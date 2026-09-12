@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dezinformarea — Armă, Psihologie, Apărare · Corpus III</title>
+<meta name="description" content="Cum funcționează dezinformarea: mecanismele psihologice, sistemul Meliorator, cazul românesc 2024-2025, AI și deepfake-urile, prebunking vs cenzură, ghidul practic de apărare.">
+<meta name="author" content="norgedan">
+<link rel="canonical" href="https://norgedan.github.io/corpus3/ro/5-dezinformarea-ro.html">
+<style>
+:root{--bg:#0e0f13;--bg2:#14161c;--bg3:#1a1d26;--line:#2a2e3d;--text:#d4d8e8;--text-dim:#7a8099;--accent:#c8a96e;--accent2:#7e9cc4;--accent-red:#c47070;--accent-green:#70a870;--white:#eef0f8;--serif:'Georgia','Times New Roman',serif;--sans:'Helvetica Neue','Arial',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:18px;line-height:1.85;}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(14,15,19,0.97);border-bottom:1px solid var(--line);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(8px);}
+nav .brand{font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;color:var(--text-dim);text-decoration:none;}nav .brand span{color:var(--accent);}
+nav .lang{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}nav .lang a{color:var(--accent2);text-decoration:none;padding-left:1rem;}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2rem 4rem;max-width:820px;margin:0 auto;position:relative;}
+.hero-label{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:1.8rem;}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;line-height:1.15;color:var(--white);margin-bottom:1.4rem;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero .subtitle{font-family:var(--sans);font-size:1rem;color:var(--text-dim);max-width:560px;line-height:1.6;margin-bottom:2.8rem;}
+.hero-meta{display:flex;gap:2rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.6rem;}
+.hero-meta-item{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}
+.hero-meta-item strong{color:var(--text);font-weight:600;}
+.scroll-hint{position:absolute;bottom:2.5rem;right:2rem;font-family:var(--sans);font-size:0.7rem;color:var(--text-dim);letter-spacing:0.1em;writing-mode:vertical-rl;animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.toc-wrap{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2.4rem 2rem;}
+.toc-inner{max-width:820px;margin:0 auto;}
+.toc-title{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);margin-bottom:1.4rem;}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.4rem 2rem;list-style:none;}
+.toc li a{font-family:var(--sans);font-size:0.82rem;color:var(--text-dim);text-decoration:none;display:flex;gap:0.7rem;align-items:baseline;padding:0.3rem 0;}
+.toc li a:hover{color:var(--accent2);}
+.toc li a .n{color:var(--line);font-size:0.68rem;min-width:1.4rem;}
+.content{max-width:820px;margin:0 auto;padding:0 2rem;}
+.chapter{padding:5rem 0 1rem;border-top:1px solid var(--line);margin-top:4rem;}
+.chapter:first-child{border-top:none;}
+.chapter-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:1.4rem;}
+.chapter h2{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--white);line-height:1.25;margin-bottom:2rem;}
+.chapter h3{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--accent2);margin:2.4rem 0 1rem;font-style:italic;}
+p{margin-bottom:1.4rem;color:var(--text);}p:last-child{margin-bottom:0;}
+strong{color:var(--white);}
+.verdict{background:var(--bg3);border-left:3px solid var(--accent);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.8rem;}
+.verdict p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.verdict-red{background:var(--bg3);border-left:3px solid var(--accent-red);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-red .verdict-label{color:var(--accent-red);}
+.verdict-red p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.verdict-green{background:var(--bg3);border-left:3px solid var(--accent-green);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-green .verdict-label{color:var(--accent-green);}
+.verdict-green p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.callout{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.18em;color:var(--accent2);margin-bottom:0.8rem;}
+.callout p{color:var(--text);margin:0;font-size:0.95rem;}
+.callout-red{background:var(--bg2);border:1px solid var(--accent-red);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-red .callout-label{color:var(--accent-red);}
+.callout-red p{color:var(--text);margin:0;font-size:0.95rem;}
+.callout-green{background:var(--bg2);border:1px solid var(--accent-green);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-green .callout-label{color:var(--accent-green);}
+.callout-green p{color:var(--text);margin:0;font-size:0.95rem;}
+.mechanic-box{background:var(--bg2);border:1px solid var(--accent);border-radius:6px;padding:1.8rem;margin:1.6rem 0;}
+.mechanic-title{font-family:var(--sans);font-size:0.75rem;letter-spacing:0.15em;color:var(--accent);margin-bottom:0.8rem;font-weight:700;}
+.mechanic-box p{font-size:0.92rem;color:var(--text);margin:0;}
+.mechanic-box p+p{margin-top:0.6rem;}
+.defense-step{display:grid;grid-template-columns:2.4rem 1fr;gap:0 1.2rem;margin-bottom:1.4rem;align-items:start;}
+.defense-n{font-family:var(--sans);font-size:1.2rem;font-weight:700;color:var(--accent-green);line-height:1;padding-top:0.2rem;}
+.defense-body .defense-title{font-family:var(--sans);font-size:0.9rem;color:var(--white);font-weight:600;margin-bottom:0.3rem;}
+.defense-body p{font-size:0.9rem;color:var(--text-dim);margin:0;line-height:1.6;}
+.fact-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:2.4rem 0;}
+.fact-item{background:var(--bg2);padding:1.2rem 1.1rem;}
+.fact-item .fact-n{font-family:var(--sans);font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.3rem;}
+.fact-item .fact-n.red{color:var(--accent-red);}
+.fact-item .fact-n.green{color:var(--accent-green);}
+.fact-item .fact-label{font-family:var(--sans);font-size:0.68rem;color:var(--text-dim);line-height:1.4;}
+.hidden-link{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:1px solid var(--accent);border-radius:4px;padding:1.4rem 1.6rem;margin:2.4rem 0;}
+.hidden-link-label{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.6rem;}
+.hidden-link p{font-size:0.95rem;margin:0;color:var(--text);}
+.divider{text-align:center;color:var(--line);margin:3rem 0;font-size:0.9rem;letter-spacing:0.4em;}
+.guide-box{background:var(--bg3);border:1px solid var(--accent-green);border-radius:6px;padding:2rem;margin:2.4rem 0;}
+.guide-title{font-family:var(--sans);font-size:0.8rem;letter-spacing:0.18em;color:var(--accent-green);margin-bottom:1.4rem;font-weight:700;}
+.conclusion{background:var(--bg2);border-top:1px solid var(--accent);margin-top:5rem;padding:4rem 2rem;}
+.conclusion-inner{max-width:820px;margin:0 auto;}
+.conclusion h2{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2rem);color:var(--white);font-weight:400;margin-bottom:2rem;}
+footer{background:var(--bg);border-top:1px solid var(--line);padding:2.4rem 2rem;font-family:var(--sans);font-size:0.72rem;color:var(--text-dim);text-align:center;line-height:1.9;}
+footer a{color:var(--accent2);text-decoration:none;}
+.sources{margin-top:1.6rem;padding-top:1.6rem;border-top:1px solid var(--line);}
+.sources-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:0.6rem;}
+.sources p{font-family:var(--sans);font-size:0.78rem;color:var(--text-dim);margin:0;line-height:1.7;}
+@media(max-width:600px){body{font-size:16px;}nav{padding:0.8rem 1.2rem;}.hero{padding:6rem 1.2rem 3rem;}.content{padding:0 1.2rem;}.toc-wrap{padding:2rem 1.2rem;}.conclusion{padding:3rem 1.2rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://norgedan.github.io/" class="brand">norgedan · <span>Corpus III</span></a>
+  <span class="lang">RO &nbsp;·&nbsp; <a href="../no/5-desinformasjon-no.html">NO →</a></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Corpus III · Documentul 5 · Română</div>
+  <h1>Dezinformarea<br><em>Armă, Psihologie, Apărare</em></h1>
+  <p class="subtitle">Cum funcționează minciuna organizată la scară industrială. Mecanismele psihologice care ne fac vulnerabili. Sistemul rusesc de dezinformare și cazul românesc 2024–2025. AI și deepfake-urile. De ce cenzura nu funcționează. Ghidul practic de apărare — pentru fiecare cetățean.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Focalizare</strong><br>Dezinformare — teorie și practică</div>
+    <div class="hero-meta-item"><strong>Capitole</strong><br>8 + Ghid practic</div>
+    <div class="hero-meta-item"><strong>Caracter</strong><br>Educativ, aplicat</div>
+    <div class="hero-meta-item"><strong>Actualizat</strong><br>Septembrie 2026</div>
+  </div>
+  <div class="scroll-hint">DERULAȚI</div>
+</section>
+
+<div class="toc-wrap">
+  <div class="toc-inner">
+    <div class="toc-title">CUPRINS</div>
+    <ul class="toc">
+      <li><a href="#cap1"><span class="n">I</span> Ce este dezinformarea — cu adevărat</a></li>
+      <li><a href="#cap2"><span class="n">II</span> Psihologia vulnerabilității — de ce funcționează</a></li>
+      <li><a href="#cap3"><span class="n">III</span> Sistemul rusesc — cum este organizat</a></li>
+      <li><a href="#cap4"><span class="n">IV</span> Cazul românesc 2024–2025 — documentat</a></li>
+      <li><a href="#cap5"><span class="n">V</span> AI și deepfake-urile — noua frontieră</a></li>
+      <li><a href="#cap6"><span class="n">VI</span> Cenzura nu funcționează — prebunking-ul da</a></li>
+      <li><a href="#cap7"><span class="n">VII</span> Modelele care funcționează — Finlanda, Estonia</a></li>
+      <li><a href="#cap8"><span class="n">VIII</span> Ghidul practic — cum te aperi tu</a></li>
+      <li><a href="#concluzie"><span class="n">✦</span> Concluzie</a></li>
+    </ul>
+  </div>
+</div>
+
+<main class="content">
+
+<!-- CAP I -->
+<section class="chapter" id="cap1">
+  <div class="chapter-label">CAPITOLUL I</div>
+  <h2>Ce este dezinformarea — cu adevărat</h2>
+
+  <p>Dezinformarea nu este o știre falsă pe care un idiot a scris-o pe internet. Dezinformarea, în sensul în care reprezintă o amenințare reală pentru democrații în 2026, este o operațiune strategică deliberată, finanțată de state sau actori statali, cu obiective clare, cu infrastructură tehhnică sofisticată și cu o înțelegere profundă a psihologiei umane.</p>
+
+  <p>Diferența dintre dezinformare și misinformare este esențială: <strong>misinformarea</strong> este o informație falsă care circulă fără intenție deliberată de înșelăciune — cineva credea ce spune. <strong>Dezinformarea</strong> este o informație falsă sau manipulată răspândită deliberat, cu scopul de a produce un efect calculat: neîncredere, confuzie, furie, polarizare, pasivitate sau acțiune într-o direcție care servește interesele celui care dezinformează.</p>
+
+  <p>Obiectivul dezinformării nu este neapărat să te convingă că ceva fals este adevărat. Adesea, obiectivul principal este mai subtil și mai periculos: <strong>să te convingă că nu poți ști ce este adevărat</strong>. Un cetățean care nu mai crede nimic, care tratează orice sursă cu același scepticism — oficialul ales, jurnalistul independent, ONG-ul, medicul — este mai ușor de manipulat decât unul cu credințe greșite precise.</p>
+
+  <div class="fact-row">
+    <div class="fact-item"><div class="fact-n red">#1</div><div class="fact-label">Dezinformarea — riscul global numărul unu pe termen scurt și mediu (WEF Global Risks Report 2026)</div></div>
+    <div class="fact-item"><div class="fact-n red">3000%</div><div class="fact-label">Creștere a tentativelor de fraudă prin deepfake în 2023 față de 2022</div></div>
+    <div class="fact-item"><div class="fact-n red">85.000</div><div class="fact-label">Atacuri cibernetice coordonate de SVR rus împotriva infrastructurii electorale românești (2024)</div></div>
+    <div class="fact-item"><div class="fact-n">32.500</div><div class="fact-label">Videoclipuri TikTok pro-Georgescu / pro-Simion identificate în campania din 2025 (Refute UK)</div></div>
+    <div class="fact-item"><div class="fact-n red">48%</div><div class="fact-label">Din interacțiunile cu materialele TikTok electorale românești au provenit din afara țării</div></div>
+    <div class="fact-item"><div class="fact-n green">1</div><div class="fact-label">Finlanda — locul 1 în European Media Literacy Index — cea mai rezistentă la dezinformare din Europa</div></div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">PREMISA DOCUMENTULUI</div>
+    <p>Dezinformarea nu poate fi combătută prin ignorare, prin scepticism uniform față de tot sau prin cenzură. Poate fi combătută prin înțelegere — a mecanismelor ei, a vulnerabilităților noastre și a instrumentelor de apărare care funcționează. Acesta este un document practic, nu teoretic.</p>
+  </div>
+</section>
+
+<!-- CAP II -->
+<section class="chapter" id="cap2">
+  <div class="chapter-label">CAPITOLUL II</div>
+  <h2>Psihologia vulnerabilității — de ce dezinformarea funcționează pe toată lumea</h2>
+
+  <p>Prima și cea mai importantă lecție despre dezinformare este una incomodă: <strong>nimeni nu este imun</strong>. Nu oamenii fără educație. Nu cei fără acces la internet. Nu cei cu IQ mare. Oamenii cu studii superioare, cu gândire critică exersată, cu acces la informații de calitate — toți suntem vulnerabili în fața anumitor tipuri de manipulare, pentru că vulnerabilitățile noastre nu sunt intelectuale. Sunt psihologice.</p>
+
+  <h3>Mecanismul 1 — Disonanța cognitivă</h3>
+
+  <div class="mechanic-box">
+    <div class="mechanic-title">CUM FUNCȚIONEAZĂ</div>
+    <p>Când primim o informație care contrazice o credință existentă puternică, creierul produce disconfort psihologic — disonanță cognitivă. Reacția automată nu este „poate am greșit" — ci „această informație trebuie să fie greșită sau vine dintr-o sursă rea". Dezinformarea exploatează asta: nu atacă direct credința, o confirmă și îi adaugă un element nou, care pătrunde mai ușor pentru că se potrivește cu ce crezi deja.</p>
+  </div>
+
+  <h3>Mecanismul 2 — Efectul de revenire (backfire effect)</h3>
+
+  <div class="mechanic-box">
+    <div class="mechanic-title">CE ARATĂ CERCETĂRILE</div>
+    <p>Studiile clasice Nyhan și Reifler (2010) au documentat că, atunci când o credință falsă puternică este corectată cu date și argumente, oamenii nu doar că nu o schimbă — o întăresc. Corectarea confirmă că cineva încearcă să îi manipuleze și rezistența devine mai puternică. Dezinformatorii știu asta și construiesc narativele astfel încât orice corecție să pară ea însăși o parte din conspirație.</p>
+  </div>
+
+  <h3>Mecanismul 3 — Camera de ecou și bulele de filtrare</h3>
+
+  <div class="mechanic-box">
+    <div class="mechanic-title">CUM ALGORITMII NE CAPTIVEAZĂ</div>
+    <p>Algoritmii platformelor sociale (TikTok, Facebook, YouTube, Instagram) nu sunt proiectați să îți ofere adevărul — sunt proiectați să îți mențină atenția cât mai mult timp posibil. Conținutul care generează reacții emoționale puternice — furie, frică, indignare morală — menține atenția mai mult decât conținutul neutru sau nuanțat. Platformele recompensează conținutul emoțional cu distribuție mai largă. Dezinformarea este structurată tocmai pentru a provoca aceste emoții.</p>
+  </div>
+
+  <h3>Mecanismul 4 — Iluzia adevărului prin repetare</h3>
+
+  <div class="mechanic-box">
+    <div class="mechanic-title">EFECTUL ILUZIEI DE ADEVĂR</div>
+    <p>Cercetările în psihologie cognitivă au documentat un fenomen contraintuitiv: o afirmație falsă repetată de suficient de multe ori ajunge să pară mai credibilă decât una adevărată spusă o singură dată. Creierul confundă familiaritatea cu credibilitatea. Tocmai de aceea dezinformatorii nu caută să convingă cu un singur mesaj puternic — ei inundă spațiul informațional cu variații ale aceleiași minciuni, astfel că la un moment dat pare că „toată lumea spune asta".</p>
+  </div>
+
+  <h3>Mecanismul 5 — Apelul la emoție și urgență</h3>
+
+  <div class="mechanic-box">
+    <div class="mechanic-title">FRICA, FURIA, URGENȚA</div>
+    <p>Frica, furia și sentimentul de urgență imediată inhibă gândirea critică. Când emoția este intensă, cortexul prefrontal — zona responsabilă de raționament — este parțial inhibat. Dezinformarea eficientă nu îți prezintă argumente de evaluat calm — îți prezintă crize de evaluat rapid. „Ei vin să îți ia copiii." „Statul vrea să te controleze." „Acum sau niciodată." Înainte ca gândirea critică să se activeze, ai dat deja share.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Vulnerabilitatea față de dezinformare nu este o slăbiciune personală — este o caracteristică a creierului uman, universală. Recunoașterea acestui fapt nu ne face mai slabi — ne face mai puțin naivi față de propria vulnerabilitate. Primul pas în apărare este să știi că ești vulnerabil.</p>
+  </div>
+</section>
+
+<!-- CAP III -->
+<section class="chapter" id="cap3">
+  <div class="chapter-label">CAPITOLUL III</div>
+  <h2>Sistemul rusesc de dezinformare — cum este organizat</h2>
+
+  <p>Dezinformarea rusă nu este haotică. Este un sistem organizat, cu finanțare de stat, cu obiective strategice clare și cu o arhitectură în mai multe niveluri, care a evoluat continuu în ultimii 20 de ani.</p>
+
+  <h3>Sistemul Meliorator — platforma de coordonare</h3>
+
+  <p>Sistemul Meliorator — documentat de serviciile de informații europene și de jurnaliști de investigație — este o platformă de coordonare a operațiunilor de influență care combină mai multe funcționalități: identificarea audiențelor vulnerabile în fiecare țară, producția de conținut dezinformant adaptat cultural și linguistic, coordonarea rețelelor de distribuție (conturi de social media, canale Telegram, site-uri de știri false) și monitorizarea eficienței mesajelor.</p>
+
+  <p>Platforma are două categorii principale de operatori: <strong>Brigadirul</strong> — coordonatorul de campanie, care stabilește obiectivele, alocă resursele și calibrează mesajele — și <strong>Taras</strong> — operatorul de teren, care gestionează conturile false și rețelele de amplificare. Terminologia vine din documentele interne furate și publicate de hacktiviști.</p>
+
+  <h3>Arhitectura unui atac de dezinformare</h3>
+
+  <p><strong>Nivelul 1 — Producția:</strong> fabricarea sau distorsionarea conținutului — un document fals, un videoclip editat, o declarație scoasă din context, o știre reală cu titlu manipulat.</p>
+
+  <p><strong>Nivelul 2 — Lansarea:</strong> publicarea pe canale cu credibilitate aparentă — site-uri care imită publicații cunoscute, conturi care par a fi ale unor jurnaliști sau experți reali, uneori conturi reale compromise.</p>
+
+  <p><strong>Nivelul 3 — Amplificarea:</strong> rețele de conturi false (boți și trolli) care distribuie conținutul masiv în primele ore — algoritmii interpretează activitatea ca dovadă de relevanță și distribuie organic mai departe.</p>
+
+  <p><strong>Nivelul 4 — Legitimizarea:</strong> preluarea de către media mainstream sau de lideri de opinie reali, care văd conținutul viralizat și îl tratează ca pe o știre de verificat — uneori chiar și negarea corectă ajută la amplificare, pentru că menționează subiectul.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">CALIBRAREA MESAJULUI PENTRU FIECARE SOCIETATE</div>
+    <p>Un element esențial al sofisticării rusești este că nu există un mesaj universal. Dezinformarea pentru Germania este diferită de cea pentru România, care este diferită de cea pentru Franța. În Vest: atacul pe instituții — neîncredere în media, în guvern, în știință, în NATO. În Est: atacul pe identitate și memorie — narativele despre „frații slavi", despre „NATO ca agresor", despre „Europa care nu ne respectă". Aceeași echipă, mesaje complet diferite, optimizate pentru vulnerabilitățile specifice ale fiecărei societăți.</p>
+  </div>
+
+  <p>Nu tot ce pare dezinformare rusă este dezinformare rusă — și aceasta este o eroare frecventă care face parte ea însăși din strategia rusă. Dezinformatorii profesionali știu că dacă oponenții lor etichetează orice critică legitimă drept „dezinformare rusă", credibilitatea acuzatorilor scade. <strong>Discernământul este esențial: există și dezinformare internă autentică, știri false produse de actori fără legătură cu Moscova, și erori jurnalistice fără intenție. Nu fiecare știre falsă este un atac rusesc.</strong></p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Sistemul rusesc de dezinformare este sofisticat, adaptabil și în continuă evoluție. Nu este omnipotent — are limitele sale. Dar ignorarea existenței lui sau minimalizarea prin „și noi dezinformăm" este o apărare care nu funcționează. Înțelegerea arhitecturii lui este primul pas spre contracarare.</p>
+  </div>
+</section>
+
+<!-- CAP IV -->
+<section class="chapter" id="cap4">
+  <div class="chapter-label">CAPITOLUL IV</div>
+  <h2>Cazul românesc 2024–2025 — documetat, verificat, necontestat</h2>
+
+  <p>România a trăit în 2024–2025 ceea ce serviciile de informații din SUA, UK, Franța și UE descriu ca una dintre cele mai complete operațiuni de influență electorală din istoria recentă a Europei. Datele sunt verificate, publice și provin din surse multiple independente.</p>
+
+  <h3>Ce s-a întâmplat — cronologia documentată</h3>
+
+  <p><strong>Campania a început în 2023</strong>, conform Mediapart și SRI: SVR-ul rus (serviciul de informații externe) a lansat o operațiune cu obiectivul de a promova candidați cu vederi suveraniste și izolaționiste în alegerile din 2024. Campania a început cu 12–18 luni înainte de alegeri — un orizont de planificare care arată intenția deliberată, nu oportunismul.</p>
+
+  <p><strong>Operațiunea TikTok:</strong> Călin Georgescu, candidat cu sub 2% în sondaje la mijlocul lui octombrie 2024, a ajuns să câștige primul tur al alegerilor prezidențiale pe 24 noiembrie 2024. Creșterea sa a fost aproape exclusiv produsul unui val de conținut TikTok — coordonat, nu organic. SRI a documentat că un cetățean român din Brașov a plătit influencerilor de pe TikTok circa un milion de euro pentru promovarea lui Georgescu, bani ale căror surse nu au fost complet clarificate. Peste 25.000 de conturi au participat la amplificare.</p>
+
+  <p><strong>Atacurile cibernetice:</strong> SRI a urmărit un val de peste 85.000 de atacuri cibernetice împotriva infrastructurii electorale românești, lansate din 33 de țări dar coordonate de SVR. A fost cel mai mare atac cibernetic documentat împotriva unui proces electoral european.</p>
+
+  <p><strong>CCR anulează alegerile:</strong> pe 6 decembrie 2024, Curtea Constituțională a României a luat o decizie fără precedent — anularea rezultatelor unui tur electoral prezidențial. Decizia a stârnit controverse, dar a avut la bază rapoartele CSAT privind interferența externă documentată.</p>
+
+  <p><strong>Campania continuă în 2025:</strong> think-tank-ul britanic Refute a documentat că, în alegerile prezidențiale reluate din mai 2025, campania a continuat cu 32.500 de videoclipuri TikTok vizând atât Georgescu (interzis să candideze), cât și George Simion. Remarcabil: 48% din interacțiunile cu aceste materiale au provenit din afara granițelor României — concentrate în diaspora din UK (15%), Italia (7%), Germania (7%), Spania (5%), Franța (2%).</p>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURĂ ASCUNSĂ — DIASPORA CA VECTOR DE DEZINFORMARE</div>
+    <p>Diaspora română este, simultan, cea mai valoroasă resursă externă a României și una dintre principalele ținte ale dezinformării pro-ruse. Românii din Italia, UK, Spania și Germania sunt mai vulnerabili la narativele nostalgice și la mesajele anti-establishment pentru că trăiesc adesea în condiții precare — muncă în sectoare marginalizate, discriminare, dor de acasă, sentiment că clasa politică română nu îi reprezintă. Dezinformarea exploatează exact aceste vulnerabilități reale. 48% din interacțiunile electorale venind din diasporă nu este o statistică neutră — este dovada că dezinformarea a vizat deliberat românii care nu vor putea fi contracarați prin dezbatere publică internă.</p>
+  </div>
+
+  <p>Nicușor Dan a câștigat alegerile prezidențiale cu 53.6% — democrația românească a rezistat. Dar că a rezistat nu înseamnă că pericolul a trecut. Ministerul Afacerilor Externe a publicat o notă în mai 2025 confirmând că campania de dezinformare era <strong>în curs</strong> și purta toate semnăturile dezinformării rusești.</p>
+
+  <div class="verdict-red">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Cazul românesc 2024–2025 este unul din cele mai bine documentate exemple de interferență externă electorală din istoria recentă a Europei. Nu este o speculație, o acuzație politică sau o teorie a conspirației. Este o realitate verificată de servicii de informații din cel puțin cinci state și de organizații independente de fact-checking. Romania a rezistat — dar în marje mai mici decât confortabile.</p>
+  </div>
+</section>
+
+<!-- CAP V -->
+<section class="chapter" id="cap5">
+  <div class="chapter-label">CAPITOLUL V</div>
+  <h2>AI și deepfake-urile — noua frontieră a dezinformării</h2>
+
+  <p>Tot ce s-a descris în capitolele anterioare devine exponențial mai periculos cu un singur ingredient nou: inteligența artificială generativă. AI nu a creat dezinformarea — aceasta există de când există oamenii. Dar AI reduce costul producției de dezinformare la aproape zero și crește credibilitatea ei la niveluri fără precedent.</p>
+
+  <h3>Ce poate face AI-ul în serviciul dezinformării</h3>
+
+  <p><strong>Deepfake video:</strong> videoclipuri în care o persoană reală spune sau face lucruri pe care nu le-a spus sau făcut niciodată. Primul deepfake major al conflictului din Ucraina — un videoclip fals al lui Zelensky cerând soldaților să se predea — a apărut în primele zile ale invaziei din 2022 și era crude. Astăzi, aceleași instrumente sunt accesibile oricui cu un laptop și o conexiune la internet, iar calitatea este incomparabil mai bună.</p>
+
+  <p><strong>Clonarea vocii:</strong> în mai puțin de 30 de secunde de înregistrare audio reală, AI-ul poate crea o voce sintetică indistinguibilă de original. Apeluri telefonice false în care „liderul tău" îți cere ceva. „Înregistrări" ale unor declarații private.</p>
+
+  <p><strong>Dezinformarea personalizată la scară:</strong> LLM-urile (modelele lingvistice mari) pot genera mii de variante ale aceluiași mesaj de dezinformare, fiecare adaptată pentru un profil demografic diferit — vârstă, regiune, convingeri politice, interese. Ceea ce înainte necesita o echipă de redactori se poate face acum cu un prompt și câteva secunde de computație.</p>
+
+  <p><strong>Conținut complet fabricat la scară:</strong> site-uri de știri false, rețele de conturi de social media cu identități generate complet de AI, articole de opinie, imagini de protest care nu au existat niciodată.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">CIFRA CARE ARATĂ VITEZA SCHIMBĂRII</div>
+    <p>Tentativele de fraudă prin deepfake au crescut cu 3.000% în 2023 față de 2022. Aceasta nu este o eroare de calcul — este expresia unui salt tehnologic care a transformat deepfake-urile dintr-o tehnologie experimentală de laborator într-un instrument accesibil oricui. Studiile publicate în 2025-2026 arată că participanții la experimente consideră dezinformarea generată de LLM-uri mai credibilă decât cea produsă de oameni — pentru că este mai fluentă, mai lipsită de erori gramaticale și mai bine adaptată contextului.</p>
+  </div>
+
+  <h3>Detecția — posibilă, dar nu suficientă singură</h3>
+
+  <p>Instrumentele de detecție a deepfake-urilor și a conținutului generat de AI există și se îmbunătățesc. Watermarking-ul conținutului generat de AI — aplicat implicit de unele platforme mari — ajută. Dar există o cursă asimetrică: instrumentele de detecție sunt întotdeauna puțin în urma celor de generare, pentru că pentru a detecta trebuie să știi cum arată ceea ce cauți. <strong>Detecția tehnologică este necesară dar nu suficientă. Reziliența umană — educația, gândirea critică, cultura verificării — rămâne esențială.</strong></p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>AI nu a schimbat regulile dezinformării — le-a amplificat dramatic. Viteza, scala și credibilitatea conținutului fabricat ating în 2026 niveluri fără precedent. Răspunsul nu este disperarea sau paranoia — este investiția urgentă în educație mediatică sistematică și în instrumente tehnice de verificare.</p>
+  </div>
+</section>
+
+<!-- CAP VI -->
+<section class="chapter" id="cap6">
+  <div class="chapter-label">CAPITOLUL VI</div>
+  <h2>De ce cenzura nu funcționează — și de ce prebunking-ul da</h2>
+
+  <p>Există două reflexe aproape automate la pericolul dezinformării: ignorarea și cenzurarea. Ambele sunt greșite strategic, și cercetarea o demonstrează.</p>
+
+  <h3>De ce ignorarea nu funcționează</h3>
+
+  <p>Dezinformarea nu dispare ignorată — se răspândește în ecosisteme alternative. Dacă platformele mainstream nu conțin un subiect, TikTok, Telegram și YouTube îl amplifică. Tăcerea instituțiilor este interpretată ca confirmare sau ca conspirație de acoperire. <strong>Vacuumul informațional este umplut întotdeauna — fie de jurnalism de calitate, fie de dezinformare.</strong></p>
+
+  <h3>De ce cenzura nu funcționează</h3>
+
+  <p>Cenzurarea conținutului de dezinformare generează trei efecte perverse documentate. <strong>Primul:</strong> confirmă narativul conspiraționist — „iată că vor să ne ascundă adevărul." <strong>Al doilea:</strong> mută conținutul pe platforme și canale mai puțin vizibile dar nu mai puțin active (Telegram, Signal, forumuri), unde se radicalizează mai repede pentru că nu există contranarativ. <strong>Al treilea:</strong> creează precedente periculoase — puterile care cenzurează dezinformarea astăzi pot cenzura critica politică mâine. Linia este greu de trasat și mai greu de apărat.</p>
+
+  <p>Cenzura poate fi justificată în cazuri extreme — conținut care incită direct la violență, care vizează date personale ale unor indivizi privați, care conține material de abuz sexual. Dar ca strategie generală de combatere a dezinformării, eșuează.</p>
+
+  <h3>Ce funcționează — prebunking-ul</h3>
+
+  <p>Prebunking-ul este opusul debunking-ului (dezmințirii). Debunking-ul încearcă să corecteze o minciună după ce a circulat deja — este dificil din cauza efectului de revenire documentat în Capitolul II. Prebunking-ul expune oamenii la mecanismele de manipulare <em>înainte</em> de a întâlni conținutul dezinformant specific — construind imunitate psihologică, nu combătând un mesaj concret.</p>
+
+  <p>Analogia din medicină este perfectă: vaccinul nu te ajută după ce te-ai infectat. Dar dacă te expune la o formă slăbită a agentului patogen înainte de infecție, sistemul imunitar construiește apărare. Prebunking-ul face același lucru cu mintea: te expune la tehnicile de manipulare în condiții controlate, astfel că le recunoști când le întâlnești în starea lor reală.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">DOVADA EXPERIMENTALĂ — CAMBRIDGE, 2022</div>
+    <p>Cercetătorii de la Universitatea Cambridge au creat un joc online — „Bad News" — care îi pune pe jucători în rolul producătorilor de dezinformare: construiesc știri false, manipulează emoțional, exploatează polarizarea. Jucătorii care au jucat 15–20 de minute au demonstrat ulterior o rezistență semnificativ mai mare la dezinformare reală decât grupul de control. Acesta este prebunking-ul la scară: nu prin lecții morale, ci prin practică directă a mecanismelor de manipulare. Google a finanțat distribuția acestui tip de conținut prebunking ca reclame YouTube în mai multe țări europene.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Cenzura și ignorarea sunt răspunsuri reactive și contraproductive. Prebunking-ul sistematic — în școli, în campanii publice, în media — este singurul instrument dovedit că produce rezistență durabilă. Nu elimină dezinformarea, dar reduce dramatic eficiența ei.</p>
+  </div>
+</section>
+
+<!-- CAP VII -->
+<section class="chapter" id="cap7">
+  <div class="chapter-label">CAPITOLUL VII</div>
+  <h2>Modelele care funcționează — Finlanda, Estonia, Suedia</h2>
+
+  <p>Nu trebuie să inventăm soluții. Există modele care funcționează, în țări cu contexte similare cu România, documentate pe parcursul a zeci de ani. Lecția centrală este identică în toate: <strong>rezistența la dezinformare se construiește înainte de criză, nu în criză. Și se construiește prin educație, nu prin cenzură.</strong></p>
+
+  <h3>Modelul finlandez — cel mai bun din Europa</h3>
+
+  <p>Finlanda se clasează constant pe primul loc în European Media Literacy Index al Open Society Institute Sofia. Motivul: educație mediatică integrată în curriculum de la vârsta de șase ani, cu extensii care continuă pe tot parcursul școlarizării. Copiii finlandezi de 6 ani învață să identifice diferența dintre opinie și fapt, să verifice sursele și să recunoască tehnicile de manipulare emoțională. La 14–15 ani, tânărul finlandez mediu știe ce este un troll, cum funcționează o cameră de ecou și cum arată dezinformarea de stat.</p>
+
+  <p>Aceasta nu este o reacție de după 2022 — Finlanda a integrat alfabetizarea mediatică în sistemul de educație din anii '90, dintr-o înțelegere lucidă că vecinătatea cu Rusia cere pregătire, nu naivitate. Ministrul finlandez al Educației a declarat în 2025: <em>„Nu credeam că lumea va fi astfel. Că vom fi bombardați cu dezinformare, că democrația noastră va fi pusă în pericol prin dezinformare. Dar iată că este."</em></p>
+
+  <h3>Modelul estonian</h3>
+
+  <p>Estonia, cu 1.3 milioane de locuitori și o minoritate rusoftă semnificativă (30% din populație), este cel mai atacat stat european cibernetic — a trăit primul atac cibernetic de stat din lume în 2007, când Rusia a paralizat infrastructura digitală estoniană după un conflict diplomatic. Răspunsul Estoniei nu a fost cenzura — a fost digitalizarea radicală a propriilor sisteme și integrarea alfabetizării digitale și mediatice în educație din 2010. Estonia se clasează pe locul 3 în European Media Literacy Index.</p>
+
+  <p>Cel mai important element al modelului estonian: un curs obligatoriu de 35 de ore pentru elevii de clasa a 10-a, dedicat exclusiv înțelegerii influenței media, identificării dezinformării și utilizării critice a surselor. Nu opțional, nu extrașcolar — parte din curriculumul obligatoriu.</p>
+
+  <div class="callout">
+    <div class="callout-label">CE AR PUTEA FACE ROMÂNIA — CONCRET</div>
+    <p>România nu trebuie să inventeze nimic. Poate copia, adapta și implementa modelele finlandeze și estone. Concret: un curs obligatoriu de alfabetizare mediatică de cel puțin 20 de ore în gimnaziu și 35 de ore în liceu — parte din curriculum, nu extrașcolar. Formarea de profesori: toți profesorii de limbă română, istorie și informatică să poată preda tehnici de verificare a surselor. Campanii publice de prebunking înainte de fiecare ciclu electoral — nu fact-checking reactiv, ci expunere proactivă la tehnici de manipulare. Finanțare pentru jurnalism de investigație independent — cel mai bun antidot al dezinformării este jurnalismul de calitate accesibil gratuit.</p>
+  </div>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Finlanda și Estonia demonstrează că rezistența la dezinformare se poate construi sistematic, cu un cost relativ mic și cu rezultate măsurabile. Ambele modele au un numitor comun: tratează educația mediatică ca pe o necesitate de securitate națională, nu ca pe un lux educațional. România ar putea implementa un model similar în 3–5 ani, dacă există voința politică.</p>
+  </div>
+</section>
+
+<!-- CAP VIII -->
+<section class="chapter" id="cap8">
+  <div class="chapter-label">CAPITOLUL VIII</div>
+  <h2>Ghidul practic — cum te aperi tu, cetățeanul de rând</h2>
+
+  <p>Tot ce s-a scris până acum are valoare doar dacă se traduce în comportamente concrete. Acesta este ghidul practic — nu pentru experți, ci pentru orice om care consumă știri, primește mesaje pe WhatsApp, urmărește content pe TikTok și votează la alegeri.</p>
+
+  <div class="guide-box">
+    <div class="guide-title">GHID PRACTIC DE APĂRARE ÎMPOTRIVA DEZINFORMĂRII</div>
+
+    <div class="defense-step">
+      <div class="defense-n">1</div>
+      <div class="defense-body">
+        <div class="defense-title">Recunoaște reacția emoțională intensă ca semnal de alertă</div>
+        <p>Dacă un conținut te face să te simți imediat furios, speriat sau indignant moral — nu distribui imediat. Emoția intensă este primul semn că s-ar putea să fii manipulat. Fă o pauză de cel puțin 30 de secunde înainte de orice acțiune.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">2</div>
+      <div class="defense-body">
+        <div class="defense-title">Verifică sursa înainte de conținut</div>
+        <p>Cine a publicat asta? Există o adresă fizică, un editor, jurnaliști cu nume reale? Există o secțiune „Despre noi"? Cauți pe Google: „[numele site-ului] + fake" sau „[numele site-ului] + dezinformare". Site-uri precum Media Literacy Index sau Eu vs Disinformation indexează surse problematice.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">3</div>
+      <div class="defense-body">
+        <div class="defense-title">Caută surse multiple independente</div>
+        <p>Dacă o știre importantă apare pe un singur site pe care nu l-ai auzit, nu existe pe nicio publicație majoră și nu a fost preluată nicăieri: este un semnal de alarmă. Știrile reale cu impact sunt preluate de surse multiple independente. Dacă „numai ei știu" — probabilitatea de dezinformare este ridicată.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">4</div>
+      <div class="defense-body">
+        <div class="defense-title">Verifică imaginile și videoclipurile</div>
+        <p>Google Images și TinEye permit căutarea inversă a imaginilor — introduci imaginea și afli dacă a mai apărut și când. Instrumentele de verificare video (InVID, WeVerify) arată metadatele unui videoclip. O imagine sau un video viral „din conflictul de ieri" care în realitate are ani de zile este dezinformare clasică.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">5</div>
+      <div class="defense-body">
+        <div class="defense-title">Fii sceptic față de urgența extremă</div>
+        <p>„Partajează acum înainte să fie șters!" / „Distribuie în 5 minute!" / „Ei nu vor să știi asta!" — toate acestea sunt tehnici de inducere a urgenței care inhibă gândirea critică. Orice conținut care cere acțiune imediată fără timp de verificare este suspect.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">6</div>
+      <div class="defense-body">
+        <div class="defense-title">Diversifică sursele de informare conștient</div>
+        <p>Algoritmii te vor duce mereu spre mai mult din ce consumi deja. Citește periodic publicații cu care nu ești de acord editorial — nu pentru a le crede neapărat, ci pentru a înțelege că există și alte perspective. Camera de ecou se construiește treptat, fără să îți dai seama.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">7</div>
+      <div class="defense-body">
+        <div class="defense-title">Recunoaște tehnicile de manipulare după tipare</div>
+        <p>Apelul la frică, demonizarea unui grup, false dileme binare (ori cu noi ori contra noastră), citatul scos din context, experții falși, statisticile fără sursă — acestea sunt tiparele clasice. Odată recunoscute ca tehnici, conținutul care le folosește devine automat suspect indiferent de concluzia lui.</p>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="defense-n">8</div>
+      <div class="defense-body">
+        <div class="defense-title">Nu confunda „am văzut mult" cu „este adevărat"</div>
+        <p>Familiaritatea nu este credibilitate. Dacă un mesaj îți apare de zece ori pe zi din surse diferite, nu înseamnă că este adevărat — poate fi exact produsul unei campanii de amplificare organizată. Întreabă-te: de ce văd asta atât de mult? Cine beneficiază dacă eu cred asta?</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout-green">
+    <div class="callout-label">RESURSE PRACTICE DE VERIFICARE — GRATUITE</div>
+    <p>Fact-checking România: <strong>Factual.ro</strong>, <strong>Verificat.ro</strong>, <strong>PressOne.ro</strong>. European context: <strong>EU vs Disinformation</strong> (euvsdisinfo.eu), <strong>Polygraph.info</strong>. Verificare imagini: <strong>Google Images</strong> (images.google.com), <strong>TinEye.com</strong>. Verificare video: <strong>InVID/WeVerify</strong> (pluginul de browser). Alfabetizare mediatică: <strong>„Bad News" game</strong> (getbadnews.com), <strong>inoculation.science</strong>. Media Literacy Index Europa: <strong>Open Society Institute Sofia</strong> (mediascore.eu).</p>
+  </div>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Apărarea împotriva dezinformării nu este un proiect de stat sau de experți. Este o responsabilitate individuală și colectivă. Fiecare distribuire neverificată este un act de amplificare. Fiecare verificare înainte de distribuire este un act de rezistență. La scară de milioane de cetățeni, aceste alegeri individuale fac diferența dintre o democrație rezistentă și una vulnerabilă.</p>
+  </div>
+</section>
+
+<div class="divider">✦ ✦ ✦</div>
+
+</main>
+
+<section class="conclusion" id="concluzie">
+  <div class="conclusion-inner">
+    <div class="chapter-label">CONCLUZIE</div>
+    <h2>Dezinformarea nu câștigă singură — o lăsăm să câștige</h2>
+
+    <p>Dezinformarea este o armă reală, cu finanțare de stat, cu obiective strategice și cu o înțelegere profundă a psihologiei umane. În 2024–2025, România a fost unul din principalele câmpuri de luptă ale acestei arme — și a rezistat, la limită.</p>
+
+    <p>AI-ul generativ a crescut exponențial viteza, scala și credibilitatea dezinformării. WEF plasează dezinformarea și misinformarea pe primul loc în riscurile globale pe doi și pe zece ani. Dacă aceasta era o problemă serioasă în 2016, în 2026 este o amenințare existențială pentru funcționarea democrațiilor.</p>
+
+    <p>Și totuși: rezistența este posibilă și demonstrată. Finlanda și Estonia demonstrează că educația mediatică sistematică produce cetățeni semnificativ mai rezistenți. Experimentele cu prebunking arată că 15–20 de minute de expunere la tehnicile de manipulare cresc rezistența la dezinformare reală. Jurnalismul de investigație independent, bine finanțat, rămâne cel mai bun antidot.</p>
+
+    <p><strong>Dezinformarea nu câștigă singură. Câștigă în vid — acolo unde lipsesc educația, jurnalismul de calitate și cultura verificării. Fiecare cetățean care înțelege cum funcționează este un cetățean care a ales să nu fie manipulat. Acesta este cel mai democratic act politic posibil.</strong></p>
+
+    <div class="sources">
+      <div class="sources-label">SURSE ȘI DATE</div>
+      <p>WEF — Global Risks Report 2026 (ian. 2026) · WEF — „Cognitive manipulation and AI will shape disinformation in 2026" (mar. 2026) · SRI România — raport interferențe electorale (dec. 2024) · Mediapart/G4Media — dovezi interferență rusă (mai 2025) · Think-tank Refute UK — raport campanie TikTok 2025 (2025) · Ministerul Afacerilor Externe al României — nota dezinformare (mai 2025) · Cambridge University — studii prebunking (Roozenbeek et al., 2022) · Van der Linden, S. — „Inoculation Theory" (2022) · Nyhan & Reifler — „backfire effect" (2010) · Open Society Institute Sofia — Media Literacy Index (2023) · Fortune/AFP — Finland media literacy (ian. 2025) · Anomali — „Spotting AI-Generated Disinformation and Deepfakes" (aug. 2025) · Preprints.org — cognitive hacking AI review (iul. 2026)</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://norgedan.github.io/">norgedan.github.io</a> &nbsp;·&nbsp;
+    Corpus III · Documentul 5 · Română &nbsp;·&nbsp;
+    <a href="../no/5-desinformasjon-no.html">Versiunea norvegiană →</a>
+  </p>
+  <p style="margin-top:0.6rem;">
+    Toate afirmațiile factuale sunt verificabile din surse publice. &nbsp;·&nbsp;
+    Document cu caracter educativ. Fără propagandă de nicio natură. &nbsp;·&nbsp;
+    Septembrie 2026
+  </p>
+  <p style="margin-top:0.6rem;">
+    <a href="4-romania-prima-linie-ro.html">← Documentul 4 — România, Prima Linie</a>
+  </p>
+</footer>
+</body>
+</html>

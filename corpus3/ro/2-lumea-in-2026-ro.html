@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumea în 2026 — Adevărul Structural · Corpus III</title>
+<meta name="description" content="Tabloul complet al lumii în 2026: CRINK, AfD și extremismul în democrații, războiul dronelor, China tăcută, instituțiile paralizate, realism moral aplicat concret.">
+<meta name="author" content="norgedan">
+<meta name="keywords" content="CRINK, AfD, extremism, Romania, geopolitica, Ucraina, China, Iran, democratie, 2026">
+<meta property="og:title" content="Lumea în 2026 — Adevărul Structural">
+<meta property="og:description" content="Tabloul complet al lumii în 2026. Adevărul complet, nu cel convenabil.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html">
+
+<style>
+  :root {
+    --bg: #0e0f13;
+    --bg2: #14161c;
+    --bg3: #1a1d26;
+    --line: #2a2e3d;
+    --text: #d4d8e8;
+    --text-dim: #7a8099;
+    --accent: #c8a96e;
+    --accent2: #7e9cc4;
+    --accent-red: #c47070;
+    --white: #eef0f8;
+    --serif: 'Georgia', 'Times New Roman', serif;
+    --sans: 'Helvetica Neue', 'Arial', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.85; }
+  nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(14,15,19,0.97); border-bottom: 1px solid var(--line); padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; z-index: 100; backdrop-filter: blur(8px); }
+  nav .brand { font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.12em; color: var(--text-dim); text-decoration: none; }
+  nav .brand span { color: var(--accent); }
+  nav .lang { font-family: var(--sans); font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.08em; }
+  nav .lang a { color: var(--accent2); text-decoration: none; padding-left: 1rem; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 7rem 2rem 4rem; max-width: 820px; margin: 0 auto; position: relative; }
+  .hero-label { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1.8rem; }
+  .hero h1 { font-family: var(--serif); font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 400; line-height: 1.15; color: var(--white); margin-bottom: 1.4rem; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero .subtitle { font-family: var(--sans); font-size: 1rem; color: var(--text-dim); max-width: 560px; line-height: 1.6; margin-bottom: 2.8rem; }
+  .hero-meta { display: flex; gap: 2rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 1.6rem; }
+  .hero-meta-item { font-family: var(--sans); font-size: 0.75rem; color: var(--text-dim); }
+  .hero-meta-item strong { color: var(--text); font-weight: 600; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; right: 2rem; font-family: var(--sans); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; writing-mode: vertical-rl; animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  .toc-wrap { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 2.4rem 2rem; }
+  .toc-inner { max-width: 820px; margin: 0 auto; }
+  .toc-title { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 1.4rem; }
+  .toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.4rem 2rem; list-style: none; }
+  .toc li a { font-family: var(--sans); font-size: 0.82rem; color: var(--text-dim); text-decoration: none; transition: color 0.2s; display: flex; gap: 0.7rem; align-items: baseline; padding: 0.3rem 0; }
+  .toc li a:hover { color: var(--accent2); }
+  .toc li a .n { color: var(--line); font-size: 0.68rem; min-width: 1.4rem; }
+  .content { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
+  .chapter { padding: 5rem 0 1rem; border-top: 1px solid var(--line); margin-top: 4rem; }
+  .chapter:first-child { border-top: none; }
+  .chapter-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.22em; color: var(--accent); margin-bottom: 1.4rem; }
+  .chapter h2 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 400; color: var(--white); line-height: 1.25; margin-bottom: 2rem; }
+  .chapter h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--accent2); margin: 2.4rem 0 1rem; font-style: italic; }
+  p { margin-bottom: 1.4rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+  .verdict { background: var(--bg3); border-left: 3px solid var(--accent); margin: 2.8rem 0; padding: 1.6rem 1.8rem; border-radius: 0 4px 4px 0; }
+  .verdict-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.8rem; }
+  .verdict p { color: var(--white); font-style: italic; margin: 0; font-size: 1rem; }
+  .verdict-red { background: var(--bg3); border-left: 3px solid var(--accent-red); margin: 2.8rem 0; padding: 1.6rem 1.8rem; border-radius: 0 4px 4px 0; }
+  .verdict-red .verdict-label { color: var(--accent-red); }
+  .verdict-red p { color: var(--white); font-style: italic; margin: 0; font-size: 1rem; }
+  .callout { background: var(--bg2); border: 1px solid var(--line); border-radius: 4px; padding: 1.6rem 1.8rem; margin: 2.4rem 0; }
+  .callout-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.18em; color: var(--accent2); margin-bottom: 0.8rem; }
+  .callout p { color: var(--text); margin: 0; font-size: 0.95rem; }
+  .callout-red { background: var(--bg2); border: 1px solid var(--accent-red); border-radius: 4px; padding: 1.6rem 1.8rem; margin: 2.4rem 0; }
+  .callout-red .callout-label { color: var(--accent-red); }
+  .callout-red p { color: var(--text); margin: 0; font-size: 0.95rem; }
+  .fact-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; margin: 2.4rem 0; }
+  .fact-item { background: var(--bg2); padding: 1.4rem 1.2rem; }
+  .fact-item .fact-n { font-family: var(--sans); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
+  .fact-item .fact-n.red { color: var(--accent-red); }
+  .fact-item .fact-label { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; }
+  .hidden-link { background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%); border: 1px solid var(--accent); border-radius: 4px; padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
+  .hidden-link-label { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.6rem; }
+  .hidden-link p { font-size: 0.95rem; margin: 0; color: var(--text); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; margin: 2.4rem 0; }
+  .col-item { background: var(--bg2); padding: 1.4rem 1.4rem; }
+  .col-title { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.15em; color: var(--accent2); margin-bottom: 0.8rem; }
+  .col-item p { font-size: 0.88rem; color: var(--text); margin-bottom: 0.5rem; line-height: 1.6; }
+  .col-item p:last-child { margin: 0; }
+  .divider { text-align: center; color: var(--line); margin: 3rem 0; font-size: 0.9rem; letter-spacing: 0.4em; }
+  .conclusion { background: var(--bg2); border-top: 1px solid var(--accent); margin-top: 5rem; padding: 4rem 2rem; }
+  .conclusion-inner { max-width: 820px; margin: 0 auto; }
+  .conclusion h2 { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2rem); color: var(--white); font-weight: 400; margin-bottom: 2rem; }
+  footer { background: var(--bg); border-top: 1px solid var(--line); padding: 2.4rem 2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); text-align: center; line-height: 1.9; }
+  footer a { color: var(--accent2); text-decoration: none; }
+  .sources { margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
+  .sources-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.6rem; }
+  .sources p { font-family: var(--sans); font-size: 0.78rem; color: var(--text-dim); margin: 0; line-height: 1.7; }
+  @media (max-width: 600px) { body { font-size: 16px; } nav { padding: 0.8rem 1.2rem; } .hero { padding: 6rem 1.2rem 3rem; } .content { padding: 0 1.2rem; } .toc-wrap { padding: 2rem 1.2rem; } .conclusion { padding: 3rem 1.2rem; } .two-col { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="https://norgedan.github.io/" class="brand">norgedan · <span>Corpus III</span></a>
+  <span class="lang">RO &nbsp;·&nbsp; <a href="../no/2-verden-i-2026-no.html">NO →</a></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Corpus III · Documentul 2 · Română</div>
+  <h1>Lumea în 2026<br><em>Adevărul Structural</em></h1>
+  <p class="subtitle">Tabloul complet: CRINK, AfD și extremismul care rodea democrațiile din interior, războiul dronelor, China tăcută, instituțiile paralizate, realism moral aplicat fără menajamente. Adevărul complet, nu cel convenabil.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Focalizare</strong><br>Ordinea mondială 2026</div>
+    <div class="hero-meta-item"><strong>Capitole</strong><br>9 + Concluzie</div>
+    <div class="hero-meta-item"><strong>Caracter</strong><br>Analiză civică, secular</div>
+    <div class="hero-meta-item"><strong>Actualizat</strong><br>Septembrie 2026</div>
+  </div>
+  <div class="scroll-hint">DERULAȚI</div>
+</section>
+
+<div class="toc-wrap">
+  <div class="toc-inner">
+    <div class="toc-title">CUPRINS</div>
+    <ul class="toc">
+      <li><a href="#cap1"><span class="n">I</span> 2026 — Anul în care ceasurile bat simultan</a></li>
+      <li><a href="#cap2"><span class="n">II</span> CRINK — Axa tăcută care reface lumea</a></li>
+      <li><a href="#cap3"><span class="n">III</span> AfD și extremismul în democrații</a></li>
+      <li><a href="#cap4"><span class="n">IV</span> Ucraina — Viitorul armamentului</a></li>
+      <li><a href="#cap5"><span class="n">V</span> Rusia — Ursul rănit și pericolul real</a></li>
+      <li><a href="#cap6"><span class="n">VI</span> China — Actorul care nu apare în știri</a></li>
+      <li><a href="#cap7"><span class="n">VII</span> Instituțiile internaționale — paralizate</a></li>
+      <li><a href="#cap8"><span class="n">VIII</span> Legăturile ascunse — firul roșu</a></li>
+      <li><a href="#cap9"><span class="n">IX</span> Realism moral — binele și răul concret</a></li>
+      <li><a href="#concluzie"><span class="n">✦</span> Concluzie</a></li>
+    </ul>
+  </div>
+</div>
+
+<main class="content">
+
+<!-- CAP I -->
+<section class="chapter" id="cap1">
+  <div class="chapter-label">CAPITOLUL I</div>
+  <h2>2026 — Anul în care toate ceasurile bat simultan</h2>
+
+  <p>Există ani care trec și ani care transformă. Nu pentru că în ei se întâmplă un singur eveniment colosal, ci pentru că în ei mai multe procese lungi, lente, aparent separate, ajung simultan la un punct de inflexiune. Anul 2026 este unul dintre acești ani — poate cel mai dens în confluențe periculoase din istoria recentă.</p>
+
+  <p>Ordinea postbelică construită după 1945, deja șubrezită după 1989 și erodată progresiv după 2008, arată acum ca un edificiu din care au fost scoase prea multe cărămizi cheie. Nu s-a prăbușit. Dar orice arhitect competent ar spune că nu mai e sigur de locuit.</p>
+
+  <p>Forumul Economic Mondial de la Davos, în ianuarie 2026, a produs un raport cu o concluzie care ar fi trebuit să ocupe prima pagină a fiecărui ziar din lume: confruntarea geoeconomică a urcat pentru prima oară pe locul unu în topul riscurilor globale pe termen scurt. Nu războiul nuclear, nu pandemia, nu schimbările climatice — ci rivalitatea economică între blocuri geopolitice opuse, care distorsionează lanțurile de aprovizionare, erodează cooperarea multilaterală și crește fragilitatea sistemelor de care depindem cu toții. Jumătate dintre experții consultați anticipau un mediu global turbulent sau furtunos. Numai unu la sută vedea perspectiva unui mediu calm.</p>
+
+  <div class="fact-row">
+    <div class="fact-item">
+      <div class="fact-n">1%</div>
+      <div class="fact-label">Experți WEF care vedeau perspectiva unui mediu global calm în 2026</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n red">43.8%</div>
+      <div class="fact-label">Scorul AfD în Saxonia-Anhalt, 6 sept. 2026 — primul land german câștigat de extrema dreaptă</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n">1.498M</div>
+      <div class="fact-label">Victime militare ruse în Ucraina, septembrie 2026 (Statul Major ucrainean)</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n">51%</div>
+      <div class="fact-label">Din arsenalele nucleare mondiale aparțin statelor CRINK</div>
+    </div>
+  </div>
+
+  <p>Lumea în care trăim în 2026 este mai periculoasă decât arată în clipele confortabile ale vieții cotidiene. Nu catastrofic — nu suntem în ajunul unui conflict nuclear, nu asistăm la prăbușirea imediată a ordinii internaționale. Dar suntem în mijlocul unui proces de eroziune lentă și deliberată a tot ce a funcționat ca stabilizator după 1945: alianțele, instituțiile, normele, și — cel mai fragil dintre toate — încrederea reciprocă dintre democrații.</p>
+
+  <div class="verdict">
+    <div class="verdict-label">PREMISA ACESTUI DOCUMENT</div>
+    <p>A spune că „totul e complex, toți au argumente, nimeni nu e complet bun sau complet rău" și a te opri acolo este o formă de relativism moral care, în practică, avantajează agresorul. Complexitatea nu dizolvă responsabilitatea. În acest document numim binele bine și răul rău — nu prin simpatie sau antipatie, ci prin analiza faptelor verificabile.</p>
+  </div>
+</section>
+
+<!-- CAP II -->
+<section class="chapter" id="cap2">
+  <div class="chapter-label">CAPITOLUL II</div>
+  <h2>CRINK — Axa tăcută care reface lumea</h2>
+
+  <p>Există un acronim pe care cei mai mulți oameni nu l-au auzit niciodată, dar care descrie poate cel mai important aranjament geopolitic al deceniului nostru: <strong>CRINK</strong> — China, Rusia, Iran, Coreea de Nord. Nu o alianță formală cu tratat semnat și comandament militar comun. Ceva mai subtil și, în anumite privințe, mai periculos: o rețea de interese complementare, de sisteme de sprijin reciproc și de obiective partajate împotriva ordinii occidentale.</p>
+
+  <p>Cele patru state reprezintă împreună aproximativ 20–21% din populația globală, circa 25% din PIB-ul mondial, 18% din cheltuielile militare globale și — cel mai îngrijorător — 51% din arsenalele nucleare mondiale. Aceasta nu este o alianță — este o convergență structurală.</p>
+
+  <h3>Cum funcționează în practică</h3>
+
+  <p><strong>Flota fantomă:</strong> Aproximativ o mie de tancuri petroliere transportă petrol rusesc și iranian sancționat sub pavilioane false, cu asigurări opace, cu origini falsificate în documentele vamale. Petrolul ajunge la rafinăriile independente chineze la prețuri substanțial reduse față de piața mondială. China câștigă energie ieftină. Rusia și Iranul câștigă venituri care altfel ar fi blocate de sancțiuni.</p>
+
+  <p><strong>Cooperarea militară:</strong> Coreea de Nord a furnizat Rusiei, conform estimărilor, între 7 și 16.000 de soldați trimiși pe frontul din Ucraina, plus milioane de obuze de artilerie și rachete balistice tactice. Iranul a furnizat drone Shahed care au devastat infrastructura civilă ucraineană. China a transferat componente cu dublă utilizare — civil și militar — esențiale pentru industria de apărare rusă. Cooperarea militară a crescut dramatic după izbucnirea conflictului cu Iranul în 2026: China a furnizat sistemul de navigație BeiDou pentru dronele iraniene, Rusia a furnizat date de targeting în timp real.</p>
+
+  <p><strong>Sistemul financiar paralel:</strong> Tranzacțiile în yuani și ruble, rețelele de companii fantomă, de-dolarizarea progresivă — nu mai e un concept teoretic, e un proiect operațional în curs de implementare.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">AVERTISMENTUL CARE TREBUIE SPUS CLAR</div>
+    <p>CRINK nu este NATO-ul lor. Analiștii de la CSIS și Lowy Institute au atras atenția asupra asimetriei fundamentale: China este coloana vertebrală economică a acestui sistem, fără de care întreaga structură se destramă în luni. Rusia, Iranul și Coreea de Nord au nevoie de China incomparabil mai mult decât China are nevoie de ele. Ceea ce unește CRINK nu e afecțiunea mutuală, ci opoziția comună față de ordinea condusă de SUA. Iran a descoperit dureros în 2026 că sprijinul din partea Moscovei și Beijingului a rămas în mare parte retoric când a venit confruntarea directă. Totuși: 616 de cazuri documentate de cooperare militară și de informații între cele patru state, între 2019 și 2025 (Foundation for Defense of Democracies), arată că este mai mult decât retorică. Amenințarea este reală și în creștere.</p>
+  </div>
+
+  <h3>De ce contează pentru România</h3>
+
+  <p>Flota fantomă operează în Marea Neagră, la câțiva kilometri de granița maritimă românească. Exercițiul NATO Sea Shield 2026, desfășurat cu 2.500 de personal din 13 națiuni în apele României, a avut ca obiectiv explicit monitorizarea flotei fantomă. Pe 21 iulie 2026, o explozie a avariat un tancher sub pavilion Liberia la 20 de mile nautice sud-est de Sfântu Gheorghe. România și Bulgaria au anunțat în mai 2026 crearea unui hub comun de securitate maritimă în Marea Neagră.</p>
+
+  <p>Acestea nu sunt știri de senzație. Sunt fapte concrete ale unui conflict economic care se desfășoară în vecinătatea imediată a țării noastre. România este în interiorul circuitului — nu spectator al lui.</p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>CRINK nu trebuie supraestimat ca o alianță monolitică — dar nici minimalizat ca o simplă convergență de interese conjuncturale. Este un sistem în creștere, cu cooperare documentată și cu obiectivul explicit de a demonta ordinea occidentală. China este forța care îl face viabil. Fără China, Rusia nu poate continua războiul la actualul ritm.</p>
+  </div>
+</section>
+
+<!-- CAP III -->
+<section class="chapter" id="cap3">
+  <div class="chapter-label">CAPITOLUL III</div>
+  <h2>AfD și extremismul care rodea democrațiile din interior — cel mai îngrijorător fenomen din 2026</h2>
+
+  <p>Există un tip de pericol față de care democrațiile sunt fundamental nepregătite: pericolul care vine din interior, îmbrăcat în hainele legitimității electorale. Rusia poate fi containedă militar. CRINK poate fi contracarată economic. Dar un partid extremist care câștigă alegeri libere folosind libertățile democratice pentru a le demonta — acesta este un pericol structural față de care democrațiile nu au un răspuns simplu.</p>
+
+  <p>Ce s-a întâmplat în Germania în 2026 trebuie privit direct, fără cosmetizare: <strong>este evenimentul politic cel mai îngrijorător din Europa occidentală de la cel de-Al Doilea Război Mondial încoace.</strong></p>
+
+  <h3>Cronologia ascensiunii AfD — date verificabile</h3>
+
+  <p><strong>Alegerile federale, 23 februarie 2025:</strong> AfD obține 20.8% din voturi — dublarea scorului față de 2021 (10.4%). Devine al doilea partid din Bundestag, cu 152 de locuri. CDU/CSU câștigă cu 28.5%. Friedrich Merz formează o coaliție CDU-SPD, refuzând orice colaborare cu AfD.</p>
+
+  <p><strong>Sondajele din aprilie 2026:</strong> AfD atinge 28% — depășind pentru prima dată CDU/CSU (24%) în sondajele naționale. Coaliția Merz se află la cel mai scăzut nivel de susținere — 36% combinate — cel mai slab result din 2025.</p>
+
+  <p><strong>Saxonia-Anhalt, 6 septembrie 2026:</strong> AfD obține <strong>43.8% din voturi</strong> și 39 din 83 de locuri în parlamentul landului. Este primul land german câștigat vreodată de AfD. CDU se prăbușește la 17.2%. Participarea la vot: 77-78% — cea mai ridicată din istoria modernă a landului. Cancelarul Merz a descris rezultatul drept „o înfrângere seismică".</p>
+
+  <div class="callout-red">
+    <div class="callout-label">DE CE ESTE ÎNFRICOȘĂTOR — NU RETORIC, CI STRUCTURAL</div>
+    <p>AfD a fost fondată în 2013 ca un partid eurosceptic moderat. În 10 ani a evoluat spre poziții pe care serviciile interne de informații germane (BfV) le califică ca parțial extremiste. Cere retragerea trupelor SUA și a armelor nucleare din Germania. Cere redeschiderea Nord Stream. Cere renegocierea sancțiunilor față de Rusia. Liderul Alice Weidel a avut relații documentate cu Rusia. Ramura din Thuringia condusă de Björn Höcke a fost declarată oficial „verificat extremistă" de BfV — Höcke a folosit în 2017 un slogan interzis din epoca nazistă la un miting de tineri. Și totuși partidul crește. Aceasta nu este o corupție morală a unor oameni răi — este expresia disperării unor oameni reali, cu probleme reale, care nu găsesc răspunsuri în partidele tradiționale. Diagnosticul corect este esențial pentru răspunsul corect.</p>
+  </div>
+
+  <h3>De ce cresc AfD și extremismele similare — adevărul incomod</h3>
+
+  <p>Este tentant să explicăm AfD exclusiv prin dezinformarea rusă, prin propaganda online, prin Alice Weidel. Aceasta este o explicație parțial adevărată și parțial convenabilă. Adevărul complet este mai dur.</p>
+
+  <p><strong>Nemulțumirile sunt reale.</strong> Estul Germaniei, unde AfD domină cu scoruri de 40%+, a trăit o transformare economică brutală după 1990: fabrici închise, comunități destrămate, tineri plecați la Vest, bătrâni rămași cu pensii mici și sentimentul că nimeni nu le-a pus la dispoziție un loc în noua Germanie. Migrația la scară mare, chiar dacă economic necesară, a creat tensiuni sociale reale în comunități care nu aveau infrastructura socială să o absoarbă. Costul vieții a crescut. Energia s-a scumpit. Sentimentul că „elitele" trăiesc în altă lume este real.</p>
+
+  <p><strong>Nimeni nu a răspuns acestor nemulțumiri.</strong> Partidele tradiționale au tratat votanții AfD ca pe o problemă de educație și nu au abordat cauzele reale. Stigmatizarea votantului AfD ca „fascist" l-a alienat și mai tare. Același tipar se reproduce în România cu AUR, în Franța cu Le Pen, în Italia cu Meloni, în Austria cu FPÖ.</p>
+
+  <p><strong>Dezinformarea rusă amplifică, nu creează.</strong> Rusia nu a inventat frustrările din Saxonia-Anhalt. Dar le-a instrumentalizat cu precizie și la scară industrială, prin rețelele de influență documentate. Distincția contează: dacă crezi că e doar dezinformare rusă, crezi că e suficient să elimini dezinformarea. Dacă înțelegi că dezinformarea amplifică nemulțumiri reale, înțelegi că trebuie să le și rezolvi.</p>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURĂ ASCUNSĂ — CORIDORUL DE INFLUENȚĂ RUSĂ</div>
+    <p>FPÖ în Austria, Fico în Slovacia, AfD în Germania, AUR în România — aceste forțe nu sunt identice și nu sunt toate la fel de conectate la Moscova. Dar ele formează, geografic și politic, un coridor de la Viena la Constanța prin care deciziile europene pot fi blocate, dilate sau compromise. Niciuna singură nu e suficientă. Împreună — prin vot în Consiliul UE, prin blocaje în NATO, prin zgomot de dezinformare — pot paraliza răspunsul occidental la agresiunea rusă. Căderea lui Orbán în Ungaria a rupt un inel din acest lanț. Dar Saxonia-Anhalt din septembrie 2026 arată că lanțul nu s-a rupt — s-a mutat.</p>
+  </div>
+
+  <h3>Răspunsurile care funcționează și cele care nu funcționează</h3>
+
+  <p><strong>Nu funcționează:</strong> Ignorarea, stigmatizarea, explicarea exclusivă prin dezinformare rusă, cordonul sanitar fără politici alternative credibile.</p>
+
+  <p><strong>Funcționează:</strong> Adresarea directă a cauzelor economice reale — nu prin sloganuri, ci prin politici. Investiții concrete în comunitățile marginalizate. Politici de migrație clare și aplicate (nu populiste, dar nu nici naive). Educație mediatică sistematică în școli. Instituții credibile care aplică legea uniform. <strong>Democrația nu se apără vorbind despre democrație — se apără livrând rezultate concrete pentru oamenii concreți care se simt lăsați în urmă.</strong></p>
+
+  <div class="verdict-red">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Ascensiunea AfD în Germania — 43.8% în Saxonia-Anhalt, lider național în sondaje cu 28% — este cel mai serios semnal de alarmă din Europa democratică din 2026. Nu pentru că AfD va câștiga federal mâine. Ci pentru că arată că mecanismele psihologice și economice care au dus la catastrofele secolului XX sunt prezente și funcționale în 2026, în cea mai mare democrație din Europa. Cine nu citește asta ca pe un avertisment urgent nu a înțeles istoria.</p>
+  </div>
+</section>
+
+<!-- CAP IV -->
+<section class="chapter" id="cap4">
+  <div class="chapter-label">CAPITOLUL IV</div>
+  <h2>Ucraina — Cum un popor mic a schimbat viitorul războiului</h2>
+
+  <p>Există o poveste despre războiul din Ucraina care se spune la televizor — despre tranșee, despre pierderi teritoriale, despre negocieri posibile sau imposibile. Și există o altă poveste, mult mai importantă pentru înțelegerea lumii din 2026, care schimbă fundamental cum vor arăta toate conflictele militare ale viitorului.</p>
+
+  <p>Ucraina — o țară fără bugete militare uriașe, fără industrie de apărare tradițională, forțată să improvizeze din primele zile ale invaziei — a inventat probabil viitorul războiului de cost-asimetric.</p>
+
+  <h3>Revoluția dronelor — date verificabile</h3>
+
+  <p>Forțele de Sisteme Fără Pilot ale Ucrainei au anunțat în vara lui 2026 o creștere de 1.150% față de începutul anului în numărul loviturilor adânci în teritoriul strategic rusesc. Numai în luna iunie 2026: 2.359 de misiuni de lovitură adâncă la distanțe de 500 până la 2.000 de kilometri, lovind 172 de facilități militaro-industriale și energetice pe teritoriul Federației Ruse. Rafinăriile din Moscova, Astrahan, Nijni Novgorod. Baza navală Kronstadt. Centre de comunicații spațiale.</p>
+
+  <p>O companie ucraineană de drone produce 300 de aparate pe zi și poate scala la 1.000 fără dificultate majoră. Filosofia care stă la baza acestei industrii a fost exprimată cu claritate de unul dintre fondatori: <em>„Nu avem nevoie de arma excelentă. Avem nevoie de arma bună în cantitate suficientă."</em></p>
+
+  <div class="two-col">
+    <div class="col-item">
+      <div class="col-title">ECUAȚIA ECONOMICĂ A RĂZBOIULUI DE DRONE</div>
+      <p>O dronă ucraineană costă câteva mii de dolari.</p>
+      <p>O rachetă Patriot care o interceptează costă 3.7 milioane de dolari.</p>
+      <p>Rusia a raportat cu mândrie interceptarea a 8.849 de drone ucrainene în mai 2026.</p>
+      <p>Dacă interceptarea medie costă cu un ordin de mărime mai mult decât drona: efortul de apărare rusesc este economic ruinător pe termen lung.</p>
+    </div>
+    <div class="col-item">
+      <div class="col-title">EFECTUL STRATEGIC AL LOVITURILOR ADÂNCI</div>
+      <p>Loviturile pe rafinăriile rusești au contribuit la creșterea prețurilor interne ale combustibilului în Rusia.</p>
+      <p>Baza navală de la Sevastopol a fost lovită repetat — flota rusă din Marea Neagră a pierdut libertatea de mișcare.</p>
+      <p>Apărarea, dusă suficient de inteligent, poate deveni ea însăși o formă de presiune economică asupra celui care a inițiat conflictul.</p>
+    </div>
+  </div>
+
+  <h3>Costul real al agresiunii ruse</h3>
+
+  <p>Conform datelor Statului Major al Forțelor Armate ale Ucrainei, pierderile totale ale Rusiei de la 24 februarie 2022 până la 7 septembrie 2026 sunt estimate la aproximativ <strong>1.498.000 de personal</strong> — morți, răniți și capturați. Pierderea de tancuri depășește 12.300 unități. Sistemele de artilerie pierdute: peste 49.000. Ritmul de înaintare rusesc în 2026: 50–90 de metri pe zi — printre cele mai lente din orice conflict militar din ultimul secol.</p>
+
+  <p>Rusia a pierdut în Ucraina mai mult decât orice putere majoră în orice conflict de la Al Doilea Război Mondial încoace. Și continuă.</p>
+
+  <div class="callout">
+    <div class="callout-label">LECȚIA PE CARE OCCIDENTUL A IGNORAT-O 4 ANI</div>
+    <p>Ucraina a acumulat patru ani de experiență în contracararea dronelor — cel mai avansat know-how operațional din lume în această privință. Când SUA a intrat în conflictul cu Iranul în 2026, a descoperit că forțele sale lansau opt rachete Patriot la o singură dronă. Ucraina a oferit expertiză. SUA a ignorat-o patru ani, apoi a solicitat-o urgent. Superioritatea tactică nu se transformă automat în înțelepciune strategică.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Ucraina apără acum nu doar propria independență — apără ordinea de securitate europeană. Este și dovada vie că o țară mică, cu imaginație și determinare, poate ține la distanță cel mai mare imperiu militar al continentului. Aceasta schimbă calculele de putere globale mai profund decât oricare tratat din ultimii 30 de ani.</p>
+  </div>
+</section>
+
+<!-- CAP V -->
+<section class="chapter" id="cap5">
+  <div class="chapter-label">CAPITOLUL V</div>
+  <h2>Rusia — Ursul rănit și pericolul său real în 2026</h2>
+
+  <p>Există o tentație periculoasă în analiza conflictelor — tentația de a subestima sau de a supraestima. Narativele despre colapsul iminent al Rusiei, despre fisurile din Kremlin, despre ceasul care bate spre o schimbare de regim sunt atrăgătoare. Sunt și parțial false.</p>
+
+  <p>Tabloul economic al Rusiei în 2026 este unul de uzură progresivă: Banca Centrală a recunoscut public o lipsă de forță de muncă fără precedent în istoria modernă. Pierderea bărbaților de vârstă activă pe câmpul de luptă, combinată cu emigrarea masivă a elitei educate după 2022, a creat un deficit demografic estimat la 4,4 milioane de lucrători — o realitate structurală care va afecta Rusia timp de o generație. Fondul Național de Avuție — rezerva financiară acumulată în anii petrolului scump — se apropie de epuizarea activelor lichide. Cheltuielile militare reprezintă oficial 13.5% din PIB.</p>
+
+  <p>Și totuși — și acesta este punctul esențial — regimul Putin nu se apropie de colaps. <strong>Putin a petrecut trei decenii studiind cum dictatorii pierd puterea și a construit sistematic mecanisme de protecție împotriva acestor scenarii.</strong> Elitele rusești rămân fragmentate și dependente de arbitrajul lui. Un eventual succesor al lui Putin ar fi probabil tot un produs al sistemului securitar, nu un democratizator.</p>
+
+  <h3>Strategia reală a Rusiei în 2026</h3>
+
+  <p>Rusia nu urmărește să câștige pe câmpul de luptă în sensul clasic. Strategia reală este să prelungească conflictul suficient de mult încât variabilele politice occidentale să se schimbe în favoarea sa: o nouă administrație americană mai favorabilă Moscovei, o criză economică europeană care face sprijinul pentru Ucraina politic imposibil, oboseala publică din societățile democratice.</p>
+
+  <p>Rusia are răbdare instituționalizată pentru acest tip de joc. Democrațiile au cicluri electorale de patru ani. Aceasta este asimetria fundamentală pe care Moscova o exploatează.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">PARADOXUL NUCLEAR — CEL MAI PUȚIN DISCUTAT</div>
+    <p>Arma nucleară nu rezolvă problema ursului rănit — o amplifică. Putin nu poate bombarda nuclear teritoriile pe care le revendică ca Rusia — Donbasul, Zaporojia, Hersonul, toate declarate oficial teritoriu rusesc. Cum populezi cu cetățeni ruși o țară pe care ai iradiat-o? Un atac nuclear pe teritoriu NATO activează Articolul 5 în forma sa cea mai brutală — exact unificarea Occidentului pe care întreaga strategie rusă o evită. Arma nucleară e utilă Rusiei exclusiv ca amenințare, nu ca instrument. Iar amenințarea s-a uzat: Occidentul a testat în 2022–2024 dacă Rusia trage — și nu a tras, chiar și când Ucraina a lovit teritoriu rusesc cu arme occidentale.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>O Rusie slăbită structural pe termen lung, dar dispusă să tolereze costuri enorme pe termen scurt, care mizează pe oboseala democratică și pe fragmentarea CRINK ca sursă de stabilitate, este mai periculoasă decât o Rusie victorioasă. Cea mai bună strategie a Occidentului este să nu cedeze la oboseala pe care Rusia o cultivă deliberat.</p>
+  </div>
+</section>
+
+<!-- CAP VI -->
+<section class="chapter" id="cap6">
+  <div class="chapter-label">CAPITOLUL VI</div>
+  <h2>China — Actorul care nu apare în știrile zilnice și câștigă cel mai mult</h2>
+
+  <p>China este piesa pe care prea puțini o analizează suficient de serios. Nu este un aliat pasiv al Rusiei. Este un actor strategic cu propriile ambiții — ambiții care depășesc cu mult sprijinul acordat Moscovei și care operează pe un orizont de timp de decenii, nu de ani.</p>
+
+  <p>China nu apare ca actor negativ în niciun titlu de știre european în 2026. Nu a invadat pe nimeni, nu a finanțat partide extremiste în mod vizibil. Dar investește discret în porturile europene, în semiconductori, în energia verde, în startup-uri tehnologice și în lobby-ul european. Orice criză care distrage atenția Europei și a SUA de la competiția strategică cu Beijing este un câștig pentru China.</p>
+
+  <h3>Puterea reală a Chinei — date concrete</h3>
+
+  <p>China produce 97% din pământurile rare necesare pentru electronică, vehicule electrice și armament modern. Controlează 64% din producția globală de panouri solare și 80% din producția de baterii. Taiwan produce 92% din semiconductorii avansați ai lumii — iar China îl consideră teritoriu propriu. Flota navală chineză a depășit numeric flota americană și continuă să crească.</p>
+
+  <p>China produce 97% din pământurile rare necesare pentru electronică. Fără acces la aceste resurse, industria de apărare occidentală nu poate funcționa la capacitate maximă. Aceasta este arma economică tăcută a Beijingului — niciodată declarată, niciodată folosită direct, dar prezentă permanent ca opțiune.</p>
+
+  <h3>Dublul joc — nici aliat, nici adversar declarat</h3>
+
+  <p>China nu a condamnat invazia rusă a Ucrainei, dar nici nu a recunoscut-o ca legitimă. Exportă componente militare Rusiei, dar menține relații comerciale masive cu Occidentul. Sprijină Rusia suficient pentru a-i perpetua capacitatea de război, dar nu suficient pentru a provoca sancțiuni serioase față de sine.</p>
+
+  <p>Este un calcul rece și sofisticat: fiecare lună în care Rusia slăbește Occidentul este o lună câștigată pentru pregătirea scenariului Taiwan. Iar atenția, resursele militare și capitalul politic al Occidentului, împărțite simultan între Ucraina și conflictul iranian, nu mai sunt disponibile pentru competiția strategică din Asia-Pacific.</p>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURĂ ASCUNSĂ — TAIWAN ȘI SEMICONDUCTORII</div>
+    <p>Taiwan produce 92% din semiconductorii avansați ai lumii. Fără chip-uri taiwaneze, economia globală s-ar prăbuși în câteva săptămâni — nu metaforic, ci literal: nu mai există automobile, avioane, spitale sau armament modern. Acesta este motivul real pentru care SUA, Japonia, Coreea de Sud și Australia investesc masiv în apărarea Taiwanului — nu din altruism față de cei 23 de milioane de taiwanezi, ci din recunoașterea că pierderea Taiwanului ar remodela complet ordinea mondială. Și tot de aceea criza din Ucraina și conflictul iranian sunt, indirect, probleme pentru securitatea Taiwanului: atenția și resursele occidentale sunt finite.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>China nu este inamicul declarat al Occidentului. Este competitorul strategic al secolului XXI — mai periculos decât Rusia pe termen lung, mai disciplinat, mai răbdător. Tratarea Chinei exclusiv ca partener comercial, ignorând competiția strategică, este greșeala pe care Europa a făcut-o cu Rusia și gazul. Prețul plătit pentru acea greșeală a fost sângele ucrainean.</p>
+  </div>
+</section>
+
+<!-- CAP VII -->
+<section class="chapter" id="cap7">
+  <div class="chapter-label">CAPITOLUL VII</div>
+  <h2>Instituțiile internaționale — paralizate în fața lumii din 2026</h2>
+
+  <p>Arhitectura juridică și diplomatică construită după Al Doilea Război Mondial pentru a preveni conflictele funcționează din ce în ce mai puțin. Și toată lumea știe asta — inclusiv cei care o încalcă.</p>
+
+  <p>Organizația Națiunilor Unite a fost fondată în 1945 cu un principiu simplu: nicio țară nu are dreptul să invadeze altă țară. Problema structurală: Consiliul de Securitate are cinci membri permanenți cu drept de veto — SUA, Regatul Unit, Franța, Rusia și China. Orice rezoluție care ar condamna Rusia pentru invazia Ucrainei este vetată de Rusia. Orice rezoluție care ar sancționa Israelul pentru acțiunile din Gaza este vetată de SUA. Sistemul a fost proiectat pentru o lume în care marile puteri nu se atacă reciproc. Nu a fost proiectat pentru lumea din 2026.</p>
+
+  <div class="callout">
+    <div class="callout-label">PARADOXUL STRUCTURAL AL ONU</div>
+    <p>Tocmai cei mai probabili agresori — marile puteri — au dreptul de a bloca orice acțiune a ONU împotriva lor. Curtea Internațională de Justiție poate emite hotărâri — dar nu are mecanism de executare. Israelul ignoră hotărârile CIJ referitoare la Gaza. Rusia a ignorat hotărârea CIJ care îi cerea să oprească invazia în Ucraina. Iranul a blocat timp de luni inspecțiile AIEA. Ordinea internațională bazată pe reguli există în documente, nu în realitate.</p>
+  </div>
+
+  <p>Aceasta nu înseamnă că instituțiile internaționale sunt inutile. Ele mențin canale de comunicare, furnizează ajutor umanitar, coordonează sănătatea globală, gestionează disputele comerciale. Dar în domeniul securității — prevenirea și oprirea conflictelor majore — sunt fundamental incapabile atâta timp cât marile puteri nu vor să coopereze.</p>
+
+  <h3>Ce funcționează în locul ONU</h3>
+
+  <p>În absența unui sistem global legitim și funcțional, au apărut structuri alternative: NATO ca alianță de apărare colectivă cu credibilitate reală; UE ca sistem de condiționare economică și politică; Curtea Penală Internațională, care a emis mandat de arestare pe numele lui Putin — cu limitarea că nu poate aplica forța proprie, dar creează restricții reale de circulație; sancțiunile economice coordonate, care, deși imperfecte, au diminuat semnificativ capacitatea Rusiei.</p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Absența unui sistem global legitim capabil să gestioneze rivalitățile dintre mari puteri este firul roșu care leagă toate conflictele active ale momentului. A ignora această absență și a pretinde că ONU va rezolva ceva este o iluzie confortabilă. Soluțiile reale sunt alianțele de state democratice, sancțiunile economice coordonate și descurajarea militară credibilă.</p>
+  </div>
+</section>
+
+<!-- CAP VIII -->
+<section class="chapter" id="cap8">
+  <div class="chapter-label">CAPITOLUL VIII</div>
+  <h2>Legăturile ascunse — firul roșu prin tot</h2>
+
+  <p>Există un mod de a privi toate subiectele de mai sus separat — ca dosare independente care se gestionează fiecare în departamentul lui. Acesta este modul în care funcționează birocrațiile de stat și, tocmai, slăbiciunea lor fundamentală față de un adversar care gândește sistemic.</p>
+
+  <h3>Legătura 1: Prețul petrolului și bugetul de război rusesc</h3>
+
+  <p>Criza declanșată în Golful Persic după loviturile israeliano-americane asupra Iranului a împins prețul global al petrolului în sus. Rusia — aflată în conflict prelungit cu Ucraina — a beneficiat direct de această creștere de preț, exact în perioada în care sancțiunile occidentale îi erodau constant celelalte surse de venit. Un conflict gândit să slăbească un regim ostil a oferit, fără ca nimeni să fi intenționat, oxigen financiar unui alt regim ostil. Teatrele de conflict sunt vase comunicante economic.</p>
+
+  <h3>Legătura 2: Instabilitatea politică și vulnerabilitatea hibridă</h3>
+
+  <p>Operațiunile electorale rusești din România în 2024 nu au urmărit neapărat să pună la putere un candidat specific — au urmărit să creeze instabilitate, polarizare și neîncredere în instituții. Aceste condiții sunt exact cele în care golul de autoritate apare și în care operațiunile hibride mai ample devin eficiente. Un stat instabil politic nu poate gestiona nici o criză energetică, nici un atac cibernetic pe infrastructură, nici o lovitură de dronă la Galați.</p>
+
+  <h3>Legătura 3: AfD și slăbirea NATO din interior</h3>
+
+  <p>AfD cere retragerea trupelor SUA și a armelor nucleare din Germania, redeschiderea Nord Stream și renegocierea sancțiunilor față de Rusia. Cu 43.8% în Saxonia-Anhalt și 28% național, AfD nu mai poate fi ignorată ca margine politică. Dacă AfD ar ajunge la putere federal — scenariu care nu e improbabil pe termen mediu — NATO ar pierde coerența strategică pe care toată apărarea europeană o presupune. Aceasta nu este o problemă germană internă. Este o problemă de securitate europeană.</p>
+
+  <h3>Legătura 4: China, disiparea atenției și fereastra taiwaneză</h3>
+
+  <p>Fiecare resursă militară și politică a Occidentului angajată în Ucraina sau în Orientul Mijlociu este o resursă care nu mai este disponibilă pentru descurajarea Chinei în Asia-Pacific. China nu trebuie să acționeze pentru a câștiga timp — trebuie doar să aștepte ca adversarul să se epuizeze în alte teatre. Aceasta este strategia pe termen lung pe care Beijing o execută cu disciplină remarcabilă.</p>
+
+  <h3>Legătura 5: Drona de la Galați și România în interiorul circuitului</h3>
+
+  <p>Pe 29 mai 2026, o dronă rusă de tip Geran-2 a lovit un bloc de apartamente în Galați — un oraș port de la Dunăre, la granița cu Ucraina. Piloții F-16 români au urmărit drona pe radar, dar nu au putut-o doborî fără a pune în pericol civilii. Evenimentul a fost tratat ca fapt divers în presa internațională. Nu era. Era dovada că România nu mai este spectator al conflictului din vecinătate — este actor involuntar în interiorul lui. Flota fantomă rusă din Marea Neagră, operațiunile hibride electorale, drona de la Galați, criza energetică moldoveană — sunt fețele aceluiași fenomen. România este în interiorul circuitului, nu în afara lui.</p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Tabloul mare nu este desenat de state și guverne separate — este desenat de rețele, de prețuri ale energiei, de algoritmi electorali, de drone și de răbdarea strategică a unor actori care gândesc în decenii. Cel mai probabil beneficiar cumulat al acestei fragmentări generale nu este actorul care apare cel mai des în titlurile serii — ci exact acela dispus să aștepte cel mai mult epuizarea celorlalți.</p>
+  </div>
+</section>
+
+<!-- CAP IX -->
+<section class="chapter" id="cap9">
+  <div class="chapter-label">CAPITOLUL IX</div>
+  <h2>Realism moral — binele și răul concret în 2026</h2>
+
+  <p>Cel mai important principiu pentru înțelegerea lumii din 2026 nu este strategic sau economic — este moral. Complexitatea nu anulează morala. A spune că „totul e complex" și a te opri acolo este relativism care, în practică, avantajează agresorul. <strong>Binele și răul se văd nu din declarații și nu din propagandă — ci din fapte concrete, verificabile, cu actori identificabili.</strong></p>
+
+  <div class="two-col">
+    <div class="col-item">
+      <div class="col-title">ACȚIUNI CARE CONSTRUIESC BINE</div>
+      <p>Ucraina apără teritoriul național — exercițiu legitim al dreptului la auto-apărare.</p>
+      <p>Omenii de știință produc cunoaștere care reduce suferința.</p>
+      <p>Jurnaliștii independenți explică realitatea fără agendă.</p>
+      <p>Statele care respectă tratatele internaționale chiar când e inconfortabil.</p>
+      <p>Cetățenii care votează informat și cer socoteală aleșilor.</p>
+      <p>Magyar câștigând în Ungaria — democrația poate fi recuperată.</p>
+    </div>
+    <div class="col-item">
+      <div class="col-title">ACȚIUNI CARE PRODUC RĂU CONCRET</div>
+      <p>Rusia traversează cu tancuri o frontieră internațional recunoscută.</p>
+      <p>Iranul spânzură tineri de 19 ani pentru că au protestat.</p>
+      <p>Hamas masacrează civili pe 7 octombrie 2023.</p>
+      <p>Israel ucide civili în Gaza la o scară care depășește orice justificare militară.</p>
+      <p>Orice stat care blochează internetul pentru a ascunde masacre.</p>
+      <p>AfD propunând redeschiderea Nord Stream în timp ce Ucraina sângerează.</p>
+    </div>
+  </div>
+
+  <p>Observați că lista de rău include actori din ambele tabere. Aceasta este esența realismului moral — nu apartenența la o tabără determină binele sau răul, ci faptele concrete. Occidentul nu are dreptate în orice. Rusia nu greșește în orice. Dar asimetria este clară și nu trebuie cosmetizată: <strong>invazia Ucrainei este ilegală, criminală și nu are nicio justificare validă în dreptul internațional. Aceasta este concluzia instanțelor internaționale, nu o opinie politică.</strong></p>
+
+  <h3>Despre Gaza — adevărul complet, nu convenabil</h3>
+
+  <p>7 octombrie 2023: Hamas și alte grupuri armate palestiniene au ucis aproximativ 1.200 de persoane în Israel, din care cel puțin 809 civili, inclusiv femei, copii și vârstnici. Aproximativ 252 de oameni au fost răpiți. Crimele comise constituie crime de război. A fost cea mai sângeroasă zi pentru evrei de la Holocaust.</p>
+
+  <p>Răspunsul militar israelian în Gaza a produs, conform datelor disponibile, peste 72.000 de morți palestinieni, din care aproximativ 80% civili. Două treimi din clădirile Gazei au fost avariate sau distruse. Un studiu publicat în The Lancet estimează cifre și mai mari.</p>
+
+  <p>Ambele tragedii sunt reale. Ambele trebuie numite pe nume. A minimaliza suferința israelienilor din 7 octombrie în numele cauzei palestiniene este o nedreptate. A minimaliza suferința palestinienilor în numele dreptului la auto-apărare al Israelului este o altă nedreptate. Două nedreptăți nu produc o dreptate. <strong>Omul ucis în Gaza nu este mai puțin om decât omul ucis în Israel.</strong></p>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Realismul moral înseamnă exact asta: recunoașterea că în spatele fiecărui sistem și al fiecărui conflict există oameni care fac alegeri — și că acele alegeri pot fi judecate moral, în baza faptelor. Nimeni nu are dreptul la impunitate în spatele complexității. Nici Rusia, nici Iranul, nici Hamas, nici Israelul, nici AfD, nici corupția internă a propriilor noastre democrații.</p>
+  </div>
+</section>
+
+<div class="divider">✦ ✦ ✦</div>
+
+</main>
+
+<!-- CONCLUSION -->
+<section class="conclusion" id="concluzie">
+  <div class="conclusion-inner">
+    <div class="chapter-label">CONCLUZIE</div>
+    <h2>Răul la vedere — și responsabilitatea de a-l vedea</h2>
+
+    <p>Lumea în care trăim în 2026 nu este în colaps — dar nu este nici în siguranță. Este un spațiu în care democrația câștigă și pierde simultan: Magyar câștigă în Ungaria — AfD câștigă Saxonia-Anhalt. Polonia se consolidează democratic — Slovacia rămâne pro-rusă. Moldova alege Europa — Austria alege FPÖ. Ucraina rezistă — Rusia continuă.</p>
+
+    <p>Pericolele pe care le-am analizat în acest document nu sunt ascunse cu abilitate. Sunt vizibile — în rapoartele publice ale serviciilor de informații, în analizele institutelor de cercetare, în datele electorale, în cifrele economice, în mișcările navale din Marea Neagră. <strong>Ceea ce lipsește nu este informația. Este dorința colectivă de a o citi, de a o conecta și de a acționa în consecință.</strong></p>
+
+    <p>CRINK nu trebuie să câștige militar pentru ca strategia sa să aibă succes. Trebuie doar să prelungească suficient, să obosească suficient, să dezinformeze suficient, să fragmenteze suficient — până când democrațiile occidentale aleg din epuizare compromisuri care îi convin. AfD nu trebuie să câștige alegerile federale pentru a schimba Germania — poate bloca politici, poate eroda coeziunea, poate semnaliza Moscovei că există o cale electorală de a slăbi NATO din interior.</p>
+
+    <p>Dar există și semnale care merită numite: democrațiile rezistă mai bine decât a prezis Moscova. Ucraina a demonstrat că un popor mic poate ține la distanță cel mai mare imperiu militar al continentului. Moldova a rupt dependența energetică în fața unor costuri reale și imediate. Magyar a câștigat în Ungaria, demonstrând că iliberalismul nu este ireversibil.</p>
+
+    <p><strong>Speranța nu este naivitate. Speranța este alegerea de a vedea realitatea complet — cu răul ei, cu binele ei și cu responsabilitatea proprie în ambele.</strong></p>
+
+    <div class="sources">
+      <div class="sources-label">SURSE ȘI DATE</div>
+      <p>World Economic Forum — Global Risk Report (ian. 2026) · Statul Major al Forțelor Armate ale Ucrainei (sept. 2026) · Foundation for Defense of Democracies — Axis of Aggressors Report (iul. 2026) · bne IntelliNews — CRINK Analysis (apr. 2026) · German Federal Electoral Authority — Bundestag results (feb. 2025) · INSA/Bild am Sonntag — AfD polling data (apr. 2026) · Ground.news — Saxony-Anhalt election results (sept. 2026) · BfV (German domestic intelligence) — AfD classification reports · CSIS — Ukraine War Cost Assessment (2026) · Human Rights Watch — Gaza civilian casualties reports · The Lancet — Gaza death toll estimates · Lowy Institute — CRINK analysis (2026)</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://norgedan.github.io/">norgedan.github.io</a> &nbsp;·&nbsp;
+    Corpus III · Documentul 2 · Română &nbsp;·&nbsp;
+    <a href="../no/2-verden-i-2026-no.html">Versiunea norvegiană →</a>
+  </p>
+  <p style="margin-top:0.6rem;">
+    Toate afirmațiile factuale sunt verificabile din surse publice. &nbsp;·&nbsp;
+    Document cu caracter educativ. Fără propagandă de nicio natură. &nbsp;·&nbsp;
+    Septembrie 2026
+  </p>
+  <p style="margin-top:0.6rem;">
+    <a href="1-romania-si-rusia-ro.html">← Documentul 1 — România și Rusia</a>
+    &nbsp;·&nbsp;
+    <a href="3-europa-la-rascruce-ro.html">Documentul 3 — Europa la Răscruce →</a>
+  </p>
+</footer>
+
+</body>
+</html>

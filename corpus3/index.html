@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpus III — Geopolitică și Civic · norgedan</title>
+<meta name="description" content="Corpus III: geopolitică, democrație, dezinformare și portrete de femei remarcabile. Adevărul complet, nu cel convenabil. Disponibil în română și norvegiană.">
+<meta name="author" content="norgedan">
+<link rel="canonical" href="https://norgedan.github.io/corpus3/">
+<style>
+:root{--bg:#0e0f13;--bg2:#14161c;--bg3:#1a1d26;--line:#2a2e3d;--text:#d4d8e8;--text-dim:#7a8099;--accent:#c8a96e;--accent2:#7e9cc4;--white:#eef0f8;--serif:'Georgia','Times New Roman',serif;--sans:'Helvetica Neue','Arial',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:18px;line-height:1.85;}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(14,15,19,0.97);border-bottom:1px solid var(--line);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(8px);}
+nav .brand{font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;color:var(--text-dim);text-decoration:none;}nav .brand span{color:var(--accent);}
+nav .home{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}nav .home a{color:var(--accent2);text-decoration:none;}
+.hero{min-height:85vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2rem 4rem;max-width:860px;margin:0 auto;}
+.hero-label{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:1.8rem;}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;line-height:1.15;color:var(--white);margin-bottom:1.4rem;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero .subtitle{font-family:var(--sans);font-size:1rem;color:var(--text-dim);max-width:580px;line-height:1.6;margin-bottom:2.8rem;}
+.standard{display:inline-block;font-family:var(--sans);font-size:0.78rem;letter-spacing:0.08em;color:var(--accent);border:1px solid var(--accent);padding:0.5rem 1rem;border-radius:2px;margin-bottom:3rem;}
+.section{max-width:860px;margin:0 auto;padding:4rem 2rem;}
+.section-title{font-family:var(--sans);font-size:0.7rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:2rem;border-bottom:1px solid var(--line);padding-bottom:1rem;}
+.doc-grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:4rem;}
+.doc-item{background:var(--bg2);padding:1.8rem 2rem;display:grid;grid-template-columns:2.4rem 1fr auto;gap:0 1.4rem;align-items:start;transition:background 0.15s;}
+.doc-item:hover{background:var(--bg3);}
+.doc-n{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--accent);line-height:1;padding-top:0.2rem;}
+.doc-body{}
+.doc-title{font-family:var(--serif);font-size:1.05rem;color:var(--white);margin-bottom:0.3rem;line-height:1.3;}
+.doc-desc{font-family:var(--sans);font-size:0.8rem;color:var(--text-dim);line-height:1.55;}
+.doc-langs{display:flex;gap:0.5rem;padding-top:0.3rem;align-items:center;}
+.lang-btn{font-family:var(--sans);font-size:0.72rem;color:var(--accent2);text-decoration:none;border:1px solid var(--line);padding:0.2rem 0.6rem;border-radius:2px;transition:border-color 0.15s,color 0.15s;white-space:nowrap;}
+.lang-btn:hover{border-color:var(--accent2);color:var(--white);}
+.doc-tag{font-family:var(--sans);font-size:0.62rem;letter-spacing:0.1em;padding:0.15rem 0.5rem;border-radius:2px;margin-left:0.3rem;}
+.tag-indep{background:rgba(126,156,196,0.12);color:var(--accent2);border:1px solid var(--accent2);}
+.about{background:var(--bg2);border-top:1px solid var(--line);padding:4rem 2rem;}
+.about-inner{max-width:860px;margin:0 auto;}
+.about h2{font-family:var(--serif);font-size:clamp(1.3rem,2.5vw,1.7rem);font-weight:400;color:var(--white);margin-bottom:1.6rem;}
+.about p{color:var(--text);margin-bottom:1.2rem;font-size:0.97rem;}
+.about p:last-child{margin:0;}
+.corpus-nav{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--line);}
+.corpus-link{font-family:var(--sans);font-size:0.78rem;color:var(--accent2);text-decoration:none;border:1px solid var(--line);padding:0.4rem 0.9rem;border-radius:2px;transition:border-color 0.15s;}
+.corpus-link:hover{border-color:var(--accent2);}
+footer{background:var(--bg);border-top:1px solid var(--line);padding:2rem 2rem;font-family:var(--sans);font-size:0.72rem;color:var(--text-dim);text-align:center;line-height:1.8;}
+footer a{color:var(--accent2);text-decoration:none;}
+@media(max-width:600px){body{font-size:16px;}nav{padding:0.8rem 1.2rem;}.hero{padding:6rem 1.2rem 3rem;}.section{padding:3rem 1.2rem;}.about{padding:3rem 1.2rem;}.doc-item{grid-template-columns:2rem 1fr;}.doc-langs{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://norgedan.github.io/" class="brand">norgedan · <span>norgedan.github.io</span></a>
+  <span class="home"><a href="https://norgedan.github.io/">← Pagina principală</a></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Corpus III · Geopolitică și Civic · Septembrie 2026</div>
+  <h1>Lumea reală,<br><em>fără perdea</em></h1>
+  <p class="subtitle">Șase documente despre geopolitica anului 2026, despre România ca primă linie NATO, despre dezinformare ca armă de stat și despre opt femei care au schimbat lumea. Disponibil în română și norvegiană.</p>
+  <div class="standard">„Adevărul complet, nu cel convenabil"</div>
+</section>
+
+<section class="section">
+  <div class="section-title">DOCUMENTELE CORPUSULUI III</div>
+
+  <div class="doc-grid">
+
+    <div class="doc-item">
+      <div class="doc-n">1</div>
+      <div class="doc-body">
+        <div class="doc-title">România și Rusia — Trei Secole de Adevăr</div>
+        <div class="doc-desc">Logica imperială, inventarul nedreptăților, masacrul de la Fântâna Albă, sistemul Meliorator, relația România–Ucraina cu adevărul complet, Moldova, mentalitatea postcomunistă și calea realistă înainte.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/1-romania-si-rusia-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/1-romania-og-russland-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-n">2</div>
+      <div class="doc-body">
+        <div class="doc-title">Lumea în 2026 — Adevărul Structural</div>
+        <div class="doc-desc">CRINK și axa tăcută, AfD și extremismul în democrații (43.8% în Saxonia-Anhalt — cel mai grav semnal de alarmă din Europa), revoluția dronelor, Rusia ursul rănit, China actorul invizibil, instituțiile paralizate, realism moral aplicat concret.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/2-lumea-in-2026-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/2-verden-i-2026-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-n">3</div>
+      <div class="doc-body">
+        <div class="doc-title">Europa la Răscruce — Tabloul Complet</div>
+        <div class="doc-desc">Europa țară cu țară — Germania, Franța, Austria (Kickl nu a ajuns cancelar — corecție față de surse), Ungaria (Magyar 141/199 locuri), Polonia, Slovacia (cel mai valoros aliat Moscovei), Bulgaria, Moldova, România. Cine profită. Legăturile ascunse. Soluțiile.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/3-europa-la-rascruce-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/3-europa-ved-veiskillet-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-n">4</div>
+      <div class="doc-body">
+        <div class="doc-title">România — Prima Linie</div>
+        <div class="doc-desc">Criza politică (130+ zile fără guvern — cronologie exactă), drona de la Galați (29 mai 2026), flancul estic NATO, energia și Neptun Deep, economia și deficitul, AUR cu diagnosticul complet, diaspora de 6 milioane, mentalitate și generații, calea realistă.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/4-romania-prima-linie-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/4-romania-forste-linje-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-n">5</div>
+      <div class="doc-body">
+        <div class="doc-title">Dezinformarea — Armă, Psihologie, Apărare</div>
+        <div class="doc-desc">Mecanismele psihologice (backfire effect, camere de ecou, iluzia adevărului), sistemul Meliorator, cazul românesc 2024–2025 (85.000 atacuri cibernetice SVR, 32.500 videoclipuri TikTok), AI și deepfake-urile, prebunking vs cenzură, modelele Finlanda și Estonia, ghid practic pentru cetățean.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/5-dezinformarea-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/5-desinformasjon-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-n">✦</div>
+      <div class="doc-body">
+        <div class="doc-title">Frumusețea și Inteligența — Opt Portrete <span class="doc-tag tag-indep">Document Independent</span></div>
+        <div class="doc-desc">Hedy Lamarr (inventatoarea WiFi), Ada Lovelace (prima programatoare), Marie Curie (2 Premii Nobel), Rosalind Franklin (Foto 51 și ADN), Katherine Johnson (traiectoria Lunii), Malala Yousafzai (cel mai tânăr Nobel), Nadia Comăneci (nota 10.00), Sofia Ionescu (prima femeie neurochirurg din lume). Portrete de onestitate și admirație.</div>
+        <div class="doc-langs">
+          <a class="lang-btn" href="ro/6-frumusetea-si-inteligenta-ro.html">🇷🇴 Română</a>
+          <a class="lang-btn" href="no/6-skjonnhet-og-intelligens-no.html">🇳🇴 Norsk</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="about">
+  <div class="about-inner">
+    <h2>Despre Corpus III</h2>
+    <p>Corpusul III este o colecție de documente geopolitice și civice scrise cu un singur standard: <strong>adevărul complet, nu cel convenabil</strong>. Fără propagandă din nicio direcție, fără cosmetizarea problemelor interne, fără minimalizarea pericolelor externe.</p>
+    <p>Toate afirmațiile factuale sunt verificabile din surse publice — servicii de informații, instituții internaționale, jurnalism de investigație independent. Datele au fost actualizate la septembrie 2026.</p>
+    <p>Documentele sunt disponibile în două limbi — română și norvegiană — nu ca traduceri, ci ca adaptări culturale: versiunea norvegiană integrează perspectiva nordică, PST, rolul Norvegiei ca exportator de gaze și flanc NATO nordic, fără a pierde conținutul central.</p>
+    <div class="corpus-nav">
+      <a class="corpus-link" href="https://norgedan.github.io/">← Corpus I</a>
+      <a class="corpus-link" href="https://norgedan.github.io/">← Corpus II</a>
+      <a class="corpus-link" href="https://norgedan.github.io/">norgedan.github.io</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><a href="https://norgedan.github.io/">norgedan.github.io</a> &nbsp;·&nbsp; Corpus III · Geopolitică și Civic &nbsp;·&nbsp; Septembrie 2026</p>
+  <p style="margin-top:0.5rem;">Documente educative. Fără propagandă de nicio natură. Toate datele verificabile din surse publice.</p>
+</footer>
+</body>
+</html>

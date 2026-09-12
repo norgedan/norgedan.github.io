@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>România — Prima Linie · Corpus III</title>
+<meta name="description" content="România în 2026: prima linie NATO, criza politică, drona de la Galați, AUR, diaspora, potențialul nevalorificat și calea realistă înainte. Adevărul complet.">
+<meta name="author" content="norgedan">
+<link rel="canonical" href="https://norgedan.github.io/corpus3/ro/4-romania-prima-linie-ro.html">
+<style>
+:root{--bg:#0e0f13;--bg2:#14161c;--bg3:#1a1d26;--line:#2a2e3d;--text:#d4d8e8;--text-dim:#7a8099;--accent:#c8a96e;--accent2:#7e9cc4;--accent-red:#c47070;--accent-green:#70a870;--white:#eef0f8;--serif:'Georgia','Times New Roman',serif;--sans:'Helvetica Neue','Arial',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:18px;line-height:1.85;}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(14,15,19,0.97);border-bottom:1px solid var(--line);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(8px);}
+nav .brand{font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;color:var(--text-dim);text-decoration:none;}nav .brand span{color:var(--accent);}
+nav .lang{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}nav .lang a{color:var(--accent2);text-decoration:none;padding-left:1rem;}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2rem 4rem;max-width:820px;margin:0 auto;position:relative;}
+.hero-label{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:1.8rem;}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;line-height:1.15;color:var(--white);margin-bottom:1.4rem;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero .subtitle{font-family:var(--sans);font-size:1rem;color:var(--text-dim);max-width:560px;line-height:1.6;margin-bottom:2.8rem;}
+.hero-meta{display:flex;gap:2rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.6rem;}
+.hero-meta-item{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}
+.hero-meta-item strong{color:var(--text);font-weight:600;}
+.scroll-hint{position:absolute;bottom:2.5rem;right:2rem;font-family:var(--sans);font-size:0.7rem;color:var(--text-dim);letter-spacing:0.1em;writing-mode:vertical-rl;animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.toc-wrap{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2.4rem 2rem;}
+.toc-inner{max-width:820px;margin:0 auto;}
+.toc-title{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);margin-bottom:1.4rem;}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.4rem 2rem;list-style:none;}
+.toc li a{font-family:var(--sans);font-size:0.82rem;color:var(--text-dim);text-decoration:none;display:flex;gap:0.7rem;align-items:baseline;padding:0.3rem 0;}
+.toc li a:hover{color:var(--accent2);}
+.toc li a .n{color:var(--line);font-size:0.68rem;min-width:1.4rem;}
+.content{max-width:820px;margin:0 auto;padding:0 2rem;}
+.chapter{padding:5rem 0 1rem;border-top:1px solid var(--line);margin-top:4rem;}
+.chapter:first-child{border-top:none;}
+.chapter-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:1.4rem;}
+.chapter h2{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--white);line-height:1.25;margin-bottom:2rem;}
+.chapter h3{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--accent2);margin:2.4rem 0 1rem;font-style:italic;}
+p{margin-bottom:1.4rem;color:var(--text);}p:last-child{margin-bottom:0;}
+.verdict{background:var(--bg3);border-left:3px solid var(--accent);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.8rem;}
+.verdict p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.verdict-red{background:var(--bg3);border-left:3px solid var(--accent-red);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-red .verdict-label{color:var(--accent-red);}
+.verdict-red p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.verdict-green{background:var(--bg3);border-left:3px solid var(--accent-green);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+.verdict-green .verdict-label{color:var(--accent-green);}
+.verdict-green p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+.callout{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.18em;color:var(--accent2);margin-bottom:0.8rem;}
+.callout p{color:var(--text);margin:0;font-size:0.95rem;}
+.callout-red{background:var(--bg2);border:1px solid var(--accent-red);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-red .callout-label{color:var(--accent-red);}
+.callout-red p{color:var(--text);margin:0;font-size:0.95rem;}
+.callout-green{background:var(--bg2);border:1px solid var(--accent-green);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+.callout-green .callout-label{color:var(--accent-green);}
+.callout-green p{color:var(--text);margin:0;font-size:0.95rem;}
+.timeline{margin:2.4rem 0;}
+.tl-item{display:grid;grid-template-columns:5rem 1fr;gap:0 1.4rem;margin-bottom:1.6rem;position:relative;}
+.tl-item::before{content:'';position:absolute;left:5rem;top:1.4rem;bottom:-1.6rem;width:1px;background:var(--line);}
+.tl-item:last-child::before{display:none;}
+.tl-date{font-family:var(--sans);font-size:0.72rem;font-weight:700;color:var(--accent);padding-top:0.15rem;text-align:right;line-height:1.4;}
+.tl-body{padding-left:1.2rem;border-left:1px solid var(--line);}
+.tl-title{font-family:var(--sans);font-size:0.88rem;color:var(--white);font-weight:600;margin-bottom:0.3rem;}
+.tl-text{font-size:0.9rem;color:var(--text-dim);line-height:1.6;margin:0;}
+.fact-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:2.4rem 0;}
+.fact-item{background:var(--bg2);padding:1.2rem 1.1rem;}
+.fact-item .fact-n{font-family:var(--sans);font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.3rem;}
+.fact-item .fact-n.red{color:var(--accent-red);}
+.fact-item .fact-n.green{color:var(--accent-green);}
+.fact-item .fact-label{font-family:var(--sans);font-size:0.68rem;color:var(--text-dim);line-height:1.4;}
+.hidden-link{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:1px solid var(--accent);border-radius:4px;padding:1.4rem 1.6rem;margin:2.4rem 0;}
+.hidden-link-label{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.6rem;}
+.hidden-link p{font-size:0.95rem;margin:0;color:var(--text);}
+.divider{text-align:center;color:var(--line);margin:3rem 0;font-size:0.9rem;letter-spacing:0.4em;}
+.conclusion{background:var(--bg2);border-top:1px solid var(--accent);margin-top:5rem;padding:4rem 2rem;}
+.conclusion-inner{max-width:820px;margin:0 auto;}
+.conclusion h2{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2rem);color:var(--white);font-weight:400;margin-bottom:2rem;}
+footer{background:var(--bg);border-top:1px solid var(--line);padding:2.4rem 2rem;font-family:var(--sans);font-size:0.72rem;color:var(--text-dim);text-align:center;line-height:1.9;}
+footer a{color:var(--accent2);text-decoration:none;}
+.sources{margin-top:1.6rem;padding-top:1.6rem;border-top:1px solid var(--line);}
+.sources-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:0.6rem;}
+.sources p{font-family:var(--sans);font-size:0.78rem;color:var(--text-dim);margin:0;line-height:1.7;}
+@media(max-width:600px){body{font-size:16px;}nav{padding:0.8rem 1.2rem;}.hero{padding:6rem 1.2rem 3rem;}.content{padding:0 1.2rem;}.toc-wrap{padding:2rem 1.2rem;}.conclusion{padding:3rem 1.2rem;}.tl-item{grid-template-columns:3.8rem 1fr;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://norgedan.github.io/" class="brand">norgedan · <span>Corpus III</span></a>
+  <span class="lang">RO &nbsp;·&nbsp; <a href="../no/4-romania-forste-linje-no.html">NO →</a></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Corpus III · Documentul 4 · Română</div>
+  <h1>România<br><em>Prima Linie</em></h1>
+  <p class="subtitle">Criza politică fără capăt, drona de la Galați, cea mai lungă perioadă fără guvern din istoria post-comunistă, AUR la 38–41%, potențialul energetic nevalorificat, diaspora de șase milioane și calea realistă înainte. Adevărul complet, nu cel convenabil.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Focalizare</strong><br>România 2026 — în profunzime</div>
+    <div class="hero-meta-item"><strong>Capitole</strong><br>10 + Concluzie</div>
+    <div class="hero-meta-item"><strong>Caracter</strong><br>Analiză civică, secular</div>
+    <div class="hero-meta-item"><strong>Actualizat</strong><br>Septembrie 2026</div>
+  </div>
+  <div class="scroll-hint">DERULAȚI</div>
+</section>
+
+<div class="toc-wrap">
+  <div class="toc-inner">
+    <div class="toc-title">CUPRINS</div>
+    <ul class="toc">
+      <li><a href="#cap1"><span class="n">I</span> Tabloul sincer — paradoxul românesc</a></li>
+      <li><a href="#cap2"><span class="n">II</span> Criza politică — anatomia unui blocaj</a></li>
+      <li><a href="#cap3"><span class="n">III</span> Drona de la Galați — nu mai suntem spectatori</a></li>
+      <li><a href="#cap4"><span class="n">IV</span> Flancul estic NATO — puterea reală</a></li>
+      <li><a href="#cap5"><span class="n">V</span> Energia — potențial și ratare</a></li>
+      <li><a href="#cap6"><span class="n">VI</span> Economia — prețul indeciziei</a></li>
+      <li><a href="#cap7"><span class="n">VII</span> AUR — diagnosticul corect</a></li>
+      <li><a href="#cap8"><span class="n">VIII</span> Diaspora — puterea invizibilă</a></li>
+      <li><a href="#cap9"><span class="n">IX</span> Mentalitate și generații</a></li>
+      <li><a href="#cap10"><span class="n">X</span> Calea realistă înainte</a></li>
+      <li><a href="#concluzie"><span class="n">✦</span> Concluzie</a></li>
+    </ul>
+  </div>
+</div>
+
+<main class="content">
+
+<section class="chapter" id="cap1">
+  <div class="chapter-label">CAPITOLUL I</div>
+  <h2>Tabloul sincer — paradoxul românesc</h2>
+
+  <p>România este, în septembrie 2026, un stat care încearcă simultan să fie mai puternic militar, mai stabil politic și mai eficient economic — și care nu reușește pe deplin la niciunul dintre cele trei. Nu din lipsă de potențial. Din lipsă de coerență instituțională și de voință politică susținută.</p>
+
+  <p>Paradoxul românesc este rar și îngrijorător: <strong>România are toate condițiile materiale pentru a fi o țară serioasă și nu are coerența instituțională pentru a le valorifica.</strong> Are o poziție geostrategică excepțională pe flancul estic NATO. Are resurse energetice reale în Marea Neagră. Are ingineri, IT-iști, medici, cercetători capabili. Are fonduri europene disponibile. Are o diasporă de șase milioane care trimite acasă mai mult decât investitorii instituționali.</p>
+
+  <p>Și are, simultan, cea mai lungă criză guvernamentală din istoria sa post-comunistă, drona unui sistem de armament rus care a lovit un bloc de apartamente la Galați, cel mai ridicat procent din UE de copii expuși riscului de sărăcie și un partid naționalist suveranist care conduce sondajele cu 38–41%.</p>
+
+  <div class="fact-row">
+    <div class="fact-item"><div class="fact-n red">130+</div><div class="fact-label">Zile fără guvern deplin — cel mai lung vid guvernamental post-comunist</div></div>
+    <div class="fact-item"><div class="fact-n red">41.5%</div><div class="fact-label">Copii expuși riscului de sărăcie — cel mai ridicat procent din UE</div></div>
+    <div class="fact-item"><div class="fact-n green">11Mrd$</div><div class="fact-label">Buget apărare 2026 — creștere 19%, al doilea cel mai mare din UE (est)</div></div>
+    <div class="fact-item"><div class="fact-n red">~6%</div><div class="fact-label">Deficit bugetar din PIB — cel mai mare din UE</div></div>
+    <div class="fact-item"><div class="fact-n green">6M</div><div class="fact-label">Diasporă română — trimite ~10 miliarde dolari anual acasă</div></div>
+    <div class="fact-item"><div class="fact-n red">38-41%</div><div class="fact-label">AUR în sondaje — cel mai mare partid de opoziție, conexiuni pro-ruse documentate</div></div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">PREMISA DOCUMENTULUI</div>
+    <p>A scrie despre România fără a numi problemele pe nume nu este patriotism — este complicitate. A scrie despre România fără a numi potențialul real nu este realism — este nihilism. Adevărul complet conține ambele, în același document.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap2">
+  <div class="chapter-label">CAPITOLUL II</div>
+  <h2>Criza politică — anatomia unui blocaj fără precedent</h2>
+
+  <p>România se află în septembrie 2026 în cea mai lungă criză guvernamentală din istoria sa post-comunistă. Guvernul deplin lipsește din mai 2026, perioadă în care executivul interimar al lui Ilie Bolojan a funcționat cu atribuții limitate, incapabil să inițieze proiecte de lege, să emită ordonanțe de urgență sau să angajeze contracte majore de investiții.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-date">Dec. 2024</div>
+      <div class="tl-body">
+        <div class="tl-title">Alegerile anulate — statul de drept rezistă</div>
+        <p class="tl-text">CCR anulează alegerile prezidențiale după documentarea interferenței ruse (cazul Călin Georgescu). Coaliție PSD+PNL+USR+UDMR formează guvernul Ciolacu — 240-143 voturi. România demonstrează că poate rezista unei operațiuni hibride electorale.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Mai 2025</div>
+      <div class="tl-body">
+        <div class="tl-title">Nicușor Dan ales cu 53.6% — cel mai mare scor din 2014</div>
+        <p class="tl-text">Nicușor Dan câștigă alegerile prezidențiale. Guvernul Bolojan (PNL) investit cu 301-9 voturi — o majoritate confortabilă PSD+PNL+USR+UDMR. Rotația premierală PSD în 2027, prevăzută în acordul de coaliție.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">5 mai 2026</div>
+      <div class="tl-body">
+        <div class="tl-title">Moțiunea de cenzură — PSD + AUR — 281 de voturi</div>
+        <p class="tl-text">PSD, care tocmai ieșise din coaliție, votează moțiunea alături de AUR. 281 voturi pentru, 4 împotrivă. Guvernul Bolojan cade — mai puțin de un an de la investire. Costul economic estimat: 64 milioane euro pe zi de vid guvernamental.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Iun. 2026</div>
+      <div class="tl-body">
+        <div class="tl-title">Tomac retras, Vestea respins — 189 de voturi (sub minimul de 233)</div>
+        <p class="tl-text">Tomac retrage mandatul. Nicușor Dan îl numește pe Adrian Vestea (PNL) fără consultarea propriului partid — PNL refuză să îl susțină. Vestea obține 189 de voturi — sub minimul de 233. Criza se adâncește. Poate fi scenariul alegerilor anticipate.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Aug. 2026</div>
+      <div class="tl-body">
+        <div class="tl-title">Vara fără guvern — Fitch și Moody's nu retrogradează, dar avertizează</div>
+        <p class="tl-text">Fitch inversează o retrogradare planificată în iulie după legislarea a patru din șase reforme PNRR. Moody's similar. Ambele avertizează că riscurile de implementare rămân ridicate. Consultările reluate pe 1 septembrie 2026.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Sept. 2026</div>
+      <div class="tl-body">
+        <div class="tl-title">Situația la data scrierii — negocieri în curs, fără soluție</div>
+        <p class="tl-text">România nu are guvern deplin la data acestui document. PNL și USR refuză să mai guverneze cu PSD. PSD refuză Bolojan ca premier. Nicușor Dan exprimă optimism privind formarea unui guvern stabil. Blocajul structural rămâne.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">CINE POARTĂ RESPONSABILITATEA — FĂRĂ ECHIVOC</div>
+    <p>PSD a răsturnat un guvern prin alianță cu extrema dreaptă, nu dintr-o convingere programatică, ci dintr-un calcul electoral — pentru a evita austeritatea nepopulară și a renegocia accesul la putere. AUR a votat moțiunea fără nicio agendă constructivă. Nicușor Dan a nominalizat Vestea fără a-și consulta propria majoritate. PNL s-a scindat. USR a rămas fragilă. Nimeni nu iese nevinovat. <strong>Dar responsabilitatea principală pentru declanșare aparține PSD, care a ales să alianțeze cu AUR pentru a răsturna un guvern pro-european în plin conflict la graniță.</strong></p>
+  </div>
+
+  <p>Un guvern interimar nu poate angaja contractele pentru proiectele de infrastructură militară din acordul SAFE de 16.68 miliarde euro, nu poate coordona eficient cu aliații NATO răspunsul la incidentele hibride, nu poate semnaliza investitorilor că România este un partener predictibil — ceea ce se traduce direct în costul datoriei publice.</p>
+
+  <div class="verdict-red">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Cel mai lung vid guvernamental post-comunist al României coincide cu cel mai periculos context geopolitic de la Revoluție încoace. Această coincidență nu este un accident — este expresia unui deficit structural de cultură politică în care supraviețuirea de partid primează față de interesul național.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap3">
+  <div class="chapter-label">CAPITOLUL III</div>
+  <h2>Drona de la Galați — România nu mai este spectator</h2>
+
+  <p>Pe 29 mai 2026, o dronă rusă de tip Geran-2 a lovit un bloc de apartamente din Galați — un oraș port la Dunăre, la granița cu Ucraina. Piloții F-16 români au urmărit drona pe radar, dar procedurile de angajament nu au permis doborârea fără a pune în pericol civilii. Evenimentul a provocat pagube materiale și un rănit.</p>
+
+  <p>Evenimentul a fost tratat aproape ca un fapt divers în presa internațională. Nu era. <strong>Era dovada că România a încetat să fie spectator al conflictului din vecinătate și a devenit actor involuntar în interiorul lui.</strong></p>
+
+  <p>Nu este primul incident: înainte de Galați, fragmente de drone ruse au căzut pe teritoriu românesc de mai multe ori. România a expulzat un consul rus — un gest diplomatic rar și semnificativ. Dar publicul român nu a primit niciodată o explicație clară despre procedurile de angajament, despre câte alte drone au intrat în spațiul aerian românesc fără a fi doborâte, sau despre ce s-ar întâmpla dacă drona lovea o conductă sau un transformator de curent.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">România ÎN INTERIORUL CIRCUITULUI</div>
+    <p>Flota fantomă rusă operează în Marea Neagră la câțiva kilometri de granița maritimă. Exercițiile NATO Sea Shield 2026 monitorizează această flotă. Pe 21 iulie 2026, o explozie a avariat un tancher la 20 de mile nautice de Sfântu Gheorghe. Baza de la Deveselu este o țintă militară explicită în planificarea rusă. Baza de la Mihail Kogălniceanu devine cel mai mare hub NATO din Europa de Est. Drona de la Galați nu este un incident izolat — este dovada că România este în interiorul conflictului, chiar dacă acest lucru nu se recunoaște public cu claritate.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Transparența față de propriul public nu este o slăbiciune strategică — este o condiție a coeziunii sociale necesare pentru a face față presiunilor hibride. Democrațiile care câștigă în fața presiunii hibride sunt cele care comunică clar cu proprii cetățeni.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap4">
+  <div class="chapter-label">CAPITOLUL IV</div>
+  <h2>Flancul estic NATO — puterea reală a României</h2>
+
+  <p>Există un domeniu în care România acționează cu claritate și consecvență, dincolo de turbulențele politice interne: apărarea. Această consecvență nu este o coincidență — este produsul unei alegeri strategice fundamentale, ancorate în înțelegerea că România nu poate supraviețui singură față de un imperiu expansionist.</p>
+
+  <p><strong>Bugetul de apărare 2026:</strong> circa 11 miliarde de dolari — creștere de 19%, cu 38% alocat achizițiilor. Pragul de 2% din PIB a fost depășit. Angajamente spre 3% în linie cu Summit-ul NATO de la Ankara din iulie 2026.</p>
+
+  <p><strong>Sistemul Patriot:</strong> 3 sisteme în dotare cu 4 suplimentare așteptate. România a donat un sistem complet Patriot PAC-3 Ucrainei în octombrie 2024 — evaluat la circa un miliard de dolari. Una din cele mai importante donații militare ale oricărui stat NATO.</p>
+
+  <p><strong>F-16 și F-35:</strong> 33 de avioane F-16 în dotare, plan pentru 66. Baza 86 Aeriană de la Borcea — primul centru de antrenament pentru piloți ucraineni de F-16 din Europa. Angajamente pentru 32 de F-35.</p>
+
+  <p><strong>Baza Mihail Kogălniceanu:</strong> extindere de 2.5 miliarde euro pentru a găzdui până la 10.000 de trupe — cel mai mare hub NATO din Europa de Est în construcție. Aceasta nu este o statistică — este o transformare structurală a rolului României în apărarea colectivă.</p>
+
+  <p><strong>Deveselu — Aegis Ashore:</strong> operațional din 2016. Singurul scut antirachetă NATO din regiune. Moscova a protestat vehement la instalare. Vehemența protestului este cea mai bună confirmare a valorii sale strategice.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">SOLIDARITATE CONCRETĂ — NU RETORICĂ</div>
+    <p>România a primit milioane de refugiați ucraineni. A permis tranzitul armamentului NATO. A conectat rețeaua electrică a Ucrainei la cea europeană. A pus la dispoziție capacitate de stocare pentru cerealele ucrainene. A sprijinit energetic Moldova în criza provocată de tăierea gazului rusesc. Acordul SAFE — 16.68 miliarde de euro, a doua cea mai mare alocare din UE după Polonia. Toate acestea sunt acțiuni concrete cu cost real.</p>
+  </div>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURĂ ASCUNSĂ — DE CE SECURITATEA UCRAINEI ESTE SECURITATEA ROMÂNIEI</div>
+    <p>Ucraina apără acum nu doar propria independență — apără ordinea de securitate europeană de care depinde direct și România. Fiecare kilometru pe care armata ucraineană îl menține departe de granițele NATO este un kilometru pe care NATO nu trebuie să îl apere direct la granița românească, cu costuri incomparabil mai mari. O Ucraină care supraviețuiește este cel mai bun scenariu pentru România. Aceasta nu este altruism — este calcul strategic corect.</p>
+  </div>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Pe dimensiunea militară și de securitate, România face alegeri corecte și consecvente, dincolo de turbulențele politice. Aceasta este fundația pe care restul trebuie construit. Dacă ar exista aceeași coerență pe celelalte dimensiuni, România ar fi deja o cu totul altă țară.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap5">
+  <div class="chapter-label">CAPITOLUL V</div>
+  <h2>Energia — potențialul real și istoria ratărilor</h2>
+
+  <p>România are un avantaj structural pe care puțini îl înțeleg în dimensiunea sa reală: nu depinde de o singură sursă de energie. Acoperea istoric 80% din consumul propriu din producție internă — cel mai mic procent de dependență de gazul rusesc din regiune.</p>
+
+  <p><strong>Mixul energetic 2025:</strong> hidroenergie circa 25%, energie nucleară circa 20%, surse regenerabile non-hidro circa 19%. Aproximativ 45% din energia electrică românească este complet curată și fără emisii — o performanță remarcabilă.</p>
+
+  <h3>Cernavodă — inima care s-a oprit</h3>
+
+  <p>Centrala nuclearo-electrică de la Cernavodă produce, în condiții normale, circa 20% din energia electrică a României. Pe 12–13 august 2026, pentru prima dată în istoria centralei, ambele unități au fost oprite — din cauza lipsei de apă din Dunăre, care a coborât la cel mai mic debit din seria istorică de observații.</p>
+
+  <p>Răspunsul a inclus dragare de urgență, dinamitarea unei stânci, scufundarea de barje — improvizație sub presiune, nu planificare strategică. Planul pentru Unitățile 3 și 4 de la Cernavodă există pe hârtie de 30 de ani și nu s-a concretizat din lipsă de finanțare, instabilitate politică și lipsă de voință.</p>
+
+  <h3>Neptun Deep — promisiunea din Marea Neagră</h3>
+
+  <p>Proiectul Neptun Deep — zăcămintele de gaz natural din Marea Neagră — poate transforma România în exportator regional de energie. Aceasta ar fi cea mai importantă transformare economică din ultimele decenii.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">ISTORIA RATĂRILOR ENERGETICE — TREBUIE SPUSĂ</div>
+    <p>În 2018, guvernul de la București a schimbat legislația în domeniul energiei într-un mod care a făcut exploatarea perimetrului Neptun Deep neatractivă comercial pentru ExxonMobil. Americanii au plecat. Nu Gazprom a blocat acest proiect — l-a blocat o decizie legislativă a unui guvern ales democratic. Aceasta este lecția despre cum corupția și incompetența pot face mai mult rău decât un adversar extern.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>România are resursele energetice pentru independență și export. Ceea ce îi lipsește este consecvența legislativă. Independența energetică este independență politică — iar România a demonstrat că se poate sabota singură mai eficient decât orice actor extern.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap6">
+  <div class="chapter-label">CAPITOLUL VI</div>
+  <h2>Economia — prețul real al indeciziei</h2>
+
+  <p>Criza politică are un cost economic zilnic, cuantificabil. Mediul de afaceri estimează pierderi de circa 64 de milioane de euro pe zi din investiții amânate, dobânzi mai mari la datoria publică și fonduri europene care riscă să se piardă definitiv.</p>
+
+  <p><strong>Deficitul bugetar:</strong> circa 6% din PIB — cel mai mare din Uniunea Europeană. <strong>Veniturile fiscale:</strong> 29% din PIB față de media europeană de 40% — o diferență care reflectă colectare fiscală deficitară și economie parțial informală. <strong>Inflația:</strong> circa 10.7% la mijlocul anului 2026, cu creșteri devastatoare la energie (+54%) și chirii (+43%). <strong>Absorbția PNRR:</strong> 31.49% — rușinos de mică față de potențial.</p>
+
+  <div class="callout">
+    <div class="callout-label">POTENȚIALUL REAL — EXISTĂ ȘI TREBUIE SPUS</div>
+    <p>România are: ~80 miliarde euro din PNRR și Cadrul Financiar Multianual 2021-2027, sector IT și industrie auto care atrag investiții masive, poziție de hub NATO care creează avantaje economice concrete, SAFE (16.68 miliarde euro — a doua cea mai mare alocare din UE după Polonia). Dacă o generație politică cu standarde occidentale preia treptat conducerea, și dacă diaspora găsește punți reale pentru implicare — schimbarea structurală este posibilă. Scenariul optimist nu este utopic. Scenariul pesimist nu este inevitabil.</p>
+  </div>
+
+  <div class="verdict-red">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Costul instabilității politice nu este abstract — se traduce în dobânzi mai mari, în investiții ratate, în oameni care pleacă. România plătește zilnic prețul unui sistem politic care recompensează supraviețuirea pe termen scurt și penalizează construcția pe termen lung.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap7">
+  <div class="chapter-label">CAPITOLUL VII</div>
+  <h2>AUR și populismul — diagnosticul corect, nu cel convenabil</h2>
+
+  <p>AUR conduce sondajele cu 38–41% și este cea mai mare forță de opoziție din România în septembrie 2026. A explica AUR exclusiv prin dezinformare rusă și prin manipulare electorală este tentant și parțial adevărat. Dar este și o explicație convenabilă care evită întrebările inconfortabile.</p>
+
+  <h3>Ce este documentat despre AUR</h3>
+
+  <p>Conexiunile cu rețele de dezinformare pro-ruse sunt documentate de SRI și de rapoarte ale serviciilor de informații aliate. AUR a folosit în campanie narativele clasice ale propagandei ruse: suveranismul anti-NATO, „România colonie a Occidentului", discursul anti-UE. Campania electorală din 2024 a inclus o operațiune hibridă documentată: 25.000 de conturi TikTok, 34 de atacuri hibride rusești, 85.000 de atacuri cibernetice. CCR a anulat alegerile — fără precedent în istoria post-comunistă.</p>
+
+  <h3>Ce este adevărat și incomod</h3>
+
+  <p><strong>Nemulțumirile sunt reale.</strong> Inflația de 10.7%, chiriile explozive, facturile la energie cu 54% mai mari — acestea nu sunt ficțiuni. Românii care votează AUR nu sunt în masă proști sau dezinformați. Sunt frustrați de probleme reale pe care niciunul din partidele tradiționale nu le-a rezolvat în 35 de ani de democrație.</p>
+
+  <p><strong>Clasa politică tradițională a creat vacuumul.</strong> PSD, PNL, USR — toate au contribuit prin corupție, incompetență sau lipsă de viziune la erodarea încrederii publice. Când toate partidele tradiționale par la fel de defectuoase, un partid care promite „schimbarea totală" câștigă teren.</p>
+
+  <p><strong>Că alegerile au fost manipulate extern nu înseamnă că nemulțumirile care au făcut posibilă manipularea sunt false.</strong> Dezinformarea nu inventează frustrările — le amplifică pe cele existente.</p>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURĂ ASCUNSĂ — FRACTURA GENERAȚIONALĂ</div>
+    <p>Cel mai periculos fenomen nu este românul de 60 de ani care votează AUR din nostalgie sau frustrare față de sărăcie. Acela este previzibil. Cel mai periculos este românul de 28 de ani, educat, cu acces la internet, care votează AUR pentru că el spune lucruri pe care celelalte partide refuză să le spună. Această fractură generațională — tineri care aleg populismul nu din ignoranță, ci din dezgust față de un sistem perceput ca iremediabil corupt — este un semnal că problema este mai profundă decât dezinformarea externă.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>AUR nu se combate prin a-i stigmatiza votanții. Se combate prin a rezolva problemele reale care îl alimentează — inflația, corupția, inegalitatea, sentimentul că regulile nu se aplică egal. Democrația nu se apără vorbind despre democrație — se apără livrând rezultate concrete pentru oameni concreți care se simt lăsați în urmă.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap8">
+  <div class="chapter-label">CAPITOLUL VIII</div>
+  <h2>Diaspora — puterea invizibilă care ține România în picioare</h2>
+
+  <p>Diaspora română numără aproape șase milioane de oameni — echivalentul unui stat de mărimea Irlandei — răspândiți în principal în Italia, Spania, Germania, Regatul Unit și Franța.</p>
+
+  <p>Banii pe care aceștia îi trimit acasă au atins aproape 10 miliarde de dolari anual — depășind cu mult investițiile străine directe atrase de întreaga economie. Diaspora finanțează România mai mult decât o fac investitorii instituționali — din proprie inițiativă, fără program de stat, fără cerere.</p>
+
+  <p>Cei care pleacă sunt, în mod sistematic, mai tineri și mai educați decât cei care rămân. Nu este o coincidență că diaspora reprezintă, în același timp, cea mai mare pierdere și cea mai mare speranță a țării: cei plecați au demonstrat deja că pot reuși în alte sisteme — exact tipul de competență care lipsește uneori acasă.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">CE POATE FACE DIASPORA — NU DOAR CE A PIERDUT ROMÂNIA</div>
+    <p>Aproximativ 850.000 de cetățeni moldoveni dețin cetățenie română — aproape 30% din populația Moldovei. O integrare de facto care avansează indiferent de ce se votează în parlamente. Diaspora română a votat covârșitor pentru Nicușor Dan. Un program de repatriere cu stimulente financiare, recunoașterea rapidă a calificărilor obținute în străinătate și sprijin pentru locuințe — după modelul polonez — ar putea transforma diaspora dintr-o pierdere calculată într-un motor real de dezvoltare.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Diaspora nu este o problemă de rezolvat — este o resursă de conectat. Statul care înțelege asta și construiește sisteme reale de repatriere și de implicare va câștiga cel mai important pariu demografic al deceniului.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap9">
+  <div class="chapter-label">CAPITOLUL IX</div>
+  <h2>Mentalitate și generații — diagnoza și speranța</h2>
+
+  <p>Există o problemă mai profundă decât criza politică: mentalitatea colectivă formată de 45 de ani de comunism. Nicio lege nu o poate schimba rapid și nicio generație nu o poate depăși complet în cursul propriei vieți.</p>
+
+  <p><strong>Comunismul a distrus inițiativa privată și responsabilitatea individuală</strong> — prin 45 de ani de mesaj că statul are grijă de cetățean. A creat reflexul de a aștepta, a se plânge, a supraviețui — nu a construi. <strong>Comunismul a produs cultura descurcărelii ilegale</strong> — un reflex adaptat și justificat în context, dar distructiv în democrație. <strong>Comunismul a instilat neîncrederea interpersonală</strong> — România are unul din cele mai scăzute niveluri de încredere interpersonală din UE, efect direct al sistemului de informatori.</p>
+
+  <h3>Generația care schimbă ecuația</h3>
+
+  <p>Generația sub 35 de ani din România este structural diferită de părinții ei. A crescut cu internetul, a călătorit în Europa, mulți au studiat sau muncit în afara țării. Are standarde de normalitate împrumutate din Occident și nu acceptă corupția ca pe ceva inevitabil.</p>
+
+  <p>Protestele din 2017 împotriva OUG 13 și protestele din 2024 au fost conduse de această generație. Este prima generație din istoria României care protestează nu pentru pâine, ci pentru principii — pentru statul de drept, pentru independența justiției, pentru o democrație funcțională. Aceasta este o schimbare calitativă profundă, chiar dacă lentă. Și Nicușor Dan însuși — matematician, activist civic, ales cu 53.6% — este un produs al acestor valori.</p>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Mentalitățile postcomuniste nu pleacă odată cu sistemul. Schimbarea vine lent, prin generații, prin educație și prin modele de comportament diferite. Prima generație care protestează pentru principii, nu pentru pâine, este semnul cel mai clar că direcția este corectă.</p>
+  </div>
+</section>
+
+<section class="chapter" id="cap10">
+  <div class="chapter-label">CAPITOLUL X</div>
+  <h2>Calea realistă — ce poate face România, concret</h2>
+
+  <p>Nu soluții utopice — direcții concrete, pe orizonturi reale de 3–7 ani, cu actori identificabili.</p>
+
+  <h3>Nivelul politic</h3>
+
+  <p>Nicușor Dan a exclus explicit un guvern cu AUR. Aceasta este linia corectă și trebuie menținută. Un guvern care depinde de voturi AUR este captiv — incapabil să implementeze reformele care l-ar face să reziste electoral. Reforma electorală — reducerea fragmentării, praguri mai ridicate, transparența finanțării — este necesară structural. Fără ea, România va continua să producă coaliții imposibile.</p>
+
+  <h3>Nivelul economic</h3>
+
+  <p><strong>Colectarea fiscală:</strong> de la 29% la 35% din PIB în 5 ani — singura modalitate de a reduce deficitul fără tăieri brutale. Nu necesită taxe noi — necesită aplicarea celor existente. <strong>Neptun Deep finalizat:</strong> un fond suveran din veniturile gazului din Marea Neagră — după modelul norvegian — poate finanța investițiile structurale pe care bugetul curent nu le poate susține. <strong>Absorbția PNRR:</strong> de la 31% la 70% în 3 ani prin simplificarea procedurilor și responsabilizarea administrativă reală.</p>
+
+  <h3>Nivelul social</h3>
+
+  <p>41.5% din copiii României sunt expuși riscului de sărăcie. Aceasta nu este o statistică de politică socială — este o bombă demografică și un rezervor de recrutare pentru populismul viitorului. Investițiile în educație timpurie, în hrană în școli, în accesul la servicii medicale pentru copiii din mediul rural sunt investiții în securitatea națională pe termen lung.</p>
+
+  <h3>Nivelul apărării</h3>
+
+  <p>Pe dimensiunea militară există deja o direcție clară — trebuie menținută și extinsă. Investiții în apărare anti-dronă (lecția de la Galați), educație mediatică sistematică în școli, transparența privind incidentele hibride față de public.</p>
+
+  <div class="callout">
+    <div class="callout-label">UN ADEVĂR INCOMOD DAR NECESAR</div>
+    <p>Nimeni nu vine să salveze România în locul românilor. Nu UE, nu SUA, nu NATO. Fondurile europene sunt o oportunitate, nu o soluție. Aliații NATO sunt o garanție de securitate, nu un substitut pentru coerența internă. Schimbarea se construiește cetățean cu cetățean, decizie cu decizie, generație cu generație. Exact ca aceasta.</p>
+  </div>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>România are resursele. Are potențialul. Are o generație tânără care a demonstrat că poate cere mai mult. Ceea ce îi lipsește nu este potențialul — este coerența strategică pe termen lung. Iar aceasta nu vine de la un lider providențial — vine de la instituții care funcționează și de la cetățeni care cer socoteală.</p>
+  </div>
+</section>
+
+<div class="divider">✦ ✦ ✦</div>
+
+</main>
+
+<section class="conclusion" id="concluzie">
+  <div class="conclusion-inner">
+    <div class="chapter-label">CONCLUZIE</div>
+    <h2>Prima linie — cu bune și rele</h2>
+
+    <p>România este în 2026 pe prima linie NATO, pe prima linie a conflictului hibrid rusesc, pe prima linie a crizei democratice europene și pe prima linie a propriei istorii. Toate simultan.</p>
+
+    <p>Diagnosticul este sever, dar nu este fără speranță. Societățile nu se schimbă prin decrete și nu se schimbă peste noapte. Se schimbă prin acumularea unor comportamente diferite, prin apariția unor modele noi, prin educația unor generații care gândesc altfel.</p>
+
+    <p>Drona de la Galați nu este o coincidență — este o dovadă că România nu mai poate privi conflictul ca pe o problemă a vecinilor. Criza politică de 130 de zile nu este o anomalie — este expresia unui sistem care nu a rezolvat problema reprezentării reale a cetățenilor. AUR la 38–41% nu este un accident rusesc — este și produsul a 35 de ani de politici care au lăsat milioane de oameni în urmă.</p>
+
+    <p>Și totuși: Nicușor Dan ales cu 53.6% este dovada că schimbarea e posibilă. Protestele din 2017 și 2024 sunt dovada că generația tânără refuză normalitatea corupției. Donația Patriot pentru Ucraina este dovada că România poate fi un aliat serios. Conexiunea electrică cu Moldova este dovada că România poate fi o ancoră regională reală.</p>
+
+    <p><strong>Adevărul real, fără perdea: nimeni nu vine să salveze România în locul românilor. Schimbarea se construiește cetățean cu cetățean, decizie cu decizie, conversație cu conversație. Exact ca aceasta.</strong></p>
+
+    <div class="sources">
+      <div class="sources-label">SURSE ȘI DATE</div>
+      <p>Reuters, AFP, Al Jazeera, Romania Insider — criza politică (mai-sept. 2026) · Fitch Ratings, Moody's — avertismente (iul. 2026) · SRI — raport interferențe electorale 2024 · Statul Major Ucrainean — victime ruse (sept. 2026) · Kiel Institute — Ukraine Support Tracker (2026) · Comisia Europeană — absorbție PNRR · Eurostat — sărăcie copii, deficit bugetar · Institutul Național de Statistică — inflație 2026 · Ministerul Apărării — buget apărare 2026 · Banca Mondială — linia electrică Vulcanești-Chișinău</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://norgedan.github.io/">norgedan.github.io</a> &nbsp;·&nbsp;
+    Corpus III · Documentul 4 · Română &nbsp;·&nbsp;
+    <a href="../no/4-romania-forste-linje-no.html">Versiunea norvegiană →</a>
+  </p>
+  <p style="margin-top:0.6rem;">
+    Toate afirmațiile factuale sunt verificabile din surse publice. &nbsp;·&nbsp;
+    Document cu caracter educativ. Fără propagandă de nicio natură. &nbsp;·&nbsp;
+    Septembrie 2026
+  </p>
+  <p style="margin-top:0.6rem;">
+    <a href="3-europa-la-rascruce-ro.html">← Documentul 3 — Europa la Răscruce</a>
+    &nbsp;·&nbsp;
+    <a href="5-dezinformarea-ro.html">Documentul 5 — Dezinformarea →</a>
+  </p>
+</footer>
+</body>
+</html>

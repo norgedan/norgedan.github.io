@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europa la Răscruce — Tabloul Complet · Corpus III</title>
+<meta name="description" content="Europa în 2026 țară cu țară: ce funcționează, ce nu funcționează, cine profită din vulnerabilități, legăturile ascunse și ce poate fi reparat. Adevărul complet.">
+<meta name="author" content="norgedan">
+<meta name="keywords" content="Europa, Germania AfD, Franta, Polonia, Ungaria, Austria, Romania, Bulgaria, NATO, dezinformare, 2026">
+<meta property="og:title" content="Europa la Răscruce — Tabloul Complet">
+<meta property="og:description" content="Europa în 2026 — tabloul real, cu bune și rele, fără propagandă.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://norgedan.github.io/corpus3/ro/3-europa-la-rascruce-ro.html">
+
+<style>
+  :root {
+    --bg: #0e0f13; --bg2: #14161c; --bg3: #1a1d26;
+    --line: #2a2e3d; --text: #d4d8e8; --text-dim: #7a8099;
+    --accent: #c8a96e; --accent2: #7e9cc4;
+    --accent-red: #c47070; --accent-green: #70a870;
+    --white: #eef0f8;
+    --serif: 'Georgia','Times New Roman',serif;
+    --sans: 'Helvetica Neue','Arial',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:18px;line-height:1.85;}
+  nav{position:fixed;top:0;left:0;right:0;background:rgba(14,15,19,0.97);border-bottom:1px solid var(--line);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(8px);}
+  nav .brand{font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;color:var(--text-dim);text-decoration:none;}
+  nav .brand span{color:var(--accent);}
+  nav .lang{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);letter-spacing:0.08em;}
+  nav .lang a{color:var(--accent2);text-decoration:none;padding-left:1rem;}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2rem 4rem;max-width:820px;margin:0 auto;position:relative;}
+  .hero-label{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:1.8rem;}
+  .hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;line-height:1.15;color:var(--white);margin-bottom:1.4rem;}
+  .hero h1 em{font-style:italic;color:var(--accent);}
+  .hero .subtitle{font-family:var(--sans);font-size:1rem;color:var(--text-dim);max-width:560px;line-height:1.6;margin-bottom:2.8rem;}
+  .hero-meta{display:flex;gap:2rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:1.6rem;}
+  .hero-meta-item{font-family:var(--sans);font-size:0.75rem;color:var(--text-dim);}
+  .hero-meta-item strong{color:var(--text);font-weight:600;}
+  .scroll-hint{position:absolute;bottom:2.5rem;right:2rem;font-family:var(--sans);font-size:0.7rem;color:var(--text-dim);letter-spacing:0.1em;writing-mode:vertical-rl;animation:pulse 3s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .toc-wrap{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2.4rem 2rem;}
+  .toc-inner{max-width:820px;margin:0 auto;}
+  .toc-title{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);margin-bottom:1.4rem;}
+  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.4rem 2rem;list-style:none;}
+  .toc li a{font-family:var(--sans);font-size:0.82rem;color:var(--text-dim);text-decoration:none;transition:color 0.2s;display:flex;gap:0.7rem;align-items:baseline;padding:0.3rem 0;}
+  .toc li a:hover{color:var(--accent2);}
+  .toc li a .n{color:var(--line);font-size:0.68rem;min-width:1.4rem;}
+  .content{max-width:820px;margin:0 auto;padding:0 2rem;}
+  .chapter{padding:5rem 0 1rem;border-top:1px solid var(--line);margin-top:4rem;}
+  .chapter:first-child{border-top:none;}
+  .chapter-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:1.4rem;}
+  .chapter h2{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--white);line-height:1.25;margin-bottom:2rem;}
+  .chapter h3{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--accent2);margin:2.4rem 0 1rem;font-style:italic;}
+  p{margin-bottom:1.4rem;color:var(--text);}
+  p:last-child{margin-bottom:0;}
+  .verdict{background:var(--bg3);border-left:3px solid var(--accent);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+  .verdict-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.8rem;}
+  .verdict p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+  .verdict-red{background:var(--bg3);border-left:3px solid var(--accent-red);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+  .verdict-red .verdict-label{color:var(--accent-red);}
+  .verdict-red p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+  .verdict-green{background:var(--bg3);border-left:3px solid var(--accent-green);margin:2.8rem 0;padding:1.6rem 1.8rem;border-radius:0 4px 4px 0;}
+  .verdict-green .verdict-label{color:var(--accent-green);}
+  .verdict-green p{color:var(--white);font-style:italic;margin:0;font-size:1rem;}
+  .callout{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+  .callout-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.18em;color:var(--accent2);margin-bottom:0.8rem;}
+  .callout p{color:var(--text);margin:0;font-size:0.95rem;}
+  .callout-red{background:var(--bg2);border:1px solid var(--accent-red);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+  .callout-red .callout-label{color:var(--accent-red);}
+  .callout-red p{color:var(--text);margin:0;font-size:0.95rem;}
+  .callout-green{background:var(--bg2);border:1px solid var(--accent-green);border-radius:4px;padding:1.6rem 1.8rem;margin:2.4rem 0;}
+  .callout-green .callout-label{color:var(--accent-green);}
+  .callout-green p{color:var(--text);margin:0;font-size:0.95rem;}
+  .country-block{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:1.8rem 1.8rem;margin:2rem 0;}
+  .country-name{font-family:var(--sans);font-size:0.78rem;letter-spacing:0.18em;color:var(--white);font-weight:700;margin-bottom:0.4rem;}
+  .country-status{display:flex;gap:0.6rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+  .tag{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.1em;padding:0.2rem 0.6rem;border-radius:2px;}
+  .tag-warn{background:rgba(196,112,112,0.15);color:var(--accent-red);border:1px solid var(--accent-red);}
+  .tag-ok{background:rgba(112,168,112,0.15);color:var(--accent-green);border:1px solid var(--accent-green);}
+  .tag-mixed{background:rgba(200,169,110,0.15);color:var(--accent);border:1px solid var(--accent);}
+  .country-block p{font-size:0.92rem;color:var(--text);margin-bottom:0.7rem;}
+  .country-block p:last-child{margin:0;}
+  .country-block strong{color:var(--white);}
+  .hidden-link{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:1px solid var(--accent);border-radius:4px;padding:1.4rem 1.6rem;margin:2.4rem 0;}
+  .hidden-link-label{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:0.6rem;}
+  .hidden-link p{font-size:0.95rem;margin:0;color:var(--text);}
+  .fact-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:2.4rem 0;}
+  .fact-item{background:var(--bg2);padding:1.2rem 1.1rem;}
+  .fact-item .fact-n{font-family:var(--sans);font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.3rem;}
+  .fact-item .fact-n.red{color:var(--accent-red);}
+  .fact-item .fact-n.green{color:var(--accent-green);}
+  .fact-item .fact-label{font-family:var(--sans);font-size:0.68rem;color:var(--text-dim);line-height:1.4;}
+  .divider{text-align:center;color:var(--line);margin:3rem 0;font-size:0.9rem;letter-spacing:0.4em;}
+  .conclusion{background:var(--bg2);border-top:1px solid var(--accent);margin-top:5rem;padding:4rem 2rem;}
+  .conclusion-inner{max-width:820px;margin:0 auto;}
+  .conclusion h2{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2rem);color:var(--white);font-weight:400;margin-bottom:2rem;}
+  footer{background:var(--bg);border-top:1px solid var(--line);padding:2.4rem 2rem;font-family:var(--sans);font-size:0.72rem;color:var(--text-dim);text-align:center;line-height:1.9;}
+  footer a{color:var(--accent2);text-decoration:none;}
+  .sources{margin-top:1.6rem;padding-top:1.6rem;border-top:1px solid var(--line);}
+  .sources-label{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:0.6rem;}
+  .sources p{font-family:var(--sans);font-size:0.78rem;color:var(--text-dim);margin:0;line-height:1.7;}
+  @media(max-width:600px){body{font-size:16px;}nav{padding:0.8rem 1.2rem;}.hero{padding:6rem 1.2rem 3rem;}.content{padding:0 1.2rem;}.toc-wrap{padding:2rem 1.2rem;}.conclusion{padding:3rem 1.2rem;}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://norgedan.github.io/" class="brand">norgedan · <span>Corpus III</span></a>
+  <span class="lang">RO &nbsp;·&nbsp; <a href="../no/3-europa-ved-veiskillet-no.html">NO →</a></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Corpus III · Documentul 3 · Română</div>
+  <h1>Europa la Răscruce<br><em>Tabloul Complet</em></h1>
+  <p class="subtitle">Europa în 2026 — țară cu țară, cu bune și rele. Cine profită din vulnerabilitățile Europei. Legăturile ascunse. Ce poate fi reparat și ce nu. Adevărul complet, nu cel convenabil.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Focalizare</strong><br>Europa 2026 — Est și Vest</div>
+    <div class="hero-meta-item"><strong>Capitole</strong><br>8 + Concluzie</div>
+    <div class="hero-meta-item"><strong>Caracter</strong><br>Analiză civică, secular</div>
+    <div class="hero-meta-item"><strong>Actualizat</strong><br>Septembrie 2026</div>
+  </div>
+  <div class="scroll-hint">DERULAȚI</div>
+</section>
+
+<div class="toc-wrap">
+  <div class="toc-inner">
+    <div class="toc-title">CUPRINS</div>
+    <ul class="toc">
+      <li><a href="#cap1"><span class="n">I</span> Europa în 2026 — nici colaps, nici siguranță</a></li>
+      <li><a href="#cap2"><span class="n">II</span> Europa de Vest — tabloul real</a></li>
+      <li><a href="#cap3"><span class="n">III</span> Europa de Est — unde s-a câștigat și unde s-a pierdut</a></li>
+      <li><a href="#cap4"><span class="n">IV</span> Statele baltice — modelul de rezistență</a></li>
+      <li><a href="#cap5"><span class="n">V</span> Cine profită din vulnerabilitățile Europei</a></li>
+      <li><a href="#cap6"><span class="n">VI</span> Legăturile ascunse — ce nu se vede</a></li>
+      <li><a href="#cap7"><span class="n">VII</span> Est și Vest — două jumătăți care nu se cunosc</a></li>
+      <li><a href="#cap8"><span class="n">VIII</span> Soluții — ce funcționează și ce nu</a></li>
+      <li><a href="#concluzie"><span class="n">✦</span> Concluzie</a></li>
+    </ul>
+  </div>
+</div>
+
+<main class="content">
+
+<!-- CAP I -->
+<section class="chapter" id="cap1">
+  <div class="chapter-label">CAPITOLUL I</div>
+  <h2>Europa în 2026 — nici în colaps, nici în siguranță</h2>
+
+  <p>Europa în 2026 nu este nici continentul ideal pe care îl visau fondatorii săi, nici ruina pe care o anunță dușmanii săi. Este un spațiu viu, contradictoriu, în care democrația câștigă și pierde în același timp, în care sărăcia și prosperitatea coexistă la câteva sute de kilometri distanță, și în care un război activ la granița estică reamintește zilnic că libertatea are un preț real.</p>
+
+  <p>Tabloul este simultan: Magyar câștigă în Ungaria — AfD câștigă Saxonia-Anhalt. Polonia se consolidează democratic — Slovacia rămâne pro-rusă. Bulgaria adoptă euro — și are proteste masive anti-corupție. Austria evită FPÖ la guvernare prin coaliție tripartită — dar FPÖ rămâne cel mai mare partid în sondaje. Moldova alege Europa — Transnistria rămâne o armă rusească. Ucraina rezistă — Rusia continuă.</p>
+
+  <p>Un avertisment necesar: în spatele oricărei crize europene există cel puțin un actor care profită. <strong>Identificarea acestor actori nu este conspiraționism — este analiză politică elementară.</strong> Cine câștigă când Europa se slăbește? Cine investește în dezinformare, în extremism și în corupție? Răspunsul apare repetat în fiecare capitol al acestui document.</p>
+
+  <div class="fact-row">
+    <div class="fact-item">
+      <div class="fact-n green">141/199</div>
+      <div class="fact-label">Locuri Tisza în parlamentul ungar — democrația poate fi recuperată</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n red">43.8%</div>
+      <div class="fact-label">AfD în Saxonia-Anhalt, sept. 2026 — democrația poate fi pierdută</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n green">1 ian. 2026</div>
+      <div class="fact-label">Bulgaria adoptă euro — al 21-lea stat din zona euro</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n red">28%</div>
+      <div class="fact-label">AfD în sondajele naționale germane, mai 2026 — lider pentru prima dată</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n">2%+</div>
+      <div class="fact-label">Toate statele NATO ating pragul cheltuielilor de apărare — schimbare istorică față de 2014</div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-n green">2.1%</div>
+      <div class="fact-label">Creșterea PIB Spania în 2026 — cea mai dinamică economie din UE</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">PREMISA CAPITOLULUI</div>
+    <p>Europa merită onestitate. Cetățenii europeni merită să fie tratați ca adulți capabili să înțeleagă complexitatea lumii în care trăiesc. Documentele educative, dialogul civic deschis și gândirea critică nu sunt lux — sunt fundament al democrației.</p>
+  </div>
+</section>
+
+<!-- CAP II -->
+<section class="chapter" id="cap2">
+  <div class="chapter-label">CAPITOLUL II</div>
+  <h2>Europa de Vest — tabloul real, cu bune și rele</h2>
+
+  <div class="country-block">
+    <div class="country-name">GERMANIA</div>
+    <div class="country-status">
+      <span class="tag tag-mixed">Tranziție dureroasă</span>
+      <span class="tag tag-warn">AfD în ascensiune</span>
+      <span class="tag tag-ok">Investiții în apărare</span>
+    </div>
+    <p><strong>Binele:</strong> Germania a revenit pe creștere economică modestă în 2026 — circa 0.6%, dar reală după doi ani de recesiune. Cancelarul Friedrich Merz a abandonat obsesia istorică germană pentru deficit zero și a lansat un program masiv de investiții în infrastructură și apărare. Coaliția CDU-SPD funcționează cu o coeziune remarcabilă față de haosul politic precedent. Germania investește serios în armată — o schimbare istorică față de deceniile de pasivitate postbelică.</p>
+    <p><strong>Răul:</strong> Modelul economic german care a funcționat trei decenii s-a prăbușit simultan pe toate axele: gazul rusesc ieftin a dispărut, exporturile în China scad, tarifele americane lovesc industria. Volkswagen, BASF și alți giganți industriali restructurează masiv. Iar AfD — la 28% în sondajele naționale, 43.8% în Saxonia-Anhalt pe 6 septembrie 2026 — a devenit forța cea mai dinamică din politica germană. <strong>Coaliția Merz CDU-SPD are doar 36% combinat în sondaje — mai puțin decât un singur partid de opoziție.</strong></p>
+    <p><strong>Cine profită din vulnerabilitățile Germaniei?</strong> Rusia — prin AfD și rețele de dezinformare. China — câștigând cotă de piață în auto și tehnologie. SUA sub Trump — prin tarife și slăbirea coeziunii transatlantice.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">FRANȚA</div>
+    <div class="country-status">
+      <span class="tag tag-warn">Criză politică internă</span>
+      <span class="tag tag-mixed">Economie rezistentă</span>
+      <span class="tag tag-ok">Industrie apărare în expansiune</span>
+    </div>
+    <p><strong>Binele:</strong> Economia franceză a performat mai bine decât Germania sau Italia în 2025–2026. Industria de apărare este în plină expansiune. Macron încearcă să consolideze autonomia strategică europeană — o viziune corectă, chiar dacă execuția este imperfectă. Franța este singura putere nucleară din UE — o poziție unică.</p>
+    <p><strong>Răul:</strong> Adunarea Națională este profund fragmentată. Marine Le Pen și Rassemblement National rămân forța pivotală. Datoria publică depășește 110% din PIB. Macron are viziune europeană dar nu mai are autoritatea internă pentru a o impune. Alegerile prezidențiale din 2027 se anunță decisive — și Le Pen conduce în sondaje.</p>
+    <p><strong>Cine profită?</strong> Rusia — prin finanțarea istorică dovedită a Le Pen și a extremei drepte franceze. SUA sub Trump — care vede în slăbiciunea franceză o oportunitate.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">AUSTRIA — CAZUL CARE MERITĂ CITIT CU ATENȚIE</div>
+    <div class="country-status">
+      <span class="tag tag-mixed">Guvern centrist format</span>
+      <span class="tag tag-warn">FPÖ rămâne cel mai mare partid</span>
+    </div>
+    <p><strong>Tabloul exact, actualizat:</strong> FPÖ a câștigat alegerile din septembrie 2024 cu 28.8%. Negocierile de coaliție între FPÖ și ÖVP au eșuat pe 12 februarie 2025. Kickl a renunțat la mandatul de formare a guvernului. Pe 3 martie 2025 a fost învestit cancelarul <strong>Christian Stocker (ÖVP)</strong>, conducând o coaliție tripartită ÖVP-SPÖ-NEOS. Austria nu este condusă de extrema dreaptă în 2026.</p>
+    <p><strong>Dar pericolul structural rămâne real:</strong> FPÖ continuă să conducă sondajele cu 30%+. Programul FPÖ cere: sfârșitul sancțiunilor față de Rusia, retragerea din Inițiativa European Sky Shield, "remigration" a imigranților. Kickl s-a prezentat ca <em>Volkskanzler</em> — termen din propaganda național-socialistă. BfV german a avertizat că rețelele de influență rusă au sprijinit activ campania FPÖ. Că democrația austriacă a funcționat în 2025 și a blocat FPÖ de la putere nu înseamnă că pericolul a dispărut — înseamnă că mecanismele democratice au ținut <em>de data aceasta</em>.</p>
+    <p><strong>Cine profită?</strong> Dacă FPÖ ar ajunge la putere în viitor: Rusia — imediat și direct. Un al doilea Orbán în inima UE ar fi mult mai periculos decât primul, pentru că Austria este stat fondator al UE.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">SPANIA</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Cea mai dinamică economie din UE</span>
+      <span class="tag tag-warn">Guvern minoritar fără buget</span>
+    </div>
+    <p><strong>Binele:</strong> Spania este surpriza pozitivă a Europei în 2026 — cea mai dinamică economie din UE, cu creștere de 2.1%, susținută de turism, servicii și consum intern. Modelul de integrare a migrației în piața muncii funcționează economic. Spania investește masiv în energie regenerabilă.</p>
+    <p><strong>Răul:</strong> Coaliția Sánchez funcționează minoritar, fără buget aprobat pentru 2026. Scandalurile de corupție din PSOE erodează credibilitatea. Criza locuințelor în Madrid și Barcelona este acută — chiriile au explodat. Spania cheltuiește doar 1.3% din PIB pe apărare — sub pragul NATO de 2%. NATO și SUA au caracterizat Spania drept <em>"cel mai puțin fiabil aliat al alianței"</em>.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">ITALIA · OLANDA · BELGIA</div>
+    <div class="country-status">
+      <span class="tag tag-mixed">Tablouri mixte</span>
+    </div>
+    <p><strong>Italia:</strong> Meloni conduce cel mai stabil guvern italian din ultimii ani. Spread-ul față de obligațiunile germane s-a stabilizat. Dar datoria publică depășește 140% din PIB — una din cele mai mari din lume. Fără fondurile PNRR, creșterea economică ar fi fost practic zero. PNRR expiră în 2026 — o prăpastie fiscală pe care politica italiană o ignoră.</p>
+    <p><strong>Olanda:</strong> Are ASML — singurul producător de mașini EUV pentru semiconductori de ultimă generație din lume. Fără ASML, nicio țară nu poate produce chips avansate. Este cel mai important activ strategic european în semiconductori. Dar sistemul electoral olandez produce fragmentare cronică și guverne instabile. Geert Wilders rămâne forță pivotală.</p>
+    <p><strong>Belgia:</strong> NATO și UE au sediul la Bruxelles. Orice penetrare a structurilor politice belgiene este o penetrare directă a instituțiilor centrale ale Occidentului. Belgia are o criză identitară flamando-valonă profundă și perioade record fără guvern. Aceasta nu este o problemă belgiană internă — este o problemă a securității occidentale colective.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Europa de Vest are instituții mai consolidate și resurse mai mari. Dar uneori este complăcătoare față de pericolul rusesc. A cumpărat gaz de la Moscova ani de zile știind că banii finanțează imperialismul. A privit cu îngăduință alunecarea Ungariei spre autoritarism timp de un deceniu. Tratează Estul ca pe un beneficiar de fonduri, nu ca pe un partener cu experiențe valide.</p>
+  </div>
+</section>
+
+<!-- CAP III -->
+<section class="chapter" id="cap3">
+  <div class="chapter-label">CAPITOLUL III</div>
+  <h2>Europa de Est — unde s-a câștigat și unde s-a pierdut în 2026</h2>
+
+  <div class="country-block">
+    <div class="country-name">UNGARIA — SCHIMBARE ISTORICĂ</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Democrația recuperată</span>
+      <span class="tag tag-warn">Moștenire devastatoare</span>
+    </div>
+    <p>La 12 aprilie 2026, Tisza condus de Péter Magyar a câștigat alegerile parlamentare cu o victorie zdrobitoare — <strong>141 din 199 de locuri</strong>, o supramajoritate de două treimi. Cel mai ridicat scor obținut vreodată de un partid în alegeri libere în Ungaria. Orbán a pierdut după 16 ani. Rusia a pierdut cel mai important aliat din interiorul UE.</p>
+    <p><strong>Ce înseamnă concret:</strong> Magyar va ridica veto-ul lui Orbán asupra împrumutului de 90 de miliarde de euro pentru Ucraina. Va debloca fondurile europene de 18 miliarde euro înghețate din cauza problemelor cu statul de drept. Va demonta infrastructura de sprijin a lui Orbán pentru partidele de extremă dreaptă din Europa.</p>
+    <p><strong>Lecția maghiară este fundamentală:</strong> demonstrează că chiar și un sistem iliberal profund înrădăcinat, cu media controlată de stat, cu gerrymandering electoral documentat și cu interferență rusă activă, poate fi învins atunci când cetățenii suferă economic și aleg să se mobilizeze. Aceasta este cea mai importantă veste democratică din Europa în 2026.</p>
+    <p><strong>Dar atenție la avertismentul real:</strong> Magyar moștenește o situație economică dezastruoasă — deficit de 6.2% din PIB, birocrație infiltrată de Fidesz la toate nivelurile, justiție capturată, presă aproape complet controlată de stat sau de oligarhi fideli lui Orbán. Reformele necesare cer ani. Dacă economia nu se îmbunătățește vizibil, dezamăgirea electorală poate aduce înapoi o formă de naționalism populist. România, Bulgaria și Slovacia urmăresc cu atenție maximă acest experiment.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">POLONIA — MODELUL POZITIV AL EUROPEI DE EST</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Revenire democratică</span>
+      <span class="tag tag-ok">Apărare 4% PIB</span>
+      <span class="tag tag-warn">PiS blochează reformele</span>
+    </div>
+    <p>Guvernul Tusk a deblocat zeci de miliarde de euro în fonduri europene înghețate prin reforme ale statului de drept. A oprit propaganda din media publică. Polonia investește <strong>peste 4% din PIB în apărare</strong> — „Scudul de Est" este cel mai ambițios program de apărare dintr-un stat NATO. Economia crește solid.</p>
+    <p><strong>Dar:</strong> Reformele democratice sunt blocate parțial de moștenirea instituțională a PiS. Președintele Nawrocki, ales pe listele PiS, refuză să numească judecători și blochează activ reformele. Fostul ministru al justiției PiS a fugit în Ungaria și a primit azil politic — o ilustrare perfectă a rețelelor de solidaritate iliberală europeană. Polarizarea politică rămâne profundă.</p>
+    <p>Polonia demonstrează că ieșirea din iliberalism este posibilă și că investițiile în apărare și reformele democratice pot coexista. <strong>Lecția poloneză este esențială pentru România, Bulgaria și Slovacia.</strong></p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">SLOVACIA — CEL MAI VALOROS ALIAT AL MOSCOVEI ÎN UE DUPĂ CĂDEREA LUI ORBÁN</div>
+    <div class="country-status">
+      <span class="tag tag-warn">Pro-rus activ</span>
+      <span class="tag tag-warn">Cal troian NATO/UE</span>
+    </div>
+    <p>Robert Fico a supraviețuit unui atac cu armă de foc în 2024 și a revenit mai radicalizat. Slovacia blochează activ ajutorul militar pentru Ucraina, diluează sancțiunile europene față de Rusia și atacă sistematic instituțiile de presă independente. Slovacia are o economie industrială solidă — cu fabrici Volkswagen, Kia și Stellantis — dar politica externă a lui Fico transformă această țară într-un cal troian în interiorul NATO și UE. <strong>Fico este, în momentul de față, cel mai valoros aliat al Moscovei în interiorul alianțelor occidentale.</strong></p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">BULGARIA — EURO ADOPTAT, DEMOCRAȚIE FRAGILĂ</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Euro adoptat 1 ian. 2026</span>
+      <span class="tag tag-warn">Corupție sistemică</span>
+      <span class="tag tag-warn">Extrema dreaptă în ascensiune</span>
+    </div>
+    <p>Bulgaria a adoptat euro la 1 ianuarie 2026 — progres economic real și un semnal de convergență cu nucleul european. Creșterea PIB: 2.9% în primul trimestru 2026. Exporturile bulgare merg 65% spre UE, industria auto produce 80% din componentele electronice utilizate în vehiculele europene.</p>
+    <p><strong>Dar:</strong> Bulgaria traversează o criză politică profundă. Guvernul a demisionat în urma protestelor masive anti-corupție. Vazrazhdane — partidul de extremă dreaptă aliniat deschis cu regimul Putin — câștigă teren în sondaje. Bulgaria are una din cele mai ridicate rate de corupție din UE și o dependență energetică istorică de Rusia greu de eliminat rapid. Adoptarea euro este un câștig real — trebuie consolidat prin reformă instituțională.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">CEHIA</div>
+    <div class="country-status">
+      <span class="tag tag-warn">Babiš și riscul capturării</span>
+      <span class="tag tag-mixed">Instituții relativ solide</span>
+    </div>
+    <p>Miliardarul Andrej Babiš a fost re-ales, iar noul său guvern ANO adoptă o poziție tranzacțională față de politicile UE. Conflictele de interese ale lui Babiš sunt printre cele mai documentate din Europa. <strong>Există riscul real al unui Cehia care urmează traiectoria Ungariei sub Orbán.</strong> China investește discret în sectoarele strategice cehe.</p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">MOLDOVA</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Candidat UE</span>
+      <span class="tag tag-ok">Rupt dependența energetică rusă</span>
+      <span class="tag tag-warn">Transnistria — armă rusă activă</span>
+    </div>
+    <p>Maia Sandu menține cu remarcabilă rezistență cursul pro-european, în ciuda dezinformării ruse masive, a sărăciei structurale și a prezenței militare ruse în Transnistria. Moldova a început negocierile de aderare la UE. A rupt dependența de gazul rusesc. Alegerile din 2024 au confirmat traiectoria europeană în ciuda interferențelor masive. <strong>Moldova demonstrează că libertatea este posibilă chiar și în cele mai dificile condiții geopolitice.</strong></p>
+  </div>
+
+  <div class="country-block">
+    <div class="country-name">ROMÂNIA — ÎN FAȚA UNEI ALEGERI STRATEGICE</div>
+    <div class="country-status">
+      <span class="tag tag-ok">Flancul estic NATO</span>
+      <span class="tag tag-warn">Criză politică persistentă</span>
+      <span class="tag tag-warn">AUR — 38-41% în sondaje</span>
+    </div>
+    <p>România se află pe flancul estic NATO cu o poziție geostrategică valoroasă. Bugetul de apărare pentru 2026: aproximativ 11 miliarde de dolari, în creștere cu 19%. Baza Mihail Kogălniceanu se extinde pentru a găzdui până la 10.000 de trupe. Acordul SAFE de 16.68 miliarde de euro — a doua cea mai mare alocare din UE după Polonia.</p>
+    <p><strong>Dar:</strong> Circa 41.5% din copiii României sunt expuși riscului de sărăcie și excluziune socială — cel mai ridicat procent din UE. Deficitul bugetar oscilează în jurul a 6% din PIB. AUR, cu 38–41% în sondaje, este cea mai mare forță de opoziție — un partid naționalist suveranist cu conexiuni documentate la rețele de dezinformare pro-ruse. Criza politică din 2026 — motția care a răsturnat guvernul Bolojan, tentativele eșuate de formare a unui nou cabinet — a costat 64 de milioane de euro pe zi conform estimărilor mediului de afaceri. Pe 29 mai 2026, o dronă rusă a lovit un bloc din Galați. <strong>România nu mai este spectator al conflictului — este actor involuntar.</strong></p>
+    <p>România are resursele pentru a reuși. Ceea ce îi lipsește este coerența strategică și stabilitatea instituțională. Factorul determinant: generația de 20–40 de ani și alegerea pe care o va face.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Europa de Est are instituții mai fragile, construite în grabă după 1989, pe ruinele comunismului. Dar are ceva pe care Vestul nu are: cunoașterea viscerală a ceea ce înseamnă să trăiești fără libertate. Polonezii, românii, balticii, ungurii, bulgarii știu din propria memorie colectivă — unii din memoria vie a părinților și bunicilor — ce este dictatura, ce este ocupația. Această cunoaștere îi face mai alertă față de retorica suveranistă.</p>
+  </div>
+</section>
+
+<!-- CAP IV -->
+<section class="chapter" id="cap4">
+  <div class="chapter-label">CAPITOLUL IV</div>
+  <h2>Statele baltice — modelul de rezistență pe care Europa trebuie să îl înțeleagă</h2>
+
+  <p>Estonia, Letonia și Lituania sunt cel mai bun exemplu european de rezistență, modernizare și ancorare democratică în fața presiunii ruse directe. Cele trei state au trăit sub ocupație sovietică și știu mai bine decât oricine ce înseamnă să pierzi libertatea. Această cunoaștere istorică vie le face cel mai lucide față de pericolul rusesc și cele mai proactive în construirea apărării.</p>
+
+  <p><strong>Estonia</strong> este cel mai digitalizat stat din lume — votul electronic, serviciile publice online, identitatea digitală sunt realități funcționale de decenii. A fost prima țară lovită de un atac cibernetic de stat în 2007 — Rusia a atacat infrastructura digitală estoniană. A ales să construiască rezistența sistemică în loc să se lamenteze. A calculat și prezentat oficial cererea de reparații față de Rusia pentru ocupația sovietică: 179 de miliarde de dolari.</p>
+
+  <p><strong>Letonia și Lituania</strong> investesc masiv în apărare și în infrastructura energetică independentă de Rusia. Toate trei au depășit 2% din PIB pentru apărare cu mult timp în urmă. Toate trei sunt democrații consolidate cu instituții funcționale.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">LECȚIA BALTICILOR PENTRU EUROPA</div>
+    <p>Statele baltice au înțeles ceva pe care Germania a înțeles abia în 2022, cu prețul sângelui ucrainean: Rusia nu este un partener care se transformă prin comerț și angajament. Este un imperiu cu o logică de expansiune de 500 de ani. Politica Wandel durch Handel a funcționat pentru Germania economic — a eșuat strategic. Balticii nu au avut niciodată această iluzie, pentru că au trăit consecințele.</p>
+  </div>
+
+  <p>Vulnerabilitățile sunt reale: dimensiunile mici, minorități rusofone semnificative și o frontieră directă sau apropiată cu Rusia și Belarus. Rusia încearcă permanent dezinformarea în rândul minorităților rusofone, atacurile cibernetice și presiunea militară la frontieră. Dar rezistența baltică — prin investiții sistematice, prin educație mediatică, prin integrarea în structurile euro-atlantice — este modelul pe care întreaga Europă trebuie să îl studieze.</p>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Statele baltice demonstrează că rezistența față de imperialismul rus nu este o chestiune de mărime, ci de luciditate și determinare. Că libertatea se poate apăra eficient chiar și în cele mai dificile condiții geografice — dacă există voința politică și investițiile corecte.</p>
+  </div>
+</section>
+
+<!-- CAP V -->
+<section class="chapter" id="cap5">
+  <div class="chapter-label">CAPITOLUL V</div>
+  <h2>Cine profită din vulnerabilitățile Europei — analiza fără menajamente</h2>
+
+  <p>O analiză onestă a Europei în 2026 trebuie să numească explicit actorii care câștigă din slăbiciunile europene. Nu din conspiraționism — din analiză politică elementară.</p>
+
+  <h3>Rusia — actorul principal al destabilizării europene</h3>
+
+  <p>Rusia este actorul principal al destabilizării europene în 2026. Nu poate câștiga militar împotriva NATO unit — dar nu trebuie să câștige militar pentru a-și atinge obiectivele. Trebuie doar să slăbească coeziunea, să împiedice deciziile rapide și să mențină Europa fracturată.</p>
+
+  <p>Instrumentele sunt documentate și verificabile: dezinformarea prin rețele sociale și media finanțate discret; sprijinul financiar și ideologic pentru partide extremiste — finanțarea Le Pen cu împrumuturi rusești este dovedită juridic; interferența electorală directă în Ungaria, România, Moldova și statele baltice; exploatarea energiei ca armă de presiune economică. <strong>Fiecare vot pentru un partid suveranist în România, fiecare decizie blocată în Consiliul UE de Fico, fiecare declarație a FPÖ împotriva sancțiunilor — toate servesc strategic Moscovei, indiferent dacă cei implicați realizează sau nu.</strong></p>
+
+  <h3>China — jocul diferit, pe termen lung</h3>
+
+  <p>China nu vrea o Europă în haos — vrea o Europă slabă dar funcțională, suficient de distrasă pentru a nu se concentra pe competiția strategică cu Beijing. Investiții în porturile Pireus, Hamburg, Trieste. Interesul strategic față de ASML olandez. Penetrarea piețelor europene cu bunuri ieftine. Finanțarea discretă a cercetării universitare europene. Orice criză care distrage atenția Europei de la competiția cu Beijing este o oportunitate pentru China.</p>
+
+  <h3>Actorii interni oportuniști</h3>
+
+  <p>În fiecare țară europeană există politicieni care folosesc frustrarea legitimă a cetățenilor ca combustibil electoral fără a oferi soluții reale. Sărăcia, corupția, migrația și inegalitatea sunt probleme reale care generează furie justificată. Populismul de extremă dreaptă colectează această furie și o transformă în voturi, fără să rezolve nimic din cauzele profunde. Câștigă electoral, dar nu câștigă pentru cetățeni.</p>
+
+  <h3>SUA sub Trump — un aliat imprevizibil</h3>
+
+  <p>SUA sub Trump este un factor perturbator al alianței transatlantice — nu un dușman al Europei, dar cu certitudine un aliat imprevizibil care folosește NATO și relațiile comerciale ca instrumente de negociere bilaterală. Tarifele comerciale lovesc industria germană și italiană. Presiunea asupra cheltuielilor de apărare este, în sine, justificată — dar modul de exercitare creează tensiuni care slăbesc coeziunea Occidentului. Europa trebuie să construiască o autonomie strategică reală — nu ca anti-americanism, ci ca responsabilitate matură.</p>
+
+  <div class="verdict-red">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Rusia este un rău structural documentat care nu va dispărea prin negociere din poziție de slăbiciune. China este un competitor strategic care trebuie tratat ca atare. SUA sub Trump este un aliat imprevizibil față de care Europa trebuie să construiască autonomie. Aceste trei realități trebuie recunoscute simultan, fără a le hierarhiza greșit sau a le ignora pe oricare.</p>
+  </div>
+</section>
+
+<!-- CAP VI -->
+<section class="chapter" id="cap6">
+  <div class="chapter-label">CAPITOLUL VI</div>
+  <h2>Legăturile ascunse — ce nu se vede la prima privire</h2>
+
+  <h3>Legătura 1: Coridorul de influență rusă de la Viena la Marea Neagră</h3>
+
+  <p>Kickl în Austria (cel mai mare partid, chiar dacă nu la guvernare), Fico în Slovacia, voturi AUR și suveraniste în România formează, geografic și politic, un coridor de la Viena până la Constanța. Niciuna din aceste forțe nu este suficientă singură pentru a bloca Europa sau NATO. Dar împreună pot dilua sancțiunile, pot bloca sau întârzia decizii urgente în Consiliul UE și pot crea zgomot de dezinformare suficient de mare pentru a confuza opinia publică europeană. <strong>Căderea lui Orbán a rupt un inel din acest lanț — dar nu l-a eliminat.</strong></p>
+
+  <h3>Legătura 2: Vulnerabilitatea centrală belgiană</h3>
+
+  <p>NATO și UE au sediul la Bruxelles. Oricine reușește să penetreze structurile politice, economice sau informaționale ale Belgiei are acces indirect la centrul de decizie al Occidentului. Instabilitatea politică cronică a Belgiei nu este o problemă belgiană — este o problemă a securității europene colective. Aceasta este vulnerabilitate majoră, subapreciată sistematic în discursul public european.</p>
+
+  <h3>Legătura 3: ASML olandez — arma economică strategică neprotejată</h3>
+
+  <p>ASML este singurul producător de mașini EUV pentru semiconductori de ultimă generație din lume. Fără ASML, nicio țară — inclusiv SUA și China — nu poate produce chips avansate. China este extrem de interesată de ASML. Orice slăbire a restricțiilor la export ar fi un câștig strategic colosal pentru Beijing. ASML trebuie tratat ca activ strategic național și european, cu restricții clare la export față de China.</p>
+
+  <h3>Legătura 4: Cetățenia română ca instrument de integrare tacită</h3>
+
+  <p>Aproximativ 850.000 de cetățeni ai Republicii Moldova dețin cetățenie română — aproape 30% din populația totală a Moldovei. La acest număr se adaugă românii din Ucraina care au cerut sau obținut cetățenia română. Fiecare dintre aceștia este, prin cetățenie, cetățean UE — cu drept de liberă circulație, de muncă, de stabilire în orice stat european. <strong>Integrarea de facto avansează indiferent de ce se votează în parlamente.</strong> Aceasta este o legătură ascunsă care are consecințe geopolitice reale.</p>
+
+  <h3>Legătura 5: Ungaria, Serbia și rețelele de solidaritate iliberală</h3>
+
+  <p>Fostul ministru al justiției PiS din Polonia a fugit în Ungaria și a primit azil politic — ilustrând că există rețele de solidaritate iliberală active în Europa. Serbia, stat non-NATO, menține relații strânse cu Rusia. Prin Serbia, influența rusă ajunge în Bosnia-Herțegovina, Muntenegru, Macedonia de Nord — state fragile cu identități naționale contestate. <strong>Flancul sudic al României este expus la o presiune indirectă mai mare decât sugerează hărțile convenționale.</strong></p>
+
+  <div class="hidden-link">
+    <div class="hidden-link-label">LEGĂTURA CEA MAI PUȚIN DISCUTATĂ</div>
+    <p>Dezinformarea rusă nu folosește același mesaj în Vest și în Est. În Europa de Vest, atacă instituțiile — neîncredere în media, anti-vaccin, anti-UE, anti-NATO. În Europa de Est, atacă identitatea și memoria istorică — narativele despre "frații slavi", despre "NATO ca agresor", despre "Europa care nu ne respectă". Este aceeași armă, cu muniție calibrată pentru fiecare societate. Eficiența ei este mai mare în Est — unde instituțiile sunt mai fragile și unde amintirea suferinței istorice reale poate fi mai ușor falsificată și exploatată.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Tabloul mare al Europei nu este desenat doar de state și guverne — este desenat și de rețele oligarhice, de Biserici, de pașapoarte, de algoritmi și de gaze. Cine vrea să înțeleagă ce se întâmplă cu adevărat în Europa trebuie să urmeze toate aceste fire simultan, nu doar pe cel mai vizibil.</p>
+  </div>
+</section>
+
+<!-- CAP VII -->
+<section class="chapter" id="cap7">
+  <div class="chapter-label">CAPITOLUL VII</div>
+  <h2>Est și Vest — două jumătăți ale aceluiași continent care nu se cunosc îndeajuns</h2>
+
+  <p>Europa de Vest și Europa de Est sunt, în 2026, două jumătăți ale aceluiași continent care nu se cunosc îndeajuns și nu se respectă îndeajuns una pe cealaltă. Aceasta este, în sine, o vulnerabilitate.</p>
+
+  <p><strong>Europa de Vest</strong> are instituții mai consolidate — rezultatul a 70 de ani de democrație neîntreruptă. Are resurse financiare mai mari, capacitate militară proprie mai dezvoltată și experiență diplomatică acumulată. <strong>Dar:</strong> A cumpărat gaz de la Moscova ani de zile știind că banii finanțează imperialismul. A privit cu îngăduință alunecarea Ungariei spre autoritarism timp de un deceniu. A tratat Estul ca pe un beneficiar de fonduri de coeziune, nu ca pe un partener cu experiențe valide. Și are uneori condescendența de a explica democrația unor popoare care au suferit sub dictatură ceea ce Vestul a citit doar în cărți.</p>
+
+  <p><strong>Europa de Est</strong> are instituții mai fragile — construite în grabă după 1989, fără experiență democratică autentică. Are resurse financiare mai reduse și este mai vulnerabilă la presiunea externă rusă. <strong>Dar</strong> are ceva pe care Vestul nu are: cunoașterea viscerală a ceea ce înseamnă să trăiești fără libertate. Polonezii, românii, balticii, ungurii, bulgarii știu din propria memorie colectivă ce este dictatura, ce este ocupația, ce este supravegherea de stat. Această cunoaștere îi face mai alertă, mai puțin naivi față de retorica suveranistă și mai determinați să apere ancorele euro-atlantice.</p>
+
+  <div class="callout">
+    <div class="callout-label">CE ADUCE FIECARE JUMĂTATE</div>
+    <p>Europa de Vest aduce Estului: capital financiar, tehnologie, acces la piețe, know-how instituțional și ancora economică fără de care convergența nu ar fi posibilă. Europa de Est aduce Vestului: vigilență geopolitică, forță militară în creștere pe flancul estic, resurse naturale — gaze în România, potențial agricol imens, energie regenerabilă — și, poate cel mai important, o perspectivă autentică asupra pericolului la adresa democrației pe care Vestul nu îl mai simte fizic. O Europă unită nu este un ideal sentimental — este singura apărare reală împotriva presiunilor simultane externe și interne.</p>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Un Vest care tratează Estul ca pe un beneficiar este o Europă vulnerabilă. Un Est care tratează Vestul cu resentiment este o Europă vulnerabilă. Parteneriatul real, echitabil și mutual — cu standardele comune de stat de drept aplicate uniform, cu strategii comune de apărare și cu resurse distribuite inteligent — este singura arhitectură care rezistă.</p>
+  </div>
+</section>
+
+<!-- CAP VIII -->
+<section class="chapter" id="cap8">
+  <div class="chapter-label">CAPITOLUL VIII</div>
+  <h2>Soluții — ce funcționează și ce nu funcționează</h2>
+
+  <h3>Ce nu funcționează</h3>
+
+  <p><strong>Stigmatizarea votanților extremiști</strong> — a numi „fascist" pe oricine votează AfD sau AUR alieneaza electoratul și nu adresează cauzele reale. Votanții nu sunt proști — sunt frustrați de probleme reale nerezolvate.</p>
+
+  <p><strong>Cordonul sanitar fără politici alternative credibile</strong> — a refuza orice cooperare cu un partid extremist fără a oferi soluții concrete la problemele care alimentează acel partid este o strategie care eșuează în timp.</p>
+
+  <p><strong>Wandel durch Handel față de Rusia</strong> — schimbarea prin comerț nu a produs democratizarea Rusiei. A produs petrodolari care au finanțat mașina de război. Această lecție costisitoare trebuie aplicată și față de China.</p>
+
+  <p><strong>Cenzura dezinformării</strong> — poate confirma teoriile conspirației. Singura abordare eficientă documentată este prebunking-ul: explicarea mecanismelor de manipulare înainte ca minciuna să ajungă la audiență.</p>
+
+  <h3>Ce funcționează — modele verificabile</h3>
+
+  <p><strong>Modelul finlandez de educație mediatică:</strong> implementat sistematic în școli din 2014 ca răspuns la dezinformarea rusă la frontieră. Finlanda este cel mai rezistent stat european la dezinformare. Nu a cenzurat nimic — a educat. Același model funcționează în Estonia și Suedia.</p>
+
+  <p><strong>Modelul polonez de apărare:</strong> cheltuieli de apărare de 4% din PIB, achiziții masive de echipamente moderne, integrare operațională cu aliații NATO. Demonstrează că investițiile serioase în apărare produc și beneficii economice — industria de apărare creează locuri de muncă și transfer de tehnologie.</p>
+
+  <p><strong>Modelul maghiar de recuperare democratică:</strong> Magyar a demonstrat că un sistem iliberal poate fi răsturnat electoral chiar și cu toate dezavantajele instituționale. Condiția: o opoziție unificată, o ofertă politică credibilă și o mobilizare electorală masivă.</p>
+
+  <p><strong>Condiționarea fondurilor europene:</strong> UE a legat sprijinul financiar acordat statelor membre de respectarea statului de drept — instrument eficient care a produs presiune reală asupra Poloniei sub PiS și a Ungariei sub Orbán. Trebuie aplicat mai consecvent și față de Bulgaria, România și Slovacia.</p>
+
+  <p><strong>Apărarea colectivă ca investiție:</strong> toate statele aliate NATO au atins pragul de 2% din PIB în apărare — o schimbare istorică față de 2014, când doar trei state atingeau pragul. Demonstrează că presiunea politică coordonată produce rezultate concrete.</p>
+
+  <div class="verdict-green">
+    <div class="verdict-label">CONCLUZIA CAPITOLULUI</div>
+    <p>Soluțiile nu sunt simple și nu sunt ieftine. Dar ele există și sunt identificabile — din modelele statelor care le-au aplicat cu succes. Europa nu trebuie să reinventeze roata. Trebuie să aibă voința politică de a aplica ce știe deja că funcționează.</p>
+  </div>
+</section>
+
+<div class="divider">✦ ✦ ✦</div>
+
+</main>
+
+<!-- CONCLUSION -->
+<section class="conclusion" id="concluzie">
+  <div class="conclusion-inner">
+    <div class="chapter-label">CONCLUZIE</div>
+    <h2>Europa la răscruce — alegerile contează mai mult ca oricând</h2>
+
+    <p>Europa în 2026 nu este în colaps — dar nu este nici în siguranță. Este un spațiu în care democrația câștigă și pierde simultan. Magyar câștigând în Ungaria este unul din cele mai importante evenimente democratice europene din ultimii ani. AfD cu 43.8% în Saxonia-Anhalt este cel mai grav semnal de alarmă. Ambele sunt adevărate în același timp. Aceasta este complexitatea pe care trebuie să o înțelegem, nu să o simplificăm.</p>
+
+    <p>Rusia este un rău structural documentat care nu va dispărea prin negociere din poziție de slăbiciune. Această afirmație nu este politică — este istoria confirmată pe trei secole și pe doi ani de război. Nu există un standard diferit pentru „ei" față de „noi" — dreptul internațional se aplică uniform sau nu se aplică deloc.</p>
+
+    <p>Europa are resursele pentru a reuși. Are instituții, are capital, are oameni capabili, are modele care funcționează. Ceea ce îi lipsește nu este potențialul — este coerența strategică și voința politică de a aplica sistematic ceea ce știe că funcționează. Rezistența nu se construiește în crize — se construiește în timp de liniște, cu planificare serioasă și cu voință politică susținută pe mai multe mandate.</p>
+
+    <p><strong>Europa la răscruce nu înseamnă că Europa este pierdută. Înseamnă că alegerile contează mai mult ca oricând. Și că cetățenii care înțeleg ce se întâmplă cu adevărat sunt cea mai bună apărare pe care o poate avea o democrație.</strong></p>
+
+    <div class="sources">
+      <div class="sources-label">SURSE ȘI DATE</div>
+      <p>Autoritatea Electorală Federală Germană — rezultate Bundestag (feb. 2025) · INSA/Bild — sondaje AfD (apr. 2026) · Ground.news — rezultate Saxonia-Anhalt (sept. 2026) · BfV — rapoarte de clasificare AfD · Autoritatea Electorală Ungară — rezultate Tisza (apr. 2026) · BCE/Lagarde — adoptarea euro în Bulgaria (ian. 2026) · ING Think — Eurozone Countries Outlook 2026 (ian. 2026) · Mastercard Economics — Economic Outlook 2026 · BBVA Research — Spain Economic Outlook (iun. 2026) · Euronews — Austria government formation timeline (feb.-mar. 2025) · Open Society Institute Sofia — Media Literacy Index 2026 · Kiel Institute — Ukraine Support Tracker 2026 · PST (Norvegia) — Årsrapport 2026</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://norgedan.github.io/">norgedan.github.io</a> &nbsp;·&nbsp;
+    Corpus III · Documentul 3 · Română &nbsp;·&nbsp;
+    <a href="../no/3-europa-ved-veiskillet-no.html">Versiunea norvegiană →</a>
+  </p>
+  <p style="margin-top:0.6rem;">
+    Toate afirmațiile factuale sunt verificabile din surse publice. &nbsp;·&nbsp;
+    Document cu caracter educativ. Fără propagandă de nicio natură. &nbsp;·&nbsp;
+    Septembrie 2026
+  </p>
+  <p style="margin-top:0.6rem;">
+    <a href="2-lumea-in-2026-ro.html">← Documentul 2 — Lumea în 2026</a>
+    &nbsp;·&nbsp;
+    <a href="4-romania-prima-linie-ro.html">Documentul 4 — România, Prima Linie →</a>
+  </p>
+</footer>
+
+</body>
+</html>
