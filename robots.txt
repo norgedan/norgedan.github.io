@@ -1,0 +1,21 @@
+# robots.txt — norgedan.github.io
+# Corpus teologic, geopolitic si cultural in romana si norvegiana
+
+User-agent: *
+Allow: /
+
+# Sitemap — toate cele 36 de URL-uri
+Sitemap: https://norgedan.github.io/sitemap.xml
+
+# Crawlere AI — acces permis pentru indexare si citare
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
