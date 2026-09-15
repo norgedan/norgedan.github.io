@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub — Modelul Chirurgical · Ghid norgedan</title>
+<meta name="description" content="Ghid complet de lucru cu GitHub pentru norgedan.github.io — structura actuală, bune practici, model chirurgical de editare.">
+<style>
+:root{
+  --bg:#0e0f13;--bg2:#14161c;--bg3:#1a1d26;
+  --line:#2a2e3d;--text:#d4d8e8;--text-dim:#7a8099;
+  --accent:#c8a96e;--accent2:#7e9cc4;--green:#70a870;--red:#c47070;
+  --white:#eef0f8;
+  --serif:'Georgia','Times New Roman',serif;
+  --sans:'Helvetica Neue','Arial',sans-serif;
+  --mono:'Courier New','Courier',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:17px;line-height:1.85;}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(14,15,19,0.97);border-bottom:1px solid var(--line);padding:0.8rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(8px);}
+nav .brand{font-family:var(--sans);font-size:0.75rem;letter-spacing:0.12em;color:var(--text-dim);}
+nav .brand span{color:var(--accent);}
+.hero{min-height:60vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.hero-label{font-family:var(--sans);font-size:0.7rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:1.4rem;}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:400;color:var(--white);line-height:1.2;margin-bottom:1rem;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero p{font-family:var(--sans);font-size:0.95rem;color:var(--text-dim);max-width:560px;line-height:1.6;}
+.toc-wrap{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2rem 2rem;}
+.toc-inner{max-width:860px;margin:0 auto;}
+.toc-title{font-family:var(--sans);font-size:0.68rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:1rem;}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.3rem 2rem;list-style:none;}
+.toc li a{font-family:var(--sans);font-size:0.8rem;color:var(--text-dim);text-decoration:none;padding:0.25rem 0;display:flex;gap:0.6rem;}
+.toc li a:hover{color:var(--accent2);}
+.toc li a .n{color:var(--line);font-size:0.65rem;}
+.content{max-width:860px;margin:0 auto;padding:0 2rem;}
+.chapter{padding:4rem 0 1rem;border-top:1px solid var(--line);margin-top:3rem;}
+.chapter:first-child{border-top:none;}
+.chapter-label{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.22em;color:var(--accent);margin-bottom:1rem;}
+.chapter h2{font-family:var(--serif);font-size:clamp(1.4rem,2.5vw,2rem);font-weight:400;color:var(--white);line-height:1.25;margin-bottom:1.6rem;}
+.chapter h3{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--accent2);margin:2rem 0 0.8rem;font-style:italic;}
+p{margin-bottom:1.2rem;color:var(--text);}
+p:last-child{margin-bottom:0;}
+strong{color:var(--white);}
+code{font-family:var(--mono);font-size:0.85em;background:var(--bg3);color:var(--accent2);padding:0.15em 0.4em;border-radius:3px;}
+pre{background:var(--bg3);border:1px solid var(--line);border-radius:6px;padding:1.4rem 1.6rem;margin:1.6rem 0;overflow-x:auto;font-family:var(--mono);font-size:0.82rem;color:var(--accent2);line-height:1.7;}
+pre .comment{color:var(--text-dim);}
+pre .cmd{color:var(--green);}
+pre .out{color:var(--text-dim);}
+.callout{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1.4rem 1.6rem;margin:2rem 0;}
+.callout-label{font-family:var(--sans);font-size:0.65rem;letter-spacing:0.18em;color:var(--accent2);margin-bottom:0.6rem;}
+.callout p{color:var(--text);margin:0;font-size:0.92rem;}
+.callout-green{background:var(--bg2);border:1px solid var(--green);border-radius:4px;padding:1.4rem 1.6rem;margin:2rem 0;}
+.callout-green .callout-label{color:var(--green);}
+.callout-green p{color:var(--text);margin:0;font-size:0.92rem;}
+.callout-red{background:var(--bg2);border:1px solid var(--red);border-radius:4px;padding:1.4rem 1.6rem;margin:2rem 0;}
+.callout-red .callout-label{color:var(--red);}
+.callout-red p{color:var(--text);margin:0;font-size:0.92rem;}
+.struct-tree{background:var(--bg3);border:1px solid var(--line);border-radius:6px;padding:1.6rem;margin:1.6rem 0;font-family:var(--mono);font-size:0.82rem;line-height:2;}
+.struct-tree .dir{color:var(--accent);}
+.struct-tree .file{color:var(--accent2);}
+.struct-tree .note{color:var(--text-dim);font-style:italic;}
+.step-list{margin:1.4rem 0;}
+.step{display:grid;grid-template-columns:2.2rem 1fr;gap:0 1rem;margin-bottom:1.4rem;}
+.step-n{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--accent);line-height:1;padding-top:0.2rem;}
+.step-body .step-title{font-family:var(--sans);font-size:0.88rem;color:var(--white);font-weight:600;margin-bottom:0.3rem;}
+.step-body p{font-size:0.88rem;color:var(--text-dim);margin:0;line-height:1.6;}
+.repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:1.6rem 0;}
+.repo-item{background:var(--bg2);padding:1.2rem 1.4rem;}
+.repo-name{font-family:var(--mono);font-size:0.82rem;color:var(--accent);margin-bottom:0.4rem;}
+.repo-desc{font-family:var(--sans);font-size:0.78rem;color:var(--text-dim);line-height:1.5;}
+.repo-url{font-family:var(--mono);font-size:0.72rem;color:var(--accent2);margin-top:0.4rem;}
+.divider{text-align:center;color:var(--line);margin:3rem 0;letter-spacing:0.4em;}
+footer{background:var(--bg2);border-top:1px solid var(--line);padding:2rem 2rem;font-family:var(--sans);font-size:0.72rem;color:var(--text-dim);text-align:center;line-height:1.8;margin-top:4rem;}
+footer a{color:var(--accent2);text-decoration:none;}
+@media(max-width:600px){body{font-size:15px;}nav{padding:0.7rem 1rem;}.hero{padding:5rem 1rem 2.5rem;}.content{padding:0 1rem;}.toc-wrap{padding:1.5rem 1rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">norgedan · <span>Ghid GitHub</span></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Aducere aminte · Septembrie 2026</div>
+  <h1>GitHub —<br><em>Modelul Chirurgical</em></h1>
+  <p>Structura completă a lui norgedan pe GitHub, modelul de lucru pas cu pas, bunele practici și cum să adaugi, modifici sau ștergi orice fișier fără risc. Exact modelul pe care îl ai deja și funcționează.</p>
+</section>
+
+<div class="toc-wrap">
+  <div class="toc-inner">
+    <div class="toc-title">CUPRINS</div>
+    <ul class="toc">
+      <li><a href="#structura"><span class="n">I</span> Structura actuală norgedan</a></li>
+      <li><a href="#cum-functioneaza"><span class="n">II</span> Cum funcționează GitHub Pages</a></li>
+      <li><a href="#chirurgical"><span class="n">III</span> Modelul chirurgical — editare precisă</a></li>
+      <li><a href="#repo-nou"><span class="n">IV</span> Cum creezi un repository nou</a></li>
+      <li><a href="#optimizare"><span class="n">V</span> Optimizarea unui repository</a></li>
+      <li><a href="#mentinere"><span class="n">VI</span> Menținerea în timp</a></li>
+      <li><a href="#urgente"><span class="n">VII</span> Situații de urgență — cum repari</a></li>
+      <li><a href="#seo-avansat"><span class="n">VIII</span> SEO avansat — fișierele esențiale</a></li>
+      <li><a href="#openbsd"><span class="n">IX</span> Note OpenBSD — comenzi specifice</a></li>
+      <li><a href="#verificare"><span class="n">X</span> Scriptul de verificare pre-push</a></li>
+      <li><a href="#jurnal"><span class="n">XI</span> Jurnal — sesiunea 15 septembrie 2026</a></li>
+      <li><a href="#ramas"><span class="n">XII</span> Ce a rămas de făcut</a></li>
+      <li><a href="#bune-practici"><span class="n">XIII</span> Bunele practici — rezumat</a></li>
+    </ul>
+  </div>
+</div>
+
+<main class="content">
+
+<!-- I -->
+<section class="chapter" id="structura">
+  <div class="chapter-label">CAPITOLUL I</div>
+  <h2>Structura actuală norgedan pe GitHub</h2>
+
+  <p>Ai 6 repository-uri pe GitHub, toate sub contul <code>norgedan</code>. Unul singur — <code>norgedan.github.io</code> — este special: GitHub îl servește automat ca site public la adresa <strong>https://norgedan.github.io/</strong>. Celelalte sunt depozite de conținut.</p>
+
+  <div class="repo-grid">
+    <div class="repo-item">
+      <div class="repo-name">norgedan.github.io</div>
+      <div class="repo-desc">Repository principal — pagina de start, sitemap, Google Search Console. Tot ce adaugi aici apare live pe site.</div>
+      <div class="repo-url">norgedan.github.io/</div>
+    </div>
+    <div class="repo-item">
+      <div class="repo-name">corpus</div>
+      <div class="repo-desc">Corpus I — Cuvântul, Omul, Lumea. 5 documente teologie, știință, geopolitică. RO + NO.</div>
+      <div class="repo-url">norgedan.github.io/corpus/</div>
+    </div>
+    <div class="repo-item">
+      <div class="repo-name">corpus2</div>
+      <div class="repo-desc">Corpus II — Firul Roșu, Geopolitică, România. 4 documente istorie, sănătate. RO + NO.</div>
+      <div class="repo-url">norgedan.github.io/corpus2/</div>
+    </div>
+    <div class="repo-item">
+      <div class="repo-name">opera</div>
+      <div class="repo-desc">Opera românească și compozitorii ei. RO + NO.</div>
+      <div class="repo-url">norgedan.github.io/opera/</div>
+    </div>
+    <div class="repo-item">
+      <div class="repo-name">limba</div>
+      <div class="repo-desc">Limba română — origini, supraviețuire, identitate. RO + NO.</div>
+      <div class="repo-url">norgedan.github.io/limba/</div>
+    </div>
+    <div class="repo-item">
+      <div class="repo-name">limba-ro-final</div>
+      <div class="repo-desc">Limba care nu vrea să moară — originile latine și mitul limbii române. RO + NO.</div>
+      <div class="repo-url">norgedan.github.io/limba-ro-final/</div>
+    </div>
+  </div>
+
+  <p><strong>Corpus III</strong> nu are propriul repository — este un folder în interiorul <code>norgedan.github.io</code>. Aceasta este abordarea corectă pentru conținut care face parte din site-ul principal.</p>
+
+  <h3>Structura fișierelor în norgedan.github.io</h3>
+
+  <div class="struct-tree">
+    <span class="dir">norgedan.github.io/</span><br>
+    ├── <span class="file">index.html</span>         <span class="note">← pagina principală — hub pentru tot</span><br>
+    ├── <span class="file">sitemap.xml</span>        <span class="note">← 36 URL-uri indexate de Google</span><br>
+    ├── <span class="file">README.md</span>          <span class="note">← descrierea repo-ului pe GitHub</span><br>
+    ├── <span class="file">google045819ef33b2ff6d.html</span> <span class="note">← Google Search Console</span><br>
+    └── <span class="dir">corpus3/</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">index.html</span>     <span class="note">← index Corpus III</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">ro/</span>            <span class="note">← 6 documente română</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="dir">no/</span>            <span class="note">← 6 documente norvegiană</span>
+  </div>
+
+  <div class="callout-green">
+    <div class="callout-label">DE CE ACEST MODEL FUNCȚIONEAZĂ</div>
+    <p>Un singur repository principal care conține tot site-ul + foldere pentru proiectele noi = control total, structură clară, un singur push pentru a actualiza orice. Corpus I, II, III, Opera, Limbă — toate servite de la aceeași adresă rădăcină.</p>
+  </div>
+</section>
+
+<!-- II -->
+<section class="chapter" id="cum-functioneaza">
+  <div class="chapter-label">CAPITOLUL II</div>
+  <h2>Cum funcționează GitHub Pages — esențialul</h2>
+
+  <p>GitHub Pages transformă automat un repository în site web public. Nu ai nevoie de server, de hosting plătit sau de configurare complicată. Regula este simplă: orice fișier HTML din repository-ul <code>norgedan.github.io</code> devine accesibil la URL-ul corespunzător.</p>
+
+  <div class="callout">
+    <div class="callout-label">REGULA DE AUR</div>
+    <p><code>corpus3/ro/1-romania-si-rusia-ro.html</code> din repo → <code>https://norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html</code> pe internet. Structura de foldere devine structura URL-urilor.</p>
+  </div>
+
+  <h3>Ciclul complet de la editare la publicare</h3>
+
+  <div class="step-list">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Editezi local</div><p>Modifici un fișier pe mașina ta — cu orice editor de text, sau cu Claude care îți generează fișierul.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">git add</div><p>Marchezi fișierele modificate pentru commit. <code>git add fisier.html</code> sau <code>git add .</code> pentru tot.</p></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">git commit</div><p>Creezi un punct de salvare cu un mesaj descriptiv. Acesta este istoria proiectului tău — fiecare commit este un moment la care poți reveni.</p></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">git push</div><p>Trimiți modificările pe GitHub. De aici, GitHub Pages preia automat și publică în 1-3 minute.</p></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Ctrl+Shift+R</div><p>Hard refresh în browser pentru a evita cache-ul local. Modificările sunt live.</p></div></div>
+  </div>
+
+  <pre><span class="comment"># Secvența completă — de fiecare dată</span>
+<span class="cmd">cd ~/norgedan.github.io</span>
+<span class="cmd">git add fisier-modificat.html</span>
+<span class="cmd">git commit -m "Descriere scurtă a ce ai schimbat"</span>
+<span class="cmd">git push origin main</span></pre>
+
+</section>
+
+<!-- III -->
+<section class="chapter" id="chirurgical">
+  <div class="chapter-label">CAPITOLUL III</div>
+  <h2>Modelul chirurgical — editare precisă, fără risc</h2>
+
+  <p>„Chirurgical" înseamnă că modifici exact ce trebuie, nimic mai mult, și că orice greșeală poate fi reparată. Git este sistemul de siguranță perfect — păstrează întreaga istorie și permite revenirea la orice moment anterior.</p>
+
+  <h3>Adaugi un fișier nou</h3>
+  <pre><span class="comment"># Copiezi fișierul generat în locul corect</span>
+<span class="cmd">cp ~/Downloads/document-nou.html ~/norgedan.github.io/corpus3/ro/</span>
+<span class="cmd">git add corpus3/ro/document-nou.html</span>
+<span class="cmd">git commit -m "Add: document nou despre X"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Modifici un fișier existent</h3>
+  <pre><span class="comment"># Înlocuiești fișierul cu versiunea nouă</span>
+<span class="cmd">cp ~/Downloads/index-actualizat.html ~/norgedan.github.io/index.html</span>
+<span class="cmd">git add index.html</span>
+<span class="cmd">git commit -m "Update: index.html — adăugat Corpus IV"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Ștergi un fișier</h3>
+  <pre><span class="comment"># git rm îl șterge și din repo</span>
+<span class="cmd">git rm corpus3/ro/document-de-sters.html</span>
+<span class="cmd">git commit -m "Remove: document eliminat — motiv"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Adaugi un folder întreg</h3>
+  <pre><span class="comment"># Copiezi tot folderul</span>
+<span class="cmd">cp -r ~/Downloads/corpus4 ~/norgedan.github.io/</span>
+<span class="cmd">git add corpus4/</span>
+<span class="cmd">git commit -m "Add: Corpus IV — descriere"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Revii la o versiune anterioară</h3>
+  <pre><span class="comment"># Vezi istoricul</span>
+<span class="cmd">git log --oneline -10</span>
+<span class="out">e72a90a Force redeploy
+0f0ac7e Update README
+768cb85 Add Corpus III to main index
+6b12b80 Add Corpus III</span>
+
+<span class="comment"># Recuperezi un fișier dintr-un commit anterior</span>
+<span class="cmd">git checkout 768cb85 -- index.html</span>
+<span class="cmd">git commit -m "Restore: index.html din versiunea anterioară"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <div class="callout-green">
+    <div class="callout-label">SIGURANȚA ABSOLUTĂ A MODELULUI</div>
+    <p>Nicio greșeală nu este permanentă în git. Orice fișier șters poate fi recuperat, orice versiune poate fi restaurată. Acesta este motivul pentru care mesajele de commit clare sunt esențiale — ele sunt harta cu care navighezi în istoric.</p>
+  </div>
+
+  <h3>Verificare înainte de push — bună practică</h3>
+  <pre><span class="comment"># Vezi ce urmează să fie trimis</span>
+<span class="cmd">git status</span>
+<span class="out">On branch main
+Changes to be committed:
+  modified: index.html
+  new file: corpus3/ro/7-document-nou.html</span>
+
+<span class="comment"># Vezi exact ce s-a schimbat într-un fișier</span>
+<span class="cmd">git diff index.html</span></pre>
+
+</section>
+
+<!-- IV -->
+<section class="chapter" id="repo-nou">
+  <div class="chapter-label">CAPITOLUL IV</div>
+  <h2>Cum creezi un repository nou</h2>
+
+  <p>Ai două opțiuni: prin interfața web GitHub (cel mai simplu) sau din terminal. Pentru conținut nou care face parte din site-ul existent — prefer folderul în <code>norgedan.github.io</code>. Pentru proiecte complet separate — un repo nou.</p>
+
+  <h3>Opțiunea 1 — Folder în norgedan.github.io (recomandat pentru conținut nou)</h3>
+  <pre><span class="cmd">cd ~/norgedan.github.io</span>
+<span class="cmd">mkdir -p corpus4/ro corpus4/no</span>
+<span class="comment"># Copiezi fișierele HTML în folder</span>
+<span class="cmd">cp ~/Downloads/*.html corpus4/ro/</span>
+<span class="cmd">git add corpus4/</span>
+<span class="cmd">git commit -m "Add: Corpus IV — descriere"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Opțiunea 2 — Repository nou separat</h3>
+
+  <div class="step-list">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Creează pe GitHub web</div><p>github.com → butonul verde <strong>New</strong> → nume repo → <strong>Public</strong> → bifează <em>Add README</em> → <strong>Create repository</strong>.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">Activează GitHub Pages</div><p>Settings → Pages → Source: <strong>Deploy from branch</strong> → Branch: <strong>main</strong> → folder: <strong>/ (root)</strong> → Save.</p></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">Clonează local</div><p><code>git clone https://github.com/norgedan/nume-repo.git</code> — apare ca folder pe mașina ta.</p></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">Adaugă fișierele</div><p>Copiezi HTML-urile în folder, <code>git add .</code>, <code>git commit</code>, <code>git push</code>.</p></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Linkează din index.html principal</div><p>Adaugi cardul în <code>norgedan.github.io/index.html</code> și actualizezi <code>sitemap.xml</code>.</p></div></div>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">ATENȚIE — REPO NOU VS FOLDER</div>
+    <p>Un repo nou separat înseamnă muncă suplimentară: GitHub Pages activat separat, URL de forma <code>norgedan.github.io/repo-nou/</code> funcționează doar dacă repo-ul se numește exact cum vrei URL-ul. Folderul în <code>norgedan.github.io</code> este mai simplu și mai curat pentru conținut editorial.</p>
+  </div>
+</section>
+
+<!-- V -->
+<section class="chapter" id="optimizare">
+  <div class="chapter-label">CAPITOLUL V</div>
+  <h2>Optimizarea unui repository — lista completă</h2>
+
+  <h3>1. About — prima impresie pe GitHub</h3>
+  <p>Pe pagina repo-ului, rotița ⚙️ lângă <strong>About</strong> → completezi: <strong>Description</strong> (1-2 propoziții clare), <strong>Website</strong> (URL-ul live), <strong>Topics</strong> (10 cuvinte cheie relevante).</p>
+
+  <h3>2. README.md — documentul de bază</h3>
+  <p>Fiecare repo ar trebui să aibă un README care explică: ce conține, la ce URL e live, cum este organizat. Editezi direct din GitHub web — click pe README.md → ✏️ Edit.</p>
+
+  <h3>3. Meta tags în fiecare HTML</h3>
+  <pre><span class="comment">&lt;!-- Esențial pentru SEO și social sharing --&gt;</span>
+&lt;meta name="description" content="Descriere clară, 150-160 caractere"&gt;
+&lt;meta name="keywords" content="cuvant1, cuvant2, cuvant3"&gt;
+&lt;meta property="og:title" content="Titlu pentru Facebook/LinkedIn"&gt;
+&lt;meta property="og:description" content="Descriere pentru share"&gt;
+&lt;meta property="og:url" content="https://norgedan.github.io/..."&gt;
+&lt;link rel="canonical" href="https://norgedan.github.io/..."&gt;</pre>
+
+  <h3>4. sitemap.xml — Google indexează tot</h3>
+  <p>Fiecare URL nou adăugat merge și în <code>sitemap.xml</code>. Structura minimă:</p>
+  <pre>&lt;url&gt;
+  &lt;loc&gt;https://norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html&lt;/loc&gt;
+  &lt;priority&gt;0.8&lt;/priority&gt;
+&lt;/url&gt;</pre>
+
+  <h3>5. Google Search Console</h3>
+  <p>Ai deja verificarea Google Search Console. Periodic intri pe <strong>search.google.com/search-console</strong> → Sitemaps → confirmi că sitemap-ul tău este indexat corect și verifici dacă există erori de crawl.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">CHECKLIST DE OPTIMIZARE — DE BIFAT LA ORICE REPO NOU</div>
+    <p>
+      ☑ Description + Website + Topics completate în About<br>
+      ☑ README.md cu link live<br>
+      ☑ Fiecare HTML are meta description, og:title, canonical<br>
+      ☑ URL-urile noi adăugate în sitemap.xml<br>
+      ☑ Link din index.html principal spre conținut nou
+    </p>
+  </div>
+</section>
+
+<!-- VI -->
+<section class="chapter" id="mentinere">
+  <div class="chapter-label">CAPITOLUL VI</div>
+  <h2>Menținerea în timp — rutina corectă</h2>
+
+  <h3>Înainte de orice sesiune de lucru</h3>
+  <pre><span class="cmd">cd ~/norgedan.github.io</span>
+<span class="cmd">git pull origin main</span>
+<span class="comment"># Sincronizezi local cu ce există pe GitHub</span>
+<span class="comment"># Esențial dacă ai editat ceva din browser web pe GitHub</span></pre>
+
+  <h3>Mesaje de commit — modelul corect</h3>
+  <pre><span class="comment"># ✅ Bun — clar ce s-a schimbat</span>
+<span class="cmd">git commit -m "Add: Corpus IV — Viitorul Europei RO+NO"</span>
+<span class="cmd">git commit -m "Update: index.html — adăugat secțiune Corpus IV"</span>
+<span class="cmd">git commit -m "Fix: link greșit în documentul 3 RO"</span>
+<span class="cmd">git commit -m "Update: sitemap.xml — 48 URL-uri"</span>
+
+<span class="comment"># ❌ Rău — nu îți spune nimic peste 3 luni</span>
+<span class="cmd">git commit -m "modificari"</span>
+<span class="cmd">git commit -m "update"</span></pre>
+
+  <h3>Verificare periodică — o dată pe lună</h3>
+  <pre><span class="cmd">git log --oneline -10</span>       <span class="comment"># Vezi ultimele 10 commit-uri</span>
+<span class="cmd">git status</span>                  <span class="comment"># Verifici dacă e ceva necommitat</span></pre>
+
+  <p>Din browser: verifici că toate link-urile din <code>index.html</code> funcționează, că sitemap-ul este actualizat și că Google Search Console nu raportează erori.</p>
+
+  <div class="callout">
+    <div class="callout-label">REGULA SIMPLĂ DE MENȚINERE</div>
+    <p><strong>git pull</strong> înainte să începi. <strong>git push</strong> după ce termini. Mesaje de commit clare. Sitemap actualizat la fiecare document nou. Aceasta este toată rutina.</p>
+  </div>
+</section>
+
+<!-- VII -->
+<section class="chapter" id="urgente">
+  <div class="chapter-label">CAPITOLUL VII</div>
+  <h2>Situații de urgență — cum repari</h2>
+
+  <h3>Site-ul nu se actualizează după push</h3>
+  <pre><span class="comment"># Forțezi re-deploy-ul cu un commit gol</span>
+<span class="cmd">git commit --allow-empty -m "Force GitHub Pages redeploy"</span>
+<span class="cmd">git push origin main</span>
+<span class="comment"># Aștepți 3-5 minute, apoi Ctrl+Shift+R în browser</span></pre>
+
+  <h3>Ai șters din greșeală un fișier</h3>
+  <pre><span class="comment"># Vezi în ce commit era fișierul</span>
+<span class="cmd">git log --all --full-history -- fisier-sters.html</span>
+<span class="comment"># Recuperezi din commit-ul respectiv</span>
+<span class="cmd">git checkout HASH_COMMIT -- fisier-sters.html</span>
+<span class="cmd">git commit -m "Restore: fisier-sters.html"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Ai stricat un fișier și vrei versiunea de ieri</h3>
+  <pre><span class="comment"># Vezi istoricul fișierului specific</span>
+<span class="cmd">git log --oneline -- index.html</span>
+<span class="out">768cb85 Add Corpus III to main index
+b7945a6 Hub principal: index.html</span>
+<span class="comment"># Restaurezi versiunea anterioară</span>
+<span class="cmd">git checkout 768cb85 -- index.html</span>
+<span class="cmd">git commit -m "Restore: index.html la versiunea 768cb85"</span>
+<span class="cmd">git push origin main</span></pre>
+
+  <h3>Repo-ul local și GitHub sunt desincronizate</h3>
+  <pre><span class="comment"># Sincronizezi — aduce modificările de pe GitHub</span>
+<span class="cmd">git pull origin main</span>
+<span class="comment"># Dacă sunt conflicte — git îți arată ce trebuie rezolvat</span></pre>
+
+  <div class="callout-red">
+    <div class="callout-label">NICIODATĂ NU FACI ASTA</div>
+    <p><code>git push --force</code> — suprascrie istoricul pe GitHub fără posibilitate de recuperare. Nu este niciodată necesar în modelul tău de lucru. Dacă cineva îți sugerează asta — nu face.</p>
+  </div>
+</section>
+
+
+<!-- VIII SEO AVANSAT -->
+<section class="chapter" id="seo-avansat">
+  <div class="chapter-label">CAPITOLUL VIII</div>
+  <h2>SEO avansat — fișierele esențiale pe care le are norgedan</h2>
+
+  <p>Un site cu conținut excelent dar fără infrastructura SEO corectă rămâne invizibil. Acestea sunt fișierele care fac diferența — toate există acum în <code>norgedan.github.io</code>.</p>
+
+  <h3>robots.txt — harta pentru crawlere</h3>
+  <p>Spune motoarelor de căutare ce pot indexa și unde se află sitemap-ul. Fără el, Google descoperă paginile mai lent și mai incomplet.</p>
+  <pre>User-agent: *
+Allow: /
+
+Sitemap: https://norgedan.github.io/sitemap.xml
+
+<span class="comment"># Crawlere AI — acces permis pentru indexare si citare</span>
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /</pre>
+
+  <div class="callout">
+    <div class="callout-label">DE CE PERMITEM CRAWLERELE AI</div>
+    <p>Pentru documente educative cu date verificate, a fi indexat de ChatGPT, Claude sau Perplexity înseamnă că răspunsurile lor pot cita conținutul tău. Este distribuție gratuită a informației corecte — exact scopul corpusului.</p>
+  </div>
+
+  <h3>hreflang — cel mai valoros câștig pentru site bilingv</h3>
+  <p>Fiecare document RO are perechea lui NO. Fără <code>hreflang</code>, Google nu știe că sunt versiuni ale aceluiași conținut și le poate trata ca duplicat. Cu <code>hreflang</code>, servește versiunea corectă utilizatorilor din fiecare țară.</p>
+  <pre><span class="comment">&lt;!-- În fiecare document, imediat după canonical --&gt;</span>
+&lt;link rel="canonical" href="https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html"&gt;
+&lt;link rel="alternate" hreflang="ro" href="https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html"&gt;
+&lt;link rel="alternate" hreflang="no" href="https://norgedan.github.io/corpus3/no/2-verden-i-2026-no.html"&gt;
+&lt;link rel="alternate" hreflang="x-default" href="https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html"&gt;</pre>
+
+  <div class="callout-green">
+    <div class="callout-label">REGULA hreflang — RECIPROCITATE OBLIGATORIE</div>
+    <p>Documentul RO trebuie să declare atât versiunea RO cât și NO. Documentul NO trebuie să declare exact aceleași două. Dacă declarația nu este reciprocă, Google ignoră complet hreflang-ul. <code>x-default</code> indică versiunea implicită pentru utilizatorii din alte țări — la norgedan, româna.</p>
+  </div>
+
+  <h3>404.html — pagina de eroare proprie</h3>
+  <p>GitHub Pages servește automat <code>404.html</code> din rădăcina repo-ului când cineva accesează un URL inexistent. Fără el, vizitatorul vede pagina generică GitHub și pleacă. Cu el, vede designul tău și link-uri spre toate corpusurile.</p>
+
+  <h3>LICENSE — clarifică drepturile</h3>
+  <p>Pentru documente educative, <strong>Creative Commons BY 4.0</strong> este alegerea potrivită: oricine poate folosi, redistribui și adapta conținutul, cu condiția atribuirii. Fișierul se numește exact <code>LICENSE</code>, fără extensie — GitHub îl recunoaște automat și îl afișează în interfața repo-ului.</p>
+
+  <h3>.gitignore — curățenia repo-ului</h3>
+  <p>Împiedică fișierele temporare de sistem și editor să ajungă în repo.</p>
+  <pre>.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+*.tmp
+*.bak
+*.log</pre>
+
+  <div class="callout-green">
+    <div class="callout-label">CHECKLIST SEO COMPLET — STAREA norgedan</div>
+    <p>
+      ☑ <code>robots.txt</code> cu sitemap și crawlere AI permise<br>
+      ☑ <code>sitemap.xml</code> — 36 URL-uri, toate documentele<br>
+      ☑ <code>hreflang</code> reciproc RO↔NO pe toate 12 documentele Corpus III<br>
+      ☑ <code>canonical</code> unic în fiecare document<br>
+      ☑ <code>404.html</code> în designul site-ului<br>
+      ☑ <code>LICENSE</code> — CC BY 4.0<br>
+      ☑ <code>.gitignore</code><br>
+      ☑ Meta description, keywords, Open Graph în fiecare HTML<br>
+      ☑ Google Search Console verificat<br>
+      ☑ About + Topics completate pe toate repo-urile
+    </p>
+  </div>
+</section>
+
+<!-- IX OPENBSD -->
+<section class="chapter" id="openbsd">
+  <div class="chapter-label">CAPITOLUL IX</div>
+  <h2>Note OpenBSD — comenzi specifice</h2>
+
+  <p>OpenBSD folosește utilitare BSD, nu GNU. Câteva comenzi diferă de exemplele găsite pe internet, care presupun de obicei Linux.</p>
+
+  <h3>tar — fără --strip-components</h3>
+  <pre><span class="comment"># ❌ Nu funcționează pe OpenBSD</span>
+tar -xzf arhiva.tar.gz --strip-components=1
+
+<span class="comment"># ✅ Varianta corectă — dezarhivezi apoi copiezi</span>
+<span class="cmd">tar -xzf ~/Downloads/arhiva.tar.gz</span>
+<span class="cmd">cp -r optimizari/* .</span>
+<span class="cmd">cp optimizari/.gitignore .</span>   <span class="comment"># fișierele ascunse separat</span>
+<span class="cmd">rm -rf optimizari</span></pre>
+
+  <div class="callout-red">
+    <div class="callout-label">ATENȚIE LA FIȘIERELE ASCUNSE</div>
+    <p><code>cp -r folder/* .</code> nu copiază fișierele care încep cu punct — <code>.gitignore</code>, <code>.htaccess</code> etc. Trebuie copiate explicit, separat.</p>
+  </div>
+
+  <h3>git pull — configurarea strategiei</h3>
+  <p>Dacă <code>git pull</code> returnează <em>„Need to specify how to reconcile divergent branches"</em>, configurezi o singură dată:</p>
+  <pre><span class="cmd">git config pull.rebase false</span>   <span class="comment"># merge (recomandat pentru fluxul tău)</span></pre>
+
+  <h3>sed — fără <code>\n</code> în textul de înlocuire</h3>
+  <p>BSD sed <strong>nu</strong> interpretează <code>\n</code> ca linie nouă — îl scrie literal ca litera <code>n</code>. Greșeala aceasta a fost făcută pe 15 septembrie 2026 și a injectat un <code>n</code> rătăcit în <code>status-proiect.html</code>.</p>
+  <pre><span class="comment"># ❌ Merge pe Linux/GNU, strică pe OpenBSD</span>
+sed 's|vechi|nou1\nnou2|' fisier
+
+<span class="comment"># ✅ Varianta portabilă — backslash urmat de linie nouă reală</span>
+sed 's|vechi|nou1\
+nou2|' fisier
+
+<span class="comment"># ✅ Sau, mai sigur pentru inserții complexe — awk</span></pre>
+
+  <h3>grep — fără alternanța <code>\|</code></h3>
+  <p><code>\|</code> este o extensie GNU. BSD grep o tratează ca text literal, deci pattern-ul nu găsește nimic și <strong>eșuează silențios</strong> — cel mai periculos tip de eroare. Aceeași sesiune, a doua greșeală de același fel.</p>
+  <pre><span class="comment"># ❌ Nu găsește nimic pe OpenBSD</span>
+grep -o 'varianta1\|varianta2' fisier
+
+<span class="comment"># ✅ Regex extins POSIX — merge pe ambele</span>
+grep -oE 'varianta1|varianta2' fisier</pre>
+
+  <div class="callout-red">
+    <div class="callout-label">REGULA GENERALĂ — BSD NU ESTE GNU</div>
+    <p>Orice exemplu găsit pe internet presupune, de obicei, Linux cu utilitare GNU. Înainte să rulezi un script generat sau copiat, caută în el: <code>\n</code> în sed, <code>\|</code> / <code>\+</code> / <code>\?</code> în grep, <code>sed -i</code> fără argument, <code>--strip-components</code>, <code>grep -P</code>. Toate acestea se comportă diferit sau eșuează pe OpenBSD.</p>
+  </div>
+
+  <h3>Verificarea rezultatelor — întotdeauna după orice operație</h3>
+  <pre><span class="comment"># Fișierele există?</span>
+<span class="cmd">ls -la robots.txt 404.html LICENSE .gitignore</span>
+
+<span class="comment"># Câte documente au hreflang?</span>
+<span class="cmd">grep -l hreflang corpus3/ro/*.html corpus3/no/*.html | wc -l</span>
+<span class="out">12</span>
+
+<span class="comment"># Ce urmează să fie commis?</span>
+<span class="cmd">git status --short</span></pre>
+
+  <div class="callout">
+    <div class="callout-label">LECȚIA PRACTICĂ</div>
+    <p>Verifică întotdeauna după o operație, nu presupune că a mers. O comandă poate eșua silențios — <code>ls</code> și <code>grep -c</code> îți spun adevărul în două secunde. <code>git status</code> înainte de commit arată exact ce se va trimite.</p>
+  </div>
+</section>
+
+<!-- X SCRIPT VERIFICARE -->
+<section class="chapter" id="verificare">
+  <div class="chapter-label">CAPITOLUL X</div>
+  <h2>Scriptul de verificare pre-push</h2>
+
+  <p>Principiul „verifică, nu presupune" funcționează doar dacă verificarea se face de fiecare dată — inclusiv când ești obosit, mai ales atunci. Un script care rulează în două secunde este mai de încredere decât atenția omenească la ora 22.</p>
+
+  <p><code>scripts/verifica.sh</code> există acum în repo-ul <code>corpus</code> și verifică automat opt lucruri:</p>
+
+  <div class="step-list">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Meta SEO complet</div><p>Fiecare document are description, canonical, hreflang (ro, nb, x-default) și og:title.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">Canonical corect</div><p>Fiecare canonical arată spre propriul fișier, nu spre altul copiat din greșeală.</p></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">Reciprocitate hreflang</div><p>Dacă documentul RO arată spre cel NO, cel NO trebuie să arate înapoi spre RO. Google ignoră legăturile nereciproce.</p></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">Tag-uri HTML echilibrate</div><p>html, head, body, section, div — deschise și închise în număr egal.</p></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Sitemap vs. realitate</div><p>Fiecare URL din sitemap are fișier pe disc, și fiecare document de pe disc este în sitemap.</p></div></div>
+    <div class="step"><div class="step-n">6</div><div class="step-body"><div class="step-title">Cifra de cuvinte</div><p>Numărul declarat în index.html și README.md este comparat cu numărul real măsurat, cu toleranță de 10%.</p></div></div>
+    <div class="step"><div class="step-n">7</div><div class="step-body"><div class="step-title">Perechi RO/NO complete</div><p>Numărul documentelor RO este egal cu cel NO — nicio versiune lipsă.</p></div></div>
+    <div class="step"><div class="step-n">8</div><div class="step-body"><div class="step-title">Reziduuri necurățate</div><p>Fișiere .bak, .tmp, .orig rămase după scripturi.</p></div></div>
+  </div>
+
+  <pre><span class="comment"># Ritualul înainte de fiecare push</span>
+<span class="cmd">cd ~/corpus</span>
+<span class="cmd">sh scripts/verifica.sh</span>
+<span class="out">REZULTAT: totul in regula. Poti face push.</span></pre>
+
+  <div class="callout-green">
+    <div class="callout-label">SCRIPTUL ȘI-A DOVEDIT VALOAREA DIN PRIMA RULARE</div>
+    <p>La prima execuție a găsit că <strong>Documentul VI nu avea hreflang</strong> — scăpase pentru că scriptul de adăugare a SEO viza doar documentele I–V. Fără verificare automată, ar fi rămas așa, iar noi am fi crezut că treaba e terminată.</p>
+  </div>
+
+  <h3>Scripturi versionate vs. scripturi de unică folosință</h3>
+  <p>Distincția contează. <code>.gitignore</code> este configurat astfel:</p>
+  <pre><span class="comment"># scripturi de lucru locale (one-off, descarcate temporar)</span>
+/*.sh
+<span class="comment"># ...dar scripturile intentionate, versionate, traiesc in scripts/</span>
+!scripts/</pre>
+  <p><strong>Merită versionate:</strong> scripturi pe care le vei rula din nou — verificări, validări, rapoarte. <strong>Nu merită:</strong> scripturi de migrare one-off; rezultatul lor e deja în commit-uri, iar peste un an nu vei ști dacă au rulat sau nu.</p>
+</section>
+
+<!-- XI JURNAL -->
+<section class="chapter" id="jurnal">
+  <div class="chapter-label">CAPITOLUL XI</div>
+  <h2>Jurnal — sesiunea 15 septembrie 2026</h2>
+
+  <p>Sesiune de corectură chirurgicală pe repo-ul <code>corpus</code> (Corpus I). Șapte commit-uri, de la <code>4ad8b24</code> la <code>9f1cffd</code>.</p>
+
+  <h3>Ce s-a făcut corect</h3>
+
+  <div class="callout-green">
+    <div class="callout-label">CONȚINUT — DOCUMENTUL I, RO + NO</div>
+    <p>Corectură teologică a Capitolului I: „egalitate de fire" păstrată dar ancorată în Ioan 4:24 („Duh e Dumnezău"), unitatea Treimii mărturisită prin Ioan 10:30 și confirmată prin Matei 3:17, distincția limpede între nașterea veșnică a Fiului din Tatăl și nașterea din nou a omului din Duh (Ioan 3:5,8), Duhul ca legătură de iubire — analogie augustiniană marcată <em>explicit ca analogie</em>, nu ca afirmație despre originea Persoanelor.<br><br>
+    <strong>Toate citatele verificate cuvânt cu cuvânt</strong> în PDF-ul Bibliei de la București 1688 (2.767 pagini) înainte de scriere.</p>
+  </div>
+
+  <div class="callout-green">
+    <div class="callout-label">TEHNIC</div>
+    <p>
+      ☑ Meta SEO complet (description, keywords, canonical, Open Graph, Twitter) pe documentele I–V<br>
+      ☑ hreflang reciproc RO↔NO pe toate 12 documentele<br>
+      ☑ <code>lang="nb"</code> în fișierele norvegiene — coerent cu <code>hreflang="nb"</code><br>
+      ☑ Numerotare corectată: „din V" → „din VI" / „av V" → „av VI"<br>
+      ☑ README rescris — 12 documente, licență, standard editorial<br>
+      ☑ LICENSE (CC BY 4.0) + .gitignore create<br>
+      ☑ <code>noindex</code> pe status-proiect.html — document intern, nu conținut public<br>
+      ☑ <code>scripts/verifica.sh</code> — control automat pre-push
+    </p>
+  </div>
+
+  <h3>Ce a fost greșit și cum s-a reparat</h3>
+
+  <div class="callout-red">
+    <div class="callout-label">1. CIFRE UMFLATE PE SITE — CEA MAI SERIOASĂ PROBLEMĂ</div>
+    <p>Site-ul declara <strong>~120.000 de cuvinte</strong>, README-ul <strong>~130.000</strong>, status-proiect <strong>~180.000</strong>. Numărul real, măsurat: <strong>53.543</strong>. Estimarea propusă inițial în locul lor (145.000) ar fi înrăutățit situația.<br><br>
+    <strong>Lecția:</strong> nicio cifră nu se scrie fără măsurare. Comanda care dă adevărul:<br>
+    <code>cat 0*.html | sed -e '/&lt;style&gt;/,/&lt;\/style&gt;/d' -e 's/&lt;[^&gt;]*&gt;//g' | wc -w</code><br>
+    (eliminarea blocului CSS este esențială — altfel numeri și stilurile)</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">2. COD GNU PE MAȘINĂ BSD — DE DOUĂ ORI ÎN ACEEAȘI SESIUNE</div>
+    <p><code>\n</code> în sed → a injectat litera <code>n</code> în HTML. <code>\|</code> în grep → a eșuat silențios, raportând fals „nu declară un număr de cuvinte".<br><br>
+    <strong>Lecția:</strong> testarea pe alt sistem decât cel de producție nu validează nimic. Vezi Capitolul IX pentru variantele portabile.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">3. FIȘIER FANTOMĂ COMIS ACCIDENTAL</div>
+    <p>O comandă tăiată la copy-paste a creat un fișier gol numit <code>main</code>, iar <code>git add -A</code> l-a inclus în commit. Reparat cu <code>git rm --cached main</code>.<br><br>
+    <strong>Lecția:</strong> <code>git status --short</code> înainte de <code>git add -A</code>, și citit <em>efectiv</em> ce scrie acolo. Un <code>?? main</code> neașteptat era semnalul.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">4. VERSIUNE VECHE COPIATĂ PESTE CEA NOUĂ</div>
+    <p>Browserul a salvat descărcarea nouă ca <code>verifica(1).sh</code>, iar <code>cp ~/Downloads/verifica.sh</code> a copiat tot fișierul vechi. Scriptul a rulat, dar cu bug-ul nereparat.<br><br>
+    <strong>Lecția:</strong> după orice copiere de fișier actualizat, verifică o linie caracteristică din el:<br>
+    <code>grep -n 'ceva-specific-versiunii-noi' fisier</code><br>
+    Și curăță <code>~/Downloads</code> după fiecare sesiune.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">OBSERVAȚIA DE FOND</div>
+    <p>Toate cele patru greșeli au fost prinse pentru că s-a verificat output-ul, nu s-a presupus succesul. Trei din patru au fost prinse de om citind atent ecranul; una de script. Ambele plase de siguranță sunt necesare — scriptul nu poate detecta că el însuși e versiunea veche.</p>
+  </div>
+</section>
+
+<!-- XII RAMAS -->
+<section class="chapter" id="ramas">
+  <div class="chapter-label">CAPITOLUL XII</div>
+  <h2>Ce a rămas de făcut</h2>
+
+  <h3>Conținut</h3>
+  <p><strong>Documentul VII — Familia și Societatea.</strong> Se discută structura înainte de scriere, ca la Doc VI. Atenție specială: teren contestat politic (natalitate, căsătorie, roluri, politici demografice). Regula convenită — se separă net <em>datele verificabile</em> (cu sursă și an) de <em>interpretarea teologică sau filozofică</em>, asumată explicit ca poziție, nu prezentată ca fapt neutru. Unde există dezbatere empirică reală, se semnalează.</p>
+
+  <p><strong>Verificarea „la puricat" a documentelor II–VI</strong> continuă — același model: se identifică pasajul, se verifică sursele, se corectează chirurgical, se aplică în ambele limbi.</p>
+
+  <h3>Cifre de verificat în alte locuri</h3>
+  <p>Dacă numărul de cuvinte era umflat de peste două ori în trei locuri diferite din <code>corpus</code>, aceeași problemă există probabil și în altă parte. De verificat și corectat, prin măsurare, nu prin estimare:</p>
+  <pre><span class="comment"># Ghidul acesta declară „~220.000 cuvinte" pentru tot proiectul — NEVERIFICAT</span>
+<span class="comment"># README-urile din corpus2, corpus3, opera, limba — NEVERIFICATE</span>
+
+<span class="comment"># Comanda de măsurare, aplicabilă oriunde:</span>
+<span class="cmd">cat *.html | sed -e '/&lt;style&gt;/,/&lt;\/style&gt;/d' -e 's/&lt;[^&gt;]*&gt;//g' | wc -w</span></pre>
+
+  <h3>Infrastructură — opțional</h3>
+  <p>
+    ○ Adaptarea <code>scripts/verifica.sh</code> pentru <code>corpus2</code>, <code>corpus3</code> și celelalte repo-uri (structura de foldere diferă la corpus3 — ro/ și no/ separate)<br>
+    ○ <code>LICENSE</code> și <code>.gitignore</code> în celelalte repo-uri<br>
+    ○ Consolidarea repo-urilor separate (<code>corpus</code>, <code>corpus2</code>) ca foldere în <code>norgedan.github.io</code> — decizie de luat la rece, nu în mijlocul unei corecturi. Funcționează bine și așa.
+  </p>
+
+  <div class="callout">
+    <div class="callout-label">STANDARDUL, REAFIRMAT</div>
+    <p><em>Adevărul complet, nu cel convenabil.</em> Verificare înainte de scriere — nicio cifră, dată sau afirmație din memorie. Citatele biblice confruntate cu textul-sursă 1688. Lucru chirurgical: se corectează pasajul vizat, nu se rescrie documentul. Comenzi portabile POSIX. Verifică, nu presupune.</p>
+  </div>
+</section>
+
+<!-- XIII -->
+<section class="chapter" id="bune-practici">
+  <div class="chapter-label">CAPITOLUL XIII</div>
+  <h2>Bunele practici — rezumatul modelului norgedan</h2>
+
+  <h3>Structura care funcționează</h3>
+  <p><strong>Un singur repository principal</strong> (<code>norgedan.github.io</code>) care conține tot site-ul și toate corpusurile ca foldere. Repo-urile separate — doar pentru proiecte complet independente cu propria lor logică de navigare.</p>
+
+  <h3>Convenția de numire a fișierelor</h3>
+  <pre><span class="comment"># ✅ Modelul tău — clar, consistent, sortabil</span>
+1-romania-si-rusia-ro.html
+2-lumea-in-2026-ro.html
+3-europa-la-rascruce-ro.html
+
+<span class="comment"># Foldere cu structură RO/NO</span>
+corpus3/ro/   ← documente române
+corpus3/no/   ← documente norvegiene</pre>
+
+  <h3>Fluxul complet pentru un document nou</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">Generezi HTML-ul cu Claude</div><p>Cu toate meta tags, canonical URL, navigare înainte/înapoi inclusă în footer.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">Descarci și copiezi în folder</div><p><code>cp ~/Downloads/document.html ~/norgedan.github.io/corpus4/ro/</code></p></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">Actualizezi index.html</div><p>Adaugi cardul cu link spre documentul nou în pagina principală.</p></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">Actualizezi sitemap.xml</div><p>Adaugi URL-ul nou cu <code>&lt;priority&gt;0.8&lt;/priority&gt;</code>.</p></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">Commit și push</div><p><code>git add . && git commit -m "Add: document nou" && git push origin main</code></p></div></div>
+    <div class="step"><div class="step-n">6</div><div class="step-body"><div class="step-title">Verifici live</div><p>Ctrl+Shift+R pe norgedan.github.io — documentul este online.</p></div></div>
+  </div>
+
+  <div class="callout-green">
+    <div class="callout-label">MODELUL NORGEDAN — REZUMAT FINAL</div>
+    <p>
+      <strong>git pull</strong> — întotdeauna înainte să începi<br>
+      <strong>sh scripts/verifica.sh</strong> — controlul automat înainte de orice push<br>
+      <strong>git status --short</strong> — citit efectiv, nu doar rulat<br>
+      <strong>git add</strong> — marchezi exact ce s-a schimbat<br>
+      <strong>git commit -m "mesaj clar"</strong> — descrii ce ai făcut<br>
+      <strong>git push origin main</strong> — publici pe internet<br>
+      <strong>sitemap.xml</strong> — actualizat la fiecare document nou<br>
+      <strong>index.html</strong> — actualizat cu link spre orice conținut nou<br><br>
+      Aceasta este toată știința. Simplu, sigur, chirurgical.
+    </p>
+  </div>
+</section>
+
+<div class="divider">✦ ✦ ✦</div>
+
+</main>
+
+<footer>
+  <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 15 septembrie 2026</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">Structura actuală: 6 repository-uri · Corpus I măsurat: 12 documente, 53.543 cuvinte · celelalte repo-uri: cifre neverificate încă · sitemap · hreflang RO/NO complet în Corpus I și III · robots.txt · 404.html · CC BY 4.0</p>
+</footer>
+
+</body>
+</html>
