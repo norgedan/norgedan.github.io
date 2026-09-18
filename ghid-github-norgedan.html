@@ -812,6 +812,18 @@ done &lt; /tmp/lista</pre>
     </p>
   </div>
 
+  <div class="callout-green">
+    <div class="callout-label">ÎNTREȚINEREA CELORLALTE REPO-URI — ACEEAȘI SEARĂ</div>
+    <p>
+      ☑ <strong>corpus2</strong> — cele 8 documente nu aveau deloc SEO (doar index.html avea). Meta complet, canonical, hreflang reciproc, Open Graph, lang nb<br>
+      ☑ <strong>opera</strong> — versiunea NO fără SEO; în plus, index.html avea <code>hreflang="no"</code> iar fișierul norvegian <code>"nb"</code>, deci legătura era ruptă fără ca nimeni să observe<br>
+      ☑ <strong>limba</strong> — ambele documente completate<br>
+      ☑ <code>LICENSE</code> și <code>.gitignore</code> în toate trei<br>
+      ☑ <code>opera/README.md</code> spunea „compozitorii ei" — documentul e despre <em>voci</em> (Cotrubaș, Gheorghiu, Zeani, Cortez), nu despre compozitori<br>
+      ☑ Totalul proiectului măsurat: 36 de documente, 154.873 de cuvinte
+    </p>
+  </div>
+
   <div class="callout">
     <div class="callout-label">OBSERVAȚIA DE FOND</div>
     <p>Toate cele patru greșeli au fost prinse pentru că s-a verificat output-ul, nu s-a presupus succesul. Trei din patru au fost prinse de om citind atent ecranul; una de script. Ambele plase de siguranță sunt necesare — scriptul nu poate detecta că el însuși e versiunea veche.</p>
@@ -830,11 +842,14 @@ done &lt; /tmp/lista</pre>
 
   <h3>Cifre de verificat în alte locuri</h3>
   <p>Dacă numărul de cuvinte era umflat de peste două ori în trei locuri diferite din <code>corpus</code>, aceeași problemă există probabil și în altă parte. De verificat și corectat, prin măsurare, nu prin estimare:</p>
-  <pre><span class="comment"># Ghidul acesta declară „~220.000 cuvinte" pentru tot proiectul — NEVERIFICAT</span>
-<span class="comment"># README-urile din corpus2, corpus3, opera, limba — NEVERIFICATE</span>
+  <div class="callout-green">
+    <div class="callout-label">MĂSURAT ȘI ÎNCHIS — 18 SEPTEMBRIE 2026</div>
+    <p>Totalul real al proiectului: <strong>36 de documente, 154.873 de cuvinte</strong>. Ghidul declara „~220.000" — supraestimare de circa 1,4 ori. README-urile din corpus2, opera și limba nu declarau nicio cifră, deci nu era nimic fals de corectat acolo; au fost lăsate intenționat fără cifre, pentru că nu există script care să le verifice și ar rămâne în urmă.</p>
+  </div>
 
-<span class="comment"># Comanda de măsurare, aplicabilă oriunde:</span>
-<span class="cmd">cat *.html | sed -e '/&lt;style&gt;/,/&lt;\/style&gt;/d' -e 's/&lt;[^&gt;]*&gt;//g' | wc -w</span></pre>
+  <pre><span class="comment"># Comanda de măsurare, cu locale fixat — aplicabilă oriunde:</span>
+
+<span class="cmd">cat *.html | awk '/&lt;style&gt;/{s=1} /&lt;\/style&gt;/{s=0;next} !s' | sed 's/&lt;[^&gt;]*&gt;//g' | LC_ALL=C.UTF-8 wc -w</span></pre>
 
   <div class="callout-green">
     <div class="callout-label">REZOLVATE ÎNTRE TIMP</div>
@@ -904,7 +919,7 @@ corpus3/no/   ← documente norvegiene</pre>
 
 <footer>
   <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 18 septembrie 2026</p>
-  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">Structura actuală: 6 repository-uri · Corpus I măsurat: 12 documente, 57.928 cuvinte (locale UTF-8) · celelalte repo-uri: cifre neverificate încă · sitemap · hreflang RO/NO complet în Corpus I și III · robots.txt · 404.html · CC BY 4.0</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">Măsurat 18 septembrie 2026 (locale UTF-8): 36 documente · 154.873 cuvinte — Corpus I 57.928 · Corpus II 34.848 · Corpus III 50.645 · limba 8.618 · opera 2.834 · sitemap · hreflang RO/NO complet în Corpus I și III · robots.txt · 404.html · CC BY 4.0</p>
 </footer>
 
 </body>
