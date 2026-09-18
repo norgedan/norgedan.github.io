@@ -453,6 +453,33 @@ Changes to be committed:
   <div class="chapter-label">CAPITOLUL VIII</div>
   <h2>Situații de urgență — cum repari</h2>
 
+  <h3>Push-ul cere parolă sau eșuează la autentificare</h3>
+
+  <p>GitHub nu mai acceptă parola contului pentru operații git din 2021. În locul ei se folosește un <strong>Personal Access Token</strong> — un șir generat de GitHub, de forma <code>ghp_xxxxxxxxxxxx</code>. La câmpul <em>Password</em> din terminal introduci tokenul, nu parola contului.</p>
+
+  <p>Token-urile <strong>expiră</strong>. Când se întâmplă, push-ul eșuează brusc, fără altă schimbare în repo — și, dacă nu ai nota asta, pierzi timp căutând vina în altă parte.</p>
+
+  <pre><span class="comment"># Generarea unui token nou, pe github.com:
+#  1. Avatarul tău, dreapta sus → Settings
+#  2. Developer settings (ultimul din meniul din stânga, jos)
+#  3. Personal access tokens → Tokens (classic)
+#  4. Generate new token → Generate new token (classic)
+#  5. Nume: openbsd-git (sau orice recunoști)
+#  6. Bifează scope-ul: repo (primul din listă)
+#  7. Generate token
+#  8. COPIAZĂ tokenul imediat — se afișează o singură dată</span></pre>
+
+  <p>Ca să nu-l introduci la fiecare push:</p>
+
+  <pre><span class="cmd">git config --global credential.helper store</span>
+<span class="comment"># La următorul push îl introduci o singură dată;
+# git îl reține în ~/.git-credentials</span></pre>
+
+  <div class="callout-red">
+    <div class="callout-label">TOKENUL NU SE POATE RECUPERA</div>
+    <p>Dacă l-ai uitat și nu l-ai salvat, GitHub nu îl mai afișează niciodată. Generezi pur și simplu altul, cu aceiași pași. Nu e o catastrofă — dar merită copiat imediat după generare, undeva sigur.</p>
+  </div>
+
   <h3>Site-ul nu se actualizează după push</h3>
   <pre><span class="comment"># Forțezi re-deploy-ul cu un commit gol</span>
 <span class="cmd">git commit --allow-empty -m "Force GitHub Pages redeploy"</span>
