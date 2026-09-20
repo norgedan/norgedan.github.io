@@ -832,15 +832,13 @@ done &lt; /tmp/lista</pre>
   <p>Pe 18 septembrie s-a măsurat tot proiectul: <strong>154.873 de cuvinte</strong> în 36 de documente, cu locale fixat la UTF-8 (corpus 57.928 · corpus2 34.848 · corpus3 50.645 · limba 8.618 · opera 2.834). Atât. Măsurarea nu a ajuns însă în paginile publice — verificate live pe 20 septembrie 2026, ele declară în continuare cifrele vechi.</p>
 
   <div class="callout-red">
-    <div class="callout-label">CE SPUNE SITE-UL ACUM — VERIFICAT LIVE, 20 SEPT 2026</div>
+    <div class="callout-label">CE ARATA FISIERELE — VERIFICAT IN SURSA, 20 SEPT 2026</div>
     <p>
-      <strong>1.</strong> Subsolul de la <code>norgedan.github.io/index.html</code> declară „~220.000 cuvinte · ~220 000 ord". Măsurat: 154.873. Supraestimare de ~1,4×.<br><br>
-      <strong>2.</strong> Subsolul de la <code>corpus/index.html</code> declară „10 documente · ~120.000 de cuvinte". Măsurat: 12 documente, 57.928 de cuvinte. Supraestimare de peste două ori — exact cifra pe care jurnalul din 15 septembrie o dă ca reparată. Nu a fost.<br><br>
-      <strong>3.</strong> Tot în <code>corpus/index.html</code>: <code>meta description</code> spune „Cinci documente în română și cinci în norvegiană", <code>og:description</code> spune „Zece documente", titlurile de secțiune spun „Cinci documente". Realitatea: șase și șase. Documentul VI a fost adăugat în linkuri, dar nu în text și nu în meta.<br><br>
-      <strong>4.</strong> Hub-ul principal linkuiește pentru Corpus I doar documentele I–V, în ambele limbi. <strong>Documentul VI nu are niciun link din pagina de start</strong> — nici RO, nici NO. Este orfan din perspectiva vizitatorului care intră pe norgedan.github.io.<br><br>
-      <strong>5.</strong> Secțiunea „Legăturile ascunse" de pe hub încă spune „Universul calibrat la 1/10 la 120 pentru viata fizica". Este exact formularea identificată ca greșită pe 17 septembrie și scoasă atunci din Documentul I. A supraviețuit pe prima pagină a site-ului.
-    </p>
-  </div>
+      <strong>1.</strong> Subsolul de la <code>norgedan.github.io/index.html</code> declara „~220.000 cuvinte · ~220 000 ord". Masurat: 154.873. Supraestimare de ~1,4×.<br><br>
+      <strong>2.</strong> Hub-ul linkuieste pentru Corpus I doar documentele I&ndash;V, in ambele limbi. <strong>Documentul VI nu are niciun link din pagina de start</strong> — nici RO, nici NO. Este orfan din perspectiva vizitatorului care intra pe norgedan.github.io. In <code>corpus/index.html</code> este linkuit corect; hub-ul a ramas in urma.<br><br>
+      <strong>3.</strong> Sectiunea „Legaturile ascunse" de pe hub spune „Universul calibrat la 1/10 la 120 pentru viata fizica". Este exact formularea identificata ca gresita pe 17 septembrie si scoasa atunci din Documentul I. A supravietuit pe prima pagina.<br><br>
+      Cauza comuna a celor trei: <code>index.html</code> din <code>norgedan.github.io</code> poarta data de <strong>12 septembrie</strong>. Sesiunile de corectura din 15, 17 si 18 septembrie au lucrat in <code>corpus</code> si nu au atins hub-ul deloc.
+    </p></div>
 
   <div class="callout-red">
     <div class="callout-label">REPO-UL UITAT — limba-ro-final</div>
@@ -850,7 +848,6 @@ done &lt; /tmp/lista</pre>
 
   <h3>De corectat, în ordinea asta</h3>
   <p>
-    ○ <code>corpus/index.html</code> — subsol: 12 documente, ~58.000 de cuvinte; meta description, og:description și titlurile de secțiune: șase și șase<br>
     ○ <code>index.html</code> (hub) — subsol: ~155.000 de cuvinte, plus cifra pentru limba-ro-final după măsurare; card și linkuri pentru Documentul VI RO+NO; scoaterea formulării „1/10 la 120"<br>
     ○ Măsurarea lui <code>limba-ro-final</code> și includerea lui în totaluri, sau decizia explicită de a-l consolida în <code>limba</code><br>
     ○ <code>status-proiect.html</code> — lista de repo-uri este greșită: enumeră <code>corpus3</code> ca repository (este folder în norgedan.github.io) și omite <code>limba-ro-final</code>, care chiar este repo<br>
@@ -864,7 +861,8 @@ done &lt; /tmp/lista</pre>
 
   <div class="callout">
     <div class="callout-label">LECȚIA — O CORECTURĂ NU E TERMINATĂ UNDE S-A FĂCUT</div>
-    <p>Cifra a fost măsurată corect și scrisă corect în documentele de lucru. Dar paginile publice au rămas cu valorile vechi, iar formularea greșită despre constanta cosmologică a supraviețuit pe prima pagină după ce fusese scoasă din documentul-sursă. <code>verifica.sh</code> nu le-a prins, pentru că rulează în <code>corpus</code> și nu vede hub-ul. Regula care urmează: după orice corectură de conținut, se caută aceeași afirmație în tot site-ul, nu doar în fișierul corectat. Ce vede cititorul este ce e publicat, nu ce s-a măsurat.</p>
+    <p>Cifra a fost măsurată corect și scrisă corect în documentele de lucru. Dar paginile publice au rămas cu valorile vechi, iar formularea greșită despre constanta cosmologică a supraviețuit pe prima pagină după ce fusese scoasă din documentul-sursă. <code>verifica.sh</code> nu le-a prins, pentru că rulează în <code>corpus</code> și nu vede hub-ul. Regula care urmează: după orice corectură de conținut, se caută aceeași afirmație în tot site-ul, nu doar în fișierul corectat.</p>
+    <p style="margin-top:0.8rem">A doua lecție, din aceeași zi și cu semnul invers. O primă verificare făcută citind paginile publice printr-un proxy a raportat drept „încă greșite" două lucruri pe care <code>corpus/index.html</code> le avea de fapt corectate și publicate din 17 septembrie: cifra de cuvinte și „Cinci documente" în meta. Proxy-ul servise o copie veche din cache. <strong>Sursa de adevăr este fișierul din repo, nu pagina randată.</strong> Verificarea se face cu <code>git status</code>, <code>git log</code> și <code>grep</code> în clona locală; browserul, cu <code>Ctrl+Shift+R</code>, doar confirmă la final.</p>
   </div>
 
   <div class="callout-green">
