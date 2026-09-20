@@ -4,7 +4,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap — toate cele 36 de URL-uri
+# Sitemap index — trimite spre lista fiecarui repo
 Sitemap: https://norgedan.github.io/sitemap.xml
 
 # Crawlere AI — acces permis pentru indexare si citare
