@@ -453,33 +453,6 @@ Changes to be committed:
   <div class="chapter-label">CAPITOLUL VIII</div>
   <h2>Situații de urgență — cum repari</h2>
 
-  <h3>Push-ul cere parolă sau eșuează la autentificare</h3>
-
-  <p>GitHub nu mai acceptă parola contului pentru operații git din 2021. În locul ei se folosește un <strong>Personal Access Token</strong> — un șir generat de GitHub, de forma <code>ghp_xxxxxxxxxxxx</code>. La câmpul <em>Password</em> din terminal introduci tokenul, nu parola contului.</p>
-
-  <p>Token-urile <strong>expiră</strong>. Când se întâmplă, push-ul eșuează brusc, fără altă schimbare în repo — și, dacă nu ai nota asta, pierzi timp căutând vina în altă parte.</p>
-
-  <pre><span class="comment"># Generarea unui token nou, pe github.com:
-#  1. Avatarul tău, dreapta sus → Settings
-#  2. Developer settings (ultimul din meniul din stânga, jos)
-#  3. Personal access tokens → Tokens (classic)
-#  4. Generate new token → Generate new token (classic)
-#  5. Nume: openbsd-git (sau orice recunoști)
-#  6. Bifează scope-ul: repo (primul din listă)
-#  7. Generate token
-#  8. COPIAZĂ tokenul imediat — se afișează o singură dată</span></pre>
-
-  <p>Ca să nu-l introduci la fiecare push:</p>
-
-  <pre><span class="cmd">git config --global credential.helper store</span>
-<span class="comment"># La următorul push îl introduci o singură dată;
-# git îl reține în ~/.git-credentials</span></pre>
-
-  <div class="callout-red">
-    <div class="callout-label">TOKENUL NU SE POATE RECUPERA</div>
-    <p>Dacă l-ai uitat și nu l-ai salvat, GitHub nu îl mai afișează niciodată. Generezi pur și simplu altul, cu aceiași pași. Nu e o catastrofă — dar merită copiat imediat după generare, undeva sigur.</p>
-  </div>
-
   <h3>Site-ul nu se actualizează după push</h3>
   <pre><span class="comment"># Forțezi re-deploy-ul cu un commit gol</span>
 <span class="cmd">git commit --allow-empty -m "Force GitHub Pages redeploy"</span>
@@ -839,18 +812,6 @@ done &lt; /tmp/lista</pre>
     </p>
   </div>
 
-  <div class="callout-green">
-    <div class="callout-label">ÎNTREȚINEREA CELORLALTE REPO-URI — ACEEAȘI SEARĂ</div>
-    <p>
-      ☑ <strong>corpus2</strong> — cele 8 documente nu aveau deloc SEO (doar index.html avea). Meta complet, canonical, hreflang reciproc, Open Graph, lang nb<br>
-      ☑ <strong>opera</strong> — versiunea NO fără SEO; în plus, index.html avea <code>hreflang="no"</code> iar fișierul norvegian <code>"nb"</code>, deci legătura era ruptă fără ca nimeni să observe<br>
-      ☑ <strong>limba</strong> — ambele documente completate<br>
-      ☑ <code>LICENSE</code> și <code>.gitignore</code> în toate trei<br>
-      ☑ <code>opera/README.md</code> spunea „compozitorii ei" — documentul e despre <em>voci</em> (Cotrubaș, Gheorghiu, Zeani, Cortez), nu despre compozitori<br>
-      ☑ Totalul proiectului măsurat: 36 de documente, 154.873 de cuvinte
-    </p>
-  </div>
-
   <div class="callout">
     <div class="callout-label">OBSERVAȚIA DE FOND</div>
     <p>Toate cele patru greșeli au fost prinse pentru că s-a verificat output-ul, nu s-a presupus succesul. Trei din patru au fost prinse de om citind atent ecranul; una de script. Ambele plase de siguranță sunt necesare — scriptul nu poate detecta că el însuși e versiunea veche.</p>
@@ -867,20 +828,48 @@ done &lt; /tmp/lista</pre>
 
   <p><strong>Verificarea „la puricat" a documentelor II–VI</strong> continuă — același model: se identifică pasajul, se verifică sursele, se corectează chirurgical, se aplică în ambele limbi.</p>
 
-  <h3>Cifre de verificat în alte locuri</h3>
-  <p>Dacă numărul de cuvinte era umflat de peste două ori în trei locuri diferite din <code>corpus</code>, aceeași problemă există probabil și în altă parte. De verificat și corectat, prin măsurare, nu prin estimare:</p>
-  <div class="callout-green">
-    <div class="callout-label">MĂSURAT ȘI ÎNCHIS — 18 SEPTEMBRIE 2026</div>
-    <p>Totalul real al proiectului: <strong>36 de documente, 154.873 de cuvinte</strong>. Ghidul declara „~220.000" — supraestimare de circa 1,4 ori. README-urile din corpus2, opera și limba nu declarau nicio cifră, deci nu era nimic fals de corectat acolo; au fost lăsate intenționat fără cifre, pentru că nu există script care să le verifice și ar rămâne în urmă.</p>
+  <h3>Cifrele umflate — măsurate în repo-uri, nereparate pe site</h3>
+  <p>Pe 18 septembrie s-a măsurat tot proiectul: <strong>154.873 de cuvinte</strong> în 36 de documente, cu locale fixat la UTF-8 (corpus 57.928 · corpus2 34.848 · corpus3 50.645 · limba 8.618 · opera 2.834). Atât. Măsurarea nu a ajuns însă în paginile publice — verificate live pe 20 septembrie 2026, ele declară în continuare cifrele vechi.</p>
+
+  <div class="callout-red">
+    <div class="callout-label">CE SPUNE SITE-UL ACUM — VERIFICAT LIVE, 20 SEPT 2026</div>
+    <p>
+      <strong>1.</strong> Subsolul de la <code>norgedan.github.io/index.html</code> declară „~220.000 cuvinte · ~220 000 ord". Măsurat: 154.873. Supraestimare de ~1,4×.<br><br>
+      <strong>2.</strong> Subsolul de la <code>corpus/index.html</code> declară „10 documente · ~120.000 de cuvinte". Măsurat: 12 documente, 57.928 de cuvinte. Supraestimare de peste două ori — exact cifra pe care jurnalul din 15 septembrie o dă ca reparată. Nu a fost.<br><br>
+      <strong>3.</strong> Tot în <code>corpus/index.html</code>: <code>meta description</code> spune „Cinci documente în română și cinci în norvegiană", <code>og:description</code> spune „Zece documente", titlurile de secțiune spun „Cinci documente". Realitatea: șase și șase. Documentul VI a fost adăugat în linkuri, dar nu în text și nu în meta.<br><br>
+      <strong>4.</strong> Hub-ul principal linkuiește pentru Corpus I doar documentele I–V, în ambele limbi. <strong>Documentul VI nu are niciun link din pagina de start</strong> — nici RO, nici NO. Este orfan din perspectiva vizitatorului care intră pe norgedan.github.io.<br><br>
+      <strong>5.</strong> Secțiunea „Legăturile ascunse" de pe hub încă spune „Universul calibrat la 1/10 la 120 pentru viata fizica". Este exact formularea identificată ca greșită pe 17 septembrie și scoasă atunci din Documentul I. A supraviețuit pe prima pagină a site-ului.
+    </p>
   </div>
 
-  <pre><span class="comment"># Comanda de măsurare, cu locale fixat — aplicabilă oriunde:</span>
+  <div class="callout-red">
+    <div class="callout-label">REPO-UL UITAT — limba-ro-final</div>
+    <p><code>limba-ro-final</code> este live și indexabil (<code>robots: index, follow</code>), cu două documente substanțiale — „Limba care nu vrea să moară" RO + NO, 15 capitole. Nu apare nicăieri în măsurătoarea din 18 septembrie: nu e în cele 36 de documente, nu e în cele 154.873 de cuvinte, nu are <code>scripts/verifica.sh</code>. Prin urmare <strong>chiar și cifra măsurată este incompletă</strong> — corectă pentru ce a numărat, dar nu pentru tot ce e publicat.</p>
+    <p style="margin-top:0.8rem">În plus, pagina lui de intrare poartă titlul „Limba sfâșiată" — același titlu ca al repo-ului <code>limba</code>, care e și el indexabil. Două pagini publice cu același titlu, pe același domeniu, sunt o problemă reală de conținut duplicat. De decis: se unifică, se diferențiază titlurile, sau una primește <code>noindex</code>.</p>
+  </div>
 
-<span class="cmd">cat *.html | awk '/&lt;style&gt;/{s=1} /&lt;\/style&gt;/{s=0;next} !s' | sed 's/&lt;[^&gt;]*&gt;//g' | LC_ALL=C.UTF-8 wc -w</span></pre>
+  <h3>De corectat, în ordinea asta</h3>
+  <p>
+    ○ <code>corpus/index.html</code> — subsol: 12 documente, ~58.000 de cuvinte; meta description, og:description și titlurile de secțiune: șase și șase<br>
+    ○ <code>index.html</code> (hub) — subsol: ~155.000 de cuvinte, plus cifra pentru limba-ro-final după măsurare; card și linkuri pentru Documentul VI RO+NO; scoaterea formulării „1/10 la 120"<br>
+    ○ Măsurarea lui <code>limba-ro-final</code> și includerea lui în totaluri, sau decizia explicită de a-l consolida în <code>limba</code><br>
+    ○ <code>status-proiect.html</code> — lista de repo-uri este greșită: enumeră <code>corpus3</code> ca repository (este folder în norgedan.github.io) și omite <code>limba-ro-final</code>, care chiar este repo<br>
+    ○ README-urile din corpus2, corpus3, opera, limba — de verificat dacă declară cifre, și cu ce valoare
+  </p>
+  <pre><span class="comment"># Comanda de măsurare, aplicabilă oriunde (locale fixat):</span>
+<span class="cmd">cat *.html | sed -e '/&lt;style&gt;/,/&lt;\/style&gt;/d' -e 's/&lt;[^&gt;]*&gt;//g' | LC_ALL=C.UTF-8 wc -w</span>
+
+<span class="comment"># Unde mai apar cifre vechi — căutare în toate repo-urile:</span>
+<span class="cmd">grep -rnE '220[ .]000|120[ .]000|130[ .]000|180[ .]000' ~/norgedan.github.io ~/corpus ~/corpus2 ~/opera ~/limba</span></pre>
+
+  <div class="callout">
+    <div class="callout-label">LECȚIA — O CORECTURĂ NU E TERMINATĂ UNDE S-A FĂCUT</div>
+    <p>Cifra a fost măsurată corect și scrisă corect în documentele de lucru. Dar paginile publice au rămas cu valorile vechi, iar formularea greșită despre constanta cosmologică a supraviețuit pe prima pagină după ce fusese scoasă din documentul-sursă. <code>verifica.sh</code> nu le-a prins, pentru că rulează în <code>corpus</code> și nu vede hub-ul. Regula care urmează: după orice corectură de conținut, se caută aceeași afirmație în tot site-ul, nu doar în fișierul corectat. Ce vede cititorul este ce e publicat, nu ce s-a măsurat.</p>
+  </div>
 
   <div class="callout-green">
     <div class="callout-label">REZOLVATE ÎNTRE TIMP</div>
-    <p>Capitolul III al Documentului I — rescris și publicat (17 sept). Scriptul de verificare — reparat și extins la v2 (18 sept). <code>.nojekyll</code> — adăugat în ambele repo-uri. Procedura „document nou" — documentată în Capitolul IV.</p>
+    <p>Capitolul III al Documentului I — rescris și publicat (17 sept). Scriptul de verificare — reparat și extins la v2 (18 sept). <code>.nojekyll</code> — adăugat în ambele repo-uri. Procedura „document nou" — documentată în Capitolul IV. Măsurarea întregului proiect — făcută pe 18 sept, cu locale fixat; rămâne de dus în paginile publice și de completat cu limba-ro-final.</p>
   </div>
 
   <h3>Infrastructură — opțional</h3>
@@ -945,8 +934,8 @@ corpus3/no/   ← documente norvegiene</pre>
 </main>
 
 <footer>
-  <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 18 septembrie 2026</p>
-  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">Măsurat 18 septembrie 2026 (locale UTF-8): 36 documente · 154.873 cuvinte — Corpus I 57.928 · Corpus II 34.848 · Corpus III 50.645 · limba 8.618 · opera 2.834 · sitemap · hreflang RO/NO complet în Corpus I și III · robots.txt · 404.html · CC BY 4.0</p>
+  <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 20 septembrie 2026</p>
+  <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">Structura actuală: 6 repository-uri · măsurat 18 sept: 36 de documente, 154.873 cuvinte (locale UTF-8), fără limba-ro-final, încă nemăsurat · sitemap · hreflang RO/NO complet în Corpus I și III · robots.txt · 404.html · CC BY 4.0</p>
 </footer>
 
 </body>
