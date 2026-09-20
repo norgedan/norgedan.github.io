@@ -1,43 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://norgedan.github.io/</loc><priority>1.0</priority></url>
-
-  <url><loc>https://norgedan.github.io/corpus/</loc><priority>0.9</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/01-la-inceput-era-cuvantul-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/01-i-begynnelsen-var-ordet-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/02-ce-este-omul-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/02-hva-er-mennesket-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/03-binele-raul-mintea-omului-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/03-det-gode-det-onde-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/04-lumea-in-care-traim-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/04-verden-vi-lever-i-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus/05-planeta-si-romania-ro.html</loc><priority>0.8</priority></url>
-
-  <url><loc>https://norgedan.github.io/corpus2/</loc><priority>0.9</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/ro/A-firul-rosu-al-istoriei-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/no/A-den-rode-traden-i-historien-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/ro/B-tabloul-lumii-2026-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/no/B-verdens-bilde-2026-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/ro/C-razboiul-invizibil-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/no/C-den-usynlige-krigen-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/ro/D-romania-diagnostic-complet-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus2/no/D-romania-fullstendig-diagnose-no.html</loc><priority>0.8</priority></url>
-
-  <url><loc>https://norgedan.github.io/corpus3/</loc><priority>0.9</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/1-romania-og-russland-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/2-verden-i-2026-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/3-europa-la-rascruce-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/3-europa-ved-veiskillet-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/4-romania-prima-linie-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/4-romania-forste-linje-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/5-dezinformarea-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/5-desinformasjon-no.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/ro/6-frumusetea-si-inteligenta-ro.html</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/corpus3/no/6-skjonnhet-og-intelligens-no.html</loc><priority>0.8</priority></url>
-
-  <url><loc>https://norgedan.github.io/opera/</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/limba/</loc><priority>0.8</priority></url>
-  <url><loc>https://norgedan.github.io/limba-ro-final/</loc><priority>0.8</priority></url>
-</urlset>
+<!-- Index de sitemap-uri. Fiecare repo isi tine propria lista, langa fisierele
+     pe care le descrie. Aici se aduna, atat. Repo nou = o singura linie aici. -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap><loc>https://norgedan.github.io/sitemap-hub.xml</loc></sitemap>
+  <sitemap><loc>https://norgedan.github.io/corpus/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://norgedan.github.io/corpus2/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://norgedan.github.io/opera/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://norgedan.github.io/limba/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://norgedan.github.io/limba-ro-final/sitemap.xml</loc></sitemap>
+</sitemapindex>
