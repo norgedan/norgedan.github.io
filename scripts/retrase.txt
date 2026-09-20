@@ -1,0 +1,23 @@
+# Formulari retrase — tipare cautate in tot site-ul de verifica-hub.sh [7]
+#
+# Cand o afirmatie e corectata intr-un document, ea ramane adesea vie in
+# indexuri, carduri sau rezumate.  Aici se scrie tiparul, ca sa nu mai poata.
+# Un tipar pe linie, cautat ca text literal.  Comentariile incep cu #.
+#
+# Adauga o linie DE FIECARE DATA cand retragi o formulare.
+
+# 17 sept 2026 — constanta cosmologica: 10^120 e discrepanta dintre predictia
+# cuantica si observatie, nu o marja de toleranta.  Scos din Doc I, a
+# supravietuit pe prima pagina pana pe 20 sept.
+1/10 la 120
+1 din 10^120
+
+# 17 sept 2026 — gravitatia "calibrata la 1 parte din 10^40": fara sursa in
+# literatura tehnica, eliminata.
+1 parte din 10
+
+# 18 sept 2026 — cifre de cuvinte umflate, inlocuite cu masuratori.
+~220.000
+~120.000
+~130.000
+~180.000
