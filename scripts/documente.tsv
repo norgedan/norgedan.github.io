@@ -1,0 +1,33 @@
+# documente.tsv — manifestul norgedan: singura sursa de adevar despre ce exista.
+#
+# Un rand = un DOCUMENT = o pereche RO+NO (definitia stabilita pe 27 sept 2026).
+# Separator: TAB.  Randurile care incep cu # sunt comentarii.  Nicio coloana goala.
+#
+#   id        identificator unic, stabil (nu se refoloseste niciodata)
+#   colectie  corpus | corpus2 | corpus3 | opera | limba | limba-ro-final
+#   repo      directorul clonei (corpus3 traieste in norgedan.github.io)
+#   ro, no    caile fisierelor, relative la radacina repo-ului
+#   titlu_ro, titlu_no   exact textul din <title> — scriptul verifica potrivirea
+#
+# Document nou = un rand nou aici.  scripts/verifica-site.sh cere apoi, singur,
+# tot restul: fisierele, meta, hreflang, sitemap, linkurile din hub, cifrele.
+#id	colectie	repo	ro	no	titlu_ro	titlu_no
+corpus-01	corpus	corpus	01-la-inceput-era-cuvantul-ro.html	01-i-begynnelsen-var-ordet-no.html	La Început era Cuvântul — Dumnezeu, Creația și Știința	I Begynnelsen var Ordet — Gud, Skaperverket og Vitenskapen
+corpus-02	corpus	corpus	02-ce-este-omul-ro.html	02-hva-er-mennesket-no.html	Ce este Omul — Trup, Suflet, Duh, Limbaj și Muzică	Hva er Mennesket — Kropp, Sjel, Ånd, Språk og Musikk
+corpus-03	corpus	corpus	03-binele-raul-mintea-omului-ro.html	03-det-gode-det-onde-no.html	Binele, Răul și Mintea Omului — Origine, Mecanism, Antidot	Det Gode, det Onde og Menneskets Sinn — Opprinnelse, Mekanisme, Motgift
+corpus-04	corpus	corpus	04-lumea-in-care-traim-ro.html	04-verden-vi-lever-i-no.html	Lumea în care trăim — Geopolitică, Imperiu și Planul lui Dumnezeu	Verden Vi Lever I — Geopolitikk, Imperium og Guds Plan
+corpus-05	corpus	corpus	05-planeta-si-romania-ro.html	05-planeten-og-romania-no.html	Planeta și România — Creația ca responsabilitate și tezaurul ascuns	Planeten og Romania — Skaperverket som ansvar og den skjulte skatten
+corpus-06	corpus	corpus	06-omul-si-inteligenta-artificiala-ro.html	06-mennesket-og-kunstig-intelligens-no.html	Omul și Inteligența Artificială — Cunoașterea care îngâmfă și dragostea care zidește	Mennesket og Kunstig Intelligens — Kunnskapen som oppblaser og kjarligheten som bygger
+corpus2-A	corpus2	corpus2	ro/A-firul-rosu-al-istoriei-ro.html	no/A-den-rode-traden-i-historien-no.html	Firul Roșu al Istoriei — De la Geneză la Apocalipsă	Den Røde Tråden i Historien — Fra Genesis til Åpenbaringen
+corpus2-B	corpus2	corpus2	ro/B-tabloul-lumii-2026-ro.html	no/B-verdens-bilde-2026-no.html	Tabloul Lumii 2026 — Rusia, Geopolitică și Planul lui Dumnezeu	Verdens Bilde 2026 — Russland, Geopolitikk og Guds Plan i Historien
+corpus2-C	corpus2	corpus2	ro/C-razboiul-invizibil-ro.html	no/C-den-usynlige-krigen-no.html	Războiul Invizibil — Minți, Rețele și Puterea Siliciului	Den Usynlige Krigen — Sinn, Nettverk og Silisiummakt
+corpus2-D	corpus2	corpus2	ro/D-romania-diagnostic-complet-ro.html	no/D-romania-fullstendig-diagnose-no.html	România — Diagnostic complet. Sănătate, sistem medical, droguri și creier	Romania — Fullstendig diagnose. Helse, medisin, narkotika og hjerne
+corpus3-1	corpus3	norgedan.github.io	corpus3/ro/1-romania-si-rusia-ro.html	corpus3/no/1-romania-og-russland-no.html	România și Rusia — Trei Secole de Adevăr · Corpus III	Romania og Russland — Tre Århundrer med Sannhet · Corpus III
+corpus3-2	corpus3	norgedan.github.io	corpus3/ro/2-lumea-in-2026-ro.html	corpus3/no/2-verden-i-2026-no.html	Lumea în 2026 — Adevărul Structural · Corpus III	Verden i 2026 — Den Strukturelle Sannheten · Corpus III
+corpus3-3	corpus3	norgedan.github.io	corpus3/ro/3-europa-la-rascruce-ro.html	corpus3/no/3-europa-ved-veiskillet-no.html	Europa la Răscruce — Tabloul Complet · Corpus III	Europa ved Veiskillet — Det Fullstendige Bildet · Corpus III
+corpus3-4	corpus3	norgedan.github.io	corpus3/ro/4-romania-prima-linie-ro.html	corpus3/no/4-romania-forste-linje-no.html	România — Prima Linie · Corpus III	Romania — Den Første Linjen · Corpus III
+corpus3-5	corpus3	norgedan.github.io	corpus3/ro/5-dezinformarea-ro.html	corpus3/no/5-desinformasjon-no.html	Dezinformarea — Armă, Psihologie, Apărare · Corpus III	Desinformasjon — Våpen, Psykologi, Forsvar · Corpus III
+corpus3-6	corpus3	norgedan.github.io	corpus3/ro/6-frumusetea-si-inteligenta-ro.html	corpus3/no/6-skjonnhet-og-intelligens-no.html	Frumusețea și Inteligența · Opt Portrete · norgedan	Skjønnhet og Intelligens · Åtte Portretter · norgedan
+opera-1	opera	opera	index.html	voci-care-nu-mor-no.html	Voci care nu mor – Opera Românească · Stemmer som ikke dør	Stemmer som ikke dør – Rumensk opera
+limba-1	limba	limba	limba-sfasiata-ro.html	det-sonderrevne-spraket-no.html	Limba sfâșiată – O conversație despre limba română și ce i s-a făcut	Det sønderrevne språket – En samtale om rumensk og hva som ble gjort med det
+limba-ro-final-1	limba-ro-final	limba-ro-final	limba-ro-final.html	spraket-no-final.html	Limba care nu vrea să moară — Originile, supraviețuirea și mitul latin	Språket som nekter å dø — Rumensk og mytene om dets opprinnelse
