@@ -1,0 +1,14 @@
+# about.tsv — pagina GitHub a fiecarui repo (caseta About): sursa de adevar.
+#
+# Se completeaza pe GitHub, pe pagina repo-ului, rotita de langa "About".
+# verifica-site.sh [12] compara, la fiecare push, ce e pe GitHub cu ce e aici.
+# Fara cifre in descrieri: o cifra copiata in al doilea loc incepe sa minta.
+# Separator: TAB.  topics: separate prin virgula, fara spatii.
+#
+#repo	descriere	website	topics
+norgedan.github.io	Corpus teologic, geopolitic și cultural în română și norvegiană — pagina principală: Corpus I, II, III, opera și limba	https://norgedan.github.io	corpus,disinformation,education,geopolitics,nato,norway,norwegian,romania,romanian,theology
+corpus	Corpus I — Cuvântul, Omul, Lumea · teologie, știință și geopolitică în română și norvegiană	https://norgedan.github.io/corpus/	bible,corpus,geopolitics,norwegian,romania,romanian,science,theology
+corpus2	Corpus II — Firul Roșu · istorie, geopolitică și sănătate în română și norvegiană	https://norgedan.github.io/corpus2/	corpus,geopolitics,health,history,norwegian,romania,romanian
+opera	Voci care nu mor — opera românească și marile ei voci, în română și norvegiană	https://norgedan.github.io/opera/	classical-music,norwegian,opera,romania,romanian,singers
+limba	Limba sfâșiată — o conversație despre limba română, în română și norvegiană	https://norgedan.github.io/limba/	language-history,linguistics,norwegian,romania,romanian,romanian-language
+limba-ro-final	Limba care nu vrea să moară — originile latine și supraviețuirea limbii române, în română și norvegiană	https://norgedan.github.io/limba-ro-final/	language-history,latin,linguistics,norwegian,romania,romanian,romanian-language

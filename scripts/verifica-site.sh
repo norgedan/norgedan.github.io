@@ -7,6 +7,7 @@
 # Utilizare (din orice director):
 #   sh ~/norgedan.github.io/scripts/verifica-site.sh            verificare completa
 #   sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou   doar tabloul
+#   ... --github          ca mai sus + pagina GitHub a fiecarui repo (retea)
 #   ... --push <repo>     folosit de hook-ul pre-push (aduce starea de pe GitHub)
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
@@ -27,6 +28,7 @@ HUB=$(dirname "$SCRIPT_DIR")
 HUBNAME=$(basename "$HUB")
 RADACINA=$(dirname "$HUB")
 MANIFEST="$SCRIPT_DIR/documente.tsv"
+ABOUT="$SCRIPT_DIR/about.tsv"
 RETRASE="$SCRIPT_DIR/retrase.txt"
 TAB=$(printf '\t')
 
@@ -35,8 +37,9 @@ PUSH_REPO=""
 case "${1:-}" in
   "")        ;;
   --tablou)  MOD=tablou ;;
+  --github)  MOD=github ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --push <repo>]" >&2; exit 2 ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --push <repo>]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -680,6 +683,14 @@ titlu 10 "ADN-ul fiecarui repo: fisiere de baza si garda pre-push"
 # ════════════════════════════════════════════════════════════════════
 
 REF_HOOK="$HUB/scripts/hooks/pre-push"
+REF_LIC="$HUB/LICENSE"
+ref_lic=""; [ -f "$REF_LIC" ] && ref_lic=$(cksum < "$REF_LIC")
+if [ -f "$REF_LIC" ] && ! grep -qF "Creative Commons Attribution 4.0 International Public License" "$REF_LIC"; then
+  problema "$HUBNAME/LICENSE nu e textul oficial CC BY 4.0 — GitHub nu-l poate recunoaste"
+fi
+# sectiunea de licenta din README: identica peste tot (de la titlu pana la marcaj)
+bloc_lic() { sed -n '/^## Licență · Lisens$/,/^<!-- sfarsit licenta -->$/p' "$1"; }
+ref_bloc=""; [ -f "$HUB/README.md" ] && ref_bloc=$(bloc_lic "$HUB/README.md" | cksum)
 ref_sum=""; [ -f "$REF_HOOK" ] && ref_sum=$(cksum < "$REF_HOOK")
 greseli=0
 while read -r repo; do
@@ -704,6 +715,23 @@ while read -r repo; do
     if [ -d "$x" ] && echo " $dirs_ok " | grep -qF " $b "; then continue; fi
     problema "$repo: \"$b\" nu are ce cauta in radacina (fisier-fantoma sau uitat?)"; greseli=1
   done
+
+  if [ -f "$d/LICENSE" ] && [ "$(cksum < "$d/LICENSE")" != "$ref_lic" ]; then
+    problema "$repo: LICENSE difera de cea din hub (trebuie identice, textul oficial)"; greseli=1
+  fi
+  if [ -f "$d/README.md" ]; then
+    if [ -z "$(bloc_lic "$d/README.md")" ]; then
+      problema "$repo: README.md nu are sectiunea \"## Licență · Lisens\" (cu marcajul de sfarsit)"; greseli=1
+    elif [ "$(bloc_lic "$d/README.md" | cksum)" != "$ref_bloc" ]; then
+      problema "$repo: sectiunea de licenta din README difera de cea din hub"; greseli=1
+    fi
+  fi
+  # identitatea cu care se fac commit-urile: adresa noreply, nu emailul personal
+  em=$(git -C "$d" config --get user.email 2>/dev/null)
+  case "$em" in
+    *@users.noreply.github.com) ;;
+    *) problema "$repo: commit-urile s-ar face cu <${em:-nesetat}> — trebuie adresa noreply GitHub"; greseli=1 ;;
+  esac
 
   h="$d/scripts/hooks/pre-push"
   if [ ! -f "$h" ]; then problema "$repo: nu are scripts/hooks/pre-push"; greseli=1
@@ -751,6 +779,56 @@ while read -r repo; do
   fi
 done < "$W/repos"
 [ "$greseli" -eq 0 ] && ok "nicio clona in urma fata de GitHub; arborii verificati sunt cei care se publica"
+
+# ════════════════════════════════════════════════════════════════════
+titlu 12 "Pagina GitHub a fiecarui repo (About) == scripts/about.tsv"
+# ════════════════════════════════════════════════════════════════════
+# Descrierea, website-ul si topics se vad primele pe GitHub.  Au continut
+# cifra retrasa "~220.000" timp de 9 zile, nevazute de nicio verificare.
+# Retea: doar la push si cu --github.  API indisponibil = ATENTIE, nu blocaj.
+
+api_get() {   # <repo> <fisier>
+  if [ -n "${NORGEDAN_API_DIR:-}" ]; then cp "$NORGEDAN_API_DIR/$1.json" "$2" 2>/dev/null; return; fi
+  u="https://api.github.com/repos/norgedan/$1"
+  if command -v curl >/dev/null 2>&1; then curl -fsS -o "$2" "$u" 2>/dev/null
+  else ftp -V -o "$2" "$u" >/dev/null 2>&1; fi
+}
+json_str() { grep -o "\"$1\":\"[^\"]*\"" "$2" | head -1 | sed "s/^\"$1\":\"//; s/\"\$//"; }
+json_bool() { grep -o "\"$1\":[a-z]*" "$2" | head -1 | sed "s/^\"$1\"://"; }
+topics_of() { grep -o '"topics":\[[^]]*\]' "$1" | sed 's/^"topics":\[//; s/\]$//; s/"//g' | tr ',' '\n' | grep -v '^$' | sort | tr '\n' ','; }
+
+if [ "$MOD" != push ] && [ "$MOD" != github ]; then
+  echo "  (sarit fara retea — ruleaza cu --github; la push ruleaza singur)"
+elif [ ! -f "$ABOUT" ]; then
+  problema "lipseste scripts/about.tsv — sursa paginilor GitHub"
+else
+  grep -v '^#' "$ABOUT" | grep -v '^[[:space:]]*$' > "$W/about"
+  greseli=0
+  while read -r repo; do
+    linie=$(awk -F'\t' -v r="$repo" '$1==r' "$W/about")
+    if [ -z "$linie" ]; then problema "$repo: nu are rand in scripts/about.tsv"; greseli=1; continue; fi
+    printf '%s\n' "$linie" | awk -F'\t' 'NF!=4 {exit 1}' || { problema "$repo: randul din about.tsv nu are 4 coloane"; greseli=1; continue; }
+    d_ok=$(printf '%s\n' "$linie" | cut -f2); w_ok=$(printf '%s\n' "$linie" | cut -f3)
+    t_ok=$(printf '%s\n' "$linie" | cut -f4 | tr ',' '\n' | grep -v '^$' | sort | tr '\n' ',')
+    if ! api_get "$repo" "$W/api.json" || ! grep -q '"full_name"' "$W/api.json"; then
+      atentie "$repo: pagina GitHub nu poate fi citita acum (retea sau limita API) — verificare sarita"; continue
+    fi
+    d=$(json_str description "$W/api.json"); w=$(json_str homepage "$W/api.json"); t=$(topics_of "$W/api.json")
+    [ "$d" = "$d_ok" ] || { problema "$repo: descrierea de pe GitHub difera de about.tsv"; echo "             GitHub:    ${d:-(goala)}"; echo "             about.tsv: $d_ok"; greseli=1; }
+    [ "$w" = "$w_ok" ] || { problema "$repo: website-ul de pe GitHub e \"${w:-gol}\", trebuie $w_ok"; greseli=1; }
+    [ "$t" = "$t_ok" ] || { problema "$repo: topics pe GitHub [${t%,}], trebuie [${t_ok%,}]"; greseli=1; }
+    for f in has_wiki has_projects; do
+      [ "$(json_bool $f "$W/api.json")" = "false" ] || { problema "$repo: ${f#has_} activ pe GitHub, dar nefolosit — Settings, Features"; greseli=1; }
+    done
+    sp=$(json_str spdx_id "$W/api.json")
+    [ "$sp" = "CC-BY-4.0" ] || atentie "$repo: GitHub vede licenta ca \"${sp:-nimic}\" — daca LICENSE tocmai s-a schimbat, GitHub o recalculeaza dupa push"
+  done < "$W/repos"
+  awk -F'\t' '{print $1}' "$W/about" | while read -r r; do
+    grep -qxF "$r" "$W/repos" || echo "$r"
+  done > "$W/aboutx"
+  while read -r r; do problema "about.tsv are rand pentru $r, care nu e repo al site-ului"; greseli=1; done < "$W/aboutx"
+  [ "$greseli" -eq 0 ] && ok "paginile GitHub corespund about.tsv (descriere, website, topics, fara wiki/projects)"
+fi
 
 # ════════════════════════════════════════════════════════════════════
 tablou

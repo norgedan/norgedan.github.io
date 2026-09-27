@@ -696,6 +696,10 @@ done &lt; /tmp/lista</pre>
 
   <p><strong>Nu lipi output în shell.</strong> Linia <code> * branch main -&gt; FETCH_HEAD</code>, lipită din greșeală, a creat un fișier gol <code>FETCH_HEAD</code> în rădăcina hub-ului: <code>&gt;</code> e redirectare. Aceeași clasă ca fișierul <code>main</code> din 15 septembrie. Acum verificarea blochează orice fișier neașteptat în rădăcină.</p>
 
+  <p><strong>API-ul GitHub întoarce JSON pe o singură linie.</strong> Un <code>sed</code> care caută „linia cu description” primește tot fișierul, de câte ori potrivește. Valorile se scot cu <code>grep -o '"description":"[^"]*"'</code>.</p>
+
+  <p><strong>Nu lipi mai multe comenzi când una pune întrebări.</strong> <code>rm -i</code> a primit ca „răspuns” linia lipită următoare — nu <code>y</code>, deci n-a șters nimic, iar comenzile lipite n-au rulat. O comandă, prompt-ul, apoi următoarea.</p>
+
   <p><strong><code>wc -w</code> diferă și între implementări, nu doar între locale.</strong> busybox numără ca POSIX chiar și în UTF-8. Cifrele de referință sunt cele de pe OpenBSD — identice cu GNU în UTF-8.</p>
 
   <h3>Verificarea rezultatelor — întotdeauna după orice operație</h3>
@@ -737,12 +741,15 @@ done &lt; /tmp/lista</pre>
     <div class="step"><div class="step-n">7</div><div class="step-body"><div class="step-title">Formulări retrase</div><p>Tiparele din <code>scripts/retrase.txt</code> caută în toate paginile publice. Adaugi o linie de fiecare dată când retragi o formulare.</p></div></div>
     <div class="step"><div class="step-n">8</div><div class="step-body"><div class="step-title">Cifrele declarate</div><p>„~N” = rotunjit la mie; „peste N” = rotunjit în jos; N simplu = exact. Documente = perechi. Tabloul din status, rând cu rând.</p></div></div>
     <div class="step"><div class="step-n">9</div><div class="step-body"><div class="step-title">Structura HTML</div><p>Tag-uri echilibrate; artefactele <code>"&gt;n&lt;</code> ale lui sed BSD.</p></div></div>
-    <div class="step"><div class="step-n">10</div><div class="step-body"><div class="step-title">ADN-ul repo-urilor</div><p>README, LICENSE, .gitignore, .nojekyll; rădăcina conține doar ce e permis; garda prezentă, identică și activă.</p></div></div>
+    <div class="step"><div class="step-n">10</div><div class="step-body"><div class="step-title">ADN-ul repo-urilor</div><p>README, LICENSE, .gitignore, .nojekyll; rădăcina conține doar ce e permis; garda prezentă, identică și activă; LICENSE = textul oficial CC BY 4.0, identic peste tot; secțiunea de licență identică în toate README-urile; commit-urile se fac cu adresa noreply.</p></div></div>
     <div class="step"><div class="step-n">11</div><div class="step-body"><div class="step-title">Starea git</div><p>La push: arbori curați în toate clonele, nimic în urmă față de GitHub; commit-urile nepublicate din alte repo-uri — atenționare.</p></div></div>
+    <div class="step"><div class="step-n">12</div><div class="step-body"><div class="step-title">Pagina GitHub</div><p>Caseta About a fiecărui repo — descriere, website, topics — comparată prin API cu <code>scripts/about.tsv</code>; Wiki și Projects dezactivate; licența recunoscută. Doar la push și cu <code>--github</code>. Dacă API-ul nu răspunde: atenționare, nu blocaj.</p></div></div>
   </div>
 
   <pre><span class="comment"># manual, oricând (fără rețea)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh</span>
+<span class="comment"># plus paginile GitHub (rețea)</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --github</span>
 <span class="comment"># doar tabloul</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou</span>
 <span class="comment"># la push: automat, prin garda (aduce starea tuturor de pe GitHub)</span></pre>
@@ -917,14 +924,14 @@ done &lt; /tmp/lista</pre>
 
   <h3>Infrastructură — următorii pași</h3>
   <p>
-    ○ <strong>Igiena GitHub</strong> — adresa noreply pentru commit-uri (4 identități diferite în istoric, inclusiv placeholder-ul <code>emailul_tau@gmail.com</code>); tag-uri la repere; About și Topics<br>
+
     ○ <strong>CI</strong> — GitHub Actions rulând același <code>verifica-site.sh</code> pe GNU, ca a doua plasă independentă de mașina locală<br>
     ○ <strong>Consolidarea</strong> repo-urilor ca foldere în hub — decizie de luat la rece; de verificat întâi cum rezolvă GitHub Pages un folder cu același nume ca un repo cu Pages activ
   </p>
 
   <div class="callout-green">
     <div class="callout-label">REZOLVATE PE 27 SEPTEMBRIE</div>
-    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat.</p>
+    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat. Igiena GitHub: identitatea noreply în toate clonele (placeholder-ul <code>emailul_tau@gmail.com</code> venea dintr-o setare locală în <code>opera</code>), GitHub blochează el însuși push-urile care ar expune emailul, licența oficială recunoscută, About și topics în <code>about.tsv</code>, Wiki și Projects dezactivate, tag-ul <code>tablou-unitar-2026-09-27</code>.</p>
   </div>
 
   <div class="callout">

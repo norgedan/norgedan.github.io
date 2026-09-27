@@ -14,4 +14,15 @@ Documente în română și norvegiană. Fiecare document există în ambele limb
 Standard editorial: *Adevărul complet, nu cel convenabil.*
 Toate afirmațiile factuale sunt verificabile din surse publice.
 
-Licență: [CC BY 4.0](LICENSE)
+## Licență · Lisens
+
+Textele sunt publicate sub [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE) · © 2025–2026 norgedan.
+Poți copia, redistribui și adapta materialul, în orice scop, inclusiv comercial, cu condiția atribuirii: autorul, linkul spre licență și indicarea modificărilor.
+
+Tekstene er publisert under [CC BY 4.0](LICENSE) · © 2025–2026 norgedan.
+Du kan kopiere, videreformidle og bearbeide materialet til ethvert formål, også kommersielt, forutsatt navngivelse: opphavsperson, lenke til lisensen og angivelse av endringer.
+
+Citatele biblice din Biblia de la București (1688), unde apar, sunt în domeniul public.
+
+https://creativecommons.org/licenses/by/4.0/
+<!-- sfarsit licenta -->

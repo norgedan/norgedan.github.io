@@ -92,6 +92,8 @@ Adaptat cultural: Ibsen, PST, Oljefond, Datatilsynet, allemannsretten, friluftsl
 <strong>scripts/verifica-site.sh v3</strong> — verifica intregul site contra manifestului, in 11 sectiuni: manifest, inventar, antet SEO (titlu, lang, description, canonical, hreflang ro/nb/x-default, og), linkuri si ancore, prezentarea in hub, sitemap-uri, formulari retrase, cifre declarate, structura HTML, ADN-ul repo-urilor, starea git.<br>
 <strong>scripts/hooks/pre-push</strong> — identic, bit cu bit, in toate cele 6 repo-uri (<code>core.hooksPath scripts/hooks</code>). La fiecare push, din oricare repo, se verifica tot site-ul, cu starea adusa de pe GitHub.<br>
 <strong>scripts/retrase.txt</strong> — formularile corectate, care nu mai au voie sa reapara nicaieri.<br>
+<strong>scripts/about.tsv</strong> — caseta About a fiecarui repo pe GitHub (descriere, website, topics); verificata la fiecare push prin API.<br>
+<strong>Identitate si licenta</strong> — commit-urile se fac cu adresa noreply GitHub (verificat in fiecare clona); LICENSE = textul oficial CC BY 4.0, identic in toate cele 6; sectiunea de licenta identica in toate README-urile.<br>
 Testat: mediu non-GNU (dash, one-true-awk, busybox), GNU si OpenBSD — verdicte identice; 20 de teste cu defecte introduse intentionat, prinse toate.</div>
 
 <h2>3. Documente urmatoare — planificate</h2>
@@ -133,6 +135,7 @@ Verifica in cateva zile daca sitemap-urile au fost procesate (erau "Nu s-a putut
 <code>for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do git -C ~/$r fetch -q origin; echo "$r $(git -C ~/$r status -sb | head -1)"; done</code><br>
 Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[behind]</code> sau <code>[ahead]</code>.<br><br>
 <strong>Verificare manuala oricand:</strong> <code>sh ~/norgedan.github.io/scripts/verifica-site.sh</code> — trebuie <code>EXIT=0</code><br>
+<strong>Plus paginile GitHub (retea):</strong> <code>sh ~/norgedan.github.io/scripts/verifica-site.sh --github</code><br>
 <strong>Doar tabloul:</strong> <code>sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou</code><br><br>
 <strong>Aplicarea unui patch:</strong> <code>sha256</code> pe fisierul descarcat, <code>git apply --check</code>, <code>git apply</code>, <code>git add -A</code>, <code>git diff --cached --raw</code> comparat cu hash-urile asteptate, apoi commit. Push-ul verifica singur.<br><br>
 <strong>Capcane BSD/POSIX:</strong> fara <code>\n</code> in sed · fara <code>\|</code> in grep · fara <code>sed -i</code> · fara litere multibyte intre paranteze drepte · fara <code>&lt;( )</code> (e bash) · optiunile grep inaintea tiparului · <code>sha256</code>, nu <code>sha256sum</code> · niciodata sabloane <code>&lt;...&gt;</code> in comenzi · nu lipi output in shell (<code>-&gt; FETCH_HEAD</code> creeaza un fisier)</div>
@@ -143,7 +146,7 @@ Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[beh
 <li><strong>og:image</strong> — nicio pagina nu are imagine de distribuire; toate declara <code>twitter:card summary_large_image</code>. De ales: o imagine comuna sau <code>summary</code>.</li>
 <li><strong>Descrierile meta</strong> — 30 au peste 160 de caractere; Google taie in jur de 155–160. Scurtare treptata, la urmatoarea atingere a fiecarui fisier?</li>
 <li><strong>Continut de verificat:</strong> „40.000 de neuroni in inima, camp de 60x mai puternic” din sectiunea „Legaturile ascunse” a hub-ului — verificare la sursa.</li>
-<li><strong>Pasii ramasi:</strong> igiena GitHub (email noreply, tag-uri, About/Topics) · CI pe GitHub Actions · consolidarea repo-urilor, decisa la rece.</li>
+<li><strong>Pasii ramasi:</strong> CI pe GitHub Actions · consolidarea repo-urilor, decisa la rece · curatenia masinii OpenBSD.</li>
 </ul></div>
 
 <h2>6. Cum sa incepi urmatoarea sesiune</h2>
