@@ -1,0 +1,45 @@
+# verifica.yml — IDENTIC in toate cele 6 repo-uri norgedan.
+# verifica-site.sh [10] compara workflow-urile intre ele: o singura plasa, nu sase.
+#
+# A doua plasa de siguranta, dupa garda locala (scripts/hooks/pre-push):
+# verifica site-ul asa cum e PE GITHUB, independent de masina locala.
+# Prinde si ce ocoleste garda: editari facute direct in browser, pe GitHub.
+#
+# Ruleaza: la fiecare push pe main, in oricare repo; zilnic, doar din hub;
+# si la cerere (Actions -> verifica-site -> Run workflow).
+# Esec = email automat de la GitHub catre proprietarul contului.
+
+name: verifica-site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verifica:
+    # rularea zilnica: o singura data, din hub — nu de sase ori
+    if: github.event_name != 'schedule' || github.repository == 'norgedan/norgedan.github.io'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/norgedan.github.io, path: norgedan.github.io }
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/corpus, path: corpus }
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/corpus2, path: corpus2 }
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/opera, path: opera }
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/limba, path: limba }
+      - uses: actions/checkout@v6
+        with: { repository: norgedan/limba-ro-final, path: limba-ro-final }
+      - name: verifica-site.sh --ci
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: sh norgedan.github.io/scripts/verifica-site.sh --ci

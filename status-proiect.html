@@ -93,6 +93,7 @@ Adaptat cultural: Ibsen, PST, Oljefond, Datatilsynet, allemannsretten, friluftsl
 <strong>scripts/hooks/pre-push</strong> — identic, bit cu bit, in toate cele 6 repo-uri (<code>core.hooksPath scripts/hooks</code>). La fiecare push, din oricare repo, se verifica tot site-ul, cu starea adusa de pe GitHub.<br>
 <strong>scripts/retrase.txt</strong> — formularile corectate, care nu mai au voie sa reapara nicaieri.<br>
 <strong>scripts/about.tsv</strong> — caseta About a fiecarui repo pe GitHub (descriere, website, topics); verificata la fiecare push prin API.<br>
+<strong>.github/workflows/verifica.yml</strong> — a doua plasa: GitHub Actions ruleaza acelasi verifica-site.sh (<code>--ci</code>) pe starea de pe GitHub, la fiecare push si zilnic; prinde si editarile facute direct in browser. Identic in toate cele 6 repo-uri.<br>
 <strong>Identitate si licenta</strong> — commit-urile se fac cu adresa noreply GitHub (verificat in fiecare clona); LICENSE = textul oficial CC BY 4.0, identic in toate cele 6; sectiunea de licenta identica in toate README-urile.<br>
 Testat: mediu non-GNU (dash, one-true-awk, busybox), GNU si OpenBSD — verdicte identice; 20 de teste cu defecte introduse intentionat, prinse toate.</div>
 
@@ -146,7 +147,7 @@ Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[beh
 <li><strong>og:image</strong> — nicio pagina nu are imagine de distribuire; toate declara <code>twitter:card summary_large_image</code>. De ales: o imagine comuna sau <code>summary</code>.</li>
 <li><strong>Descrierile meta</strong> — 30 au peste 160 de caractere; Google taie in jur de 155–160. Scurtare treptata, la urmatoarea atingere a fiecarui fisier?</li>
 <li><strong>Continut de verificat:</strong> „40.000 de neuroni in inima, camp de 60x mai puternic” din sectiunea „Legaturile ascunse” a hub-ului — verificare la sursa.</li>
-<li><strong>Pasii ramasi:</strong> CI pe GitHub Actions · consolidarea repo-urilor, decisa la rece · curatenia masinii OpenBSD.</li>
+<li><strong>Pasii ramasi:</strong> consolidarea repo-urilor, decisa la rece · curatenia masinii OpenBSD.</li>
 </ul></div>
 
 <h2>6. Cum sa incepi urmatoarea sesiune</h2>

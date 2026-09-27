@@ -698,6 +698,8 @@ done &lt; /tmp/lista</pre>
 
   <p><strong>API-ul GitHub întoarce JSON pe o singură linie.</strong> Un <code>sed</code> care caută „linia cu description” primește tot fișierul, de câte ori potrivește. Valorile se scot cu <code>grep -o '"description":"[^"]*"'</code>.</p>
 
+  <p><strong>Fișierele de workflow cer permisiunea <code>workflow</code> pe tokenul PAT.</strong> Fără ea, GitHub refuză push-ul oricărui fișier din <code>.github/workflows/</code> — curat, fără să strice nimic. Se adaugă o singură dată, din Settings → Developer settings → Personal access tokens.</p>
+
   <p><strong>Nu lipi mai multe comenzi când una pune întrebări.</strong> <code>rm -i</code> a primit ca „răspuns” linia lipită următoare — nu <code>y</code>, deci n-a șters nimic, iar comenzile lipite n-au rulat. O comandă, prompt-ul, apoi următoarea.</p>
 
   <p><strong><code>wc -w</code> diferă și între implementări, nu doar între locale.</strong> busybox numără ca POSIX chiar și în UTF-8. Cifrele de referință sunt cele de pe OpenBSD — identice cu GNU în UTF-8.</p>
@@ -745,6 +747,10 @@ done &lt; /tmp/lista</pre>
     <div class="step"><div class="step-n">11</div><div class="step-body"><div class="step-title">Starea git</div><p>La push: arbori curați în toate clonele, nimic în urmă față de GitHub; commit-urile nepublicate din alte repo-uri — atenționare.</p></div></div>
     <div class="step"><div class="step-n">12</div><div class="step-body"><div class="step-title">Pagina GitHub</div><p>Caseta About a fiecărui repo — descriere, website, topics — comparată prin API cu <code>scripts/about.tsv</code>; Wiki și Projects dezactivate; licența recunoscută. Doar la push și cu <code>--github</code>. Dacă API-ul nu răspunde: atenționare, nu blocaj.</p></div></div>
   </div>
+
+  <h3>A doua plasă: GitHub Actions</h3>
+  <p>Garda locală vede doar push-urile de pe mașina ta. <code>.github/workflows/verifica.yml</code> — identic în toate cele 6 repo-uri — rulează <code>verifica-site.sh --ci</code> pe serverul GitHub: la fiecare push pe <code>main</code>, în oricare repo; zilnic, doar din hub; și la cerere (Actions → verifica-site → Run workflow). Prinde și ce ocolește garda: o editare făcută direct în browser, o descriere schimbată în About. Un eșec trimite automat email proprietarului contului.</p>
+  <p><code>--ci</code> rulează tot, mai puțin ce ține de clona locală (garda activă, identitatea, starea git) — pe server nu există mașina ta. Pagina GitHub se citește cu tokenul automat al Actions, fără limita de 60 de cereri pe oră.</p>
 
   <pre><span class="comment"># manual, oricând (fără rețea)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh</span>
@@ -925,13 +931,12 @@ done &lt; /tmp/lista</pre>
   <h3>Infrastructură — următorii pași</h3>
   <p>
 
-    ○ <strong>CI</strong> — GitHub Actions rulând același <code>verifica-site.sh</code> pe GNU, ca a doua plasă independentă de mașina locală<br>
     ○ <strong>Consolidarea</strong> repo-urilor ca foldere în hub — decizie de luat la rece; de verificat întâi cum rezolvă GitHub Pages un folder cu același nume ca un repo cu Pages activ
   </p>
 
   <div class="callout-green">
     <div class="callout-label">REZOLVATE PE 27 SEPTEMBRIE</div>
-    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat. Igiena GitHub: identitatea noreply în toate clonele (placeholder-ul <code>emailul_tau@gmail.com</code> venea dintr-o setare locală în <code>opera</code>), GitHub blochează el însuși push-urile care ar expune emailul, licența oficială recunoscută, About și topics în <code>about.tsv</code>, Wiki și Projects dezactivate, tag-ul <code>tablou-unitar-2026-09-27</code>.</p>
+    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat. Igiena GitHub: identitatea noreply în toate clonele (placeholder-ul <code>emailul_tau@gmail.com</code> venea dintr-o setare locală în <code>opera</code>), GitHub blochează el însuși push-urile care ar expune emailul, licența oficială recunoscută, About și topics în <code>about.tsv</code>, Wiki și Projects dezactivate, tag-ul <code>tablou-unitar-2026-09-27</code>. CI: GitHub Actions rulează aceeași verificare pe server, la fiecare push și zilnic.</p>
   </div>
 
   <div class="callout">

@@ -8,6 +8,7 @@
 #   sh ~/norgedan.github.io/scripts/verifica-site.sh            verificare completa
 #   sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou   doar tabloul
 #   ... --github          ca mai sus + pagina GitHub a fiecarui repo (retea)
+#   ... --ci              in GitHub Actions: tot, fara ce tine de clona locala
 #   ... --push <repo>     folosit de hook-ul pre-push (aduce starea de pe GitHub)
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
@@ -38,8 +39,9 @@ case "${1:-}" in
   "")        ;;
   --tablou)  MOD=tablou ;;
   --github)  MOD=github ;;
+  --ci)      MOD=ci ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --push <repo>]" >&2; exit 2 ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo>]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -683,6 +685,8 @@ titlu 10 "ADN-ul fiecarui repo: fisiere de baza si garda pre-push"
 # ════════════════════════════════════════════════════════════════════
 
 REF_HOOK="$HUB/scripts/hooks/pre-push"
+REF_WF="$HUB/.github/workflows/verifica.yml"
+ref_wf=""; [ -f "$REF_WF" ] && ref_wf=$(cksum < "$REF_WF")
 REF_LIC="$HUB/LICENSE"
 ref_lic=""; [ -f "$REF_LIC" ] && ref_lic=$(cksum < "$REF_LIC")
 if [ -f "$REF_LIC" ] && ! grep -qF "Creative Commons Attribution 4.0 International Public License" "$REF_LIC"; then
@@ -707,7 +711,7 @@ while read -r repo; do
     [ -e "$x" ] || continue
     b=$(basename "$x")
     case "$b" in
-      .git|.gitignore|.nojekyll|LICENSE|README.md|sitemap.xml|scripts|*.html) continue ;;
+      .git|.github|.gitignore|.nojekyll|LICENSE|README.md|sitemap.xml|scripts|*.html) continue ;;
     esac
     if [ "$repo" = "$HUBNAME" ]; then
       case "$b" in robots.txt|sitemap-hub.xml) continue ;; esac
@@ -726,12 +730,13 @@ while read -r repo; do
       problema "$repo: sectiunea de licenta din README difera de cea din hub"; greseli=1
     fi
   fi
-  # identitatea cu care se fac commit-urile: adresa noreply, nu emailul personal
-  em=$(git -C "$d" config --get user.email 2>/dev/null)
-  case "$em" in
-    *@users.noreply.github.com) ;;
-    *) problema "$repo: commit-urile s-ar face cu <${em:-nesetat}> — trebuie adresa noreply GitHub"; greseli=1 ;;
-  esac
+  # a doua plasa: workflow-ul CI, identic peste tot
+  if [ ! -f "$d/.github/workflows/verifica.yml" ]; then
+    problema "$repo: nu are .github/workflows/verifica.yml (CI)"; greseli=1
+  elif [ "$(cksum < "$d/.github/workflows/verifica.yml")" != "$ref_wf" ]; then
+    problema "$repo: workflow-ul CI difera de cel din hub (trebuie identice)"; greseli=1
+  fi
+
 
   h="$d/scripts/hooks/pre-push"
   if [ ! -f "$h" ]; then problema "$repo: nu are scripts/hooks/pre-push"; greseli=1
@@ -739,8 +744,17 @@ while read -r repo; do
     [ -x "$h" ] || { problema "$repo: hook-ul nu e executabil"; greseli=1; }
     [ "$(cksum < "$h")" = "$ref_sum" ] || { problema "$repo: hook-ul difera de cel din hub (trebuie identice)"; greseli=1; }
   fi
-  hp=$(git -C "$d" config --get core.hooksPath 2>/dev/null)
-  [ "$hp" = "scripts/hooks" ] || { problema "$repo: garda inactiva (core.hooksPath=\"${hp:-nesetat}\")"; greseli=1; }
+  # ce urmeaza tine de clona locala — in CI nu exista, deci nu se verifica acolo
+  if [ "$MOD" != ci ]; then
+    hp=$(git -C "$d" config --get core.hooksPath 2>/dev/null)
+    [ "$hp" = "scripts/hooks" ] || { problema "$repo: garda inactiva (core.hooksPath=\"${hp:-nesetat}\")"; greseli=1; }
+    # identitatea cu care se fac commit-urile: adresa noreply, nu emailul personal
+    em=$(git -C "$d" config --get user.email 2>/dev/null)
+    case "$em" in
+      *@users.noreply.github.com) ;;
+      *) problema "$repo: commit-urile s-ar face cu <${em:-nesetat}> — trebuie adresa noreply GitHub"; greseli=1 ;;
+    esac
+  fi
 
   for v in scripts/verifica.sh scripts/verifica-hub.sh; do
     [ -f "$d/$v" ] && { problema "$repo: $v inca exista — verificarea trebuie sa aiba o singura sursa"; greseli=1; }
@@ -756,7 +770,8 @@ titlu 11 "Starea git: ce verific e ce se publica"
 #              commit-uri nepublicate in alte repo-uri = ATENTIE.
 
 greseli=0
-while read -r repo; do
+[ "$MOD" = ci ] && echo "  (sarit in CI — starea clonelor locale nu exista pe server)"
+[ "$MOD" = ci ] || while read -r repo; do
   d="$RADACINA/$repo"; [ -d "$d/.git" ] || continue
   br=$(git -C "$d" rev-parse --abbrev-ref HEAD 2>/dev/null)
   [ "$br" = "main" ] || { problema "$repo: pe ramura \"$br\", nu pe main"; greseli=1; continue; }
@@ -790,7 +805,10 @@ titlu 12 "Pagina GitHub a fiecarui repo (About) == scripts/about.tsv"
 api_get() {   # <repo> <fisier>
   if [ -n "${NORGEDAN_API_DIR:-}" ]; then cp "$NORGEDAN_API_DIR/$1.json" "$2" 2>/dev/null; return; fi
   u="https://api.github.com/repos/norgedan/$1"
-  if command -v curl >/dev/null 2>&1; then curl -fsS -o "$2" "$u" 2>/dev/null
+  if command -v curl >/dev/null 2>&1; then
+    # in GitHub Actions: tokenul automat, fara limita de 60 de cereri/ora
+    if [ -n "${GITHUB_TOKEN:-}" ]; then curl -fsS -H "Authorization: Bearer $GITHUB_TOKEN" -o "$2" "$u" 2>/dev/null
+    else curl -fsS -o "$2" "$u" 2>/dev/null; fi
   else ftp -V -o "$2" "$u" >/dev/null 2>&1; fi
 }
 # GitHub trimite JSON compact unor clienti (ftp) si formatat altora (curl):
@@ -801,7 +819,7 @@ json_str() { json_1l "$2" | grep -o "\"$1\"[ ]*:[ ]*\"[^\"]*\"" | head -1 | sed 
 json_bool() { json_1l "$2" | grep -o "\"$1\"[ ]*:[ ]*[a-z]*" | head -1 | sed "s/^\"$1\"[ ]*:[ ]*//"; }
 topics_of() { json_1l "$1" | grep -o '"topics"[ ]*:[ ]*\[[^]]*\]' | sed 's/^"topics"[ ]*:[ ]*\[//; s/\]$//; s/[" ]//g' | tr ',' '\n' | grep -v '^$' | sort | tr '\n' ','; }
 
-if [ "$MOD" != push ] && [ "$MOD" != github ]; then
+if [ "$MOD" != push ] && [ "$MOD" != github ] && [ "$MOD" != ci ]; then
   echo "  (sarit fara retea — ruleaza cu --github; la push ruleaza singur)"
 elif [ ! -f "$ABOUT" ]; then
   problema "lipseste scripts/about.tsv — sursa paginilor GitHub"
