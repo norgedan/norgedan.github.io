@@ -793,9 +793,13 @@ api_get() {   # <repo> <fisier>
   if command -v curl >/dev/null 2>&1; then curl -fsS -o "$2" "$u" 2>/dev/null
   else ftp -V -o "$2" "$u" >/dev/null 2>&1; fi
 }
-json_str() { grep -o "\"$1\":\"[^\"]*\"" "$2" | head -1 | sed "s/^\"$1\":\"//; s/\"\$//"; }
-json_bool() { grep -o "\"$1\":[a-z]*" "$2" | head -1 | sed "s/^\"$1\"://"; }
-topics_of() { grep -o '"topics":\[[^]]*\]' "$1" | sed 's/^"topics":\[//; s/\]$//; s/"//g' | tr ',' '\n' | grep -v '^$' | sort | tr '\n' ','; }
+# GitHub trimite JSON compact unor clienti (ftp) si formatat altora (curl):
+# "cheie":"v" sau "cheie": "v", liste pe o linie sau pe mai multe.
+# De aceea: tot fisierul pe o singura linie, spatii permise in jurul lui ":".
+json_1l()  { tr '\n\r' '  ' < "$1"; }
+json_str() { json_1l "$2" | grep -o "\"$1\"[ ]*:[ ]*\"[^\"]*\"" | head -1 | sed "s/^\"$1\"[ ]*:[ ]*\"//; s/\"\$//"; }
+json_bool() { json_1l "$2" | grep -o "\"$1\"[ ]*:[ ]*[a-z]*" | head -1 | sed "s/^\"$1\"[ ]*:[ ]*//"; }
+topics_of() { json_1l "$1" | grep -o '"topics"[ ]*:[ ]*\[[^]]*\]' | sed 's/^"topics"[ ]*:[ ]*\[//; s/\]$//; s/[" ]//g' | tr ',' '\n' | grep -v '^$' | sort | tr '\n' ','; }
 
 if [ "$MOD" != push ] && [ "$MOD" != github ]; then
   echo "  (sarit fara retea — ruleaza cu --github; la push ruleaza singur)"
