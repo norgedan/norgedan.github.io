@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Context de sesiune · Norgedan</title>
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--border:#2a2f42;--gold:#c9a84c;--teal:#4a9e9e;--rose:#b85c5c;--amber:#d4973a;--text:#dde1ec;--muted:#7a8199;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:Georgia,serif;font-size:1rem;line-height:1.8;padding:2rem 1.5rem;}
+.wrap{max-width:820px;margin:0 auto;}
+h1{font-size:1.6rem;color:var(--gold);font-weight:normal;letter-spacing:.02em;margin-bottom:.4rem;}
+.sub{color:var(--muted);font-size:.9rem;font-style:italic;margin-bottom:2.2rem;}
+h2{font-size:1.1rem;color:var(--teal);font-weight:normal;margin:2.4rem 0 .9rem;letter-spacing:.02em;}
+p{margin-bottom:1rem;}
+.copiaza{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:1.4rem 1.6rem;margin:1.2rem 0 1.6rem;}
+.copiaza pre{font-family:ui-monospace,"Courier New",monospace;font-size:.86rem;line-height:1.75;color:var(--text);white-space:pre-wrap;word-wrap:break-word;}
+.eticheta{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;font-family:ui-monospace,"Courier New",monospace;}
+.nota{background:rgba(74,158,158,.07);border:1px dashed var(--teal);border-radius:6px;padding:1rem 1.3rem;margin:1.4rem 0;font-size:.92rem;}
+.nota .eticheta{color:var(--teal);}
+ul{margin:.6rem 0 1rem 1.3rem;}
+li{margin-bottom:.45rem;}
+code{font-family:ui-monospace,"Courier New",monospace;font-size:.88em;background:rgba(201,168,76,.1);padding:.1rem .35rem;border-radius:3px;color:var(--amber);}
+footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);color:var(--muted);font-size:.82rem;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Context de sesiune</h1>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan</p>
+
+<h2>Textul de copiat</h2>
+
+<div class="copiaza">
+  <p class="eticheta">Selectează tot blocul și copiază-l</p>
+<pre>Claude, continuăm proiectul Norgedan. Atașez ghidul și documentul de status.
+
+STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
+- Adevărul complet, nu cel convenabil — inclusiv când e incomod sau contrazice o preferință.
+- Verificare înainte de scriere. Nicio cifră, dată sau afirmație factuală din memorie; se caută și se confirmă.
+- Citatele biblice se confruntă cuvânt cu cuvânt cu Biblia de la București 1688 (PDF pe care îl reîncarc).
+- Lucru chirurgical: se corectează pasajul vizat, nu se rescrie documentul. Diff verificat înainte de commit.
+- Comenzi POSIX portabile — mașina e OpenBSD, deci BSD, nu GNU. Comenzi concrete, niciodată șabloane cu &lt;...&gt;.
+- Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
+
+STAREA PROIECTULUI:
+Cifrele trăiesc într-un singur loc — status-proiect.html, verificat automat de
+scripts/verifica-site.sh la fiecare push. Tabloul exact: verifica-site.sh --tablou.
+Document = pereche RO+NO. Manifestul: scripts/documente.tsv în norgedan.github.io.
+Garda pre-push e identică în toate cele 6 repo-uri; fiecare push verifică tot site-ul.
+
+CLONELE LOCALE (surori, în /home/bogdan):
+norgedan.github.io · corpus · corpus2 · opera · limba · limba-ro-final
+
+URMEAZĂ:
+Doc VII — Familia și Societatea. Discutăm structura înainte de scriere, ca la Doc VI.
+Atenție: teren contestat politic. Separăm datele verificabile (cu sursă și an) de
+interpretarea teologică, asumată explicit ca poziție, nu prezentată ca fapt neutru.</pre>
+</div>
+
+<h2>Ce se atașează odată cu el</h2>
+
+<ul>
+  <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, infrastructură, decizii deschise, planuri (https://norgedan.github.io/status-proiect.html)</li>
+  <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
+  <li><code>Biblia-1688.pdf</code> — numai dacă se lucrează pe texte cu citate scripturistice</li>
+</ul>
+
+<div class="nota">
+  <p class="eticheta">De ce contează atașamentele</p>
+  <p>Textul de mai sus dă direcția și standardul. Ghidul și statusul dau detaliile — proceduri pas cu pas, greșelile deja făcute și lecțiile lor, planurile pe termen lung. Fără ele, o discuție nouă pornește de la zero și repetă erori deja rezolvate. Atașează-le din repo, nu din Downloads: o copie rămasă în Downloads poate fi alta decât cea publicată.</p>
+</div>
+
+<h2>Dacă se lucrează pe texte</h2>
+
+<p>PDF-ul Bibliei nu persistă între discuții, deci trebuie reîncărcat de fiecare dată când se verifică citate. Fără el, orice verset ar fi scris din memorie — ceea ce standardul nu permite.</p>
+
+<h2>Rutina de sesiune</h2>
+
+<p><strong>La început:</strong> starea tuturor clonelor față de GitHub — fiecare linie trebuie să fie <code>## main...origin/main</code>:</p>
+<pre>for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do git -C ~/$r fetch -q origin; echo "$r $(git -C ~/$r status -sb | head -1)"; done</pre>
+<p>Apoi golește <code>~/Downloads</code> de fișierele proiectului, ca orice descărcare nouă să fie fără echivoc cea nouă.</p>
+
+<p><strong>La fiecare fișier descărcat:</strong> <code>sha256</code> comparat cu valoarea dată în discuție, înainte de orice <code>git apply</code>.</p>
+
+<p><strong>La push:</strong> verificarea rulează singură. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda.</p>
+
+<p><strong>La sfârșit:</strong> golește Downloads. Verificarea semnalează singură orice fișier rătăcit în rădăcina unui repo.</p>
+
+<footer>
+  Document intern · norgedan · actualizat 27 septembrie 2026
+</footer>
+
+</div>
+</body>
+</html>

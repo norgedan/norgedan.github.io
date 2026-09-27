@@ -526,7 +526,10 @@ titlu 8 "Cifrele declarate public == cifrele masurate"
 # ════════════════════════════════════════════════════════════════════
 # Unde se verifica:  hub index.html + README.md  -> intreg site-ul
 #                    pagina si README-ul fiecarei colectii -> colectia
-# Cuvinte:  "~N" si N simplu = rotunjit la mie;  "peste N"/"over N" = rotunjit in jos.
+# Cuvinte:  "~N" = rotunjit la mie;  "peste N"/"over N" = rotunjit in jos;
+#           N simplu = exact (cine scrie o cifra fara ~ afirma precizie).
+# Documentele de lucru (status, context) se compara cu totalul site-ului;
+# tabloul din status se verifica rand cu rand, pe colectii.
 # Documente: "N documente" / "Seks dokumenter" = numarul de perechi.
 # Pe hub, cifrele de documente apar in ordinea colectiilor din manifest.
 
@@ -575,7 +578,8 @@ verifica_cuv() {   # <fisier> <valoare-masurata> <eticheta>
   grep -oE "$RE_CUV" "$1" 2>/dev/null | while read -r dec; do
     cifre=$(echo "$dec" | sed 's/ de cuvinte//; s/ cuvinte//; s/ ord//' | tr -cd '0-9')
     case "$dec" in peste*|over*) tinta=$(jos "$2"); fel="rotunjit in jos" ;;
-                   *)            tinta=$(rot "$2"); fel="rotunjit" ;; esac
+                   "~"*)         tinta=$(rot "$2"); fel="rotunjit" ;;
+                   *)            tinta=$2;          fel="exact" ;; esac
     if [ "$cifre" -eq "$tinta" ]; then echo "OK"
     else echo "PROBLEMA ${1#"$RADACINA"/} declara \"$dec\"; $3 masurat $2 ($fel: $tinta)"; fi
   done
@@ -613,6 +617,40 @@ for col in $(cut -f2 "$W/m" | awk '!s[$0]++'); do
     done >> "$W/nrerr"
   done
 done
+# documentele de lucru din hub: orice cifra se compara cu totalul site-ului
+TOTAL_DOC=$(wc -l < "$W/m" | tr -d ' ')
+for f in "$HUB/status-proiect.html" "$HUB/context-sesiune.html"; do
+  [ -f "$f" ] || continue
+  verifica_cuv "$f" "$TOTAL_CUV" "site-ul intreg:" >> "$W/nrerr"
+  decl_docs "$f" | while read -r d; do
+    if [ "$d" = "$TOTAL_DOC" ]; then echo OK
+    else echo "PROBLEMA ${f#"$RADACINA"/} declara $d documente; manifestul are $TOTAL_DOC"; fi
+  done >> "$W/nrerr"
+done
+
+# tabloul din status: un rand pe colectie + TOTAL, fiecare verificat
+STATUS="$HUB/status-proiect.html"
+if [ -f "$STATUS" ]; then
+  sed -n 's|.*<tr data-colectie="\([^"]*\)"><td>.*</td><td>\([0-9]*\)</td><td>~\([0-9.]*\)</td></tr>.*|\1 \2 \3|p' "$STATUS" > "$W/st"
+  for col in $(cut -f2 "$W/m" | awk '!s[$0]++') TOTAL; do
+    linie=$(awk -v c="$col" '$1==c' "$W/st")
+    if [ -z "$linie" ]; then echo "PROBLEMA status-proiect.html: tabloul nu are rand pentru $col"; continue; fi
+    set -- $linie
+    if [ "$col" = TOTAL ]; then rd=$TOTAL_DOC; rc=$TOTAL_CUV; else rd=$(doc_col "$col"); rc=$(cuv_col "$col"); fi
+    if [ "$2" = "$rd" ]; then echo OK
+    else echo "PROBLEMA status-proiect.html: tabloul spune $2 documente la $col; manifestul are $rd"; fi
+    c=$(echo "$3" | tr -cd '0-9')
+    if [ "$c" -eq "$(rot "$rc")" ]; then echo OK
+    else echo "PROBLEMA status-proiect.html: tabloul spune ~$3 cuvinte la $col; masurat $rc (rotunjit: $(rot "$rc"))"; fi
+  done >> "$W/nrerr"
+  awk '{print $1}' "$W/st" | while read -r c; do
+    [ "$c" = TOTAL ] && continue
+    cut -f2 "$W/m" | grep -qxF "$c" || echo "PROBLEMA status-proiect.html: tabloul are rand pentru $c, care nu e in manifest"
+  done >> "$W/nrerr"
+else
+  echo "PROBLEMA lipseste $HUBNAME/status-proiect.html — tabloul de continuitate" >> "$W/nrerr"
+fi
+
 nok=$(grep -c '^OK' "$W/nrerr")
 grep '^PROBLEMA' "$W/nrerr" | sort -u | while read -r l; do echo "${l#PROBLEMA }"; done > "$W/nrp"
 if [ -s "$W/nrp" ]; then while read -r l; do problema "$l"; done < "$W/nrp"; fi
