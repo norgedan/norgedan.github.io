@@ -375,6 +375,14 @@ while IFS="$TAB" read -r d e; do
 done < "$W/descr"
 [ "$lungi" -gt 0 ] && atentie "$lungi descrieri au peste 160 de caractere (Google taie in jur de 155-160)"
 
+# standardul "nb" peste tot, nu doar pe documente: si paginile de intrare
+while read -r f; do
+  rel=${f#"$RADACINA"/}; repo=${rel%%/*}; cale=${rel#*/}
+  awk -F'\t' -v r="$repo" -v c="$cale" '$1==r && $2==c {g=1} END {exit !g}' "$W/docs" && continue
+  e_intern "$f" && continue
+  [ -n "$(val "$f" link hreflang no href)" ] && problema "$rel: foloseste hreflang=\"no\" — standardul site-ului e \"nb\""
+done < "$W/html"
+
 grep -q "${TAB}og:image$TAB" "$W"/t/* 2>/dev/null || atentie "nicio pagina nu are og:image — distribuirile apar fara imagine"
 
 # ════════════════════════════════════════════════════════════════════
@@ -540,9 +548,16 @@ BEGIN {
   for (i = 2; i <= m; i++) {
     x = a[i]; sub(/[.,;:!?]$/, "", x)
     if (x != "documente" && x != "dokumenter") continue
+    # cifra: doar imediat inainte ("12 documente") — altfel un an ar fi luat drept numar
     c = a[i - 1]; if (c == "de" && i > 2) c = a[i - 2]
-    if (c ~ /^[0-9]+$/) print c
-    else if (c in nr) print nr[c]
+    if (c ~ /^[0-9]+$/) { print c; continue }
+    # numeral in litere: pana la 5 cuvinte inapoi, oprit la sfarsit de propozitie
+    # ("tolv teologiske, vitenskapelige og geopolitiske dokumenter")
+    for (j = i - 1; j >= 1 && j >= i - 5; j--) {
+      c = a[j]; g = c; sub(/[,;:]$/, "", g)
+      if (g in nr) { print nr[g]; break }
+      if (c ~ /[.!?]$/) break
+    }
   }
 }
 AWK
@@ -635,6 +650,22 @@ while read -r repo; do
   for x in README.md LICENSE .gitignore .nojekyll; do [ -f "$d/$x" ] || lipsa="$lipsa $x"; done
   [ "$repo" = "$HUBNAME" ] && for x in robots.txt 404.html sitemap.xml sitemap-hub.xml; do [ -f "$d/$x" ] || lipsa="$lipsa $x"; done
   [ -n "$lipsa" ] && { problema "$repo: lipseste$lipsa"; greseli=1; }
+
+  # radacina: doar ce e permis. Fisierele-fantoma (main pe 15 sept,
+  # FETCH_HEAD pe 27 sept) apar din comenzi taiate la lipire; comise, raman.
+  dirs_ok=$(awk -F'\t' -v r="$repo" '$3==r {print $4; print $5}' "$W/m" | sed -n 's|/.*||p' | sort -u | tr '\n' ' ')
+  for x in "$d"/* "$d"/.[!.]*; do
+    [ -e "$x" ] || continue
+    b=$(basename "$x")
+    case "$b" in
+      .git|.gitignore|.nojekyll|LICENSE|README.md|sitemap.xml|scripts|*.html) continue ;;
+    esac
+    if [ "$repo" = "$HUBNAME" ]; then
+      case "$b" in robots.txt|sitemap-hub.xml) continue ;; esac
+    fi
+    if [ -d "$x" ] && echo " $dirs_ok " | grep -qF " $b "; then continue; fi
+    problema "$repo: \"$b\" nu are ce cauta in radacina (fisier-fantoma sau uitat?)"; greseli=1
+  done
 
   h="$d/scripts/hooks/pre-push"
   if [ ! -f "$h" ]; then problema "$repo: nu are scripts/hooks/pre-push"; greseli=1
