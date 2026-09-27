@@ -1,0 +1,46 @@
+#!/bin/sh
+# pre-push — ruleaza automat la fiecare git push si il opreste daca pica.
+# Activare, o singura data in clona:  git config core.hooksPath scripts/hooks
+# Ocolire explicita, doar constient:  git push --no-verify
+#
+# Doua garzi inainte de verifica-hub.sh:
+#  1. arborele acestui repo e curat — altfel verificarea n-ar vedea ce pleaca
+#  2. fiecare clona sora e identica cu GitHub — altfel hub-ul s-ar verifica
+#     fata de o copie veche sau nepublicata, nu fata de site-ul real
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "pre-push: exista modificari necomise — verificarea n-ar vedea ce pleaca." >&2
+  git status --short >&2
+  exit 1
+fi
+
+# lista de repo-uri se citeste din script: o singura sursa, nu doua
+REPOS=$(sed -n 's/^REPOS="\([^"]*\)".*/\1/p' scripts/verifica-hub.sh)
+if [ -z "$REPOS" ]; then
+  echo "pre-push: nu gasesc REPOS=\"...\" in scripts/verifica-hub.sh" >&2
+  exit 1
+fi
+
+for r in $REPOS; do
+  d="../$r"
+  [ -d "$d/.git" ] || continue          # neclonat: verifica-hub.sh il semnaleaza
+  if ! git -C "$d" fetch -q origin; then
+    echo "pre-push: nu pot aduce starea de pe GitHub pentru $r" >&2
+    exit 1
+  fi
+  if [ -n "$(git -C "$d" status --porcelain)" ]; then
+    echo "pre-push: $r are modificari necomise — hub-ul s-ar verifica fata de ele." >&2
+    exit 1
+  fi
+  aici=$(git -C "$d" rev-parse --short HEAD)
+  sus=$(git -C "$d" rev-parse --short origin/main)
+  if [ "$aici" != "$sus" ]; then
+    echo "pre-push: $r nu e identic cu GitHub (local $aici, GitHub $sus)." >&2
+    echo "pre-push: fa push in $r sau git pull, apoi revino aici." >&2
+    exit 1
+  fi
+done
+
+exec sh scripts/verifica-hub.sh

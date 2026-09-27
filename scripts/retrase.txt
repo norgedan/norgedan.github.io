@@ -21,3 +21,14 @@
 ~120.000
 ~130.000
 ~180.000
+
+# 27 sept 2026 — Opera: documentul e despre voci, nu despre compozitori
+# (README corectat pe 18 sept; descrierile si cardul din hub ramasesera in urma)
+si compozitorii ei
+și compozitorii ei
+og dens komponister
+
+# 27 sept 2026 — titlul norvegian al lui limba-ro-final este
+# "Spraket som nekter a do" (asa e in document); varianta de mai jos era gresita
+ikke vil dø
+ikke vil do
