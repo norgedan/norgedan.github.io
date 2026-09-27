@@ -698,7 +698,9 @@ done &lt; /tmp/lista</pre>
 
   <p><strong>API-ul GitHub întoarce JSON pe o singură linie.</strong> Un <code>sed</code> care caută „linia cu description” primește tot fișierul, de câte ori potrivește. Valorile se scot cu <code>grep -o '"description":"[^"]*"'</code>.</p>
 
-  <p><strong>Fișierele de workflow cer permisiunea <code>workflow</code> pe tokenul PAT.</strong> Fără ea, GitHub refuză push-ul oricărui fișier din <code>.github/workflows/</code> — curat, fără să strice nimic. Se adaugă o singură dată, din Settings → Developer settings → Personal access tokens.</p>
+  <p><strong>Două „Permission denied” diferite.</strong> <code>ssh: connect to host github.com port 22: Permission denied</code> = conexiunea nici n-a pornit — firewall-ul local (pf, <code>block return</code>) a refuzat portul 22. <code>Permission denied (publickey)</code> = GitHub a răspuns, dar a refuzat cheia. Soluția pentru prima, fără a slăbi firewall-ul: SSH pe <code>ssh.github.com</code>, portul 443, în <code>~/.ssh/config</code>. Amprenta serverului se compară întotdeauna cu cea publicată de GitHub înainte de <code>yes</code>.</p>
+
+  <p><strong>Fișierele de workflow cer permisiunea <code>workflow</code> pe tokenul PAT</strong> (valabil cât timp push-ul mergea prin HTTPS; din 27 sept push-ul merge prin SSH și tokenul a fost șters). Fără ea, GitHub refuză push-ul oricărui fișier din <code>.github/workflows/</code> — curat, fără să strice nimic. Se adaugă o singură dată, din Settings → Developer settings → Personal access tokens.</p>
 
   <p><strong>Nu lipi mai multe comenzi când una pune întrebări.</strong> <code>rm -i</code> a primit ca „răspuns” linia lipită următoare — nu <code>y</code>, deci n-a șters nimic, iar comenzile lipite n-au rulat. O comandă, prompt-ul, apoi următoarea.</p>
 
@@ -931,12 +933,12 @@ done &lt; /tmp/lista</pre>
   <h3>Infrastructură — următorii pași</h3>
   <p>
 
-    ○ <strong>Consolidarea</strong> repo-urilor ca foldere în hub — decizie de luat la rece; de verificat întâi cum rezolvă GitHub Pages un folder cu același nume ca un repo cu Pages activ
+    ○ <strong>Consolidarea</strong> — <em>decisă pe 27 sept: nu</em>. Motivul ei (erorile dintre repo-uri) e acoperit acum de verificarea automată. Regula: conținut nou = folder în hub, nu repo nou. Se reconsideră doar dacă dublul commit devine o povară reală.
   </p>
 
   <div class="callout-green">
     <div class="callout-label">REZOLVATE PE 27 SEPTEMBRIE</div>
-    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat. Igiena GitHub: identitatea noreply în toate clonele (placeholder-ul <code>emailul_tau@gmail.com</code> venea dintr-o setare locală în <code>opera</code>), GitHub blochează el însuși push-urile care ar expune emailul, licența oficială recunoscută, About și topics în <code>about.tsv</code>, Wiki și Projects dezactivate, tag-ul <code>tablou-unitar-2026-09-27</code>. CI: GitHub Actions rulează aceeași verificare pe server, la fiecare push și zilnic.</p>
+    <p>Cifrele umflate — reparate pe site și verificate automat. Documentul VI și Doc V NO linkuite din hub. Formularea 10¹²⁰ — nu mai apare nicăieri public. <code>limba-ro-final</code> — măsurat, inclus, SEO complet, LICENSE. Adaptarea verificării la toate repo-urile — un singur script pentru tot. LICENSE și .gitignore — în toate cele 6. Statusul — corectat și ținut corect automat. Igiena GitHub: identitatea noreply în toate clonele (placeholder-ul <code>emailul_tau@gmail.com</code> venea dintr-o setare locală în <code>opera</code>), GitHub blochează el însuși push-urile care ar expune emailul, licența oficială recunoscută, About și topics în <code>about.tsv</code>, Wiki și Projects dezactivate, tag-ul <code>tablou-unitar-2026-09-27</code>. CI: GitHub Actions rulează aceeași verificare pe server, la fiecare push și zilnic. Autentificarea: push prin SSH cu cheie dedicată, prin portul 443; tokenul PAT șters. Mașina: copiile rătăcite și credențialele vechi, șterse.</p>
   </div>
 
   <div class="callout">
@@ -951,7 +953,7 @@ done &lt; /tmp/lista</pre>
   <h2>Bunele practici — rezumatul modelului norgedan</h2>
 
   <h3>Structura care funcționează</h3>
-  <p><strong>Un singur adevăr despre site</strong>: un manifest, un script de verificare, o gardă identică peste tot — toate în hub. Conținutul poate sta în mai multe repo-uri; adevărul despre el, nu. Conținut nou care ține de site-ul principal: folder în <code>norgedan.github.io</code>, ca Corpus III.</p>
+  <p><strong>Un singur adevăr despre site</strong>: un manifest, un script de verificare, o gardă identică peste tot — toate în hub. Conținutul poate sta în mai multe repo-uri; adevărul despre el, nu. Conținut nou: folder în <code>norgedan.github.io</code>, ca Corpus III — nu repo nou (decizie din 27 sept).</p>
 
   <h3>Convenția de numire a fișierelor</h3>
   <pre><span class="comment"># ✅ Modelul tău — clar, consistent, sortabil</span>

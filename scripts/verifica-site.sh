@@ -754,12 +754,19 @@ while read -r repo; do
       *@users.noreply.github.com) ;;
       *) problema "$repo: commit-urile s-ar face cu <${em:-nesetat}> — trebuie adresa noreply GitHub"; greseli=1 ;;
     esac
+    # push-ul prin SSH (cheie cu parola), nu prin HTTPS cu token in text clar
+    pu=$(git -C "$d" remote get-url --push origin 2>/dev/null)
+    [ "$pu" = "git@github.com:norgedan/$repo.git" ] || { problema "$repo: push-ul merge spre \"${pu:-nimic}\" — trebuie git@github.com:norgedan/$repo.git (SSH)"; greseli=1; }
   fi
 
   for v in scripts/verifica.sh scripts/verifica-hub.sh; do
     [ -f "$d/$v" ] && { problema "$repo: $v inca exista — verificarea trebuie sa aiba o singura sursa"; greseli=1; }
   done
 done < "$W/repos"
+if [ "$MOD" != ci ]; then
+  ch=$(git config --global --get credential.helper 2>/dev/null)
+  [ -n "$ch" ] && atentie "credential.helper=\"$ch\" — parolele/tokenurile s-ar salva din nou pe disc; push-ul merge prin SSH"
+fi
 [ "$greseli" -eq 0 ] && ok "toate repo-urile au fisierele de baza si aceeasi garda activa"
 
 # ════════════════════════════════════════════════════════════════════
