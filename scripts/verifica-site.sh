@@ -31,6 +31,9 @@ RADACINA=$(dirname "$HUB")
 MANIFEST="$SCRIPT_DIR/documente.tsv"
 ABOUT="$SCRIPT_DIR/about.tsv"
 RETRASE="$SCRIPT_DIR/retrase.txt"
+AFIRMATII="$SCRIPT_DIR/afirmatii.tsv"
+CERT="$SCRIPT_DIR/certitudini.txt"
+CERT_OK="$SCRIPT_DIR/certitudini-ok.txt"
 TAB=$(printf '\t')
 
 MOD=manual
@@ -270,6 +273,11 @@ tablou() {
     }' "$W/cuv"
   echo "  ----------------------------------------------------------------"
   echo "  numarat fara CSS si tag-uri, locale $LOCALE_NUM"
+  if [ -f "$AFIRMATII" ]; then
+    grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' | awk -F'\t' '
+      { n++; s[$3]++ }
+      END { printf "  afirmatii in registru: %d  (verificate %d, de verificat %d, de corectat %d)\n", n, s["verificat"], s["de-verificat"], s["de-corectat"] }'
+  fi
 }
 
 TOTAL_CUV=$(awk -F'\t' '{s += $3} END {print s + 0}' "$W/cuv")
@@ -857,6 +865,165 @@ else
   done > "$W/aboutx"
   while read -r r; do problema "about.tsv are rand pentru $r, care nu e repo al site-ului"; greseli=1; done < "$W/aboutx"
   [ "$greseli" -eq 0 ] && ok "paginile GitHub corespund about.tsv (descriere, website, topics, fara wiki/projects)"
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 13 "Afirmatiile: registru, perechi RO-NO, datoria de verificare"
+# ════════════════════════════════════════════════════════════════════
+# Sectiunile 1-12 verifica forma.  Aceasta tine evidenta faptelor: nu poate
+# judeca adevarul, dar nu lasa nicio afirmatie fara eticheta, sursa si decizie.
+#   scripts/afirmatii.tsv         registrul (formatul: in capul fisierului)
+#   <span data-afirmatie="id">    afirmatia, marcata pe locul ei, in RO si in NO
+#   scripts/certitudini.txt       cuvinte de certitudine cautate in textul nemarcat
+#   scripts/certitudini-ok.txt    fragmente citite si acceptate
+# PROBLEMA doar pentru ce masina judeca sigur: registru stricat, id necunoscut
+# sau nefolosit, marcaj pe alt tag, afirmatie prezenta intr-o singura limba.
+# Datoria de verificare si detectorul = ATENTIE: amandoua cer judecata umana.
+
+# paginile publice (fara noindex), ca la [7]
+: > "$W/pub13"
+while read -r f; do e_intern "$f" || echo "$f" >> "$W/pub13"; done < "$W/html"
+
+# marcajele din pagini, citite din tag-uri reale:  id TAB fisier TAB tag
+: > "$W/afuz"
+while read -r f; do
+  awk -F'\t' -v r="${f#"$RADACINA"/}" \
+    '{for (i = 2; i < NF; i += 2) if ($i == "data-afirmatie") print $(i + 1) "\t" r "\t" $1}' \
+    "$(tagsf "$f")" >> "$W/afuz"
+done < "$W/pub13"
+
+greseli=0
+: > "$W/af"
+if [ ! -f "$AFIRMATII" ]; then
+  atentie "lipseste scripts/afirmatii.tsv — registrul nu poate fi verificat"
+else
+  grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' > "$W/af"
+  awk -F'\t' '
+    NF != 7 { print "rand " NR ": " NF " coloane, trebuie 7"; next }
+    {
+      for (i = 1; i <= 7; i++) if ($i == "") print "rand " NR ": coloana " i " e goala (fara continut se scrie -)"
+      if ($1 !~ /^[a-z0-9][a-z0-9-]*$/) print "rand " NR ": id \"" $1 "\" — doar litere mici fara diacritice, cifre si -"
+      if (id[$1]++) print "id duplicat: " $1
+      if ($2 != "FAPT" && $2 != "ESTIMARE" && $2 != "INTERPRETARE" && $2 != "CREDINTA")
+        print $1 ": eticheta \"" $2 "\" — trebuie FAPT, ESTIMARE, INTERPRETARE sau CREDINTA"
+      if ($3 != "verificat" && $3 != "de-verificat" && $3 != "de-corectat")
+        print $1 ": stare \"" $3 "\" — trebuie verificat, de-verificat sau de-corectat"
+      if ($3 == "verificat" && $2 != "CREDINTA" && $5 == "-") print $1 ": e verificat, dar nu are sursa"
+      if ($3 == "verificat" && ($2 == "FAPT" || $2 == "ESTIMARE") && $6 == "-") print $1 ": e verificat, dar nu are anul sursei"
+    }' "$W/af" > "$W/aferr"
+  while read -r l; do problema "afirmatii.tsv: $l"; greseli=1; done < "$W/aferr"
+fi
+cut -f1 "$W/af" | LC_ALL=C sort -u > "$W/afid"
+cut -f1 "$W/afuz" | LC_ALL=C sort -u > "$W/afuzid"
+
+# marcajul se pune doar pe <span>: altfel detectorul nu-l poate ocoli corect
+awk -F'\t' '$3 != "span" {print $2 ": data-afirmatie=\"" $1 "\" pe <" $3 "> — se pune doar pe <span>"}' "$W/afuz" > "$W/x13"
+while read -r l; do problema "$l"; greseli=1; done < "$W/x13"
+
+# id marcat in pagina, dar absent din registru
+while read -r i; do
+  grep -qxF -- "$i" "$W/afid" && continue
+  problema "data-afirmatie=\"$i\" nu exista in afirmatii.tsv — in: $(awk -F'\t' -v i="$i" '$1==i {print $2}' "$W/afuz" | sort -u | tr '\n' ' ')"
+  greseli=1
+done < "$W/afuzid"
+
+# rand in registru, dar nemarcat nicaieri: afirmatia a disparut sau marcajul s-a pierdut
+while read -r i; do
+  grep -qxF -- "$i" "$W/afuzid" && continue
+  problema "afirmatii.tsv: \"$i\" nu e marcat in nicio pagina publica — marcheaza-l sau sterge randul"
+  greseli=1
+done < "$W/afid"
+
+# perechile: ce e marcat in RO e marcat si in NO, cu acelasi id
+: > "$W/afpar"
+while IFS="$TAB" read -r id col repo cro cno tro tno; do
+  awk -F'\t' -v r="$repo/$cro" '$2==r {print $1}' "$W/afuz" | LC_ALL=C sort -u > "$W/afro"
+  awk -F'\t' -v r="$repo/$cno" '$2==r {print $1}' "$W/afuz" | LC_ALL=C sort -u > "$W/afno"
+  # diferenta de multimi cu awk (fara comm; corect si cand un fisier e gol)
+  awk -v A="$W/afno" 'BEGIN {while ((getline l < A) > 0) a[l] = 1} !($0 in a)' "$W/afro" \
+    | sed "s|^|$id: \"|; s|\$|\" marcat in RO, lipseste in NO ($repo/$cno)|" >> "$W/afpar"
+  awk -v A="$W/afro" 'BEGIN {while ((getline l < A) > 0) a[l] = 1} !($0 in a)' "$W/afno" \
+    | sed "s|^|$id: \"|; s|\$|\" marcat in NO, lipseste in RO ($repo/$cro)|" >> "$W/afpar"
+done < "$W/m"
+while read -r l; do problema "$l"; greseli=1; done < "$W/afpar"
+
+if [ "$greseli" -eq 0 ]; then
+  n=$(wc -l < "$W/af" | tr -d ' ')
+  if [ "$n" -eq 0 ]; then ok "registrul e gol — nicio afirmatie marcata inca"
+  else ok "$n afirmatii in registru, toate marcate, perechile RO-NO intregi"; fi
+fi
+
+# datoria de verificare: vizibila la fiecare rulare, fara sa blocheze lucrul
+nv=$(awk -F'\t' '$3=="de-verificat"' "$W/af" | wc -l | tr -d ' ')
+nc=$(awk -F'\t' '$3=="de-corectat"' "$W/af" | wc -l | tr -d ' ')
+if [ "$nv" -gt 0 ] || [ "$nc" -gt 0 ]; then
+  atentie "datoria de verificare: $nv de verificat, $nc de corectat"
+  awk -F'\t' '$3=="de-corectat" || $3=="de-verificat" {print "             " $3 ": " $1}' "$W/af"
+fi
+
+# detectorul de certitudine: textul public NEMARCAT care suna a dovada
+cat > "$W/cert.awk" <<'AWK'
+# Ruleaza cu LC_ALL=C: tolower atinge doar literele ASCII, identic pe orice
+# implementare; literele cu diacritice se compara exact, octet cu octet.
+# Potrivire pe cuvinte intregi: inainte si dupa tipar nu sta o litera
+# ("overbeviser" nu e "beviser").  Octetii peste ~ (diacriticele) conteaza ca
+# litere; cratima e granita, deci "s-a dovedit" si "a demonstrat-o" se prind.
+function litera(c) { return c ~ /[a-z0-9]/ || c > "~" }
+function cuvant(t, x,   poz, i, st) {
+  poz = 1
+  while ((i = index(substr(t, poz), x)) > 0) {
+    st = poz + i - 1
+    if (!(st > 1 && litera(substr(t, st - 1, 1))) && !litera(substr(t, st + length(x), 1))) return st
+    poz = st + 1
+  }
+  return 0
+}
+BEGIN {
+  while ((getline l < TF) > 0) { np++; p[np] = l; pl[np] = tolower(l) }
+  while ((getline l < OKF) > 0) { nk++; k[nk] = l }
+  M = "<span data-afirmatie=\""
+}
+{
+  s = $0
+  # afirmatiile marcate sunt deja in registru: se scot din text
+  while ((i = index(s, M)) > 0) {
+    r = substr(s, i); j = index(r, "</span>")
+    if (j == 0) break
+    s = substr(s, 1, i - 1) " " substr(r, j + 7)
+  }
+  gsub(/<[^>]*>/, " ", s); gsub(/[ \t\r]+/, " ", s)
+  # fragmentele citite si acceptate
+  for (q = 1; q <= nk; q++) while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q]))
+  ls = tolower(s); gasit = ""; prim = 0
+  for (q = 1; q <= np; q++) if ((i = cuvant(ls, pl[q])) > 0) {
+    gasit = gasit (gasit == "" ? "" : ", ") p[q]
+    if (prim == 0) prim = i
+  }
+  if (gasit == "") next
+  a = prim - 50; if (a < 1) a = 1
+  f = substr(s, a, 130)
+  if (a > 1) sub(/^[^ ]* /, "", f)
+  if (a + 130 <= length(s)) sub(/ [^ ]*$/, "", f)
+  sub(/^ +/, "", f); sub(/ +$/, "", f)
+  print R ":" FNR "\t" gasit "\t" f
+}
+AWK
+if [ ! -f "$CERT" ]; then
+  atentie "lipseste scripts/certitudini.txt — detectorul de certitudine nu ruleaza"
+else
+  grep -v '^#' "$CERT" | grep -v '^[[:space:]]*$' > "$W/cert"
+  : > "$W/certok"
+  [ -f "$CERT_OK" ] && grep -v '^#' "$CERT_OK" | grep -v '^[[:space:]]*$' > "$W/certok"
+  : > "$W/certhit"
+  while read -r f; do
+    LC_ALL=C awk -v R="${f#"$RADACINA"/}" -v TF="$W/cert" -v OKF="$W/certok" -f "$W/cert.awk" "$f" >> "$W/certhit"
+  done < "$W/pub13"
+  if [ -s "$W/certhit" ]; then
+    atentie "$(wc -l < "$W/certhit" | tr -d ' ') locuri cu cuvinte de certitudine in text nemarcat — de citit:"
+    awk -F'\t' '{print "             " $1 "  [" $2 "]"; print "               ... " $3 " ..."}' "$W/certhit"
+  else
+    ok "niciun cuvant de certitudine in textul nemarcat ($(wc -l < "$W/cert" | tr -d ' ') tipare)"
+  fi
 fi
 
 # ════════════════════════════════════════════════════════════════════

@@ -1,0 +1,33 @@
+# certitudini.txt — cuvintele de certitudine cautate de verifica-site.sh [13]
+# in textul public NEMARCAT (adica in afara <span data-afirmatie>).
+# Un tipar pe linie, text exact (nu regex), potrivit pe CUVINTE INTREGI
+# ("beviser" nu prinde "overbeviser").  Literele fara diacritice se potrivesc
+# indiferent de majuscule; cele cu diacritice, doar exact cum sunt scrise —
+# de aceea unele tipare apar de doua ori (cu si fara diacritice).
+# O semnalare nu e o acuzatie: e o propozitie de citit.
+a demonstrat
+au demonstrat
+a dovedit
+au dovedit
+a confirmat
+au confirmat
+demonstrează
+demonstreaza
+dovedeste
+dovedește
+fara indoiala
+fără îndoială
+singurul
+singura
+singurului
+har demonstrert
+har dokumentert
+har bevist
+har bekreftet
+demonstrerer
+beviser
+bekrefter
+den eneste
+det eneste
+de eneste
+uten tvil

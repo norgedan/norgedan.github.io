@@ -1,0 +1,10 @@
+# afirmatii.tsv — registrul afirmatiilor de fond ale site-ului (verifica-site.sh [13]).
+# Un rand = o afirmatie.  7 coloane, separate prin TAB:
+#   id  eticheta  stare  afirmatia  sursa  an  nota
+# id        litere mici fara diacritice, cifre si "-"   (ex: inima-neuroni)
+# eticheta  FAPT | ESTIMARE | INTERPRETARE | CREDINTA
+# stare     verificat | de-verificat | de-corectat
+# O coloana fara continut se scrie "-", niciodata goala.
+# "verificat" cere sursa (in afara de CREDINTA); FAPT si ESTIMARE cer si anul.
+# In pagina, afirmatia se marcheaza pe locul ei, in RO si in perechea NO:
+#   <span data-afirmatie="id">...</span>

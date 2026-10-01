@@ -1,0 +1,5 @@
+# certitudini-ok.txt — fragmente citite si acceptate (verifica-site.sh [13]).
+# Un fragment pe linie, copiat EXACT din ce afiseaza detectorul (text exact, nu regex).
+# Intra aici doar ce ai citit si ai decis ca nu e o afirmatie de fond (o figura
+# de stil) sau ca e corect formulat.  O afirmatie de fond NU vine aici: se
+# inregistreaza in afirmatii.tsv si se marcheaza in pagina.
