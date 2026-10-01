@@ -89,14 +89,22 @@ Adaptat cultural: Ibsen, PST, Oljefond, Datatilsynet, allemannsretten, friluftsl
 <h2>2b. Infrastructura si verificare</h2>
 <div class="done"><span class="tag tag-done">IN VIGOARE DIN 27 SEPT</span>
 <strong>scripts/documente.tsv</strong> — manifestul: singura sursa de adevar despre ce exista. Un rand = un document = o pereche RO+NO.<br>
-<strong>scripts/verifica-site.sh v3</strong> — verifica intregul site contra manifestului, in 11 sectiuni: manifest, inventar, antet SEO (titlu, lang, description, canonical, hreflang ro/nb/x-default, og), linkuri si ancore, prezentarea in hub, sitemap-uri, formulari retrase, cifre declarate, structura HTML, ADN-ul repo-urilor, starea git.<br>
+<strong>scripts/verifica-site.sh v3</strong> — verifica intregul site contra manifestului, in 13 sectiuni: manifest, inventar, antet SEO (titlu, lang, description, canonical, hreflang ro/nb/x-default, og), linkuri si ancore, prezentarea in hub, sitemap-uri, formulari retrase, cifre declarate, structura HTML, ADN-ul repo-urilor, starea git, pagina GitHub (About), afirmatiile [13].<br>
 <strong>scripts/hooks/pre-push</strong> — identic, bit cu bit, in toate cele 6 repo-uri (<code>core.hooksPath scripts/hooks</code>). La fiecare push, din oricare repo, se verifica tot site-ul, cu starea adusa de pe GitHub.<br>
 <strong>scripts/retrase.txt</strong> — formularile corectate, care nu mai au voie sa reapara nicaieri.<br>
+<strong>scripts/afirmatii.tsv</strong> — registrul afirmatiilor de fond: eticheta (FAPT, ESTIMARE, INTERPRETARE, CREDINTA), stare, sursa, an. Afirmatia se marcheaza in pagina cu <code>&lt;span data-afirmatie="id"&gt;</code>, in RO si in perechea NO. Verificat de [13]: registru, perechi RO-NO, datoria de verificare (ATENTIE, nu blocheaza).<br>
+<strong>scripts/certitudini.txt</strong> si <strong>certitudini-ok.txt</strong> — detectorul de certitudine din [13]: cuvinte ca „a demonstrat”, „singurul”, „har dokumentert”, cautate pe cuvinte intregi in textul nemarcat; semnaleaza, nu blocheaza. Fragmentele citite si acceptate intra in <code>certitudini-ok.txt</code>.<br>
 <strong>scripts/about.tsv</strong> — caseta About a fiecarui repo pe GitHub (descriere, website, topics); verificata la fiecare push prin API.<br>
 <strong>.github/workflows/verifica.yml</strong> — a doua plasa: GitHub Actions ruleaza acelasi verifica-site.sh (<code>--ci</code>) pe starea de pe GitHub, la fiecare push si zilnic; prinde si editarile facute direct in browser. Identic in toate cele 6 repo-uri.<br>
 <strong>Autentificare</strong> — push prin SSH: cheie ed25519 dedicata (<code>~/.ssh/id_ed25519_github</code>, cu parola, tinuta de ssh-agent), prin <code>ssh.github.com:443</code> (firewall-ul pf permite doar anumite porturi; 22 nu e printre ele). Fetch pe HTTPS, fara autentificare (repo-uri publice). Niciun token: sters de pe masina si de pe GitHub pe 27 sept.<br>
 <strong>Identitate si licenta</strong> — commit-urile se fac cu adresa noreply GitHub (verificat in fiecare clona); LICENSE = textul oficial CC BY 4.0, identic in toate cele 6; sectiunea de licenta identica in toate README-urile.<br>
-Testat: mediu non-GNU (dash, one-true-awk, busybox), GNU si OpenBSD — verdicte identice; 20 de teste cu defecte introduse intentionat, prinse toate.</div>
+Testat: mediu non-GNU (dash, one-true-awk, busybox), GNU si OpenBSD — verdicte identice; 20 de teste cu defecte introduse intentionat, prinse toate. Sectiunea [13]: 38 de teste, plus contra-proba pe scriptul vechi (testele pozitive trebuie sa pice acolo).</div>
+
+<h2>2c. Adevarul continutului — 1 octombrie 2026</h2>
+<div class="done"><span class="tag tag-done">FACUT 1 OCT</span>
+<strong>Inima</strong> — „40.000 de neuroni”, „60x”, „stiinta a confirmat inima biblica”: corectate in toate locurile, RO si NO, ca doua oglinzi (ce masoara stiinta / ce spune Scriptura); sursele in <code>afirmatii.tsv</code>.<br>
+<strong>Biblia 1688</strong> — fiecare bloc de citat biblic de pe paginile romanesti confruntat literal cu textul editiei (PDF-ul 1688); peste 80 nu erau textul 1688 (formulari moderne sau stilizate sa sune vechi). Acum toate corespund, cu trimiterile in numerotarea 1688 (Septuaginta: Psalmii decalati, Paremii 14:35, 16:20).<br>
+<strong>retrase.txt</strong> — formularile vechi trecute in garda, ca sa nu poata reveni.</div>
 
 <h2>3. Documente urmatoare — planificate</h2>
 <div class="todo"><span class="tag tag-todo">URMEAZA</span>
@@ -140,14 +148,18 @@ Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[beh
 <strong>Plus paginile GitHub (retea):</strong> <code>sh ~/norgedan.github.io/scripts/verifica-site.sh --github</code><br>
 <strong>Doar tabloul:</strong> <code>sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou</code><br><br>
 <strong>Aplicarea unui patch:</strong> <code>sha256</code> pe fisierul descarcat, <code>git apply --check</code>, <code>git apply</code>, <code>git add -A</code>, <code>git diff --cached --raw</code> comparat cu hash-urile asteptate, apoi commit. Push-ul verifica singur.<br><br>
-<strong>Capcane BSD/POSIX:</strong> fara <code>\n</code> in sed · fara <code>\|</code> in grep · fara <code>sed -i</code> · fara litere multibyte intre paranteze drepte · fara <code>&lt;( )</code> (e bash) · optiunile grep inaintea tiparului · <code>sha256</code>, nu <code>sha256sum</code> · niciodata sabloane <code>&lt;...&gt;</code> in comenzi · nu lipi output in shell (<code>-&gt; FETCH_HEAD</code> creeaza un fisier)</div>
+<strong>Capcane BSD/POSIX:</strong> fara <code>\n</code> in sed · fara <code>\|</code> in grep · fara <code>sed -i</code> · fara litere multibyte intre paranteze drepte · fara <code>&lt;( )</code> (e bash) · optiunile grep inaintea tiparului · <code>sha256</code>, nu <code>sha256sum</code> · niciodata sabloane <code>&lt;...&gt;</code> in comenzi · nu lipi output in shell (<code>-&gt; FETCH_HEAD</code> creeaza un fisier) · <code>tar</code> pe OpenBSD: lista de fisiere cu <code>-I fisier</code>, nu <code>-T</code> · dupa o cerere de parola, comenzile lipite in continuare se pierd: o comanda pe rand</div>
 
 <h2>5b. Decizii deschise</h2>
 <div class="todo"><span class="tag tag-todo">DE DECIS</span>
 <ul>
 <li><strong>og:image</strong> — nicio pagina nu are imagine de distribuire; toate declara <code>twitter:card summary_large_image</code>. De ales: o imagine comuna sau <code>summary</code>.</li>
 <li><strong>Descrierile meta</strong> — 30 au peste 160 de caractere; Google taie in jur de 155–160. Scurtare treptata, la urmatoarea atingere a fiecarui fisier?</li>
-<li><strong>Continut de verificat (lista din [13]):</strong> doua erori geografice — Marea Neagra (<code>corpus3/1</code>) si granita NATO–Rusia (<code>corpus2/C</code>); apoi BDNF, Bruce Alexander, IIT, neuronii oglinda, GPT-4, „memoria inimii” la transplant. Afirmatia despre inima: corectata pe 1 oct 2026, sursele in <code>scripts/afirmatii.tsv</code>.</li>
+<li><strong>Continut de verificat (lista din [13]):</strong> doua erori geografice — Marea Neagra (<code>corpus3/1</code>) si granita NATO–Rusia (<code>corpus2/C</code>); apoi BDNF, Bruce Alexander, IIT, neuronii oglinda, GPT-4, Weidel (sursa), cifrele de razboi BBC/Mediazona.</li>
+<li><strong>Citatele biblice din proza</strong> — circa 30, in <code>&lt;em&gt;</code>, adesea fara trimitere, inca in traducere moderna (Doc II, III, IV, V, Firul Rosu A, B). Urmeaza dupa sectiunea [14].</li>
+<li><strong>Sectiunea [14] — urmatoarea sesiune:</strong> verificatorul automat al citatelor biblice contra textului 1688, tinut LOCAL (<code>~/biblia-1688.txt</code>, extras cu <code>pdftotext</code> din poppler-utils), nu in repo.</li>
+<li><strong>Partea NO</strong> — editia Bibliei de stabilit (subsolul spune „Norsk standardoversettelse”, nume neverificat); revizuire de catre un vorbitor nativ; lipsuri de traducere: Doc I NO fara subcapitolul despre AI, Doc II NO fara paragraful „inima noua”, „Norsk perspektiv” fara corespondent RO. <code>scriptura-inima</code> ramane de-verificat pana atunci.</li>
+<li><strong>Doc VI</strong> — textul RO e scris fara diacritice (citatele 1688 au acum diacriticele editiei).</li>
 <li><strong>Decis pe 27 sept:</strong> repo-urile raman separate (fara consolidare). Regula: continut nou = folder in hub, ca Corpus III, nu repo nou.</li>
 <li><strong>Termene de urmarit:</strong> 19 octombrie 2026 — <code>ubuntu-latest</code> trece la Ubuntu 26 in CI (daca verificarea devine rosie, e informatie reala) · workflow-ul zilnic se dezactivează singur dupa 60 de zile fara activitate in hub (reactivare: Actions → verifica-site → Enable workflow).</li>
 </ul></div>
@@ -157,9 +169,9 @@ Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[beh
 Textul de lipit e in <strong>context-sesiune.html</strong> (https://norgedan.github.io/context-sesiune.html). Se ataseaza: acest status + ghidul (https://norgedan.github.io/ghid-github-norgedan.html) + <strong>DOCUMENTARE.md</strong> din repo-ul privat <code>norgedan-jurnal</code> + PDF-ul Bibliei 1688 daca se lucreaza pe texte.</div>
 
 <footer>
-<p>Status actualizat: 27 septembrie 2026</p>
+<p>Status actualizat: 1 octombrie 2026</p>
 <p style="margin-top:.3rem">Proiect: 19 documente · ~170.000 de cuvinte · 6 repo-uri · verificare automata la fiecare push, din oricare repo</p>
-<p style="margin-top:.3rem">Toate documentele: Biblia de la Bucuresti 1688 (RO) · Norsk standardoversettelse (NO)</p>
+<p style="margin-top:.3rem">Citate biblice RO: Biblia de la Bucuresti 1688 (blocurile de citat confruntate integral pe 1 oct; proza — in curs) · NO: editia de stabilit</p>
 </footer>
 </div>
 </body>

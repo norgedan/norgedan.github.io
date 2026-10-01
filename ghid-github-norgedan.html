@@ -748,6 +748,7 @@ done &lt; /tmp/lista</pre>
     <div class="step"><div class="step-n">10</div><div class="step-body"><div class="step-title">ADN-ul repo-urilor</div><p>README, LICENSE, .gitignore, .nojekyll; rădăcina conține doar ce e permis; garda prezentă, identică și activă; LICENSE = textul oficial CC BY 4.0, identic peste tot; secțiunea de licență identică în toate README-urile; commit-urile se fac cu adresa noreply.</p></div></div>
     <div class="step"><div class="step-n">11</div><div class="step-body"><div class="step-title">Starea git</div><p>La push: arbori curați în toate clonele, nimic în urmă față de GitHub; commit-urile nepublicate din alte repo-uri — atenționare.</p></div></div>
     <div class="step"><div class="step-n">12</div><div class="step-body"><div class="step-title">Pagina GitHub</div><p>Caseta About a fiecărui repo — descriere, website, topics — comparată prin API cu <code>scripts/about.tsv</code>; Wiki și Projects dezactivate; licența recunoscută. Doar la push și cu <code>--github</code>. Dacă API-ul nu răspunde: atenționare, nu blocaj.</p></div></div>
+    <div class="step"><div class="step-n">13</div><div class="step-body"><div class="step-title">Afirmațiile</div><p>Registrul <code>scripts/afirmatii.tsv</code> (etichetă FAPT, ESTIMARE, INTERPRETARE sau CREDINȚĂ; stare; sursă; an) și marcajele <code>&lt;span data-afirmatie="id"&gt;</code> din pagini: registru corect, niciun id necunoscut sau nefolosit, perechile RO-NO întregi — acestea blochează. Datoria de verificare și detectorul de certitudine (<code>certitudini.txt</code>, pe cuvinte întregi) doar semnalează: cer judecată, nu mașină.</p></div></div>
   </div>
 
   <h3>A doua plasă: GitHub Actions</h3>
@@ -912,6 +913,24 @@ done &lt; /tmp/lista</pre>
     <strong>Regex fără graniță de cuvânt.</strong> „zece documente” găsit în „douăsprezece”, „tre” în „dintre”. Apoi invers: „tolv … dokumenter”, cu trei adjective între ele, nu era găsit deloc. Lecția: textul se desparte în cuvinte întregi și se caută într-un tabel exact.<br><br>
     <strong>Copii din afara repo-ului.</strong> Ghidul atașat în discuție diferea de cel publicat. Lecția: se atașează din repo, nu din Downloads.</p>
   </div>
+
+  <h3>1 octombrie 2026 — stratul de adevăr și Biblia de la București 1688</h3>
+
+  <div class="callout">
+    <div class="callout-label">CE S-A FĂCUT</div>
+    <p><strong>Secțiunea [13]</strong> — registrul afirmațiilor (<code>afirmatii.tsv</code>), perechile RO-NO, datoria de verificare și detectorul de certitudine. Principiul: mașina blochează doar ce poate judeca sigur; ce cere judecată se semnalează. Testată cu 38 de defecte introduse și contra-probă pe scriptul vechi.<br><br>
+    <strong>Inima</strong> — „40.000 de neuroni, 60× mai puternic, știința a confirmat inima biblică”: o estimare unică rotunjită, o amplitudine prezentată ca putere și afirmații HeartMath prezentate ca demonstrate. Corectate în toate locurile, ca două oglinzi — ce măsoară știința (cu surse) și ce spune Scriptura (asumat ca credință). Traducerea NO completată acolo unde lipseau paragrafe.<br><br>
+    <strong>Biblia 1688</strong> — subsolurile declarau că citatele sunt din Biblia de la București 1688. Confruntate automat cu textul din PDF, peste 80 de citate în blocuri nu erau textul ediției: unele în traducere modernă, altele stilizate să <em>sune</em> vechi („Dumnezău”, „iaste”), dar inventate. Toate aduse la textul exact, cu trimiterile în numerotarea 1688 (tradusă din greacă, după Septuaginta: Psalmii decalați cu unu, Paremii 14:35 și 16:20, Ieremia 17:9 „adâncă”, nu „vicleană”). Paremii 23:7 („cum gândește în inima lui”) nu există în 1688 — vine din textul ebraic.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">GREȘELILE ACESTEI SESIUNI — ȘI LECȚIILE LOR</div>
+    <p><strong>Detectorul căuta litere, nu cuvinte.</strong> „beviser” prindea „overbeviser”, „a dovedit” prindea „răbdarea dovedită”. Lecția (a doua oară, după regex-ul din 27 sept): tiparele se potrivesc pe cuvinte întregi.<br><br>
+    <strong>Mostra de test avea un punct orb.</strong> Paragrafele NO adăugate au schimbat totalul de cuvinte, iar mostra fără status nu putea vedea secțiunea [8]. Garda a prins-o pe mașina reală. Lecția: testul final se face pe site-ul întreg, nu pe o mostră.<br><br>
+    <strong>Corectura găsită pe bucăți.</strong> Citatele vechi au fost descoperite document cu document, pe măsură ce <code>retrase.txt</code> le prindea în pagini nevăzute. Lecția: când o problemă e sistematică, se cere tot site-ul de la început.<br><br>
+    <strong>O afirmație a mea, prea categorică.</strong> Despre traducerea automată și Google am spus mai mult decât arătau sursele; verificat, am corectat. Lecția: standardul se aplică și explicațiilor mele.<br><br>
+    <strong>BSD:</strong> pe OpenBSD, <code>tar</code> ia lista de fișiere cu <code>-I fișier</code>, nu <code>-T</code>; <code>comm</code> lipsește din unele busybox (înlocuit cu awk). <strong>Terminal:</strong> comenzile lipite după o cerere de parolă se pierd — o comandă pe rând; textul vechi lipit din greșeală e respins de ksh, iar <code>git apply --check</code> a împiedicat o aplicare dublă.</p>
+  </div>
 </section>
 
 <!-- XII RAMAS -->
@@ -922,7 +941,10 @@ done &lt; /tmp/lista</pre>
   <h3>Conținut</h3>
   <p><strong>Documentul VII — Familia și Societatea.</strong> Se discută structura înainte de scriere, ca la Doc VI. Teren contestat politic: datele verificabile (cu sursă și an) se separă net de interpretarea teologică, asumată explicit ca poziție. Unde există dezbatere empirică reală, se semnalează.</p>
   <p>Verificarea „la puricat” a documentelor II–VI continuă — același model: pasajul, sursele, corectura chirurgicală în ambele limbi.</p>
-  <p>Verificat la sursă pe 1 octombrie 2026: afirmația despre inimă („40.000 de neuroni”, „60×”) — corectată în toate locurile, în RO și NO, ca două oglinzi: ce măsoară știința și ce spune Scriptura. Sursele sunt în <code>scripts/afirmatii.tsv</code>. Urmează candidații semnalați de secțiunea [13] a verificării.</p>
+  <p>Verificat la sursă pe 1 octombrie 2026: afirmația despre inimă („40.000 de neuroni”, „60×”) — corectată în toate locurile, în RO și NO, ca două oglinzi: ce măsoară știința și ce spune Scriptura. Sursele sunt în <code>scripts/afirmatii.tsv</code>. Urmează candidații semnalați de secțiunea [13] a verificării: întâi cele două erori geografice (Marea Neagră, granița NATO–Rusia).</p>
+  <p><strong>Secțiunea [14] — sesiunea următoare.</strong> Verificatorul automat al citatelor biblice: fiecare citat confruntat cu textul 1688, ținut <em>local</em> (<code>~/biblia-1688.txt</code>, extras o singură dată cu <code>pdftotext</code>), nu în repo. Apoi cele circa 30 de citate rămase în proză, în traducere modernă.</p>
+  <p><strong>Partea norvegiană.</strong> Ediția Bibliei de stabilit și de declarat corect; revizuire de un vorbitor nativ; paragrafele lipsă din traducere (Doc I NO — subcapitolul despre AI; Doc II NO — „inima nouă”).</p>
+  <p><strong>Documentul „Știința și credința față în față”.</strong> Construit în întregime pe oglinzi: constantele universale, conștiința, nașterea științei din credință, rugăciunea pusă la probă, credința și sănătatea.</p>
 
   <h3>Decizii deschise</h3>
   <p>
@@ -988,7 +1010,7 @@ corpus3/no/   ← documente norvegiene</pre>
 </main>
 
 <footer>
-  <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 27 septembrie 2026</p>
+  <p>norgedan.github.io &nbsp;·&nbsp; Ghid GitHub — Modelul Chirurgical &nbsp;·&nbsp; Actualizat 1 octombrie 2026</p>
   <p style="margin-top:0.5rem;opacity:0.6;font-size:0.7rem;">6 repository-uri · manifest <code>scripts/documente.tsv</code> · <code>verifica-site.sh</code> v3 · gardă pre-push identică în toate · cifrele: <code>status-proiect.html</code> și <code>--tablou</code> · CC BY 4.0</p>
 </footer>
 
