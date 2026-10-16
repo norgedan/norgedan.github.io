@@ -52,13 +52,13 @@ Toate servite sub https://norgedan.github.io/ · LICENSE CC BY 4.0, .gitignore, 
 <div class="done"><span class="tag tag-done">MASURAT · VERIFICAT DE v3</span>
 <table>
 <tr><th>colectie</th><th>documente</th><th>cuvinte</th></tr>
-<tr data-colectie="corpus"><td>Corpus I — Cuvantul, Omul, Lumea <code>corpus</code></td><td>6</td><td>~62.000</td></tr>
+<tr data-colectie="corpus"><td>Corpus I — Cuvantul, Omul, Lumea <code>corpus</code></td><td>6</td><td>~63.000</td></tr>
 <tr data-colectie="corpus2"><td>Corpus II — Firul Rosu <code>corpus2</code></td><td>4</td><td>~36.000</td></tr>
 <tr data-colectie="corpus3"><td>Corpus III — Geopolitica si Civic <code>norgedan.github.io/corpus3</code></td><td>6</td><td>~51.000</td></tr>
 <tr data-colectie="opera"><td>Voci care nu mor <code>opera</code></td><td>1</td><td>~6.000</td></tr>
 <tr data-colectie="limba"><td>Limba sfasiata <code>limba</code></td><td>1</td><td>~9.000</td></tr>
 <tr data-colectie="limba-ro-final"><td>Limba care nu vrea sa moara <code>limba-ro-final</code></td><td>1</td><td>~11.000</td></tr>
-<tr data-colectie="TOTAL"><td><strong>TOTAL</strong></td><td>19</td><td>~174.000</td></tr>
+<tr data-colectie="TOTAL"><td><strong>TOTAL</strong></td><td>19</td><td>~175.000</td></tr>
 </table>
 Cuvintele sunt rotunjite la mie; documentele sunt exacte. <code>scripts/verifica-site.sh</code> sectiunea [8] compara fiecare rand cu masuratoarea si blocheaza push-ul daca statusul ramane in urma.<br>
 Cifra exacta, la cuvant: <code>sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou</code></div>
@@ -155,11 +155,11 @@ Fiecare linie trebuie sa fie <code>## main...origin/main</code>, fara <code>[beh
 <ul>
 <li><strong>og:image</strong> — nicio pagina nu are imagine de distribuire; toate declara <code>twitter:card summary_large_image</code>. De ales: o imagine comuna sau <code>summary</code>.</li>
 <li><strong>Descrierile meta</strong> — 30 au peste 160 de caractere; Google taie in jur de 155–160. Scurtare treptata, la urmatoarea atingere a fiecarui fisier?</li>
-<li><strong>Continut de verificat (lista din [13]):</strong> doua erori geografice — Marea Neagra (<code>corpus3/1</code>) si granita NATO–Rusia (<code>corpus2/C</code>); apoi BDNF, Bruce Alexander, IIT, neuronii oglinda, GPT-4, Weidel (sursa), cifrele de razboi BBC/Mediazona.</li>
+<li><strong>Continut de verificat (lista din [13]):</strong> doua erori geografice — Marea Neagra (<code>corpus3/1</code>) si granita NATO–Rusia (<code>corpus2/C</code>); apoi BDNF, Bruce Alexander, Weidel (sursa). Verificate intre timp: IIT, neuronii oglinda, GPT-4, cifrele de razboi BBC/Mediazona.</li>
 <li><strong>Citatele biblice din proza</strong> — circa 30, in <code>&lt;em&gt;</code>, adesea fara trimitere, inca in traducere moderna (Doc II, III, IV, V, Firul Rosu A, B). Urmeaza dupa sectiunea [14].</li>
 <li><strong>Sectiunea [14] — urmatoarea sesiune:</strong> verificatorul automat al citatelor biblice contra textului 1688, tinut LOCAL (<code>~/biblia-1688.txt</code>, extras cu <code>pdftotext</code> din poppler-utils), nu in repo.</li>
 <li><strong>Partea NO</strong> — editia Bibliei de stabilit (subsolul spune „Norsk standardoversettelse”, nume neverificat); revizuire de catre un vorbitor nativ; lipsuri de traducere: Doc I NO fara subcapitolul despre AI, Doc II NO fara paragraful „inima noua”, „Norsk perspektiv” fara corespondent RO. <code>scriptura-inima</code> ramane de-verificat pana atunci.</li>
-<li><strong>Doc VI</strong> — textul RO e scris fara diacritice (citatele 1688 au acum diacriticele editiei).</li>
+<li><strong>Doc VI</strong> — textul RO e scris fara diacritice, iar textul NO fara æ, ø, å; pasajele corectate in pas22 le au deja. Restaurarea completa — intr-un pas separat, cuvant cu cuvant.</li>
 <li><strong>Decis pe 27 sept:</strong> repo-urile raman separate (fara consolidare). Regula: continut nou = folder in hub, ca Corpus III, nu repo nou.</li>
 <li><strong>Termene de urmarit:</strong> 19 octombrie 2026 — <code>ubuntu-latest</code> trece la Ubuntu 26 in CI (daca verificarea devine rosie, e informatie reala) · workflow-ul zilnic se dezactivează singur dupa 60 de zile fara activitate in hub (reactivare: Actions → verifica-site → Enable workflow).</li>
 </ul></div>
@@ -170,7 +170,7 @@ Textul de lipit e in <strong>context-sesiune.html</strong> (https://norgedan.git
 
 <footer>
 <p>Status actualizat: 1 octombrie 2026</p>
-<p style="margin-top:.3rem">Proiect: 19 documente · ~174.000 de cuvinte · 6 repo-uri · verificare automata la fiecare push, din oricare repo</p>
+<p style="margin-top:.3rem">Proiect: 19 documente · ~175.000 de cuvinte · 6 repo-uri · verificare automata la fiecare push, din oricare repo</p>
 <p style="margin-top:.3rem">Citate biblice RO: Biblia de la Bucuresti 1688 (blocurile de citat confruntate integral pe 1 oct; proza — in curs) · NO: editia de stabilit</p>
 </footer>
 </div>
