@@ -40,68 +40,90 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Adevărul complet, nu cel convenabil — inclusiv când e incomod sau contrazice o preferință.
 - Verificare înainte de scriere. Nicio cifră, dată sau afirmație factuală din memorie; se caută și se confirmă.
-- Citatele biblice se confruntă cuvânt cu cuvânt cu Biblia de la București 1688 (PDF pe care îl reîncarc).
-- Lucru chirurgical: se corectează pasajul vizat, nu se rescrie documentul. Diff verificat înainte de commit.
-- Comenzi POSIX portabile — mașina e OpenBSD, deci BSD, nu GNU. Comenzi concrete, niciodată șabloane cu &lt;...&gt;.
+- Fiecare afirmație de fond își poartă eticheta: FAPT, ESTIMARE, INTERPRETARE, CREDINȚĂ.
+  Aceeași regulă în ambele direcții: știința nu semnează teologie, credința nu e rezultat de laborator.
+- Citatele biblice: RO exact din Biblia de la București 1688, NO exact din Bibelen 1930.
+  Textele stau LOCAL, în ~/biblii (b1688.txt, Norsk-1930.json), niciodată în repo.
+- Lucru chirurgical: se corectează pasajul vizat, nu se rescrie documentul.
+- Comenzi POSIX portabile — mașina e OpenBSD (ksh), BSD, nu GNU. Comenzi concrete,
+  niciodată șabloane cu &lt;...&gt;. O comandă pe rând. Fiecare comandă git începe cu
+  cd ~/numele-repo-ului &amp;&amp; ... Întâi commit în toate repo-urile, apoi push.
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
+- norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI:
-Cifrele trăiesc într-un singur loc — status-proiect.html, verificat automat de
-scripts/verifica-site.sh la fiecare push. Tabloul exact: verifica-site.sh --tablou.
-Document = pereche RO+NO. Manifestul: scripts/documente.tsv în norgedan.github.io.
-Garda pre-push e identică în toate cele 6 repo-uri; fiecare push verifică tot site-ul.
+STAREA PROIECTULUI (18 octombrie 2026, după pas47):
+19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
+norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
+Cifrele trăiesc într-un singur loc: status-proiect.html, verificat la fiecare push.
+Lucrul vine ca patch-uri pasNN-&lt;repo&gt;.patch: git apply (o singură dată!),
+git add -A, git diff --cached --raw (amprentele se compară cu cele date în discuție),
+commit, apoi push.
 
-CLONELE LOCALE (surori, în /home/bogdan):
-norgedan.github.io · corpus · corpus2 · opera · limba · limba-ro-final
-Push prin SSH (ssh.github.com:443), fetch prin HTTPS. Niciun token.
+DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
+1. Garda locală (pre-push): scripts/verifica-site.sh, 17 secțiuni, tot site-ul.
+2. GitHub Actions (verifica.yml, identic în cele 6 repo-uri): jobul „verifica”,
+   apoi „publica” — GitHub Pages publică NUMAI dacă verificarea a trecut.
+   (Settings → Pages → Source: GitHub Actions, setat în toate cele 6.)
 
-URMEAZĂ (din 1 octombrie 2026):
-1. Secțiunea [14] din verifica-site.sh: citatele biblice confruntate automat cu
-   textul 1688, ținut LOCAL în ~/biblia-1688.txt (pdftotext), nu în repo.
-2. Cele circa 30 de citate biblice din proză, încă în traducere modernă.
-3. Erorile geografice (Marea Neagră, granița NATO–Rusia) și candidații din [13].
-Apoi: Doc VII — Familia și Societatea. Discutăm structura înainte de scriere.
-Teren contestat politic: datele verificabile (cu sursă și an) separate de
-interpretarea teologică, asumată explicit ca poziție, nu prezentată ca fapt neutru.
+CE S-A FĂCUT PE 18 OCTOMBRIE (pas36–pas47):
+- [14] citatele biblice confruntate automat cu 1688 (RO) și 1930 (NO): toate identice.
+- [15] paritatea RO-NO: capitole, subcapitole, citate, lungime — harta golurilor NO.
+- termene de reverificare în afirmatii.tsv; detectorul de certitudine la zero.
+- [16] pilonii (scripts/piloni.tsv): temelia site-ului, fiecare cu eticheta și limita
+  lui (ce NU dovedește), ancorați în pagini RO și NO.
+- limba-ro-final: rumân/român; martorii antici citați exact (Ovidiu, Strabon, Cassius Dio);
+  obiecțiile „dacii n-au învățat latina?” cu dovezile; de ce nu știm mai mult despre
+  dacă; „limba e vie?”; capitolele NO 12–14 traduse.
+- [17] vocea: asculta.js în hub, „Ascultă” pe toate documentele, RO și NO.
+- publicarea doar după verificare; acțiunile Pages pe Node.js 24.
 
-AFIRMAȚIILE (din 1 oct): orice afirmație de fond se etichetează — FAPT, ESTIMARE,
-INTERPRETARE, CREDINȚĂ — în scripts/afirmatii.tsv și se marchează în pagină.
-Aceeași regulă în ambele direcții: știința nu semnează teologie, iar credința
-nu e prezentată ca rezultat de laborator.</pre>
+URMEAZĂ, ÎN ORDINE:
+1. Traducerile NO lipsă, după lista din [15] (15 perechi): întâi corpus Doc VI
+   (NO ~66% din RO), apoi corpus2 C și D, apoi restul. Diferența acceptată
+   conștient intră în scripts/paritate-ok.txt.
+2. Cele circa 30 de citate biblice din proză (în &lt;em&gt;), aduse la 1688/1930
+   și puse sub verificare automată.
+3. opera, „Voci care nu mor”: verificarea afirmațiilor (de ex. Herlea „a cântat
+   în principal în afară” — îndoielnic).
+4. Descrierile meta peste 160 de caractere (30), og:image, diacriticele din hub.
+5. Documentul nou „Știința și credința față în față”; ghidul și DOCUMENTARE.md la zi.
+
+Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
+separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>
 </div>
 
 <h2>Ce se atașează odată cu el</h2>
 
 <ul>
-  <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, infrastructură, decizii deschise, planuri (https://norgedan.github.io/status-proiect.html)</li>
+  <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code> (<code>~/norgedan-jurnal</code>): ce s-a făcut exact, cum stăm, cum funcționează fiecare piesă, ce urmează — scris de Claude, ținut la zi</li>
-  <li><code>Biblia-1688.pdf</code> — numai dacă se lucrează pe texte cu citate scripturistice</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>, numai dacă vrei tu să-l atașezi; nu se publică nicăieri</li>
+  <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
 <div class="nota">
   <p class="eticheta">De ce contează atașamentele</p>
-  <p>Textul de mai sus dă direcția și standardul. Ghidul și statusul dau detaliile — proceduri pas cu pas, greșelile deja făcute și lecțiile lor, planurile pe termen lung. Fără ele, o discuție nouă pornește de la zero și repetă erori deja rezolvate. Atașează-le din repo, nu din Downloads: o copie rămasă în Downloads poate fi alta decât cea publicată.</p>
+  <p>Textul de mai sus dă direcția și standardul. Ghidul și statusul dau detaliile — proceduri pas cu pas, greșelile deja făcute și lecțiile lor. Fără ele, o discuție nouă pornește de la zero și repetă erori deja rezolvate. Atașează-le din repo, nu din Downloads: o copie rămasă în Downloads poate fi alta decât cea publicată.</p>
 </div>
 
 <h2>Dacă se lucrează pe texte</h2>
 
-<p>PDF-ul Bibliei nu persistă între discuții, deci trebuie reîncărcat de fiecare dată când se verifică citate. Fără el, orice verset ar fi scris din memorie — ceea ce standardul nu permite.</p>
+<p>Textele Bibliei nu persistă între discuții, deci se reatașează de fiecare dată când se verifică citate. Pe mașina ta, secțiunea [14] le confruntă singură la fiecare push, din <code>~/biblii</code>. Fără ele, orice verset ar fi scris din memorie — ceea ce standardul nu permite.</p>
 
 <h2>Rutina de sesiune</h2>
 
 <p><strong>La început:</strong> starea tuturor clonelor față de GitHub — fiecare linie trebuie să fie <code>## main...origin/main</code>:</p>
 <pre>for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do git -C ~/$r fetch -q origin; echo "$r $(git -C ~/$r status -sb | head -1)"; done</pre>
-<p>Apoi golește <code>~/Downloads</code> de fișierele proiectului, ca orice descărcare nouă să fie fără echivoc cea nouă.</p>
+<p>Apoi <code>~/Downloads</code> golit de patch-urile vechi, ca orice descărcare nouă să fie fără echivoc cea nouă.</p>
 
-<p><strong>La fiecare fișier descărcat:</strong> <code>sha256</code> comparat cu valoarea dată în discuție, înainte de orice <code>git apply</code>.</p>
+<p><strong>La fiecare patch:</strong> <code>git apply</code> o singură dată — a doua rulare dă eroare doar pentru că patch-ul e deja aplicat. Amprentele de la <code>git diff --cached --raw</code> se compară cu cele din discuție înainte de commit.</p>
 
-<p><strong>La push:</strong> verificarea rulează singură. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda.</p>
+<p><strong>La push:</strong> verificarea rulează singură, local și apoi pe GitHub. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda. Dacă „publica” iese roșu în Actions, site-ul live rămâne neatins până la reparare.</p>
 
 <p><strong>La sfârșit:</strong> golește Downloads. Verificarea semnalează singură orice fișier rătăcit în rădăcina unui repo.</p>
 
 <footer>
-  Document intern · norgedan · actualizat 1 octombrie 2026
+  Document intern · norgedan · actualizat 18 octombrie 2026
 </footer>
 
 </div>
