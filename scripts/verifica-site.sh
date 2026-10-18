@@ -1301,6 +1301,47 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
+titlu 16 "Pilonii: temelia declarata, cu limita ei, ancorata in pagini"
+# ════════════════════════════════════════════════════════════════════
+# scripts/piloni.tsv tine afirmatiile pe care se sprijina documentele, fiecare
+# cu eticheta reala si cu ce NU dovedeste.  Un pilon ancorat trebuie sa-si
+# gaseasca fragmentul exact in pagina RO si in perechea NO: daca textul e
+# schimbat sau sters, temelia s-a mutat fara sa se vada — PROBLEMA.
+PILONI="$SCRIPT_DIR/piloni.tsv"
+if [ ! -f "$PILONI" ]; then
+  problema "lipseste scripts/piloni.tsv"
+else
+  grep -v '^#' "$PILONI" | grep -v '^[[:space:]]*$' > "$W/pil"
+  awk -F'\t' '
+    NF != 9 { print "rand " NR ": " NF " coloane in loc de 9"; next }
+    $1 !~ /^[a-z0-9-]+$/ { print "id gresit: " $1 }
+    $2 !~ /^(FAPT|ESTIMARE|INTERPRETARE|CREDINTA)$/ { print $1 ": eticheta necunoscuta " $2 }
+    { for (i = 1; i <= 9; i++) if ($i ~ /^[[:space:]]*$/) print $1 ": coloana " i " goala (se scrie \"-\")" }
+    $5 == "-" { print $1 ": lipseste limita — ce NU dovedeste pilonul" }
+    $4 == "-" && $2 != "CREDINTA" { print $1 ": lipseste sursa" }
+    ($6 == "-") != ($8 == "-") { print $1 ": ancorat doar intr-o limba (RO si NO merg impreuna)" }
+    ($6 == "-") != ($7 == "-") || ($8 == "-") != ($9 == "-") { print $1 ": fisier fara ancora sau ancora fara fisier" }
+    seen[$1]++ == 1 { print "id dublat: " $1 }
+  ' "$W/pil" > "$W/pilerr"
+  na=0
+  while IFS="$TAB" read -r id et pil src lim fro aro fno ano; do
+    for p in "$fro$TAB$aro" "$fno$TAB$ano"; do
+      f=${p%%"$TAB"*}; a=${p#*"$TAB"}
+      [ "$f" = "-" ] && continue
+      if [ ! -f "$RADACINA/$f" ]; then echo "$id: nu exista $f" >> "$W/pilerr"
+      elif grep -qF -- "$a" "$RADACINA/$f"; then na=$((na + 1))
+      else echo "$id: ancora nu mai e in $f — „$a”" >> "$W/pilerr"; fi
+    done
+  done < "$W/pil"
+  if [ -s "$W/pilerr" ]; then
+    while IFS= read -r l; do problema "$l"; done < "$W/pilerr"
+  else
+    np=$(wc -l < "$W/pil" | tr -d ' ')
+    ok "$np piloni, toti cu eticheta, sursa si limita; $na ancore gasite in pagini, RO si NO"
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
 tablou
 
 probleme=$(wc -l < "$W/prob" | tr -d ' ')
