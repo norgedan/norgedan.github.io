@@ -70,8 +70,8 @@ jobs:
         with: { path: repo }
       - name: arborele publicat (fara .git si .github, ca pana acum)
         run: mkdir _site && tar -C repo --exclude=./.git --exclude=./.github -cf - . | tar -C _site -xf -
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with: { path: _site }
       - id: publicare
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
