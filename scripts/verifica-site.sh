@@ -723,7 +723,7 @@ while read -r repo; do
       .git|.github|.gitignore|.nojekyll|LICENSE|README.md|sitemap.xml|scripts|*.html) continue ;;
     esac
     if [ "$repo" = "$HUBNAME" ]; then
-      case "$b" in robots.txt|sitemap-hub.xml) continue ;; esac
+      case "$b" in robots.txt|sitemap-hub.xml|asculta.js) continue ;; esac
     fi
     if [ -d "$x" ] && echo " $dirs_ok " | grep -qF " $b "; then continue; fi
     problema "$repo: \"$b\" nu are ce cauta in radacina (fisier-fantoma sau uitat?)"; greseli=1
@@ -1339,6 +1339,30 @@ else
   else
     np=$(wc -l < "$W/pil" | tr -d ' ')
     ok "$np piloni, toti cu eticheta, sursa si limita; $na ancore gasite in pagini, RO si NO"
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 17 "Vocea: fiecare document se poate asculta"
+# ════════════════════════════════════════════════════════════════════
+# asculta.js sta o singura data, in radacina hub-ului (norgedan.github.io/),
+# si e incarcat de fiecare document cu <script src="/asculta.js" defer>.
+# Cale absoluta: toate repo-urile se publica sub acelasi domeniu.
+VOCE="$RADACINA/norgedan.github.io/asculta.js"
+if [ ! -f "$VOCE" ]; then
+  problema "lipseste norgedan.github.io/asculta.js — niciun document nu se poate asculta"
+else
+  : > "$W/voce"
+  while IFS="$TAB" read -r id col repo cro cno tro tno; do
+    for f in "$repo/$cro" "$repo/$cno"; do
+      [ -f "$RADACINA/$f" ] || continue
+      grep -qF '<script src="/asculta.js" defer></script>' "$RADACINA/$f" || echo "$f" >> "$W/voce"
+    done
+  done < "$W/m"
+  if [ -s "$W/voce" ]; then
+    while IFS= read -r f; do problema "$f nu incarca /asculta.js — documentul nu se poate asculta"; done < "$W/voce"
+  else
+    ok "toate cele $(($(wc -l < "$W/m") * 2)) fisiere-document incarca vocea (asculta.js, RO si NO)"
   fi
 fi
 
