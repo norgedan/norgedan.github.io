@@ -1246,13 +1246,14 @@ AWK
   while IFS="$TAB" read -r repo cale limba id col tit; do
     f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
     if [ "$limba" = ro ]; then ix="$W/i1688"; else ix="$W/i1930"; fi
-    LC_ALL=C awk -v IDX="$ix" -v R="$repo/$cale" -f "$W/citate.awk" "$f" >> "$W/cit"
+    LC_ALL=C awk -v IDX="$ix" -v R="$repo/$cale" -f "$W/citate.awk" "$f" | sed "s/\$/$TAB$limba/" >> "$W/cit"
   done < "$W/docs"
   greseli=0
   awk -F'\t' '$1=="GRESIT" || $1=="NEGASIT" || $1=="NECUNOSCUT" {print $2 " — " $3 ": " $4}' "$W/cit" > "$W/citp"
   while read -r l; do problema "$l"; greseli=1; done < "$W/citp"
-  nro=$(awk -F'\t' '$1=="OK" && $2 !~ /-no\.html$|\/no\//' "$W/cit" | wc -l | tr -d ' ')
-  nno=$(awk -F'\t' '$1=="OK" && $2 ~ /-no\.html$|\/no\//' "$W/cit" | wc -l | tr -d ' ')
+  # limba vine din manifest (ultima coloana), nu din numele fisierului
+  nro=$(awk -F'\t' '$1=="OK" && $NF=="ro"' "$W/cit" | wc -l | tr -d ' ')
+  nno=$(awk -F'\t' '$1=="OK" && $NF!="ro"' "$W/cit" | wc -l | tr -d ' ')
   [ "$greseli" -eq 0 ] && ok "$((nro + nno)) citate biblice identice cu editia declarata (RO 1688: $nro, NO 1930: $nno)"
   nabs=$(awk -F'\t' '$1=="SARIT" && $4 ~ /nu exista in editia/' "$W/cit" | wc -l | tr -d ' ')
   [ "$nabs" -gt 0 ] && atentie "$nabs citate din carti absente din editia de referinta (de ex. Intelepciunea lui Solomon in Bibelen 1930) — neconfruntate"
