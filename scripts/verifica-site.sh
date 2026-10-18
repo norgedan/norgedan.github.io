@@ -193,10 +193,11 @@ url_of() {
   if [ "$1" = "$HUBNAME" ]; then echo "$BASE/$p"; else echo "$BASE/$1/$p"; fi
 }
 
-# cuvinte intr-un fisier — aceeasi metoda ca in v2, ca cifrele sa ramana comparabile
+# cuvinte intr-un fisier: textul, fara CSS si fara cod JavaScript (<script>).
+# Pana la 18 oct 2026 codul butonului „Asculta” se numara si el (275 de cuvinte).
 cuvinte() {
-  awk '/<style>/{s=1} /<\/style>/{s=0;next} !s' "$1" | sed 's/<[^>]*>//g' \
-    | LC_ALL="$LOCALE_NUM" wc -w | tr -d ' '
+  awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
+    | sed 's/<[^>]*>//g' | LC_ALL="$LOCALE_NUM" wc -w | tr -d ' '
 }
 
 # pagina interna = marcata noindex
@@ -272,7 +273,7 @@ tablou() {
       printf "  %-16s %10d %10d %10d %10d\n", "TOTAL", N, R, O, R + O
     }' "$W/cuv"
   echo "  ----------------------------------------------------------------"
-  echo "  numarat fara CSS si tag-uri, locale $LOCALE_NUM"
+  echo "  numarat fara CSS, cod si tag-uri, locale $LOCALE_NUM"
   if [ -f "$AFIRMATII" ]; then
     grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' | awk -F'\t' '
       { n++; s[$3]++ }
