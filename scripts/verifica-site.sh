@@ -900,9 +900,10 @@ if [ ! -f "$AFIRMATII" ]; then
 else
   grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' > "$W/af"
   awk -F'\t' '
-    NF != 7 { print "rand " NR ": " NF " coloane, trebuie 7"; next }
+    NF != 8 { print "rand " NR ": " NF " coloane, trebuie 8"; next }
     {
-      for (i = 1; i <= 7; i++) if ($i == "") print "rand " NR ": coloana " i " e goala (fara continut se scrie -)"
+      for (i = 1; i <= 8; i++) if ($i == "") print "rand " NR ": coloana " i " e goala (fara continut se scrie -)"
+      if ($8 != "-" && $8 !~ /^[0-9][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]$/) print $1 ": reverifica \"" $8 "\" — trebuie AAAA-LL-ZZ sau -"
       if ($1 !~ /^[a-z0-9][a-z0-9-]*$/) print "rand " NR ": id \"" $1 "\" — doar litere mici fara diacritice, cifre si -"
       if (id[$1]++) print "id duplicat: " $1
       if ($2 != "FAPT" && $2 != "ESTIMARE" && $2 != "INTERPRETARE" && $2 != "CREDINTA")
@@ -961,6 +962,16 @@ if [ "$nv" -gt 0 ] || [ "$nc" -gt 0 ]; then
   atentie "datoria de verificare: $nv de verificat, $nc de corectat"
   awk -F'\t' '$3=="de-corectat" || $3=="de-verificat" {print "             " $3 ": " $1}' "$W/af"
 fi
+
+# faptele care se invechesc: data de reverificare a trecut
+AZI=$(date +%Y-%m-%d)
+awk -F'\t' -v azi="$AZI" '$8 != "-" && $8 <= azi {print $1 " (pana la " $8 ")"}' "$W/af" > "$W/afexp"
+if [ -s "$W/afexp" ]; then
+  atentie "$(wc -l < "$W/afexp" | tr -d ' ') afirmatii au trecut de data de reverificare — de confruntat din nou cu sursa:"
+  sed 's|^|             |' "$W/afexp"
+fi
+nper=$(awk -F'\t' '$8 != "-"' "$W/af" | wc -l | tr -d ' ')
+[ -s "$W/afexp" ] || ok "$nper afirmatii cu termen de reverificare, niciunul depasit"
 
 # detectorul de certitudine: textul public NEMARCAT care suna a dovada
 cat > "$W/cert.awk" <<'AWK'

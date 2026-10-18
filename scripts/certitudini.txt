@@ -17,6 +17,8 @@ dovedeste
 dovedește
 fara indoiala
 fără îndoială
+fara nicio indoiala
+fără nicio îndoială
 singurul
 singura
 singurului
