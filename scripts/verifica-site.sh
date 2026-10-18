@@ -841,7 +841,7 @@ elif [ ! -f "$ABOUT" ]; then
   problema "lipseste scripts/about.tsv — sursa paginilor GitHub"
 else
   grep -v '^#' "$ABOUT" | grep -v '^[[:space:]]*$' > "$W/about"
-  greseli=0; npg=0; nramura=0
+  greseli=0; npg=0; nramura=0; ncitite=0
   while read -r repo; do
     linie=$(awk -F'\t' -v r="$repo" '$1==r' "$W/about")
     if [ -z "$linie" ]; then problema "$repo: nu are rand in scripts/about.tsv"; greseli=1; continue; fi
@@ -851,6 +851,7 @@ else
     if ! api_get "$repo" "$W/api.json" || ! grep -q '"full_name"' "$W/api.json"; then
       atentie "$repo: pagina GitHub nu poate fi citita acum (retea sau limita API) — verificare sarita"; continue
     fi
+    ncitite=$((ncitite + 1))
     d=$(json_str description "$W/api.json"); w=$(json_str homepage "$W/api.json"); t=$(topics_of "$W/api.json")
     [ "$d" = "$d_ok" ] || { problema "$repo: descrierea de pe GitHub difera de about.tsv"; echo "             GitHub:    ${d:-(goala)}"; echo "             about.tsv: $d_ok"; greseli=1; }
     [ "$w" = "$w_ok" ] || { problema "$repo: website-ul de pe GitHub e \"${w:-gol}\", trebuie $w_ok"; greseli=1; }
@@ -860,8 +861,9 @@ else
     done
     # publicarea: doar prin GitHub Actions, adica doar dupa jobul "verifica"
     # (build_type "legacy" = Pages publica direct din ramura, ocolind verificarea).
-    # Raspuns necitibil (API fara drept de citire) = sarit in tacere.
-    if api_get "$repo/pages" "$W/pages.json" && grep -q '"build_type"' "$W/pages.json"; then
+    # Doar cu token (in GitHub Actions): fara token, GitHub nu arata sursa
+    # publicarii, iar cererea in plus ar consuma limita de 60 de cereri/ora.
+    if [ -n "${GITHUB_TOKEN:-}${NORGEDAN_API_DIR:-}" ] && api_get "$repo/pages" "$W/pages.json" && grep -q '"build_type"' "$W/pages.json"; then
       npg=$((npg + 1)); bt=$(json_str build_type "$W/pages.json")
       if [ "$bt" != workflow ]; then
         nramura=$((nramura + 1))
@@ -875,7 +877,7 @@ else
     grep -qxF "$r" "$W/repos" || echo "$r"
   done > "$W/aboutx"
   while read -r r; do problema "about.tsv are rand pentru $r, care nu e repo al site-ului"; greseli=1; done < "$W/aboutx"
-  [ "$greseli" -eq 0 ] && ok "paginile GitHub corespund about.tsv (descriere, website, topics, fara wiki/projects)"
+  [ "$greseli" -eq 0 ] && [ "$ncitite" -gt 0 ] && ok "paginile GitHub corespund about.tsv (descriere, website, topics, fara wiki/projects) — $ncitite din $(wc -l < "$W/repos" | tr -d ' ') citite"
   [ "$npg" -gt 0 ] && [ "$nramura" -eq 0 ] && ok "publicarea trece prin verificare (GitHub Actions) in toate cele $npg repo-uri citite"
 fi
 
