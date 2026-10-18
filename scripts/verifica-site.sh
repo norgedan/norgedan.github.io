@@ -841,7 +841,7 @@ elif [ ! -f "$ABOUT" ]; then
   problema "lipseste scripts/about.tsv — sursa paginilor GitHub"
 else
   grep -v '^#' "$ABOUT" | grep -v '^[[:space:]]*$' > "$W/about"
-  greseli=0
+  greseli=0; npg=0; nramura=0
   while read -r repo; do
     linie=$(awk -F'\t' -v r="$repo" '$1==r' "$W/about")
     if [ -z "$linie" ]; then problema "$repo: nu are rand in scripts/about.tsv"; greseli=1; continue; fi
@@ -858,6 +858,16 @@ else
     for f in has_wiki has_projects; do
       [ "$(json_bool $f "$W/api.json")" = "false" ] || { problema "$repo: ${f#has_} activ pe GitHub, dar nefolosit — Settings, Features"; greseli=1; }
     done
+    # publicarea: doar prin GitHub Actions, adica doar dupa jobul "verifica"
+    # (build_type "legacy" = Pages publica direct din ramura, ocolind verificarea).
+    # Raspuns necitibil (API fara drept de citire) = sarit in tacere.
+    if api_get "$repo/pages" "$W/pages.json" && grep -q '"build_type"' "$W/pages.json"; then
+      npg=$((npg + 1)); bt=$(json_str build_type "$W/pages.json")
+      if [ "$bt" != workflow ]; then
+        nramura=$((nramura + 1))
+        atentie "$repo: GitHub Pages publica direct din ramura (\"$bt\"), ocolind verificarea — Settings, Pages, Source: GitHub Actions"
+      fi
+    fi
     sp=$(json_str spdx_id "$W/api.json")
     [ "$sp" = "CC-BY-4.0" ] || atentie "$repo: GitHub vede licenta ca \"${sp:-nimic}\" — daca LICENSE tocmai s-a schimbat, GitHub o recalculeaza dupa push"
   done < "$W/repos"
@@ -866,6 +876,7 @@ else
   done > "$W/aboutx"
   while read -r r; do problema "about.tsv are rand pentru $r, care nu e repo al site-ului"; greseli=1; done < "$W/aboutx"
   [ "$greseli" -eq 0 ] && ok "paginile GitHub corespund about.tsv (descriere, website, topics, fara wiki/projects)"
+  [ "$npg" -gt 0 ] && [ "$nramura" -eq 0 ] && ok "publicarea trece prin verificare (GitHub Actions) in toate cele $npg repo-uri citite"
 fi
 
 # ════════════════════════════════════════════════════════════════════

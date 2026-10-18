@@ -8,6 +8,11 @@
 # Ruleaza: la fiecare push pe main, in oricare repo; zilnic, doar din hub;
 # si la cerere (Actions -> verifica-site -> Run workflow).
 # Esec = email automat de la GitHub catre proprietarul contului.
+#
+# Publicarea (jobul "publica") porneste NUMAI dupa ce "verifica" a trecut:
+# un site cu probleme nu ajunge pe GitHub Pages, oricum ar fi ajuns pe GitHub.
+# Cere, o singura data per repo: Settings -> Pages -> Source: GitHub Actions.
+# Fiecare repo isi publica doar propriul site; verificarea e a site-ului intreg.
 
 name: verifica-site
 
@@ -20,6 +25,7 @@ on:
 
 permissions:
   contents: read
+  pages: read   # [12] citeste sursa publicarii (Actions sau ramura)
 
 jobs:
   verifica:
@@ -43,3 +49,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: sh norgedan.github.io/scripts/verifica-site.sh --ci
+
+  publica:
+    needs: verifica
+    # la push si la cerere; rularea zilnica doar verifica, nu republica
+    if: github.event_name != 'schedule' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publicare.outputs.page_url }}
+    concurrency:
+      group: pages-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+        with: { path: repo }
+      - name: arborele publicat (fara .git si .github, ca pana acum)
+        run: mkdir _site && tar -C repo --exclude=./.git --exclude=./.github -cf - . | tar -C _site -xf -
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with: { path: _site }
+      - id: publicare
+        uses: actions/deploy-pages@v4
