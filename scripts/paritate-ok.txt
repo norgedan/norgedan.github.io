@@ -1,0 +1,7 @@
+# paritate-ok.txt — diferente RO-NO citite si acceptate (verifica-site.sh [15]).
+# Un rand = o diferenta, separata prin TAB:   id  masura  RO/NO
+#   id       din documente.tsv (ex: corpus-04)
+#   masura   capitole | subcapitole | citate | lungime
+#   RO/NO    valoarea EXACTA afisata de verificare (ex: 8/9, sau 6405/4168 (65%))
+# Intra aici doar o diferenta voita (o adaptare pentru cititorul norvegian),
+# nu una de reparat.  Daca valorile se schimba, semnalarea revine singura.

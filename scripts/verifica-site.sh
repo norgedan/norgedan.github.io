@@ -1248,6 +1248,48 @@ AWK
 fi
 
 # ════════════════════════════════════════════════════════════════════
+titlu 15 "Paritatea RO-NO: aceeasi structura in ambele limbi"
+# ════════════════════════════════════════════════════════════════════
+# O pereche RO+NO e acelasi document: aceleasi capitole (<h2>), subcapitole
+# (<h3>), citate biblice (blocuri verse) si o lungime asemanatoare (textul NO
+# are de obicei 70-90% din cuvintele RO).  O diferenta nu e neaparat o greseala
+# — poate fi o adaptare constienta — dar asa au ramas nevazute capitole lipsa
+# si erori de traducere.  Toate semnalarile sunt ATENTIE.
+#   scripts/paritate-ok.txt   diferente citite si acceptate:  id TAB masura TAB RO/NO
+#   (valoarea exacta: daca diferenta se schimba, semnalarea revine)
+PARIT_OK="$SCRIPT_DIR/paritate-ok.txt"
+: > "$W/parok"; [ -f "$PARIT_OK" ] && grep -v '^#' "$PARIT_OK" | grep -v '^[[:space:]]*$' > "$W/parok"
+cat > "$W/par.awk" <<'AWK'
+BEGIN { FS = "\t" }
+$1 == "h2" { h2++ } $1 == "h3" { h3++ }
+$1 == "blockquote" { for (i = 2; i < NF; i += 2) if ($i == "class" && ($(i+1) == "verse" || $(i+1) == "hero-verse")) v++ }
+END { print h2 + 0, h3 + 0, v + 0 }
+AWK
+: > "$W/par"
+while IFS="$TAB" read -r id col repo cro cno tro tno; do
+  fro="$RADACINA/$repo/$cro"; fno="$RADACINA/$repo/$cno"
+  [ -f "$fro" ] && [ -f "$fno" ] || continue
+  set -- $(awk -f "$W/par.awk" "$(tagsf "$fro")") $(awk -f "$W/par.awk" "$(tagsf "$fno")")
+  wro=$(cuvinte "$fro"); wno=$(cuvinte "$fno")
+  for m in "capitole $1/$4" "subcapitole $2/$5" "citate $3/$6"; do
+    n=${m%% *}; v=${m#* }
+    [ "${v%/*}" = "${v#*/}" ] && continue
+    printf '%s\t%s\t%s\n' "$id" "$n" "$v" >> "$W/par"
+  done
+  if [ "$wro" -gt 0 ] && [ $((wno * 100 / wro)) -lt 70 ]; then
+    printf '%s\t%s\t%s\n' "$id" "lungime" "$wro/$wno ($((wno * 100 / wro))%)" >> "$W/par"
+  fi
+done < "$W/m"
+# lista acceptata se citeste in BEGIN: cu NR==FNR, o lista goala ar inghiti tot
+awk -F'\t' -v OKF="$W/parok" 'BEGIN { while ((getline l < OKF) > 0) ok[l] = 1 } !(($1 "\t" $2 "\t" $3) in ok)' "$W/par" > "$W/parx"
+if [ -s "$W/parx" ]; then
+  atentie "$(cut -f1 "$W/parx" | sort -u | wc -l | tr -d ' ') perechi RO-NO cu structura diferita — de citit (RO/NO):"
+  awk -F'\t' '{ d[$1] = d[$1] (d[$1] == "" ? "" : ", ") $2 " " $3 } END { for (k in d) print "             " k ": " d[k] }' "$W/parx" | sort
+else
+  ok "toate perechile RO-NO au aceeasi structura (sau diferenta e acceptata in paritate-ok.txt)"
+fi
+
+# ════════════════════════════════════════════════════════════════════
 tablou
 
 probleme=$(wc -l < "$W/prob" | tr -d ' ')
