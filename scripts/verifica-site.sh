@@ -1028,6 +1028,226 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
+titlu 14 "Citatele biblice == textul editiilor declarate (1688 RO, 1930 NO)"
+# ════════════════════════════════════════════════════════════════════
+# Fiecare <blockquote class="verse"> (si "hero-verse") din documente se confrunta
+# cu editia declarata a limbii lui: RO — Biblia de la Bucuresti (1688),
+# NO — Bibelen 1930 (Det Norske Bibelselskap).  Textele stau DOAR local,
+# langa clone, in afara oricarui repo:
+#     RADACINA/biblii/b1688.txt          RADACINA/biblii/Norsk-1930.json
+# (alta cale: variabila NORGEDAN_BIBLII).  In CI nu exista — sectiunea se sare.
+# Confruntarea: aceleasi cuvinte, in aceeasi ordine; ghilimelele, apostroful,
+# punctuatia si majusculele nu decid.  Taieturile marcate cu „…” sunt permise:
+# fiecare bucata trebuie sa existe in verset, in ordine.
+# Nu acopera (inca): citatele din proza, intre ghilimele, cu trimitere in paranteza.
+
+BIBLII="${NORGEDAN_BIBLII:-$RADACINA/biblii}"
+B1688="$BIBLII/b1688.txt"; B1930="$BIBLII/Norsk-1930.json"
+# amprentele textelor confruntate (cksum): alt fisier = alte rezultate
+CK1688="4063011430 5536761"; CK1930="428768866 8024090"
+
+if [ "$MOD" = ci ]; then
+  echo "  (sarit in CI — textele de referinta stau doar local)"
+elif [ ! -f "$B1688" ] || [ ! -f "$B1930" ]; then
+  atentie "textele de referinta lipsesc din $BIBLII (b1688.txt, Norsk-1930.json) — citatele nu sunt confruntate"
+else
+  [ "$(cksum < "$B1688" | awk '{print $1, $2}')" = "$CK1688" ] || atentie "b1688.txt difera de textul cu care s-a lucrat (cksum) — rezultatele pot diferi"
+  [ "$(cksum < "$B1930" | awk '{print $1, $2}')" = "$CK1930" ] || atentie "Norsk-1930.json difera de textul cu care s-a lucrat (cksum) — rezultatele pot diferi"
+  cat > "$W/idx1688.awk" <<'AWK'
+# idx1688.awk — indexul Bibliei de la Bucuresti (1688): iesire  COD TAB cap TAB vers TAB text
+BEGIN {
+  n = split("FAC IES LEV NUM DEU IOS JDC RUT 1IMP 2IMP 3IMP 4IMP 1PAR 2PAR EZD NEE EST IOV " \
+            "PAR ECL CANT ISA IER PLA IEZ DAN OSE IOI AMO AVD ION MIH NAU AVV SOF AGG ZAH MAL " \
+            "TOV IUT VAR 3EZD INT SIR 1MAC 2MAC 3MAC 4MAC " \
+            "MAT MAR LUC IOA FAP ROM 1COR 2COR GAL EFE FLP COL 1TES 2TES 1TIM 2TIM TIT FLM EVR " \
+            "IAC 1PET 2PET 1IOA 2IOA 3IOA IUD APO", C, " ")
+  k = 0; b = ""; cap = 0; v = 0
+}
+{ sub(/^[\f\r]+/, ""); sub(/\r$/, "") }
+# trimiteri marginale lipite la sfarsitul versetului: "... zideaște. Fapt. Ap. 15, 20."
+#   "... făcut. A 2 Leage 5, 14."   "... Enos. 5, 6."   "... 1, 26; 9, 6; Col. 3, 10."
+# Se scot cuvant cu cuvant, de la coada: numere ("15," "20." "3-5;"), abrevieri scurte
+# cu punct ("Fapt." "Ap." "Col.") si "A", "Leage".  Doar daca coada are o pereche "N, N".
+function fara_trimiteri(t,   n, w, i, j, x) {
+  if (t !~ /[0-9]+[,.] [0-9]+[-0-9,;.]*$/) return t
+  n = split(t, w, " ")
+  for (i = n; i > 0; i--) {
+    x = w[i]
+    if (x ~ /^[0-9]+(-[0-9]+)?[,;.]?$/) continue
+    if (x == "A" || x == "Leage" || x == "Leage," ) continue
+    if (x ~ /\.$/ && length(x) <= 9 && (x ~ /^[A-Z]/ || x ~ /^(Ă|Â|Î|Ș|Ț)/)) continue
+    # nume intreg de carte ("Luca", "Neemia", "Sirah") urmat de un numar
+    if (i < n && w[i + 1] ~ /^[0-9]/ && length(x) <= 9 && x ~ /^([A-Z]|Ă|Â|Î|Ș|Ț)[a-zăâîșț]*$/) continue
+    break
+  }
+  if (i == n) return t
+  x = ""; for (j = 1; j <= i; j++) x = x (j > 1 ? " " : "") w[j]
+  return x
+}
+# o cheie apare o singura data: prima aparitie e versetul cartii (adaosurile vin dupa)
+function flush(   key) {
+  t = fara_trimiteri(t)
+  key = b SUBSEP cap SUBSEP v; if (b != "" && v > 0 && !(key in vazut)) { vazut[key] = 1; print b "\t" cap "\t" v "\t" t }; v = 0; t = "" }
+/^CAP 1$/ { flush(); k++; b = C[k]; cap = 1; next }
+/^CAP [0-9]+$/ { flush(); cap = $2 + 0; next }
+/^(CATHISMA [0-9]+\. )?PSALMUL [0-9]+$/ { flush(); b = "PSA"; cap = $NF + 0; next }
+# dupa Apocalipsa urmeaza tabelele liturgice: indexul se opreste
+b == "APO" && /^APOSTOLUL / { flush(); b = ""; stop = 1 }
+stop { next }
+# trimiteri marginale:  "Ioan 1, 1, 2; Evr. 1, 10."  "1 Paral. 2, 5."
+/^([1-4] )?[A-ZĂÂÎȘȚ][^ ]* [0-9]+, [0-9]/ && /\.$/ { next }
+{
+  l = $0
+  if (match(l, /^[0-9]+\.(\[[0-9]+\.[^]]*\])? */)) {
+    flush(); num = substr(l, 1, RLENGTH); sub(/\..*/, "", num); v = num + 0
+    t = substr(l, RLENGTH + 1); next
+  }
+  if (v > 0 && l != "") t = t " " l
+}
+END { flush(); if (k != 75) print "EROARE\t" k " carti, trebuie 75" > "/dev/stderr" }
+AWK
+  cat > "$W/idx1930.awk" <<'AWK'
+# idx1930.awk — indexul Bibelen 1930 (JSON scrollmapper): iesire  COD TAB cap TAB vers TAB text
+BEGIN {
+  n = split("Genesis:FAC Exodus:IES Leviticus:LEV Numbers:NUM Deuteronomy:DEU Joshua:IOS Judges:JDC Ruth:RUT " \
+    "I Samuel:1IMP II Samuel:2IMP I Kings:3IMP II Kings:4IMP I Chronicles:1PAR II Chronicles:2PAR Ezra:EZD " \
+    "Nehemiah:NEE Esther:EST Job:IOV Psalms:PSA Proverbs:PAR Ecclesiastes:ECL Song of Solomon:CANT Isaiah:ISA " \
+    "Jeremiah:IER Lamentations:PLA Ezekiel:IEZ Daniel:DAN Hosea:OSE Joel:IOI Amos:AMO Obadiah:AVD Jonah:ION " \
+    "Micah:MIH Nahum:NAU Habakkuk:AVV Zephaniah:SOF Haggai:AGG Zechariah:ZAH Malachi:MAL Matthew:MAT Mark:MAR " \
+    "Luke:LUC John:IOA Acts:FAP Romans:ROM I Corinthians:1COR II Corinthians:2COR Galatians:GAL Ephesians:EFE " \
+    "Philippians:FLP Colossians:COL I Thessalonians:1TES II Thessalonians:2TES I Timothy:1TIM II Timothy:2TIM " \
+    "Titus:TIT Philemon:FLM Hebrews:EVR James:IAC I Peter:1PET II Peter:2PET I John:1IOA II John:2IOA " \
+    "III John:3IOA Jude:IUD Revelation of John:APO", P, " ")
+  # numele cu spatii au fost taiate de split: le refacem
+  s = ""; for (i = 1; i <= n; i++) { s = s (s == "" ? "" : " ") P[i]; if (s ~ /:/) { k = s; sub(/:.*/, "", k); v = s; sub(/^[^:]*:/, "", v); M[k] = v; s = "" } }
+}
+/"name": "/  { x = $0; sub(/^[^"]*"name": "/, "", x); sub(/",?[ \t]*$/, "", x); b = (x in M) ? M[x] : "?" x; next }
+/"chapter": / { x = $0; gsub(/[^0-9]/, "", x); cap = x + 0; next }
+/"verse": /   { x = $0; gsub(/[^0-9]/, "", x); v = x + 0; next }
+/"text": "/   { x = $0; sub(/^[^"]*"text": "/, "", x); sub(/"[ \t]*,?[ \t]*$/, "", x); gsub(/\\"/, "\"", x); gsub(/\\\\/, "\\", x)
+  # erata textului digital (scrollmapper, la fel pe biblehub): cuvinte dublate la digitizare
+  if (b == "2TIM" && cap == 3 && v == 16) sub(/av Gud av Gud/, "av Gud", x)
+  print b "\t" cap "\t" v "\t" x }
+AWK
+  cat > "$W/citate.awk" <<'AWK'
+# citate.awk — confrunta blocurile <blockquote class="verse"> cu textul de referinta.
+# Variabile: IDX (indexul: COD TAB cap TAB vers TAB text), LIMBA (ro|no), R (calea afisata).
+# Iesire, cate o linie pe bloc:  STARE TAB R TAB referinta TAB detaliu
+#   STARE = OK | GRESIT | NEGASIT | SARIT | NECUNOSCUT
+function lower(s) {
+  s = tolower(s)
+  gsub(/Ă/, "ă", s); gsub(/Â/, "â", s); gsub(/Î/, "î", s); gsub(/Ș/, "ș", s); gsub(/Ț/, "ț", s)
+  gsub(/Ş/, "ș", s); gsub(/Ţ/, "ț", s); gsub(/ş/, "ș", s); gsub(/ţ/, "ț", s)
+  gsub(/Å/, "å", s); gsub(/Æ/, "æ", s); gsub(/Ø/, "ø", s); gsub(/É/, "é", s)
+  return s
+}
+function norm(s) {
+  gsub(/<[^>]*>/, " ", s)
+  gsub(/&nbsp;/, " ", s); gsub(/&amp;/, "\\&", s); gsub(/&quot;/, " ", s); gsub(/&#39;/, "'", s)
+  gsub(/„|“|”|"|«|»|‹|›/, " ", s)
+  gsub(/’|‘|`/, "'", s)
+  gsub(/↡|↟/, " ", s); gsub(/\[[0-9]+\.[^]]*\]/, " ", s)
+  gsub(/–|—/, " ", s)
+  gsub(/[ \t\r\n]+/, " ", s)
+  s = lower(s)
+  # semnele de punctuatie nu decid: se scot, ca virgula din citat sa nu conteze fata de punct
+  gsub(/[.,;:!?()]/, " ", s)
+  gsub(/ +/, " ", s); sub(/^ /, "", s); sub(/ $/, "", s)
+  return s
+}
+BEGIN {
+  FS = "\t"
+  while ((getline l < IDX) > 0) { split(l, a, "\t"); T[a[1] SUBSEP a[2] SUBSEP a[3]] = a[4]; ARE[a[1]] = 1 }
+  n = split("Facerea:FAC|Geneza:FAC|Ieșirea:IES|Psalmul:PSA|Psalmii:PSA|Paremiile lui Solomon:PAR|Pildele lui Solomon:PAR|" \
+    "Eclesiastul:ECL|Isaia:ISA|Ieremia:IER|Iezechiil:IEZ|Daniil:DAN|Înțelepciunea lui Solomon:INT|Iov:IOV|" \
+    "Matei:MAT|Marcu:MAR|Luca:LUC|Ioan:IOA|Faptele Apostolilor:FAP|Romani:ROM|Efeseni:EFE|Evrei:EVR|" \
+    "1 Ioan:1IOA|Apocalipsa:APO|1 Corinteni:1COR|2 Corinteni:2COR|Galateni:GAL|Filipeni:FLP|Coloseni:COL|Iacov:IAC|1 Petru:1PET|1 Timotei:1TIM|2 Timotei:2TIM|Isus Navi:IOS|Iisus Navi:IOS|Apocalipsis:APO|A Doua Lege:DEU|Numerii:NUM|Preoția:LEV|" \
+    "1 Mosebok:FAC|2 Mosebok:IES|Salme:PSA|Salmene:PSA|Ordspråkene:PAR|Salomos Ordsprog:PAR|Forkynneren:ECL|" \
+    "Jesaja:ISA|Jeremia:IER|Esekiel:IEZ|Daniel:DAN|Visdommens bok:INT|Job:IOV|Matteus:MAT|Markus:MAR|" \
+    "Lukas:LUC|Johannes:IOA|Apostlenes gjerninger:FAP|Romerne:ROM|Efeserne:EFE|Hebreerne:EVR|" \
+    "1 Johannes:1IOA|Åpenbaringen:APO|1 Korinterbrev:1COR|2 Korinterbrev:2COR|Galaterne:GAL|Filipperne:FLP|Kolosserne:COL|Jakob:IAC|1 Peter:1PET|1 Timoteus:1TIM|2 Timoteus:2TIM|Josva:IOS|3 Mosebok:LEV|4 Mosebok:NUM|5 Mosebok:DEU", c, "|")
+  for (i = 1; i <= n; i++) { k = c[i]; sub(/:[^:]*$/, "", k); v = c[i]; sub(/^.*:/, "", v); CARTE[k] = v }
+  RS = "\001"
+}
+{
+  s = $0
+  # versetul din antetul paginii are alta clasa, aceeasi regula
+  gsub(/<blockquote class="hero-verse">/, "<blockquote class=\"verse\">", s)
+  while ((i = index(s, "<blockquote class=\"verse\">")) > 0) {
+    s = substr(s, i + 26); j = index(s, "</blockquote>"); if (j == 0) break
+    bloc = substr(s, 1, j - 1); s = substr(s, j + 13)
+    ci = index(bloc, "<cite>"); cj = index(bloc, "</cite>")
+    if (ci > 0 && cj > 0) { cite = substr(bloc, ci + 6, cj - ci - 6); citat = substr(bloc, 1, ci - 1) }
+    else {
+      # fara <cite>: trimiterea sta dupa ghilimelele de inchidere (Doc VI)
+      u = 0; t2 = bloc
+      while (match(t2, /"|”|»|“/)) { u += RSTART + RLENGTH - 1; t2 = substr(t2, RSTART + RLENGTH) }
+      if (u > 0) { citat = substr(bloc, 1, u); cite = substr(bloc, u + 1) }
+      else {
+        # fara ghilimele: trimiterea e ultimul rand nevid al blocului
+        t2 = bloc; sub(/[ \t\r\n]+$/, "", t2); u = 0
+        for (q = length(t2); q > 0; q--) if (substr(t2, q, 1) == "\n") { u = q; break }
+        if (u == 0) { print "SARIT\t" R "\t-\tbloc fara trimitere"; continue }
+        citat = substr(t2, 1, u); cite = substr(t2, u + 1)
+      }
+    }
+    gsub(/<[^>]*>/, "", cite); gsub(/[ \t\r\n]+/, " ", cite); sub(/^ /, "", cite)
+    # referinta: "Carte cap:vers[-vers][,vers]" la inceputul lui <cite>
+    if (!match(cite, /^([1-5] )?[^0-9]+ [0-9]+:[0-9][-0-9,]*/)) { print "SARIT\t" R "\t" cite "\tnu e trimitere biblica"; continue }
+    ref = substr(cite, 1, RLENGTH); rest = substr(cite, RLENGTH + 1)
+    if (rest ~ /ebraic|hebraisk/) { print "SARIT\t" R "\t" ref "\ttraducere din ebraica, declarata in <cite>"; continue }
+    k = ref; sub(/ [0-9]+:[-0-9,]*$/, "", k)
+    if (index(k, ",")) { print "SARIT\t" R "\t" ref "\tautor si opera, nu carte biblica"; continue }
+    if (!(k in CARTE)) { print "NECUNOSCUT\t" R "\t" ref "\tcartea \"" k "\" nu e in tabelul de nume"; continue }
+    cod = CARTE[k]
+    if (!(cod in ARE)) { print "SARIT\t" R "\t" ref "\tcartea nu exista in editia de referinta"; continue }
+    cv = substr(ref, length(k) + 2); cap = cv; sub(/:.*/, "", cap); lv = cv; sub(/^[^:]*:/, "", lv)
+    txt = ""; lipsa = ""
+    m = split(lv, parti, ",")
+    for (q = 1; q <= m; q++) {
+      va = parti[q]; vb = va
+      if (index(va, "-")) { vb = va; sub(/^[^-]*-/, "", vb); sub(/-.*/, "", va) }
+      for (vv = va + 0; vv <= vb + 0; vv++) {
+        key = cod SUBSEP (cap + 0) SUBSEP vv
+        if (key in T) txt = txt " " T[key]; else lipsa = lipsa " " vv
+      }
+    }
+    if (lipsa != "") { print "NEGASIT\t" R "\t" ref "\tversetul" lipsa " nu e in index"; continue }
+    nt = norm(txt)
+    # citatul poate avea taieturi: "…", "[…]", "..." — fiecare bucata, in ordine
+    gsub(/\[…\]|\[\.\.\.\]|…|\.\.\./, "\002", citat)
+    nb = split(citat, buc, "\002"); poz = 1; bun = 1; rau = ""
+    for (q = 1; q <= nb; q++) {
+      x = norm(buc[q]); if (x == "") continue
+      r = index(substr(nt, poz), x)
+      if (r == 0) { bun = 0; rau = x; break }
+      poz = poz + r - 1 + length(x)
+    }
+    if (bun) print "OK\t" R "\t" ref "\t-"
+    else print "GRESIT\t" R "\t" ref "\tpe site: \"" substr(rau, 1, 70) "\" | editia: \"" substr(nt, 1, 70) "\""
+  }
+}
+AWK
+  LC_ALL=C awk -f "$W/idx1688.awk" "$B1688" > "$W/i1688" 2> "$W/i1688.err"
+  LC_ALL=C awk -f "$W/idx1930.awk" "$B1930" > "$W/i1930"
+  [ -s "$W/i1688.err" ] && problema "indexul 1688: $(cat "$W/i1688.err")"
+  : > "$W/cit"
+  while IFS="$TAB" read -r repo cale limba id col tit; do
+    f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
+    if [ "$limba" = ro ]; then ix="$W/i1688"; else ix="$W/i1930"; fi
+    LC_ALL=C awk -v IDX="$ix" -v R="$repo/$cale" -f "$W/citate.awk" "$f" >> "$W/cit"
+  done < "$W/docs"
+  greseli=0
+  awk -F'\t' '$1=="GRESIT" || $1=="NEGASIT" || $1=="NECUNOSCUT" {print $2 " — " $3 ": " $4}' "$W/cit" > "$W/citp"
+  while read -r l; do problema "$l"; greseli=1; done < "$W/citp"
+  nro=$(awk -F'\t' '$1=="OK" && $2 !~ /-no\.html$|\/no\//' "$W/cit" | wc -l | tr -d ' ')
+  nno=$(awk -F'\t' '$1=="OK" && $2 ~ /-no\.html$|\/no\//' "$W/cit" | wc -l | tr -d ' ')
+  [ "$greseli" -eq 0 ] && ok "$((nro + nno)) citate biblice identice cu editia declarata (RO 1688: $nro, NO 1930: $nno)"
+  nabs=$(awk -F'\t' '$1=="SARIT" && $4 ~ /nu exista in editia/' "$W/cit" | wc -l | tr -d ' ')
+  [ "$nabs" -gt 0 ] && atentie "$nabs citate din carti absente din editia de referinta (de ex. Intelepciunea lui Solomon in Bibelen 1930) — neconfruntate"
+fi
+
+# ════════════════════════════════════════════════════════════════════
 tablou
 
 probleme=$(wc -l < "$W/prob" | tr -d ' ')
