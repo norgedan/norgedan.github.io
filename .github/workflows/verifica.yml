@@ -45,10 +45,34 @@ jobs:
         with: { repository: norgedan/limba, path: limba }
       - uses: actions/checkout@v6
         with: { repository: norgedan/limba-ro-final, path: limba-ro-final }
-      - name: verifica-site.sh --ci
+      # [14] NO: Bibelen 1930, text public, fixat pe commit; scriptul ii verifica
+      # amprenta (cksum).  RO 1688 sta doar local, deci in CI se confrunta doar NO.
+      - name: Bibelen 1930 pentru [14] (scrollmapper, commit fixat)
+        run: |
+          mkdir -p biblii
+          curl -fsSL --retry 3 -o biblii/Norsk-1930.json \
+            https://raw.githubusercontent.com/scrollmapper/bible_databases/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/formats/json/Norsk.json
+      # Cursa dintre repo-uri (pas53): un pas care atinge doua repo-uri pleaca in
+      # doua push-uri, la un minut distanta.  CI-ul primului vede, intre timp,
+      # fratele inca nesincronizat (asa au picat corpus #42 si #43, 19 oct).
+      # De aceea: pana la 3 incercari, la 2 minute; inainte de fiecare reluare,
+      # fratii se aduc din nou de pe GitHub.  Repo-ul propriu ramane fix pe
+      # commit-ul push-ului: ce se verifica e exact ce se publica.
+      - name: verifica-site.sh --ci (reluat daca un repo frate e in mijlocul push-ului)
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: sh norgedan.github.io/scripts/verifica-site.sh --ci
+        run: |
+          EU=${GITHUB_REPOSITORY#*/}
+          for i in 1 2 3; do
+            sh norgedan.github.io/scripts/verifica-site.sh --ci && exit 0
+            [ "$i" -lt 3 ] || exit 1
+            echo "::notice::verificarea a picat (incercarea $i din 3) - reiau peste 2 minute, cu repo-urile surori aduse din nou"
+            sleep 120
+            for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do
+              [ "$r" = "$EU" ] && continue
+              git -C "$r" fetch -q --depth 1 origin main && git -C "$r" reset -q --hard FETCH_HEAD
+            done
+          done
 
   publica:
     needs: verifica

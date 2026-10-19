@@ -319,6 +319,8 @@ while IFS="$TAB" read -r repo cale limba id col tit; do
     lipsa=$((lipsa + 1))
   fi
 done < "$W/docs"
+# santinela: nicio pagina gasita = cautarea s-a stricat, nu un site curat
+[ -s "$W/html" ] || { problema "nicio pagina .html gasita sub $RADACINA — cautarea s-a stricat"; necunoscute=1; }
 [ "$necunoscute" -eq 0 ] && [ "$lipsa" -eq 0 ] && \
   ok "$(wc -l < "$W/html" | tr -d ' ') pagini pe disc, toate cunoscute; $(wc -l < "$W/docs" | tr -d ' ') fisiere-document prezente"
 
@@ -427,6 +429,8 @@ while IFS="$TAB" read -r sursa tinta frag orig cale; do
     fi
   fi
 done < "$W/links"
+# santinela: zero trimiteri pe un site cu sute de linkuri = citirea s-a stricat
+[ -s "$W/links" ] || { problema "nicio trimitere interna citita — extragerea linkurilor s-a stricat"; rupte=1; }
 [ "$rupte" -eq 0 ] && ok "$(wc -l < "$W/links" | tr -d ' ') trimiteri interne, toate ajung la tinta"
 
 # ════════════════════════════════════════════════════════════════════
@@ -1059,7 +1063,15 @@ titlu 14 "Citatele biblice == textul editiilor declarate (1688 RO, 1930 NO)"
 # NO — Bibelen 1930 (Det Norske Bibelselskap).  Textele stau DOAR local,
 # langa clone, in afara oricarui repo:
 #     RADACINA/biblii/b1688.txt          RADACINA/biblii/Norsk-1930.json
-# (alta cale: variabila NORGEDAN_BIBLII).  In CI nu exista — sectiunea se sare.
+# (alta cale: variabila NORGEDAN_BIBLII).
+# Lipsa unui text NU mai trece in tacere (pas53):
+#   push   — text lipsa sau cu alta amprenta = PROBLEMA; ocolire doar constienta,
+#            vizibila in raport:  NORGEDAN_FARA_BIBLII=1 git push
+#   manual — ATENTIE (esti in mijlocul lucrului)
+#   ci     — NO se confrunta (verifica.yml aduce Bibelen 1930, commit fixat);
+#            RO 1688 sta doar local, deci in CI se sare, declarat.
+# Santinela: un text prezent din care nu iese niciun citat confruntat = PROBLEMA
+# (extragerea s-a stricat; pe acest site sunt sute de citate).
 # Confruntarea: aceleasi cuvinte, in aceeasi ordine; ghilimelele, apostroful,
 # punctuatia si majusculele nu decid.  Taieturile marcate cu „…” sunt permise:
 # fiecare bucata trebuie sa existe in verset, in ordine.
@@ -1070,13 +1082,33 @@ B1688="$BIBLII/b1688.txt"; B1930="$BIBLII/Norsk-1930.json"
 # amprentele textelor confruntate (cksum): alt fisier = alte rezultate
 CK1688="4063011430 5536761"; CK1930="428768866 8024090"
 
+# textul de referinta lipsa sau schimbat: cat de grav, dupa mod
+lipsa_text() {
+  case "$MOD" in
+    push|ci)
+      if [ "$MOD" = push ] && [ "${NORGEDAN_FARA_BIBLII:-}" = 1 ]; then
+        atentie "$1 — OCOLIRE CONSTIENTA (NORGEDAN_FARA_BIBLII=1): aceste citate nu sunt confruntate"
+      else
+        problema "$1 — citatele nu pot fi confruntate (ocolire doar constienta: NORGEDAN_FARA_BIBLII=1 git push)"
+      fi ;;
+    *) atentie "$1 — citatele nu sunt confruntate" ;;
+  esac
+}
+ARE_RO=0; ARE_NO=0
 if [ "$MOD" = ci ]; then
-  echo "  (sarit in CI — textele de referinta stau doar local)"
-elif [ ! -f "$B1688" ] || [ ! -f "$B1930" ]; then
-  atentie "textele de referinta lipsesc din $BIBLII (b1688.txt, Norsk-1930.json) — citatele nu sunt confruntate"
-else
-  [ "$(cksum < "$B1688" | awk '{print $1, $2}')" = "$CK1688" ] || atentie "b1688.txt difera de textul cu care s-a lucrat (cksum) — rezultatele pot diferi"
-  [ "$(cksum < "$B1930" | awk '{print $1, $2}')" = "$CK1930" ] || atentie "Norsk-1930.json difera de textul cu care s-a lucrat (cksum) — rezultatele pot diferi"
+  echo "  (RO 1688 sarit in CI — textul sta doar local; NO 1930 se confrunta)"
+elif [ -f "$B1688" ]; then ARE_RO=1
+else lipsa_text "lipseste $B1688 (RO, Biblia 1688)"; fi
+if [ -f "$B1930" ]; then ARE_NO=1
+elif [ "$MOD" = ci ]; then problema "lipseste $B1930 in CI — pasul care il aduce din verifica.yml a esuat"
+else lipsa_text "lipseste $B1930 (NO, Bibelen 1930)"; fi
+if [ "$ARE_RO" = 1 ] && [ "$(cksum < "$B1688" | awk '{print $1, $2}')" != "$CK1688" ]; then
+  lipsa_text "b1688.txt difera de textul cu care s-a lucrat (cksum)"; ARE_RO=0
+fi
+if [ "$ARE_NO" = 1 ] && [ "$(cksum < "$B1930" | awk '{print $1, $2}')" != "$CK1930" ]; then
+  lipsa_text "Norsk-1930.json difera de textul cu care s-a lucrat (cksum)"; ARE_NO=0
+fi
+if [ "$ARE_RO" = 1 ] || [ "$ARE_NO" = 1 ]; then
   cat > "$W/idx1688.awk" <<'AWK'
 # idx1688.awk — indexul Bibliei de la Bucuresti (1688): iesire  COD TAB cap TAB vers TAB text
 BEGIN {
@@ -1252,13 +1284,17 @@ BEGIN {
   }
 }
 AWK
-  LC_ALL=C awk -f "$W/idx1688.awk" "$B1688" > "$W/i1688" 2> "$W/i1688.err"
-  LC_ALL=C awk -f "$W/idx1930.awk" "$B1930" > "$W/i1930"
-  [ -s "$W/i1688.err" ] && problema "indexul 1688: $(cat "$W/i1688.err")"
+  : > "$W/i1688"; : > "$W/i1930"
+  if [ "$ARE_RO" = 1 ]; then
+    LC_ALL=C awk -f "$W/idx1688.awk" "$B1688" > "$W/i1688" 2> "$W/i1688.err"
+    [ -s "$W/i1688.err" ] && problema "indexul 1688: $(cat "$W/i1688.err")"
+  fi
+  [ "$ARE_NO" = 1 ] && LC_ALL=C awk -f "$W/idx1930.awk" "$B1930" > "$W/i1930"
   : > "$W/cit"
   while IFS="$TAB" read -r repo cale limba id col tit; do
     f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
-    if [ "$limba" = ro ]; then ix="$W/i1688"; else ix="$W/i1930"; fi
+    if [ "$limba" = ro ]; then [ "$ARE_RO" = 1 ] || continue; ix="$W/i1688"
+    else [ "$ARE_NO" = 1 ] || continue; ix="$W/i1930"; fi
     LC_ALL=C awk -v IDX="$ix" -v R="$repo/$cale" -f "$W/citate.awk" "$f" | sed "s/\$/$TAB$limba/" >> "$W/cit"
   done < "$W/docs"
   greseli=0
@@ -1267,7 +1303,14 @@ AWK
   # limba vine din manifest (ultima coloana), nu din numele fisierului
   nro=$(awk -F'\t' '$1=="OK" && $NF=="ro"' "$W/cit" | wc -l | tr -d ' ')
   nno=$(awk -F'\t' '$1=="OK" && $NF!="ro"' "$W/cit" | wc -l | tr -d ' ')
-  [ "$greseli" -eq 0 ] && ok "$((nro + nno)) citate biblice identice cu editia declarata (RO 1688: $nro, NO 1930: $nno)"
+  # santinela: un text prezent, zero citate confruntate = extragerea s-a stricat
+  [ "$ARE_RO" = 1 ] && [ "$nro" -eq 0 ] && { problema "niciun citat RO confruntat, desi b1688.txt e prezent — citirea blocurilor sau indexul s-a stricat"; greseli=1; }
+  [ "$ARE_NO" = 1 ] && [ "$nno" -eq 0 ] && { problema "niciun citat NO confruntat, desi Norsk-1930.json e prezent — citirea blocurilor sau indexul s-a stricat"; greseli=1; }
+  if [ "$greseli" -eq 0 ]; then
+    if [ "$ARE_RO" = 1 ] && [ "$ARE_NO" = 1 ]; then ok "$((nro + nno)) citate biblice identice cu editia declarata (RO 1688: $nro, NO 1930: $nno)"
+    elif [ "$ARE_NO" = 1 ]; then ok "$nno citate NO identice cu Bibelen 1930 (RO neconfruntat aici)"
+    else ok "$nro citate RO identice cu Biblia 1688 (NO neconfruntat aici)"; fi
+  fi
   nabs=$(awk -F'\t' '$1=="SARIT" && $4 ~ /nu exista in editia/' "$W/cit" | wc -l | tr -d ' ')
   [ "$nabs" -gt 0 ] && atentie "$nabs citate din carti absente din editia de referinta (de ex. Intelepciunea lui Solomon in Bibelen 1930) — neconfruntate"
 fi
@@ -1295,6 +1338,9 @@ while IFS="$TAB" read -r id col repo cro cno tro tno; do
   fro="$RADACINA/$repo/$cro"; fno="$RADACINA/$repo/$cno"
   [ -f "$fro" ] && [ -f "$fno" ] || continue
   set -- $(awk -f "$W/par.awk" "$(tagsf "$fro")") $(awk -f "$W/par.awk" "$(tagsf "$fno")")
+  # santinela: un document fara niciun <h2> citit = structura sau citirea s-a stricat
+  [ "$1" -eq 0 ] && problema "$id: $repo/$cro nu are niciun capitol (<h2>) citit"
+  [ "$4" -eq 0 ] && problema "$id: $repo/$cno nu are niciun capitol (<h2>) citit"
   wro=$(cuvinte "$fro"); wno=$(cuvinte "$fno")
   for m in "capitole $1/$4" "subcapitole $2/$5" "citate $3/$6"; do
     n=${m%% *}; v=${m#* }
