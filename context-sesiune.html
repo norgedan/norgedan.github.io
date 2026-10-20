@@ -69,7 +69,7 @@ DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
    Citatele NO se confruntă și aici (Bibelen 1930, commit fixat); o verificare
    picată se reia de încă 2 ori, la 2 minute (cursa dintre repo-uri).
 Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării,
-trebuie „0 cu verdict greșit” (pe 20 oct: 17 teste, 7 vulnerabilități deschise).
+trebuie „0 cu verdict greșit”; vulnerabilitățile încă deschise apar ca DESCHIS.
 
 CE S-A FĂCUT PE 19 OCTOMBRIE (pas48–pas53):
 - Doc VI NO: subcapitolele lipsă traduse (cap. II, III, concluzia), citatele noi
@@ -106,13 +106,13 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>, numai dacă vrei tu să-l atașezi; nu se publică nicăieri</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>, numai dacă vrei tu să-l atașezi; nu se publică nicăieri. Garda semnalează (ATENTIE, doar local) când a rămas în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
 <div class="nota">
   <p class="eticheta">De ce contează atașamentele</p>
-  <p>Textul de mai sus dă direcția și standardul. Ghidul și statusul dau detaliile — proceduri pas cu pas, greșelile deja făcute și lecțiile lor. Fără ele, o discuție nouă pornește de la zero și repetă erori deja rezolvate. Atașează-le din repo, nu din Downloads: o copie rămasă în Downloads poate fi alta decât cea publicată.</p>
+  <p>Textul de mai sus dă direcția și standardul. Ghidul și statusul dau detaliile — proceduri pas cu pas, greșelile deja făcute și lecțiile lor. Fără ele, o discuție nouă pornește de la zero și repetă erori deja rezolvate. Pe OpenBSD, Firefox vede din directorul tău doar <code>~/Downloads</code> (e închis cu <code>unveil</code>), deci atașarea trece prin Downloads: o copie proaspătă, confirmată cu <code>sha256</code> față de fișierul din repo, apoi ștearsă. O copie veche rămasă acolo poate fi alta decât cea publicată.</p>
 </div>
 
 <h2>Dacă se lucrează pe texte</h2>

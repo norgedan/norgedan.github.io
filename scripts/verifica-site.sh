@@ -815,6 +815,36 @@ greseli=0
 done < "$W/repos"
 [ "$greseli" -eq 0 ] && ok "nicio clona in urma fata de GitHub; arborii verificati sunt cei care se publica"
 
+# Jurnalul privat (din 20 oct 2026): DOCUMENTARE.md nu se scrie automat — hotararile
+# si motivele nu le stie masina — dar nu are voie sa ramana in urma nevazut.
+# Doar local (in CI repo-ul privat nu exista si nu trebuie sa existe); citeste doar
+# DATELE din tabelul „Istoricul acestui document” (randuri "| AAAA-LL-ZZ |"), nu
+# continutul.  Comparatia: ultima data de acolo vs data ultimului commit "pasNN" din hub.
+JURNAL="${NORGEDAN_JURNAL:-$RADACINA/norgedan-jurnal}"
+if [ "$MOD" != ci ] && [ "$MOD" != tablou ]; then
+  if [ ! -f "$JURNAL/DOCUMENTARE.md" ]; then
+    atentie "nu gasesc $JURNAL/DOCUMENTARE.md — jurnalul proiectului nu poate fi urmarit"
+  else
+    jd=$(grep -o '^| 20[0-9][0-9]-[01][0-9]-[0-3][0-9] |' "$JURNAL/DOCUMENTARE.md" | tr -d '| ' | sort | tail -1)
+    # %ci (nu %cs): merge si pe versiuni vechi de git; data = primele 10 caractere
+    hp=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%ci|%s' 2>/dev/null)
+    hd=$(printf '%s' "$hp" | cut -c1-10); hs=${hp#*|}; hs=${hs%%:*}
+    if [ -z "$jd" ]; then
+      atentie "DOCUMENTARE.md nu are nicio data in „Istoricul acestui document” — nu se poate spune daca e la zi"
+    # datele ca numere (AAAALLZZ): comparatie portabila, fara „>” in test
+    elif [ -n "$hd" ] && [ "$(echo "$hd" | tr -d -)" -gt "$(echo "$jd" | tr -d -)" ]; then
+      atentie "DOCUMENTARE.md a ramas in urma: ultima intrare $jd, ultimul pas din hub ($hs) din $hd — de adus la zi in norgedan-jurnal"
+    fi
+    if [ -d "$JURNAL/.git" ]; then
+      [ -n "$(git -C "$JURNAL" status --porcelain)" ] && atentie "norgedan-jurnal: modificari necomise"
+      if git -C "$JURNAL" rev-parse -q --verify origin/main >/dev/null; then
+        jn=$(git -C "$JURNAL" rev-list --count origin/main..HEAD)
+        [ "$jn" -gt 0 ] && atentie "norgedan-jurnal: $jn commit(uri) neimpinse pe GitHub (repo-ul privat e copia de siguranta)"
+      fi
+    fi
+  fi
+fi
+
 # ════════════════════════════════════════════════════════════════════
 titlu 12 "Pagina GitHub a fiecarui repo (About) == scripts/about.tsv"
 # ════════════════════════════════════════════════════════════════════
