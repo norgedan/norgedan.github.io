@@ -51,42 +51,51 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (18 octombrie 2026, după pas47):
+STAREA PROIECTULUI (20 octombrie 2026, după pas53):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 Cifrele trăiesc într-un singur loc: status-proiect.html, verificat la fiecare push.
 Lucrul vine ca patch-uri pasNN-&lt;repo&gt;.patch: git apply (o singură dată!),
 git add -A, git diff --cached --raw (amprentele se compară cu cele date în discuție),
-commit, apoi push.
+commit, apoi push. Un pas care adaugă text aduce în același patch și cifrele
+declarate (altfel garda blochează la [8]).
 
 DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
 1. Garda locală (pre-push): scripts/verifica-site.sh, 17 secțiuni, tot site-ul.
+   La push, textele Bibliei lipsă sau schimbate = PROBLEMA
+   (ocolire doar conștientă: NORGEDAN_FARA_BIBLII=1 git push).
 2. GitHub Actions (verifica.yml, identic în cele 6 repo-uri): jobul „verifica”,
    apoi „publica” — GitHub Pages publică NUMAI dacă verificarea a trecut.
-   (Settings → Pages → Source: GitHub Actions, setat în toate cele 6.)
+   Citatele NO se confruntă și aici (Bibelen 1930, commit fixat); o verificare
+   picată se reia de încă 2 ori, la 2 minute (cursa dintre repo-uri).
+Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării,
+trebuie „0 cu verdict greșit” (pe 20 oct: 17 teste, 7 vulnerabilități deschise).
 
-CE S-A FĂCUT PE 18 OCTOMBRIE (pas36–pas47):
-- [14] citatele biblice confruntate automat cu 1688 (RO) și 1930 (NO): toate identice.
-- [15] paritatea RO-NO: capitole, subcapitole, citate, lungime — harta golurilor NO.
-- termene de reverificare în afirmatii.tsv; detectorul de certitudine la zero.
-- [16] pilonii (scripts/piloni.tsv): temelia site-ului, fiecare cu eticheta și limita
-  lui (ce NU dovedește), ancorați în pagini RO și NO.
-- limba-ro-final: rumân/român; martorii antici citați exact (Ovidiu, Strabon, Cassius Dio);
-  obiecțiile „dacii n-au învățat latina?” cu dovezile; de ce nu știm mai mult despre
-  dacă; „limba e vie?”; capitolele NO 12–14 traduse.
-- [17] vocea: asculta.js în hub, „Ascultă” pe toate documentele, RO și NO.
-- publicarea doar după verificare; acțiunile Pages pe Node.js 24.
+CE S-A FĂCUT PE 19 OCTOMBRIE (pas48–pas53):
+- Doc VI NO: subcapitolele lipsă traduse (cap. II, III, concluzia), citatele noi
+  confruntate cu Bibelen 1930 — subcapitole 27/27.
+- cifrele declarate aduse la măsurătoare; aceeași măsură a certitudinii în RO
+  și NO („sugerează” / „tyder på”), „confirmă” adăugat în detector.
+- auditul gărzii: 12 vulnerabilități, dovedite cu defecte introduse intenționat;
+  pas53 a reparat cedarea în tăcere ([14] la push și în CI, santinele) și cursa.
 
 URMEAZĂ, ÎN ORDINE:
-1. Traducerile NO lipsă, după lista din [15] (15 perechi): întâi corpus Doc VI
-   (NO ~66% din RO), apoi corpus2 C și D, apoi restul. Diferența acceptată
-   conștient intră în scripts/paritate-ok.txt.
-2. Cele circa 30 de citate biblice din proză (în &lt;em&gt;), aduse la 1688/1930
+1. pas54: amprenta afirmațiilor (textul verificat nu se mai poate schimba
+   nevăzut; id legat de documentul lui) și [14] mai strict (blocurile după
+   clasa care conține „verse”, trimiterea de neînțeles = PROBLEMA, minim
+   4 cuvinte pe citat) — închide T20–T23.
+2. pas55: [7] și [8] pe text normalizat (tag-uri, &amp;nbsp;, rânduri), [6] toate
+   adresele din sitemap, [9] mai multe tag-uri, fragmentele acceptate legate de
+   fișier, hook-ul confruntă commit-ul care pleacă — închide T24–T26.
+3. Doc VI: cele 3 citate rămase (cap. IV — 2, cap. V — 1).
+4. Traducerile NO lipsă, după lista din [15]: corpus2 C și D (NO ~65%), apoi
+   restul. Diferența acceptată conștient intră în scripts/paritate-ok.txt.
+5. Cele circa 30 de citate biblice din proză (în &lt;em&gt;), aduse la 1688/1930
    și puse sub verificare automată.
-3. opera, „Voci care nu mor”: verificarea afirmațiilor (de ex. Herlea „a cântat
+6. opera, „Voci care nu mor”: verificarea afirmațiilor (de ex. Herlea „a cântat
    în principal în afară” — îndoielnic).
-4. Descrierile meta peste 160 de caractere (30), og:image, diacriticele din hub.
-5. Documentul nou „Știința și credința față în față”; ghidul și DOCUMENTARE.md la zi.
+7. Descrierile meta peste 160 de caractere (30), og:image, diacriticele din hub.
+8. Documentul nou „Știința și credința față în față”; DOCUMENTARE.md la zi.
 
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
 separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>
@@ -118,12 +127,12 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 
 <p><strong>La fiecare patch:</strong> <code>git apply</code> o singură dată — a doua rulare dă eroare doar pentru că patch-ul e deja aplicat. Amprentele de la <code>git diff --cached --raw</code> se compară cu cele din discuție înainte de commit.</p>
 
-<p><strong>La push:</strong> verificarea rulează singură, local și apoi pe GitHub. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda. Dacă „publica” iese roșu în Actions, site-ul live rămâne neatins până la reparare.</p>
+<p><strong>La push:</strong> verificarea rulează singură, local și apoi pe GitHub. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda. Dacă „publica” iese roșu în Actions, site-ul live rămâne neatins până la reparare. Un pas pe mai multe repo-uri: întâi commit în toate, apoi push-urile unul după altul, hub-ul ultimul — reluarea din CI acoperă câteva minute; dacă o rulare rămâne totuși roșie doar din cauza unui frate încă neîmpins, „Re-run all jobs” după ultimul push.</p>
 
 <p><strong>La sfârșit:</strong> golește Downloads. Verificarea semnalează singură orice fișier rătăcit în rădăcina unui repo.</p>
 
 <footer>
-  Document intern · norgedan · actualizat 18 octombrie 2026
+  Document intern · norgedan · actualizat 20 octombrie 2026
 </footer>
 
 </div>
