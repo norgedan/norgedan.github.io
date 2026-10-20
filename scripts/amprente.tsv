@@ -6,6 +6,8 @@
 # si diferenta (git diff scripts/amprente.tsv) se citeste inainte de commit.
 adn-probabilitate	corpus/01-i-begynnelsen-var-ordet-no.html	3782409838-246
 adn-probabilitate	corpus/01-la-inceput-era-cuvantul-ro.html	216346084-259
+ai-act-calendar	corpus/06-mennesket-og-kunstig-intelligens-no.html	1647230194-175
+ai-act-calendar	corpus/06-omul-si-inteligenta-artificiala-ro.html	243273309-202
 alphafold	corpus/06-mennesket-og-kunstig-intelligens-no.html	4116158083-316
 alphafold	corpus/06-omul-si-inteligenta-artificiala-ro.html	311041484-322
 antrenament-mental	corpus/03-binele-raul-mintea-omului-ro.html	3063355924-167
