@@ -748,8 +748,8 @@ done &lt; /tmp/lista</pre>
     <div class="step"><div class="step-n">10</div><div class="step-body"><div class="step-title">ADN-ul repo-urilor</div><p>README, LICENSE, .gitignore, .nojekyll; rădăcina conține doar ce e permis; garda prezentă, identică și activă; LICENSE = textul oficial CC BY 4.0, identic peste tot; secțiunea de licență identică în toate README-urile; commit-urile se fac cu adresa noreply.</p></div></div>
     <div class="step"><div class="step-n">11</div><div class="step-body"><div class="step-title">Starea git</div><p>La push: arbori curați în toate clonele, nimic în urmă față de GitHub; commit-urile nepublicate din alte repo-uri — atenționare.</p></div></div>
     <div class="step"><div class="step-n">12</div><div class="step-body"><div class="step-title">Pagina GitHub</div><p>Caseta About a fiecărui repo — descriere, website, topics — comparată prin API cu <code>scripts/about.tsv</code>; Wiki și Projects dezactivate; licența recunoscută. Doar la push și cu <code>--github</code>. Dacă API-ul nu răspunde: atenționare, nu blocaj.</p></div></div>
-    <div class="step"><div class="step-n">13</div><div class="step-body"><div class="step-title">Afirmațiile</div><p>Registrul <code>scripts/afirmatii.tsv</code> (etichetă FAPT, ESTIMARE, INTERPRETARE sau CREDINȚĂ; stare; sursă; an) și marcajele <code>&lt;span data-afirmatie="id"&gt;</code> din pagini: registru corect, niciun id necunoscut sau nefolosit, perechile RO-NO întregi — acestea blochează. Datoria de verificare și detectorul de certitudine (<code>certitudini.txt</code>, pe cuvinte întregi) doar semnalează: cer judecată, nu mașină.</p></div></div>
-    <div class="step"><div class="step-n">14</div><div class="step-body"><div class="step-title">Citatele biblice</div><p>Fiecare <code>&lt;blockquote class="verse"&gt;</code> confruntat cu ediția declarată: RO cu Biblia 1688, NO cu Bibelen 1930, din <code>~/biblii/</code>, cu amprenta (cksum) verificată. La push, un text lipsă sau schimbat blochează; ocolirea doar conștientă, <code>NORGEDAN_FARA_BIBLII=1 git push</code>, scrisă în raport. În CI: NO da, RO nu (textul 1688 stă doar local).</p></div></div>
+    <div class="step"><div class="step-n">13</div><div class="step-body"><div class="step-title">Afirmațiile</div><p>Registrul <code>scripts/afirmatii.tsv</code> (etichetă FAPT, ESTIMARE, INTERPRETARE sau CREDINȚĂ; stare; sursă; an) și marcajele <code>&lt;span data-afirmatie="id"&gt;</code> din pagini: registru corect, niciun id necunoscut sau nefolosit, perechile RO-NO întregi — acestea blochează. Din pas54, <strong>amprentele</strong> (<code>scripts/amprente.tsv</code>): textul fiecărui marcaj, pe fiecare pagină, are o amprentă; schimbat după verificare, mutat în alt document sau dispărut — blochează, până la reverificarea la sursă și <code>--amprente</code>. Datoria de verificare și detectorul de certitudine (<code>certitudini.txt</code>, pe cuvinte întregi) doar semnalează: cer judecată, nu mașină.</p></div></div>
+    <div class="step"><div class="step-n">14</div><div class="step-body"><div class="step-title">Citatele biblice</div><p>Fiecare <code>&lt;blockquote class="verse"&gt;</code> confruntat cu ediția declarată: RO cu Biblia 1688, NO cu Bibelen 1930, din <code>~/biblii/</code>, cu amprenta (cksum) verificată. La push, un text lipsă sau schimbat blochează; ocolirea doar conștientă, <code>NORGEDAN_FARA_BIBLII=1 git push</code>, scrisă în raport. În CI: NO da, RO nu (textul 1688 stă doar local). Din pas54: blocul e recunoscut după clasa care conține <code>verse</code>; o trimitere biblică fără forma <code>cap:vers</code>, un bloc fără trimitere sau un citat sub 4 cuvinte — blochează. Citatele din alți autori (Soljenițîn, Augustin) rămân sărite, declarat.</p></div></div>
     <div class="step"><div class="step-n">15</div><div class="step-body"><div class="step-title">Paritatea RO-NO</div><p>Capitole, subcapitole, citate, lungime — aceeași structură în ambele limbi. Semnalează; diferența acceptată conștient, cu valoarea ei exactă, intră în <code>paritate-ok.txt</code>.</p></div></div>
     <div class="step"><div class="step-n">16</div><div class="step-body"><div class="step-title">Pilonii</div><p><code>piloni.tsv</code>: temelia declarată, fiecare cu eticheta, sursa și limita (ce NU dovedește); fragmentul ancorat trebuie să existe în pagina RO și în perechea NO.</p></div></div>
     <div class="step"><div class="step-n">17</div><div class="step-body"><div class="step-title">Vocea</div><p>Fiecare document încarcă <code>/asculta.js</code>.</p></div></div>
@@ -768,6 +768,9 @@ done &lt; /tmp/lista</pre>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --github</span>
 <span class="comment"># doar tabloul</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou</span>
+<span class="comment"># după (re)verificarea unei afirmații la sursă: amprentele, apoi diferența citită</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente</span>
+<span class="cmd">git -C ~/norgedan.github.io diff scripts/amprente.tsv</span>
 <span class="comment"># suita gărzii, după orice schimbare a verificării (~10 minute, clonele neatinse)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/teste-garda.sh</span>
 <span class="comment"># la push: automat, prin garda (aduce starea tuturor de pe GitHub)</span></pre>
@@ -958,6 +961,20 @@ done &lt; /tmp/lista</pre>
     <strong>Am verificat și o suspiciune care s-a dovedit falsă.</strong> Mă temeam că „verifica” și „publica” pot vedea commit-uri diferite; codul sursă al <code>actions/checkout</code> arată că ambele iau commit-ul exact al push-ului. Lecția: și ipotezele mele trec prin verificare înainte să devină reparații.<br><br>
     <strong>Terminal:</strong> o comandă combinată (<code>git apply … &amp;&amp; git add -A &amp;&amp; …</code>) a aplicat deja patch-ul; al doilea <code>git apply</code> a dat eroare tocmai pentru că modificarea era acolo. <code>git log -1</code> și <code>git status -sb</code> au confirmat starea înainte de a merge mai departe.</p>
   </div>
+
+  <h3>20 octombrie 2026 — documentele, jurnalul, amprentele</h3>
+
+  <div class="callout">
+    <div class="callout-label">CE S-A FĂCUT</div>
+    <p><strong>Documentele de continuitate și DOCUMENTARE.md la zi</strong> — zilele 2–18 octombrie, care nu fuseseră notate, reconstituite din status și context și marcate ca atare. <strong>[11]</strong> semnalează de acum, doar local, când DOCUMENTARE.md rămâne în urma pașilor din hub: garda nu poate scrie hotărârile, dar poate să nu le lase uitate.<br><br>
+    <strong>pas54</strong> — amprentele afirmațiilor (<code>amprente.tsv</code>, 222 de marcaje): o afirmație verificată nu se mai poate schimba, muta sau pierde nevăzut. [14] mai strict: clasa după cuvânt, trimiterea stricată și blocul fără trimitere blochează, minim 4 cuvinte. Măsurat întâi pe site: verdictele au rămas identice — regulile noi nu ating niciun citat corect. Amprentele, identice cu mawk și cu one-true-awk.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">GREȘELILE ACESTEI SESIUNI — ȘI LECȚIILE LOR</div>
+    <p><strong>„Atașează din repo”</strong> — imposibil pe OpenBSD: Firefox e închis cu <code>unveil</code> și vede doar <code>~/Downloads</code>. Nu verificasem. Lecția: o regulă despre mașina ta se verifică pe mașina ta.<br><br>
+    <strong>Patch-ul vechi aplicat în locul celui nou.</strong> Firefox a salvat descărcarea nouă ca <code>…(1).patch</code>; comanda a luat fișierul vechi, iar amprenta afișată nu a fost comparată. Nu s-a stricat nimic — varianta veche era verificată — și s-a completat cu pas53b. Lecția: Downloads golit înainte de fiecare descărcare, iar amprenta se compară, nu doar se afișează.</p>
+  </div>
 </section>
 
 <!-- XII RAMAS -->
@@ -971,7 +988,7 @@ done &lt; /tmp/lista</pre>
   <p>Verificat la sursă pe 1 octombrie 2026: afirmația despre inimă („40.000 de neuroni”, „60×”) — corectată în toate locurile, în RO și NO, ca două oglinzi: ce măsoară știința și ce spune Scriptura. Sursele sunt în <code>scripts/afirmatii.tsv</code>. Urmează candidații semnalați de secțiunea [13] a verificării: întâi cele două erori geografice (Marea Neagră, granița NATO–Rusia).</p>
   <p><strong>Citatele din proză.</strong> Secțiunea [14] e activă din 18 octombrie pentru blocurile de citat (RO 1688, NO 1930). Rămân cele circa 30 de citate din proză, în <code>&lt;em&gt;</code>, încă în traducere modernă — aduse la ediții și puse sub verificare.</p>
   <p><strong>Partea norvegiană.</strong> Ediția e stabilită și declarată: Bibelen 1930. Rămân traducerile lipsă după lista din [15] — Doc VI (3 citate), corpus2 C și D (NO ~65% din RO), apoi celelalte perechi — și revizuirea de un vorbitor nativ.</p>
-  <p><strong>Garda.</strong> pas54: amprenta afirmațiilor și [14] mai strict (T20–T23). pas55: normalizarea textului la [7] și [8], sitemap-ul pe un rând, [9] mai larg, fragmentele acceptate legate de fișier, hook-ul care confruntă commit-ul ce pleacă (T24–T26). Starea exactă: <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code>.</p>
+  <p><strong>Garda.</strong> pas54 — amprentele și [14] mai strict — făcut pe 20 octombrie. pas55: normalizarea textului la [7] și [8], sitemap-ul pe un rând, [9] mai larg, fragmentele acceptate legate de fișier, hook-ul care confruntă commit-ul ce pleacă (T24–T26). Starea exactă: <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code>.</p>
   <p><strong>Documentul „Știința și credința față în față”.</strong> Construit în întregime pe oglinzi: constantele universale, conștiința, nașterea științei din credință, rugăciunea pusă la probă, credința și sănătatea.</p>
 
   <h3>Decizii deschise</h3>

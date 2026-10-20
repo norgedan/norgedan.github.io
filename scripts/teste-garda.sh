@@ -79,8 +79,9 @@ mut_T00() { :; }
 # ── pas53: lipsa de date nu mai trece in tacere ────────────────────────────
 mut_T01() { rm biblii/Norsk-1930.json; }
 mut_T02() { echo x >> biblii/Norsk-1930.json; }
-# toate blocurile de citat cu alta clasa: zero citate confruntate
-mut_T03() { docs | while read -r f; do rep "$f" 's/<blockquote class="verse">/<blockquote class="verse x">/g; s/<blockquote class="hero-verse">/<blockquote class="hero-verse x">/g'; done; }
+# toate blocurile de citat cu o clasa fara cuvantul "verse": zero citate confruntate
+# (din pas54, "verse x" e recunoscut corect ca citat — santinela se testeaza altfel)
+mut_T03() { docs | while read -r f; do rep "$f" 's/<blockquote class="verse">/<blockquote class="citat">/g; s/<blockquote class="hero-verse">/<blockquote class="citat-erou">/g'; done; }
 # extragerea linkurilor stricata (in copia verificarii): zero trimiteri
 mut_T04() { rep norgedan.github.io/scripts/verifica-site.sh 's/^\$1 == "a" || \$1 == "link" .*{$/$1 == "NIMIC" {/'; }
 # un document fara niciun capitol citit
@@ -92,7 +93,7 @@ mut_T11() { rep norgedan.github.io/index.html 's/over 181 000 ord/over 999 000 o
 mut_T12() { awk '/<\/urlset>/ {print "<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url>"} {print}' corpus/sitemap.xml > x && mv x corpus/sitemap.xml; }
 mut_T13() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/Forut for undergang går overmot/Forut for undergang går stolthet/'; }
 
-# ── deschise: gasite in audit, de reparat in pas54-55 ──────────────────────
+# ── pas54: [14] mai strict si amprentele afirmatiilor ──────────────────────
 # exact blocul cu Ordspråkene 16:18: clasa schimbata si textul stricat
 mut_T20() { f=corpus/06-mennesket-og-kunstig-intelligens-no.html
             awk '{ l[NR] = $0 } END { for (i = 1; i <= NR; i++) {
@@ -103,6 +104,23 @@ mut_T21() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/«Forut fo
 mut_T22() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 999 forskere/'; }
 mut_T23() { for f in corpus2/ro/A-firul-rosu-al-istoriei-ro.html corpus2/no/A-den-rode-traden-i-historien-no.html; do
               rep "$f" 's/<\/h1>/<\/h1><p><span data-afirmatie="iit-disputa">Forskningen a demonstrat totul.<\/span><\/p>/'; done; }
+# trimitere biblica fara forma cap:vers
+mut_T27() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/1 Mosebok 3:22/1 Mosebok 3.22/'; }
+# bloc de citat fara nicio trimitere
+mut_T28() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/^    Ordspråkene 16:18$//'; }
+# o amprenta stearsa din amprente.tsv: marcajul ramane fara amprenta
+mut_T29() { grep -v '^iit-disputa' norgedan.github.io/scripts/amprente.tsv > x && mv x norgedan.github.io/scripts/amprente.tsv; }
+# fluxul corect: afirmatia schimbata, reverificata, apoi --amprente = trece
+mut_T30() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 124 forskere (124)/'
+            NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --amprente > /dev/null 2>&1; }
+# o clasa care doar incepe cu "verse" nu e citat biblic: nu se confrunta
+mut_T31() { f=corpus/06-mennesket-og-kunstig-intelligens-no.html
+            awk '{ l[NR] = $0 } END { for (i = 1; i <= NR; i++) {
+                     if (l[i] ~ /<blockquote class="verse">/ && l[i + 1] ~ /Forut for undergang/) sub(/class="verse"/, "class=\"versetul\"", l[i])
+                     print l[i] } }' "$f" > "$f.t" && mv "$f.t" "$f"
+            rep "$f" 's/Forut for undergang går overmot/Forut for undergang går stolthet/'; }
+
+# ── deschise: gasite in audit, de reparat in pas55 ─────────────────────────
 mut_T24() { f=$(docs_no | head -1); rep "$f" 's/<\/h1>/<\/h1><p>40.000 de neuroni în <em>inimă<\/em><\/p>/'; }
 mut_T25() { rep norgedan.github.io/index.html 's/over 181 000 ord/over 999\&nbsp;000 ord/'; }
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
@@ -121,10 +139,15 @@ t T10 PICA    "40.000 de neuroni"       "[7] formulare retrasa"
 t T11 PICA    "999 000"                 "[8] cifra declarata gresita"
 t T12 PICA    "fantoma"                 "[6] adresa din sitemap fara pagina"
 t T13 PICA    "Ordspråkene 16:18"       "[14] citat NO schimbat"
-t T20 DESCHIS "Ordspråkene 16:18"       "[14] citat schimbat, ascuns de alta clasa (pas54)"
-t T21 DESCHIS "Ordspråkene 16:18"       "[14] citat redus la un cuvant (pas54)"
-t T22 DESCHIS "iit-disputa"             "[13] afirmatie verificata, text schimbat (pas54)"
-t T23 DESCHIS "a demonstrat"            "[13] id refolosit ascunde o certitudine (pas54)"
+t T20 PICA    "Ordspråkene 16:18"       "[14] citat schimbat, ascuns de alta clasa"
+t T21 PICA    "citat prea scurt"        "[14] citat redus la un cuvant"
+t T22 PICA    "iit-disputa"             "[13] afirmatie verificata, text schimbat"
+t T23 PICA    "marcaj fara amprenta"    "[13] id refolosit in alt document"
+t T27 PICA    "fara forma carte"        "[14] trimitere biblica stricata (3.22)"
+t T28 PICA    "fara trimitere"          "[14] bloc de citat fara trimitere"
+t T29 PICA    "marcaj fara amprenta"    "[13] amprenta stearsa din amprente.tsv"
+t T30 TRECE   "Poti face push"          "[13] text schimbat, reverificat, --amprente: trece"
+t T31 TRECE   "Poti face push"          "[14] clasa \"versetul\" nu e citat: ignorata"
 t T24 DESCHIS "40.000 de neuroni"       "[7] formulare retrasa rupta de un tag (pas55)"
 t T25 DESCHIS "999"                     "[8] cifra cu &nbsp; (pas55)"
 t T26 DESCHIS "fantoma"                 "[6] sitemap pe un singur rand (pas55)"

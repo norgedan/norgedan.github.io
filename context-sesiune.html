@@ -45,6 +45,8 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Citatele biblice: RO exact din Biblia de la București 1688, NO exact din Bibelen 1930.
   Textele stau LOCAL, în ~/biblii (b1688.txt, Norsk-1930.json), niciodată în repo.
 - Lucru chirurgical: se corectează pasajul vizat, nu se rescrie documentul.
+- O afirmație marcată (data-afirmatie) se schimbă doar reverificată la sursă,
+  iar amprenta ei (scripts/amprente.tsv, prin --amprente) vine în același patch.
 - Comenzi POSIX portabile — mașina e OpenBSD (ksh), BSD, nu GNU. Comenzi concrete,
   niciodată șabloane cu &lt;...&gt;. O comandă pe rând. Fiecare comandă git începe cu
   cd ~/numele-repo-ului &amp;&amp; ... Întâi commit în toate repo-urile, apoi push.
@@ -71,31 +73,31 @@ DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
 Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării,
 trebuie „0 cu verdict greșit”; vulnerabilitățile încă deschise apar ca DESCHIS.
 
-CE S-A FĂCUT PE 19 OCTOMBRIE (pas48–pas53):
+CE S-A FĂCUT PE 19–20 OCTOMBRIE (pas48–pas54):
 - Doc VI NO: subcapitolele lipsă traduse (cap. II, III, concluzia), citatele noi
   confruntate cu Bibelen 1930 — subcapitole 27/27.
 - cifrele declarate aduse la măsurătoare; aceeași măsură a certitudinii în RO
   și NO („sugerează” / „tyder på”), „confirmă” adăugat în detector.
 - auditul gărzii: 12 vulnerabilități, dovedite cu defecte introduse intenționat;
-  pas53 a reparat cedarea în tăcere ([14] la push și în CI, santinele) și cursa.
+  pas53 a reparat cedarea în tăcere ([14] la push și în CI, santinele) și cursa;
+  pas54: amprentele afirmațiilor (textul verificat e înghețat, id-ul legat de
+  documentele lui) și [14] mai strict.
+- documentele de continuitate și DOCUMENTARE.md la zi; garda semnalează când
+  DOCUMENTARE.md rămâne în urma pașilor din hub.
 
 URMEAZĂ, ÎN ORDINE:
-1. pas54: amprenta afirmațiilor (textul verificat nu se mai poate schimba
-   nevăzut; id legat de documentul lui) și [14] mai strict (blocurile după
-   clasa care conține „verse”, trimiterea de neînțeles = PROBLEMA, minim
-   4 cuvinte pe citat) — închide T20–T23.
-2. pas55: [7] și [8] pe text normalizat (tag-uri, &amp;nbsp;, rânduri), [6] toate
+1. pas55: [7] și [8] pe text normalizat (tag-uri, &amp;nbsp;, rânduri), [6] toate
    adresele din sitemap, [9] mai multe tag-uri, fragmentele acceptate legate de
    fișier, hook-ul confruntă commit-ul care pleacă — închide T24–T26.
-3. Doc VI: cele 3 citate rămase (cap. IV — 2, cap. V — 1).
-4. Traducerile NO lipsă, după lista din [15]: corpus2 C și D (NO ~65%), apoi
+2. Doc VI: cele 3 citate rămase (cap. IV — 2, cap. V — 1).
+3. Traducerile NO lipsă, după lista din [15]: corpus2 C și D (NO ~65%), apoi
    restul. Diferența acceptată conștient intră în scripts/paritate-ok.txt.
-5. Cele circa 30 de citate biblice din proză (în &lt;em&gt;), aduse la 1688/1930
+4. Cele circa 30 de citate biblice din proză (în &lt;em&gt;), aduse la 1688/1930
    și puse sub verificare automată.
-6. opera, „Voci care nu mor”: verificarea afirmațiilor (de ex. Herlea „a cântat
+5. opera, „Voci care nu mor”: verificarea afirmațiilor (de ex. Herlea „a cântat
    în principal în afară” — îndoielnic).
-7. Descrierile meta peste 160 de caractere (30), og:image, diacriticele din hub.
-8. Documentul nou „Știința și credința față în față”; DOCUMENTARE.md la zi.
+6. Descrierile meta peste 160 de caractere (30), og:image, diacriticele din hub.
+7. Documentul nou „Știința și credința față în față”; DOCUMENTARE.md la zi.
 
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
 separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>

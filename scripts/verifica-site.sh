@@ -10,6 +10,8 @@
 #   ... --github          ca mai sus + pagina GitHub a fiecarui repo (retea)
 #   ... --ci              in GitHub Actions: tot, fara ce tine de clona locala
 #   ... --push <repo>     folosit de hook-ul pre-push (aduce starea de pe GitHub)
+#   ... --amprente        dupa ce o afirmatie a fost (re)verificata la sursa:
+#                         rescrie scripts/amprente.tsv din paginile de acum
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
 #
@@ -32,6 +34,7 @@ MANIFEST="$SCRIPT_DIR/documente.tsv"
 ABOUT="$SCRIPT_DIR/about.tsv"
 RETRASE="$SCRIPT_DIR/retrase.txt"
 AFIRMATII="$SCRIPT_DIR/afirmatii.tsv"
+AMPRENTE="$SCRIPT_DIR/amprente.tsv"
 CERT="$SCRIPT_DIR/certitudini.txt"
 CERT_OK="$SCRIPT_DIR/certitudini-ok.txt"
 TAB=$(printf '\t')
@@ -41,10 +44,11 @@ PUSH_REPO=""
 case "${1:-}" in
   "")        ;;
   --tablou)  MOD=tablou ;;
+  --amprente) MOD=amprente ;;
   --github)  MOD=github ;;
   --ci)      MOD=ci ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo>]" >&2; exit 2 ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -996,10 +1000,75 @@ while IFS="$TAB" read -r id col repo cro cno tro tno; do
 done < "$W/m"
 while read -r l; do problema "$l"; greseli=1; done < "$W/afpar"
 
+# Amprentele (pas54): textul unei afirmatii verificate e inghetat.  Pentru fiecare
+# marcaj, pe fiecare pagina publica: cksum pe textul dintre <span data-afirmatie>
+# si </span>, fara tag-uri, cu spatiile unificate.  scripts/amprente.tsv tine
+# perechile (id, fisier) cu amprenta lor.  Blocheaza:
+#   - textul s-a schimbat dupa verificare        -> reverifica la sursa, apoi --amprente
+#   - marcaj nou sau mutat (id refolosit in alt document) -> idem
+#   - amprenta fara marcaj (marcajul a disparut)  -> idem
+# Un id e astfel legat de documentele lui: nu poate acoperi alt text, altundeva.
+cat > "$W/ampr.awk" <<'AWK'
+BEGIN { RS = "\001"; M = "<span data-afirmatie=\"" }
+{
+  s = $0
+  while ((i = index(s, M)) > 0) {
+    s = substr(s, i + length(M)); q = index(s, "\""); if (q == 0) break
+    id = substr(s, 1, q - 1)
+    g = index(s, ">"); if (g == 0) break
+    s = substr(s, g + 1); j = index(s, "</span>"); if (j == 0) break
+    t = substr(s, 1, j - 1); s = substr(s, j + 7)
+    gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); gsub(/[ \t\r\n]+/, " ", t)
+    sub(/^ /, "", t); sub(/ $/, "", t)
+    print id "\t" t
+  }
+}
+AWK
+: > "$W/amprn"
+while read -r f; do
+  rel=${f#"$RADACINA"/}
+  LC_ALL=C awk -f "$W/ampr.awk" "$f" | while IFS="$TAB" read -r id txt; do
+    printf '%s\t%s\t%s\n' "$id" "$rel" "$(printf '%s' "$txt" | cksum | awk '{print $1 "-" $2}')"
+  done >> "$W/amprn"
+done < "$W/pub13"
+LC_ALL=C sort "$W/amprn" > "$W/amprs"
+
+if [ "$MOD" = amprente ]; then
+  {
+    echo "# amprente.tsv — amprentele afirmatiilor verificate (verifica-site.sh [13], din pas54)."
+    echo "# Un rand = un marcaj <span data-afirmatie> pe o pagina publica:  id TAB fisier TAB cksum"
+    echo "# cksum: suma si lungimea textului din marcaj, fara tag-uri, cu spatiile unificate."
+    echo "# NU se editeaza de mana.  Dupa ce o afirmatie a fost (re)verificata la sursa:"
+    echo "#   sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente"
+    echo "# si diferenta (git diff scripts/amprente.tsv) se citeste inainte de commit."
+    cat "$W/amprs"
+  } > "$AMPRENTE"
+  echo ""
+  echo "  amprente.tsv rescris: $(wc -l < "$W/amprs" | tr -d ' ') marcaje.  Citeste diferenta inainte de commit:"
+  echo "    git -C $HUB diff --stat scripts/amprente.tsv"
+  echo ""
+  exit 0
+fi
+
+if [ ! -f "$AMPRENTE" ]; then
+  problema "lipseste scripts/amprente.tsv — dupa verificarea afirmatiilor: sh $0 --amprente"; greseli=1
+else
+  grep -v '^#' "$AMPRENTE" | grep -v '^[[:space:]]*$' | LC_ALL=C sort > "$W/ampro"
+  # aceeasi pereche (id, fisier): amprenta schimbata = text schimbat
+  awk -F'\t' -v A="$W/ampro" '
+    BEGIN { while ((getline l < A) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = x[3] } }
+    { k = $1 "\t" $2; vazut[k] = 1
+      if (!(k in v)) print "marcaj fara amprenta: \"" $1 "\" in " $2 " — afirmatie noua sau mutata (un id e legat de documentele lui); dupa verificarea la sursa: --amprente"
+      else if (v[k] != $3) print "\"" $1 "\" in " $2 ": textul afirmatiei s-a schimbat dupa verificare — reverifica la sursa, apoi --amprente" }
+    END { for (k in v) if (!(k in vazut)) { split(k, x, "\t"); print "amprenta fara marcaj: \"" x[1] "\" in " x[2] " — marcajul a disparut; dupa verificare: --amprente" } }
+  ' "$W/amprs" | LC_ALL=C sort > "$W/amprerr"
+  while IFS= read -r l; do problema "$l"; greseli=1; done < "$W/amprerr"
+fi
+
 if [ "$greseli" -eq 0 ]; then
   n=$(wc -l < "$W/af" | tr -d ' ')
   if [ "$n" -eq 0 ]; then ok "registrul e gol — nicio afirmatie marcata inca"
-  else ok "$n afirmatii in registru, toate marcate, perechile RO-NO intregi"; fi
+  else ok "$n afirmatii in registru, toate marcate, perechile RO-NO intregi; $(wc -l < "$W/amprs" | tr -d ' ') marcaje cu amprenta neschimbata"; fi
 fi
 
 # datoria de verificare: vizibila la fiecare rulare, fara sa blocheze lucrul
@@ -1227,6 +1296,17 @@ function lower(s) {
   gsub(/Å/, "å", s); gsub(/Æ/, "æ", s); gsub(/Ø/, "ø", s); gsub(/É/, "é", s)
   return s
 }
+# blocul e citat biblic daca atributul class contine cuvantul "verse" sau
+# "hero-verse" (pas54): <blockquote class="verse x"> sau class='verse' nu mai
+# scapa nevazute, cum scapau cand se cauta sirul exact class="verse".
+function e_verse(tag,   v, n, w, i) {
+  if (match(tag, /class[ \t\r\n]*=[ \t\r\n]*"[^"]*"/) || match(tag, /class[ \t\r\n]*=[ \t\r\n]*'[^']*'/)) {
+    v = substr(tag, RSTART, RLENGTH); sub(/^[^"']*["']/, "", v); sub(/["']$/, "", v)
+    n = split(v, w, /[ \t\r\n]+/)
+    for (i = 1; i <= n; i++) if (w[i] == "verse" || w[i] == "hero-verse") return 1
+  }
+  return 0
+}
 function norm(s) {
   gsub(/<[^>]*>/, " ", s)
   gsub(/&nbsp;/, " ", s); gsub(/&amp;/, "\\&", s); gsub(/&quot;/, " ", s); gsub(/&#39;/, "'", s)
@@ -1257,10 +1337,12 @@ BEGIN {
 }
 {
   s = $0
-  # versetul din antetul paginii are alta clasa, aceeasi regula
-  gsub(/<blockquote class="hero-verse">/, "<blockquote class=\"verse\">", s)
-  while ((i = index(s, "<blockquote class=\"verse\">")) > 0) {
-    s = substr(s, i + 26); j = index(s, "</blockquote>"); if (j == 0) break
+  # fiecare <blockquote ...>; e citat biblic daca clasa contine verse / hero-verse
+  while ((i = index(s, "<blockquote")) > 0) {
+    s = substr(s, i + 11); e = index(s, ">"); if (e == 0) break
+    tag = substr(s, 1, e - 1); s = substr(s, e + 1)
+    if (tag !~ /^([ \t\r\n]|$)/ || !e_verse(tag)) continue
+    j = index(s, "</blockquote>"); if (j == 0) break
     bloc = substr(s, 1, j - 1); s = substr(s, j + 13)
     ci = index(bloc, "<cite>"); cj = index(bloc, "</cite>")
     if (ci > 0 && cj > 0) { cite = substr(bloc, ci + 6, cj - ci - 6); citat = substr(bloc, 1, ci - 1) }
@@ -1273,13 +1355,23 @@ BEGIN {
         # fara ghilimele: trimiterea e ultimul rand nevid al blocului
         t2 = bloc; sub(/[ \t\r\n]+$/, "", t2); u = 0
         for (q = length(t2); q > 0; q--) if (substr(t2, q, 1) == "\n") { u = q; break }
-        if (u == 0) { print "SARIT\t" R "\t-\tbloc fara trimitere"; continue }
+        # un bloc de citat biblic fara nicio trimitere nu poate fi confruntat (pas54: PROBLEMA)
+        if (u == 0) { print "NECUNOSCUT\t" R "\t-\tbloc de citat fara trimitere"; continue }
         citat = substr(t2, 1, u); cite = substr(t2, u + 1)
       }
     }
-    gsub(/<[^>]*>/, "", cite); gsub(/[ \t\r\n]+/, " ", cite); sub(/^ /, "", cite)
+    gsub(/<[^>]*>/, "", cite); gsub(/[ \t\r\n]+/, " ", cite); sub(/^ /, "", cite); sub(/ $/, "", cite)
+    if (cite == "") { print "NECUNOSCUT\t" R "\t-\tbloc de citat fara trimitere"; continue }
     # referinta: "Carte cap:vers[-vers][,vers]" la inceputul lui <cite>
-    if (!match(cite, /^([1-5] )?[^0-9]+ [0-9]+:[0-9][-0-9,]*/)) { print "SARIT\t" R "\t" cite "\tnu e trimitere biblica"; continue }
+    if (!match(cite, /^([1-5] )?[^0-9]+ [0-9]+:[0-9][-0-9,]*/)) {
+      # incepe cu numele unei carti biblice, dar fara forma cap:vers ("1 Mosebok 3.22",
+      # "Matei 5") = trimitere stricata, PROBLEMA (pas54).  Alti autori raman sariti.
+      stricat = 0
+      for (k in CARTE) if (index(cite, k " ") == 1 || cite == k) { stricat = 1; break }
+      if (stricat) print "NECUNOSCUT\t" R "\t" cite "\ttrimitere biblica fara forma carte cap:vers"
+      else print "SARIT\t" R "\t" cite "\tnu e trimitere biblica"
+      continue
+    }
     ref = substr(cite, 1, RLENGTH); rest = substr(cite, RLENGTH + 1)
     if (rest ~ /ebraic|hebraisk/) { print "SARIT\t" R "\t" ref "\ttraducere din ebraica, declarata in <cite>"; continue }
     k = ref; sub(/ [0-9]+:[-0-9,]*$/, "", k)
@@ -1302,6 +1394,11 @@ BEGIN {
     nt = norm(txt)
     # citatul poate avea taieturi: "…", "[…]", "..." — fiecare bucata, in ordine
     gsub(/\[…\]|\[\.\.\.\]|…|\.\.\./, "\002", citat)
+    # un fragment de 1-3 cuvinte se gaseste in aproape orice verset: nu confrunta nimic
+    # (pas54).  Pe site, cel mai scurt citat are 5 cuvinte.
+    x = citat; gsub(/\002/, " ", x); x = norm(x)
+    nw = (x == "") ? 0 : split(x, ww, " ")
+    if (nw < 4) { print "GRESIT\t" R "\t" ref "\tcitat prea scurt (" nw " cuvinte, minim 4) — nu poate fi confruntat"; continue }
     nb = split(citat, buc, "\002"); poz = 1; bun = 1; rau = ""
     for (q = 1; q <= nb; q++) {
       x = norm(buc[q]); if (x == "") continue
@@ -1360,7 +1457,8 @@ PARIT_OK="$SCRIPT_DIR/paritate-ok.txt"
 cat > "$W/par.awk" <<'AWK'
 BEGIN { FS = "\t" }
 $1 == "h2" { h2++ } $1 == "h3" { h3++ }
-$1 == "blockquote" { for (i = 2; i < NF; i += 2) if ($i == "class" && ($(i+1) == "verse" || $(i+1) == "hero-verse")) v++ }
+# aceeasi regula ca la [14]: clasa contine cuvantul verse / hero-verse
+$1 == "blockquote" { for (i = 2; i < NF; i += 2) if ($i == "class") { n = split($(i+1), cl, " "); for (k = 1; k <= n; k++) if (cl[k] == "verse" || cl[k] == "hero-verse") { v++; break } } }
 END { print h2 + 0, h3 + 0, v + 0 }
 AWK
 : > "$W/par"
