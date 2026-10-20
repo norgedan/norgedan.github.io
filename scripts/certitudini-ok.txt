@@ -120,3 +120,5 @@ conținutul care confirmă perfect prejudecățile
 surse secundare independente care confirmă?
 Dacă un articol confirmă perfect tot
 Confirmă emoția, nu conținutul
+# --- pas57 (20 oct 2026): legat de fisier — perechea NO a fragmentului RO acceptat „pierzi și singura cale de influență” ---
+corpus2/no/C-den-usynlige-krigen-no.html	mister du også den eneste veien til innflytelse
