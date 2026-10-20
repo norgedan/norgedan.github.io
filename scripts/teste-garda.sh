@@ -7,6 +7,8 @@
 #   TRECE  = verificarea trebuie sa treaca (exit 0)
 #   DESCHIS = vulnerabilitate cunoscuta, inca nereparata (auditul din 19 oct);
 #             se raporteaza, nu pica suita.  Cand e reparata, testul devine PICA.
+#   SEMNAL = atentionarea asteptata trebuie sa apara (pentru regulile care doar semnaleaza)
+#   TACE   = verificarea trece si tiparul NU apare (o acceptare care trebuie sa functioneze)
 # Clonele tale nu sunt atinse; nimic nu pleaca in retea (paginile GitHub, [12],
 # sunt sarite prin NORGEDAN_API_DIR inexistent).
 #
@@ -62,6 +64,8 @@ t() {
   case "$astept" in
     PICA)    [ "$ex" -eq 1 ] && [ "$semnalat" -eq 1 ] && v=bun || v=GRESIT ;;
     TRECE)   [ "$ex" -eq 0 ] && v=bun || v=GRESIT ;;
+    SEMNAL)  [ "$semnalat" -eq 1 ] && v=bun || v=GRESIT ;;
+    TACE)    [ "$ex" -eq 0 ] && [ "$semnalat" -eq 0 ] && v=bun || v=GRESIT ;;
     DESCHIS) if [ "$ex" -eq 1 ] && [ "$semnalat" -eq 1 ]; then v="REPARAT? — fa-l PICA"; else v=deschis; fi ;;
   esac
   case "$v" in
@@ -120,9 +124,22 @@ mut_T31() { f=corpus/06-mennesket-og-kunstig-intelligens-no.html
                      print l[i] } }' "$f" > "$f.t" && mv "$f.t" "$f"
             rep "$f" 's/Forut for undergang går overmot/Forut for undergang går stolthet/'; }
 
-# ── deschise: gasite in audit, de reparat in pas55 ─────────────────────────
+# ── pas55: textul normalizat, sitemap-ul, [9] mai larg, acceptarile pe fisier ──
 mut_T24() { f=$(docs_no | head -1); rep "$f" 's/<\/h1>/<\/h1><p>40.000 de neuroni în <em>inimă<\/em><\/p>/'; }
 mut_T25() { rep norgedan.github.io/index.html 's/over 181 000 ord/over 999\&nbsp;000 ord/'; }
+# un <em> neinchis intr-un titlu (asa a stat un </em> ratacit in Firul Rosu A)
+mut_T32() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's|<h3>Kunnskapens tre — hvorfor det var forbudt</h3>|<h3>Kunnskapens tre — <em>hvorfor det var forbudt</h3>|'; }
+# formulare retrasa cu &nbsp;
+mut_T33() { f=$(docs_no | head -1); rep "$f" 's/<\/h1>/<\/h1><p>40.000\&nbsp;de neuroni în inimă<\/p>/'; }
+# formulare retrasa rupta pe doua randuri
+mut_T34() { f=$(docs_no | head -1)
+            awk '{ print } /<\/h1>/ && !g { print "<p>40.000 de neuroni"; print "în inimă</p>"; g = 1 }' "$f" > "$f.t" && mv "$f.t" "$f"; }
+# o certitudine noua; fragmentul acceptat e legat de ALT fisier: nu are voie s-o ascunda
+mut_T35() { rep corpus2/ro/A-firul-rosu-al-istoriei-ro.html 's/<\/h1>/<\/h1><p>Cercetarea a demonstrat totul aici.<\/p>/'
+            printf 'corpus/01-la-inceput-era-cuvantul-ro.html\tCercetarea a demonstrat totul aici.\n' >> norgedan.github.io/scripts/certitudini-ok.txt; }
+# acelasi fragment, legat de fisierul lui: acceptat
+mut_T36() { rep corpus2/ro/A-firul-rosu-al-istoriei-ro.html 's/<\/h1>/<\/h1><p>Cercetarea a demonstrat totul aici.<\/p>/'
+            printf 'corpus2/ro/A-firul-rosu-al-istoriei-ro.html\tCercetarea a demonstrat totul aici.\n' >> norgedan.github.io/scripts/certitudini-ok.txt; }
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
 echo ""
@@ -148,9 +165,14 @@ t T28 PICA    "fara trimitere"          "[14] bloc de citat fara trimitere"
 t T29 PICA    "marcaj fara amprenta"    "[13] amprenta stearsa din amprente.tsv"
 t T30 TRECE   "Poti face push"          "[13] text schimbat, reverificat, --amprente: trece"
 t T31 TRECE   "Poti face push"          "[14] clasa \"versetul\" nu e citat: ignorata"
-t T24 DESCHIS "40.000 de neuroni"       "[7] formulare retrasa rupta de un tag (pas55)"
-t T25 DESCHIS "999"                     "[8] cifra cu &nbsp; (pas55)"
-t T26 DESCHIS "fantoma"                 "[6] sitemap pe un singur rand (pas55)"
+t T24 PICA    "40.000 de neuroni"       "[7] formulare retrasa rupta de un tag"
+t T25 PICA    "999"                     "[8] cifra cu &nbsp;"
+t T26 PICA    "fantoma"                 "[6] sitemap pe un singur rand"
+t T32 PICA    "dezechilibrat"           "[9] <em> neinchis intr-un titlu"
+t T33 PICA    "40.000 de neuroni"       "[7] formulare retrasa cu &nbsp;"
+t T34 PICA    "40.000 de neuroni"       "[7] formulare retrasa pe doua randuri"
+t T35 SEMNAL  "a demonstrat"            "[13] fragment acceptat pentru alt fisier nu ascunde"
+t T36 TACE    "a demonstrat"            "[13] fragment acceptat pentru fisierul lui: tace"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

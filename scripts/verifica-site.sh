@@ -64,6 +64,11 @@ trap 'exit 1' INT TERM
 mkdir "$W/t"
 : > "$W/prob"; : > "$W/aten"
 
+# La push, git da hook-ului pe stdin ce pleaca:  ref-local sha-local ref-distant sha-distant.
+# Se citeste aici, la inceput, inainte ca vreo comanda sa poata consuma stdin-ul (pas55).
+: > "$W/pushin"
+if [ "$MOD" = push ] && [ ! -t 0 ]; then cat > "$W/pushin"; fi
+
 ok()       { echo "  OK       $1"; }
 problema() { echo "  PROBLEMA $1"; echo x >> "$W/prob"; }
 atentie()  { echo "  ATENTIE  $1"; echo x >> "$W/aten"; }
@@ -202,6 +207,16 @@ url_of() {
 cuvinte() {
   awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
     | sed 's/<[^>]*>//g' | LC_ALL="$LOCALE_NUM" wc -w | tr -d ' '
+}
+
+# textul unei pagini pentru cautari (pas55): fara CSS si cod, fara tag-uri, cu
+# &nbsp; si spatiul neseparabil (U+00A0) ca spatiu, totul pe un rand, spatiile unificate.
+# O formulare sau o cifra rupta de un tag (<em>), de &nbsp; sau de un rand nou
+# nu mai scapa nevazuta.  Octet cu octet (LC_ALL=C), identic pe BSD si GNU.
+NBSP=$(printf '\302\240')
+text_normalizat() {
+  awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
+    | tr '\n\r\t' '   ' | LC_ALL=C sed -e 's/<[^>]*>/ /g' -e 's/&nbsp;/ /g' -e "s/$NBSP/ /g" | tr -s ' '
 }
 
 # pagina interna = marcata noindex
@@ -503,7 +518,9 @@ done < "$W/docs"
 # fiecare <loc> din orice sitemap duce la o pagina reala, publica
 for sm in "$HUB/sitemap-hub.xml" $(for r in $REPOS_FARA_HUB; do echo "$RADACINA/$r/sitemap.xml"; done); do
   [ -f "$sm" ] || continue
-  sed -n 's|.*<loc>\([^<]*\)</loc>.*|\1|p' "$sm" | while read -r u; do
+  # toate <loc> de pe fiecare rand (pas55): un sitemap scris pe un singur rand
+  # nu mai ascunde adresele de dinaintea ultimei
+  awk '{ s = $0; while ((i = index(s, "<loc>")) > 0) { s = substr(s, i + 5); j = index(s, "</loc>"); if (j == 0) break; print substr(s, 1, j - 1); s = substr(s, j + 6) } }' "$sm" | while read -r u; do
     p=${u#"$BASE"}
     seg=${p#/}; seg=${seg%%/*}
     if [ -n "$seg" ] && echo " $REPOS_FARA_HUB " | grep -qF " $seg "; then f="$RADACINA${p}"; else f="$HUB${p}"; fi
@@ -532,10 +549,22 @@ else
     find "$RADACINA/$repo" -name .git -prune -o -type f -name '*.md' -print >> "$W/pub"
   done < "$W/repos"
   grep -v '^#' "$RETRASE" | grep -v '^[[:space:]]*$' > "$W/tipare"
+  # textul normalizat al fiecarei pagini, o singura data (pas55)
+  mkdir -p "$W/n7"; : > "$W/pubn"
+  while read -r f; do
+    n="$W/n7/$(echo "${f#"$RADACINA"/}" | sed 's|/|_|g')"
+    text_normalizat "$f" > "$n"; printf '%s\t%s\n' "$f" "$n" >> "$W/pubn"
+  done < "$W/pub"
   gasit=0
   while read -r tipar; do
     : > "$W/hit"
-    while read -r f; do grep -qF -- "$tipar" "$f" && echo "${f#"$RADACINA"/}" >> "$W/hit"; done < "$W/pub"
+    # tiparele care contin tag-uri (de ex. „sub 50 de dolari</strong>”) au fost gandite
+    # pe marcaj: raman confruntate cu textul brut, ca sa nu devina mai largi
+    case "$tipar" in
+      *"<"*) while IFS="$TAB" read -r f n; do grep -qF -- "$tipar" "$f" && echo "${f#"$RADACINA"/}" >> "$W/hit"; done < "$W/pubn" ;;
+      *)     tn=$(printf '%s' "$tipar" | tr -s ' ')
+             while IFS="$TAB" read -r f n; do grep -qF -- "$tn" "$n" && echo "${f#"$RADACINA"/}" >> "$W/hit"; done < "$W/pubn" ;;
+    esac
     if [ -s "$W/hit" ]; then
       problema "\"$tipar\" apare in:"; sed 's|^|             |' "$W/hit"; gasit=1
     fi
@@ -590,14 +619,16 @@ AWK
 RE_CUV='(~|peste |over )?[0-9]{1,3}([. ][0-9]{3})+( de)? (cuvinte|ord)'
 # textul fara tag-uri, cu ghilimelele si parantezele transformate in spatii
 decl_docs() {
-  sed 's/<[^>]*>/ /g; s/[("*>]/ /g; s/„/ /g; s/”/ /g; s/«/ /g; s/»/ /g' "$1" | awk -f "$W/nr.awk"
+  sed 's/<[^>]*>/ /g; s/&nbsp;/ /g; s/[("*>]/ /g; s/„/ /g; s/”/ /g; s/«/ /g; s/»/ /g' "$1" | LC_ALL=C sed "s/$NBSP/ /g" | awk -f "$W/nr.awk"
 }
 
 rot()  { echo $(( ($1 + 500) / 1000 * 1000 )); }
 jos()  { echo $(( $1 / 1000 * 1000 )); }
 
 verifica_cuv() {   # <fisier> <valoare-masurata> <eticheta>
-  grep -oE "$RE_CUV" "$1" 2>/dev/null | while read -r dec; do
+  # pe textul normalizat (pas55): „181&nbsp;000 ord” sau o cifra rupta de un tag
+  # nu mai scapa nevazute
+  text_normalizat "$1" | grep -oE "$RE_CUV" 2>/dev/null | while read -r dec; do
     cifre=$(echo "$dec" | sed 's/ de cuvinte//; s/ cuvinte//; s/ ord//' | tr -cd '0-9')
     case "$dec" in peste*|over*) tinta=$(jos "$2"); fel="rotunjit in jos" ;;
                    "~"*)         tinta=$(rot "$2"); fel="rotunjit" ;;
@@ -687,7 +718,9 @@ greseli=0
 while IFS="$TAB" read -r repo cale limba id col tit; do
   f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
   dez=""
-  for tag in html head body section blockquote div; do
+  # din pas55 si tag-urile de text: un <em> sau un <a> neinchis colora sau lega
+  # tot restul paginii, nevazut (asa a stat un </em> ratacit in Firul Rosu A)
+  for tag in html head body section blockquote div p a em strong span ul ol li h1 h2 h3 h4 table tr td th nav header footer main article aside figure pre code; do
     d=$(awk -F'\t' -v t="$tag" '$1==t' "$(tagsf "$f")" | wc -l | tr -d ' ')
     i=$(grep -o "</$tag>" "$f" | wc -l | tr -d ' ')
     [ "$d" = "$i" ] || dez="$dez $tag($d/$i)"
@@ -817,6 +850,18 @@ greseli=0
     atentie "$repo: $ainte commit(uri) nepublicate — publica-le si pe ele, altfel site-ul live ramane incoerent"
   fi
 done < "$W/repos"
+# ce pleaca spre main trebuie sa fie exact HEAD-ul verificat (pas55): altfel un
+# „git push origin alta-ramura:main” ar publica un commit pe care verificarea nu l-a vazut
+if [ "$MOD" = push ] && [ -s "$W/pushin" ]; then
+  cap=$(git -C "$RADACINA/$PUSH_REPO" rev-parse HEAD 2>/dev/null)
+  while read -r lref lsha rref rsha; do
+    [ "$rref" = refs/heads/main ] || continue
+    case "$lsha" in
+      *[!0]*) [ "$lsha" = "$cap" ] || { problema "$PUSH_REPO: spre main pleaca $(echo "$lsha" | cut -c1-7), dar verificarea a vazut HEAD $(echo "$cap" | cut -c1-7) — push doar din HEAD: git push"; greseli=1; } ;;
+      *)      problema "$PUSH_REPO: push-ul ar sterge ramura main de pe GitHub"; greseli=1 ;;
+    esac
+  done < "$W/pushin"
+fi
 [ "$greseli" -eq 0 ] && ok "nicio clona in urma fata de GitHub; arborii verificati sunt cei care se publica"
 
 # Jurnalul privat (din 20 oct 2026): DOCUMENTARE.md nu se scrie automat — hotararile
@@ -1108,7 +1153,9 @@ function cuvant(t, x,   poz, i, st) {
 }
 BEGIN {
   while ((getline l < TF) > 0) { np++; p[np] = l; pl[np] = tolower(l) }
-  while ((getline l < OKF) > 0) { nk++; k[nk] = l }
+  # din pas55, un fragment acceptat poate fi legat de fisierul unde a fost citit:
+  #   cale/fisier.html TAB fragment     (fara TAB: acceptat pe tot site-ul, ca pana acum)
+  while ((getline l < OKF) > 0) { nk++; t = index(l, "\t"); if (t > 0) { kf[nk] = substr(l, 1, t - 1); k[nk] = substr(l, t + 1) } else { kf[nk] = ""; k[nk] = l } }
   M = "<span data-afirmatie=\""
 }
 {
@@ -1121,7 +1168,7 @@ BEGIN {
   }
   gsub(/<[^>]*>/, " ", s); gsub(/[ \t\r]+/, " ", s)
   # fragmentele citite si acceptate
-  for (q = 1; q <= nk; q++) while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q]))
+  for (q = 1; q <= nk; q++) { if (kf[q] != "" && kf[q] != R) continue; while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q])) }
   ls = tolower(s); gasit = ""; prim = 0
   for (q = 1; q <= np; q++) if ((i = cuvant(ls, pl[q])) > 0) {
     gasit = gasit (gasit == "" ? "" : ", ") p[q]
