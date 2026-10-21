@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas57, 20 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas58, 21 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -67,7 +67,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (20 octombrie 2026, după pas57):
+STAREA PROIECTULUI (21 octombrie 2026, după pas58):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -89,8 +89,8 @@ Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării, 
 „0 cu verdict greșit”. Auditul din 19 oct e închis: nicio vulnerabilitate deschisă.
 
 URMEAZĂ (detaliat în secțiunea „Ce urmează”, mai jos):
-1. corpus2 C NO — capitolele sub 70% din RO: 2, 6, 7, 9, 10, 11 (traducere completă,
-   decisă pe 20 oct; fiecare cifră reverificată la sursă).
+1. corpus2 C NO — capitolele încă condensate (numerotarea din pagină): V, VIII, IX, X
+   (traducere completă, decisă pe 20 oct; fiecare cifră reverificată la sursă).
 2. corpus2 D NO — 12 din 14 capitole condensate; document medical, multe cifre.
 3. Celelalte 11 perechi din [15]; apoi cele ~30 de citate biblice din proză.
 4. opera (Herlea), descrierile meta, og:image, &lt;/meta&gt; de prisos, titlul din
@@ -105,7 +105,7 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 17 secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 20 oct e la zi până la pas57 (commit <code>28752b0</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 21 oct e la zi până la pas58 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
@@ -118,7 +118,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
   <p>Ultima comandă, după atașare. Status și ghidul se pot da și ca link (sunt publice, cu noindex).</p>
 </div>
 
-<h2>Ce s-a făcut pe 19–20 octombrie, pas cu pas</h2>
+<h2>Ce s-a făcut pe 19–21 octombrie, pas cu pas</h2>
 
 <p>Fiecare pas a fost livrat ca patch, cu amprenta <code>sha256</code> și cu <code>git diff --cached --raw</code> comparate înainte de commit, verificat pe o copie a celor 6 repo-uri înainte de livrare și apoi de garda de pe mașina ta. Commit-urile sunt pe GitHub; <code>git log</code> are datele exacte.</p>
 
@@ -136,6 +136,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas55</td><td>hub, corpus2, jurnal</td><td>[7] și [8] pe text normalizat, [6] toate adresele, [9] pe 25 de tag-uri, la push pleacă doar HEAD-ul; un <code>&lt;/em&gt;</code> rătăcit scos din Firul Roșu A; auditul închis</td><td><code>d2e0e79</code>, <code>f5d71bf</code>, <code>482cf83</code></td></tr>
 <tr><td>pas56</td><td>corpus, hub, jurnal</td><td>Doc VI NO complet (cap. IV și V); fraza RO „AI Act … aplicat treptat până în 2027”, depășită după Regulamentul (UE) 2026/1744, corectată și marcată <code>ai-act-calendar</code></td><td><code>6fa6d64</code>, <code>12d4466</code>, <code>53a3e6f</code></td></tr>
 <tr><td>pas57</td><td>corpus2, hub, jurnal</td><td>corpus2 C NO: capitolul lipsă „Hvordan snakke med et radikalisert menneske”; cifrele; fragmentul NO acceptat legat de fișier</td><td><code>4060897</code>, <code>91e453c</code>, <code>28752b0</code></td></tr>
+<tr><td>pas58</td><td>corpus2, hub, jurnal</td><td>corpus2 C NO: cap. I „Oppmerksomhetsøkonomien” și cap. VI „Algoritmen som jobber mot deg”, complete; <code>romania-imuna</code> mutat în cap. I, ca în RO; lista capitolelor condensate corectată (două numerotări amestecate, Galați omis)</td><td>în <code>git log</code></td></tr>
 </table>
 
 <p>Tot pe 20 oct, în afara proiectului: parola cheii SSH de GitHub schimbată (<code>ssh-keygen -p</code>); cheia rămâne aceeași, nimic de schimbat pe GitHub.</p>
@@ -167,20 +168,20 @@ sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii, ~
 
 <h2>Ce urmează, în detaliu</h2>
 
-<h3>1. corpus2 C NO — „Den usynlige krigen” (următorul: pas58)</h3>
-<p>Decis pe 20 oct: <strong>traducere completă</strong>, nu condensare acceptată. C a ieșit din lista [15] doar pentru că a trecut pragul de 70%; capitolele de mai jos rămân condensate. Măsurat pe 20 oct, cuvinte NO față de RO:</p>
+<h3>1. corpus2 C NO — „Den usynlige krigen” (următorul: pas59)</h3>
+<p>Decis pe 20 oct: <strong>traducere completă</strong>, nu condensare acceptată. C a ieșit din lista [15] doar pentru că a trecut pragul de 70%; capitolele de mai jos rămân condensate. Numerotarea e cea din pagină (Introducere, apoi Capitolul I–XI). Măsurat pe 20 oct, cuvinte NO față de RO; I și VI completate în pas58:</p>
 <table>
 <tr><th>Cap.</th><th>RO</th><th>NO / RO</th><th>Notă</th></tr>
-<tr><td>2 — Economia atenției</td><td class="n">420</td><td class="n">57%</td><td>de completat</td></tr>
-<tr><td>6 — Galați, 29 mai 2026</td><td class="n">619</td><td class="n">68%</td><td>de completat; fapte de presă recente — reverificate</td></tr>
-<tr><td>7 — Algoritmul care lucrează împotriva ta</td><td class="n">390</td><td class="n">60%</td><td>de completat</td></tr>
-<tr><td>9 — Siliciul ca putere</td><td class="n">644</td><td class="n">44%</td><td>de completat; cifre de industrie (cipuri, cote de piață) — reverificate</td></tr>
-<tr><td>10 — Războiul cibernetic</td><td class="n">747</td><td class="n">60%</td><td>de completat; atacuri, atribuiri — reverificate</td></tr>
-<tr><td>11 — Project Glasswing</td><td class="n">715</td><td class="n">61%</td><td>de completat; reverificat față de anthropic.com/glasswing</td></tr>
-<tr><td>3, 4 — Cine vorbește online; Cele șase minciuni</td><td class="n">594, 609</td><td class="n">79%, 74%</td><td>de citit cap la cap; completat unde lipsește conținut</td></tr>
-<tr><td>5 — România și rănile ei / Norge og den usynlige trusselen</td><td class="n">380</td><td class="n">84%</td><td>adaptare culturală voită, ca la Doc VI — se păstrează</td></tr>
+<tr><td>I — Economia atenției</td><td class="n">420</td><td class="n">101%</td><td>complet (pas58)</td></tr>
+<tr><td>V — Galați, 29 mai 2026</td><td class="n">619</td><td class="n">68%</td><td>de completat; fapte de presă recente — reverificate</td></tr>
+<tr><td>VI — Algoritmul care lucrează împotriva ta</td><td class="n">390</td><td class="n">97%</td><td>complet (pas58)</td></tr>
+<tr><td>VIII — Siliciul ca putere</td><td class="n">644</td><td class="n">44%</td><td>de completat; cifre de industrie (cipuri, cote de piață) — reverificate; în subtitlul NO, „Det nye oljet” → „Den nye oljen”</td></tr>
+<tr><td>IX — Războiul cibernetic</td><td class="n">747</td><td class="n">60%</td><td>de completat; atacuri, atribuiri — reverificate</td></tr>
+<tr><td>X — Project Glasswing</td><td class="n">715</td><td class="n">61%</td><td>de completat; reverificat față de anthropic.com/glasswing</td></tr>
+<tr><td>II, III — Cine vorbește online; Cele șase minciuni</td><td class="n">594, 609</td><td class="n">79%, 74%</td><td>de citit cap la cap; completat unde lipsește conținut; în NO, „Ondskaps banalitet” → „Ondskapens banalitet”</td></tr>
+<tr><td>IV — România și rănile ei / Norge og den usynlige trusselen</td><td class="n">380</td><td class="n">84%</td><td>adaptare culturală voită, ca la Doc VI — se păstrează</td></tr>
 </table>
-<p>Propunere de ordine: pas58 cap. 2 și 7 (fără cifre grele), pas59 cap. 9, pas60 cap. 10, pas61 cap. 11, pas62 cap. 6 și lectura 3–4.</p>
+<p>Propunere de ordine: pas59 cap. VIII, pas60 cap. IX, pas61 cap. X, pas62 cap. V și lectura II–III.</p>
 
 <h3>2. corpus2 D NO — „Romania — fullstendig diagnose”</h3>
 <p>Document medical, cu multe cifre: fiecare pasaj tradus înseamnă reverificarea cifrei, nu doar a frazei (lecția AI Act). Măsurat pe 20 oct:</p>
@@ -269,7 +270,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 20 octombrie 2026, după pas57
+  Document intern · norgedan · actualizat 21 octombrie 2026, după pas58
 </footer>
 
 </div>
