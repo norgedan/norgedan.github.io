@@ -337,3 +337,14 @@ cât o casă medie
 cât un oraș mediu
 peste 350 de milioane
 cât de complet a fost aplicată nu am putut verifica
+
+# 21 oct 2026 (pas60) — corpus2 C, cap. IX: Volt Typhoon a exfiltrat parole si schite OT
+# (CISA AA24-038A); Salt Typhoon: „probabil 1-2 ani” inainte de descoperire, nu 3;
+# spitalele lovite esalonat (10-12 feb. 2024), nu „simultan”; NIS2: 4 din 27 la doua luni
+# DUPA termen, nu „la timp”; XZ: acces neautentificat, nu „nelimitat”.
+Nu au furat date
+3 ani nedetectat
+paralizat simultan
+transpusă la timp, până la 17 octombrie 2024
+De stjal ikke data
+ubegrenset ekstern tilgang
