@@ -329,3 +329,11 @@ ingen statsoffisial straffedømt endelig
 Medicul a stat 15 minute în stație
 Legen satt 15 minutter
 aplicat treptat până în 2027
+
+# 21 oct 2026 (pas59) — corpus2 C, cap. VIII: un server AI de ~10 kW nu e „o casa medie”
+# (media UE ~3.600 kWh/an de locuinta, adica ~0,4 kW); High-NA costa circa 350 mil. euro,
+# nu „peste”; aplicarea Legii 163/2021 se poate verifica (Huawei respins, 29 feb. 2024).
+cât o casă medie
+cât un oraș mediu
+peste 350 de milioane
+cât de complet a fost aplicată nu am putut verifica
