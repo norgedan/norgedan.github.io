@@ -753,6 +753,7 @@ done &lt; /tmp/lista</pre>
     <div class="step"><div class="step-n">15</div><div class="step-body"><div class="step-title">Paritatea RO-NO</div><p>Capitole, subcapitole, citate, lungime — aceeași structură în ambele limbi. Semnalează; diferența acceptată conștient, cu valoarea ei exactă, intră în <code>paritate-ok.txt</code>.</p></div></div>
     <div class="step"><div class="step-n">16</div><div class="step-body"><div class="step-title">Pilonii</div><p><code>piloni.tsv</code>: temelia declarată, fiecare cu eticheta, sursa și limita (ce NU dovedește); fragmentul ancorat trebuie să existe în pagina RO și în perechea NO.</p></div></div>
     <div class="step"><div class="step-n">17</div><div class="step-body"><div class="step-title">Vocea</div><p>Fiecare document încarcă <code>/asculta.js</code>.</p></div></div>
+    <div class="step"><div class="step-n">18</div><div class="step-body"><div class="step-title">Capitolele verificate la sursă</div><p>Din pas63. <code>scripts/capitole-verificate.tsv</code>: un rând = un capitol verificat la sursă (poziția <code>&lt;h2&gt;</code>, titlul RO, pasul, data, amprenta textului RO și NO). Text schimbat după verificare, capitol mutat, rând stricat sau fără amprentă — blochează. Capitolele încă neverificate apar ca datorie, la fiecare rulare. Mașina nu judecă adevărul și nici ordinea lucrului („întâi verifici RO, apoi traduci”); face vizibil ce s-a schimbat după verificare. După reverificare: pas și dată noi în rând, <code>--capitole</code>, diferența citită.</p></div></div>
   </div>
   <p><strong>Santinelele (din pas53).</strong> Un verificator care nu găsește nimic de verificat nu are voie să spună „OK”: zero pagini, zero linkuri, zero citate confruntate deși textul e prezent, sau un document fără niciun capitol citit — toate sunt PROBLEMA. Așa se prinde ziua în care extragerea însăși s-a stricat.</p>
 
@@ -771,7 +772,10 @@ done &lt; /tmp/lista</pre>
 <span class="comment"># după (re)verificarea unei afirmații la sursă: amprentele, apoi diferența citită</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente</span>
 <span class="cmd">git -C ~/norgedan.github.io diff scripts/amprente.tsv</span>
-<span class="comment"># suita gărzii, după orice schimbare a verificării (~10 minute, clonele neatinse)</span>
+<span class="comment"># după (re)verificarea unui capitol: pas și dată noi în rând, apoi amprentele capitolelor</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --capitole</span>
+<span class="cmd">git -C ~/norgedan.github.io diff scripts/capitole-verificate.tsv</span>
+<span class="comment"># suita gărzii, după orice schimbare a verificării (~35 de minute, clonele neatinse)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/teste-garda.sh</span>
 <span class="comment"># la push: automat, prin garda (aduce starea tuturor de pe GitHub)</span></pre>
 
@@ -977,6 +981,33 @@ done &lt; /tmp/lista</pre>
     <p><strong>„Atașează din repo”</strong> — imposibil pe OpenBSD: Firefox e închis cu <code>unveil</code> și vede doar <code>~/Downloads</code>. Nu verificasem. Lecția: o regulă despre mașina ta se verifică pe mașina ta.<br><br>
     <strong>Patch-ul vechi aplicat în locul celui nou.</strong> Firefox a salvat descărcarea nouă ca <code>…(1).patch</code>; comanda a luat fișierul vechi, iar amprenta afișată nu a fost comparată. Nu s-a stricat nimic — varianta veche era verificată — și s-a completat cu pas53b. Lecția: Downloads golit înainte de fiecare descărcare, iar amprenta se compară, nu doar se afișează.</p>
   </div>
+
+  <h3>21 octombrie 2026 — documentul C complet în NO (pas57–pas62)</h3>
+
+  <div class="callout">
+    <div class="callout-label">CE S-A FĂCUT</div>
+    <p><strong>pas57–pas62</strong> — corpus2 C, „Den usynlige krigen”, tradus complet, capitol cu capitol, fiecare cifră reverificată la sursă. Traducerea a corectat originalul RO în aproape fiecare capitol: comparațiile cu energia centrelor de date (pas59), cinci afirmații despre atacuri cibernetice (pas60), un capitol despre Project Glasswing care avea doar versiunea companiei (pas61, verificat și față de surse independente — conflict de interese declarat: compania e cea care l-a făcut pe asistent), șase afirmații despre Galați, între care un avertisment rus prezentat ca reacție, deși fusese transmis cu două zile înainte (pas62). Și o contradicție internă în cap. II, între introducere și „regula de aur”.<br><br>
+    <strong>Regula care decurge</strong>, scrisă în standard: la fiecare capitol, întâi cifrele și faptele din RO reverificate la sursă, apoi traducerea.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">GREȘELILE ACESTEI SESIUNI — ȘI LECȚIILE LOR</div>
+    <p><strong>Două numerotări amestecate</strong> pentru aceleași capitole (pe poziții și din pagină), în status și context. Lecția: o singură numerotare — cea din pagină.<br><br>
+    <strong>Diagnostic tras înainte de citire:</strong> am crezut că reluarea din CI nu prinde push-ul; prima încercare arăta că o prinsese. Lecția: verifică și diagnosticul, nu doar rezultatul.<br><br>
+    <strong>Un commit sărit la copiere</strong> — garda a oprit push-ul ([11], modificări necomise). Plasa a funcționat.</p>
+  </div>
+
+  <h3>22 octombrie 2026 — pas63, capitolele verificate</h3>
+
+  <div class="callout">
+    <div class="callout-label">CE S-A FĂCUT</div>
+    <p><strong>[18] și <code>capitole-verificate.tsv</code></strong> — măsurat întâi pe site: 391 de capitole, amprente identice pe patru implementări awk. 7 capitole din C intră în registru; cap. III nu încă (cele șase categorii atribuite raportului România Imună nu sunt verificate). Datoria: 187 din 194 de capitole RO, fără verificare întreagă înregistrată — vizibilă la fiecare rulare.</p>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-label">CE A GĂSIT PAS63 ÎN SUITĂ</div>
+    <p><strong>T11 și T25 erau stricate din pas59.</strong> Căutau în <code>index.html</code> o cifră fixă din subsol (181 de mii); cifra s-a schimbat, mutația nu mai schimba nimic, iar testul raporta GREȘIT — dar suita nu mai fusese rulată din pas55, deci nu l-a văzut nimeni. Reparate cu un tipar general, plus o santinelă: o mutație care nu schimbă nimic face testul GREȘIT, cu motivul scris. Lecția: un verificator care nu găsește nimic de verificat trebuie să pice — și testele lui. Și suita se rulează după orice schimbare a verificării, nu doar când adăugăm teste.</p>
+  </div>
 </section>
 
 <!-- XII RAMAS -->
@@ -989,8 +1020,8 @@ done &lt; /tmp/lista</pre>
   <p>Verificarea „la puricat” a documentelor II–VI continuă — același model: pasajul, sursele, corectura chirurgicală în ambele limbi.</p>
   <p>Verificat la sursă pe 1 octombrie 2026: afirmația despre inimă („40.000 de neuroni”, „60×”) — corectată în toate locurile, în RO și NO, ca două oglinzi: ce măsoară știința și ce spune Scriptura. Sursele sunt în <code>scripts/afirmatii.tsv</code>. Urmează candidații semnalați de secțiunea [13] a verificării: întâi cele două erori geografice (Marea Neagră, granița NATO–Rusia).</p>
   <p><strong>Citatele din proză.</strong> Secțiunea [14] e activă din 18 octombrie pentru blocurile de citat (RO 1688, NO 1930). Rămân cele circa 30 de citate din proză, în <code>&lt;em&gt;</code>, încă în traducere modernă — aduse la ediții și puse sub verificare.</p>
-  <p><strong>Partea norvegiană.</strong> Ediția e stabilită și declarată: Bibelen 1930. Rămân traducerile lipsă după lista din [15] — Doc VI e complet din 20 octombrie —, corpus2 C și D (NO ~65% din RO), apoi celelalte perechi — și revizuirea de un vorbitor nativ.</p>
-  <p><strong>Garda.</strong> pas54 și pas55 — făcute pe 20 octombrie: toate vulnerabilitățile din auditul din 19 octombrie sunt închise, fiecare cu testul ei. Starea exactă: <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code>.</p>
+  <p><strong>Partea norvegiană.</strong> Ediția e stabilită și declarată: Bibelen 1930. Rămân traducerile lipsă după lista din [15] — Doc VI e complet din 20 octombrie, corpus2 C din 21 octombrie —, corpus2 D (NO ~66% din RO; întâi cifrele RO verificate, apoi traducerea), apoi celelalte perechi — și revizuirea de un vorbitor nativ.</p>
+  <p><strong>Garda.</strong> pas54 și pas55 — făcute pe 20 octombrie: toate vulnerabilitățile din auditul din 19 octombrie sunt închise, fiecare cu testul ei. pas63 — [18], capitolele verificate la sursă. De reparat: mesajul din [11] care afișează ora în loc de „pasNN”. Starea exactă: <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code>.</p>
   <p><strong>Documentul „Știința și credința față în față”.</strong> Construit în întregime pe oglinzi: constantele universale, conștiința, nașterea științei din credință, rugăciunea pusă la probă, credința și sănătatea.</p>
 
   <h3>Decizii deschise</h3>

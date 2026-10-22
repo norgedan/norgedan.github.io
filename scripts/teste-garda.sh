@@ -57,7 +57,15 @@ t() {
   id=$1; astept=$2; tip=$3; descr=$4
   if [ -n "$ALES" ] && ! echo " $ALES " | grep -qF " $id "; then return; fi
   pregateste || { echo "$id  NU POT COPIA CLONELE"; gresite=$((gresite + 1)); return; }
+  ( cd "$C" && find . -type f ! -path '*/.git/*' -exec cksum {} + | sort ) > "$T/inainte"
   ( cd "$C" && "mut_$id" ) || { echo "$id  MUTATIA A ESUAT — testul nu mai corespunde site-ului"; gresite=$((gresite + 1)); return; }
+  # santinela (pas63): o mutatie care nu schimba nimic face testul sa „treaca” fara sa testeze.
+  # Asa au stat T11 si T25 stricate dupa pas59: cautau „over 181 000 ord”, cifra se schimbase.
+  ( cd "$C" && find . -type f ! -path '*/.git/*' -exec cksum {} + | sort ) > "$T/dupa"
+  if [ "$id" != T00 ] && cmp -s "$T/inainte" "$T/dupa"; then
+    printf '  GRESIT   %-4s %-7s %s  (mutatia n-a schimbat nimic — testul nu mai corespunde site-ului)\n' "$id" "$astept" "$descr"
+    gresite=$((gresite + 1)); return
+  fi
   ( cd "$C" && NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --ci ) > "$T/out" 2>&1
   ex=$?; rulate=$((rulate + 1))
   grep -qF -- "$tip" "$T/out" && semnalat=1 || semnalat=0
@@ -93,7 +101,8 @@ mut_T05() { f=$(docs_no | head -1); rep "$f" 's/<h2/<h4/g; s/<\/h2>/<\/h4>/g'; }
 
 # ── garzile vechi, ca regresie: trebuie sa prinda in continuare ────────────
 mut_T10() { f=$(docs_no | head -1); rep "$f" 's/<\/h1>/<\/h1><p>40.000 de neuroni în inimă<\/p>/'; }
-mut_T11() { rep norgedan.github.io/index.html 's/over 181 000 ord/over 999 000 ord/'; }
+# cifra din subsolul hub-ului, oricare ar fi ea acum (pana in pas63: „over 181 000 ord” fix)
+mut_T11() { rep norgedan.github.io/index.html 's/over [0-9][0-9]* 000 ord/over 999 000 ord/'; }
 mut_T12() { awk '/<\/urlset>/ {print "<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url>"} {print}' corpus/sitemap.xml > x && mv x corpus/sitemap.xml; }
 mut_T13() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/Forut for undergang går overmot/Forut for undergang går stolthet/'; }
 
@@ -126,7 +135,7 @@ mut_T31() { f=corpus/06-mennesket-og-kunstig-intelligens-no.html
 
 # ── pas55: textul normalizat, sitemap-ul, [9] mai larg, acceptarile pe fisier ──
 mut_T24() { f=$(docs_no | head -1); rep "$f" 's/<\/h1>/<\/h1><p>40.000 de neuroni în <em>inimă<\/em><\/p>/'; }
-mut_T25() { rep norgedan.github.io/index.html 's/over 181 000 ord/over 999\&nbsp;000 ord/'; }
+mut_T25() { rep norgedan.github.io/index.html 's/over [0-9][0-9]* 000 ord/over 999\&nbsp;000 ord/'; }
 # un <em> neinchis intr-un titlu (asa a stat un </em> ratacit in Firul Rosu A)
 mut_T32() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's|<h3>Kunnskapens tre — hvorfor det var forbudt</h3>|<h3>Kunnskapens tre — <em>hvorfor det var forbudt</h3>|'; }
 # formulare retrasa cu &nbsp;
@@ -140,6 +149,26 @@ mut_T35() { rep corpus2/ro/A-firul-rosu-al-istoriei-ro.html 's/<\/h1>/<\/h1><p>C
 # acelasi fragment, legat de fisierul lui: acceptat
 mut_T36() { rep corpus2/ro/A-firul-rosu-al-istoriei-ro.html 's/<\/h1>/<\/h1><p>Cercetarea a demonstrat totul aici.<\/p>/'
             printf 'corpus2/ro/A-firul-rosu-al-istoriei-ro.html\tCercetarea a demonstrat totul aici.\n' >> norgedan.github.io/scripts/certitudini-ok.txt; }
+# ── pas63: capitolele verificate la sursa ([18]) ──────────────────────────
+CV=norgedan.github.io/scripts/capitole-verificate.tsv
+# un cuvant schimbat intr-un capitol verificat, RO (C, poz 7 „Algoritmul…”)
+mut_T40() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citește știrile/Algoritmul nu citește toate știrile/'; }
+# la fel, in NO
+mut_T41() { rep corpus2/no/C-den-usynlige-krigen-no.html 's/Algoritmen leser ikke nyheter/Algoritmen leser ikke alle nyheter/'; }
+# un capitol nou inserat inaintea celor verificate: pozitiile se muta
+mut_T42() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's|<h2 class="ch-title">Economia atenției|<h2>Capitol nou</h2><p>text</p><h2 class="ch-title">Economia atenției|'; }
+# rand pentru un capitol care nu exista
+mut_T43() { printf 'corpus2-C\t99\t-\tpas63\t2026-10-22\t-\t-\tnimic\n' >> "$CV"; }
+# fluxul corect: text schimbat, reverificat, pas nou, --capitole = trece
+mut_T44() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citește știrile/Algoritmul nu citește toate știrile/'
+            NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --capitole > /dev/null 2>&1; }
+# rand nou fara amprente (inainte de --capitole)
+mut_T46() { printf 'corpus2-C\t12\t-\tpas63\t2026-10-22\t-\t-\tnou\n' >> "$CV"; }
+# extragerea capitolelor stricata (in copia verificarii): zero capitole (santinela)
+mut_T47() { rep norgedan.github.io/scripts/verifica-site.sh 's/while ((i = index(s, "<h2")) > 0) {/while (0) {/'; }
+# datoria: un capitol neverificat (martorul neatins nu se poate folosi: mutatia trebuie sa schimbe ceva)
+mut_T45() { grep -v '^corpus2-C	11	' "$CV" > x && mv x "$CV"; }
+
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
 echo ""
@@ -173,6 +202,14 @@ t T33 PICA    "40.000 de neuroni"       "[7] formulare retrasa cu &nbsp;"
 t T34 PICA    "40.000 de neuroni"       "[7] formulare retrasa pe doua randuri"
 t T35 SEMNAL  "a demonstrat"            "[13] fragment acceptat pentru alt fisier nu ascunde"
 t T36 TACE    "a demonstrat"            "[13] fragment acceptat pentru fisierul lui: tace"
+t T40 PICA    "RO: textul s-a schimbat"  "[18] capitol verificat, text RO schimbat"
+t T41 PICA    "NO: textul s-a schimbat"  "[18] capitol verificat, text NO schimbat"
+t T42 PICA    "capitolele s-au mutat"   "[18] capitol nou inserat: pozitiile se muta"
+t T43 PICA    "capitolul 99 nu exista"  "[18] rand pentru un capitol inexistent"
+t T44 TRECE   "Poti face push"          "[18] text schimbat, reverificat, --capitole: trece"
+t T45 SEMNAL  "corpus2-C: 6 din 12"     "[18] datoria: capitolul scos din registru apare"
+t T46 PICA    "fara titlu sau amprenta" "[18] rand nou fara --capitole"
+t T47 PICA    "niciun capitol citit"    "[18] zero capitole citite (santinela)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

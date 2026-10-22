@@ -12,6 +12,8 @@
 #   ... --push <repo>     folosit de hook-ul pre-push (aduce starea de pe GitHub)
 #   ... --amprente        dupa ce o afirmatie a fost (re)verificata la sursa:
 #                         rescrie scripts/amprente.tsv din paginile de acum
+#   ... --capitole        dupa ce un capitol a fost (re)verificat la sursa (pas63):
+#                         rescrie titlul si amprentele in scripts/capitole-verificate.tsv
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
 #
@@ -45,10 +47,11 @@ case "${1:-}" in
   "")        ;;
   --tablou)  MOD=tablou ;;
   --amprente) MOD=amprente ;;
+  --capitole) MOD=capitole ;;
   --github)  MOD=github ;;
   --ci)      MOD=ci ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente]" >&2; exit 2 ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -1597,6 +1600,149 @@ else
     while IFS= read -r f; do problema "$f nu incarca /asculta.js — documentul nu se poate asculta"; done < "$W/voce"
   else
     ok "toate cele $(($(wc -l < "$W/m") * 2)) fisiere-document incarca vocea (asculta.js, RO si NO)"
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 18 "Capitolele verificate la sursa: textul de dupa verificare"
+# ════════════════════════════════════════════════════════════════════
+# Din pas63.  Regula de lucru (21 oct 2026): la fiecare capitol, intai cifrele si
+# faptele din RO reverificate la sursa, apoi traducerea.  Masina nu poate judeca
+# daca un capitol e adevarat si nici in ce ordine s-a lucrat; poate face vizibil
+# ce s-a schimbat DUPA verificare si ce n-a fost verificat niciodata.
+#
+#   scripts/capitole-verificate.tsv — un rand = un capitol verificat la sursa:
+#     id  poz  titlu-RO  pas  data  amprenta-RO  amprenta-NO  nota      (TAB)
+#   poz    = al catelea <h2> din pagina, numarat de sus (introducerea inclusa);
+#            perechea NO = acelasi <h2> ca pozitie
+#   titlu  = titlul RO al capitolului, asa cum e in pagina: daca la pozitia
+#            aceea apare alt titlu, capitolele s-au mutat — PROBLEMA
+#   capitolul N = de la al N-lea <h2> pana la urmatorul; ultimul, pana la primul
+#            <footer, </main> sau </body>; fara comentarii, <style>, <script>,
+#            fara tag-uri, spatiile unificate; amprenta = cksum, ca in amprente.tsv
+# Blocheaza: rand stricat, capitol inexistent, titlu mutat, amprenta lipsa,
+#            text RO sau NO schimbat dupa verificare.
+# Semnaleaza: capitolele neverificate inca (datoria), perechile cu numar diferit
+#            de capitole (pozitiile pot sa nu corespunda).
+# Dupa reverificarea la sursa a unui capitol schimbat: pas si data noi in rand,
+#   apoi  sh verifica-site.sh --capitole  (rescrie titlul si amprentele),
+#   apoi  git diff scripts/capitole-verificate.tsv  citit inainte de commit.
+# Un capitol nou verificat: rand nou cu "-" la titlu si amprente, apoi --capitole.
+CAPV="$SCRIPT_DIR/capitole-verificate.tsv"
+cat > "$W/cap.awk" <<'AWK'
+function curata(t) {
+  gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); gsub(/\302\240/, " ", t)
+  gsub(/[ \t\r\n]+/, " ", t); sub(/^ /, "", t); sub(/ $/, "", t)
+  return t
+}
+function scoate(s, a, b,   out, i, j) {
+  out = ""
+  while ((i = index(s, a)) > 0) {
+    out = out substr(s, 1, i - 1); s = substr(s, i)
+    j = index(s, b); if (j == 0) { s = ""; break }
+    s = substr(s, j + length(b))
+  }
+  return out s
+}
+BEGIN { RS = "\001" }
+{
+  s = scoate($0, "<!--", "-->"); s = scoate(s, "<script", "</script>"); s = scoate(s, "<style", "</style>")
+  n = 0
+  while ((i = index(s, "<h2")) > 0) {
+    s = substr(s, i + 3); n++
+    j = index(s, "<h2"); if (j == 0) j = length(s) + 1
+    c = substr(s, 1, j - 1)
+    if (index(s, "<h2") == 0) {
+      e = length(c) + 1
+      split("<footer </main> </body>", z, " ")
+      for (k = 1; k <= 3; k++) { p = index(c, z[k]); if (p > 0 && p < e) e = p }
+      c = substr(c, 1, e - 1)
+    }
+    g = index(c, ">"); h = index(c, "</h2>")
+    tit = (g > 0 && h > g) ? curata(substr(c, g + 1, h - g - 1)) : "?"
+    print n "\t" tit "\t" curata("<h2" c)
+  }
+}
+AWK
+# capitolele masurate:  id TAB limba TAB poz TAB titlu TAB amprenta
+: > "$W/capm"
+while IFS="$TAB" read -r id col repo cro cno tro tno; do
+  for p in "ro$TAB$repo/$cro" "no$TAB$repo/$cno"; do
+    l=${p%%"$TAB"*}; f="$RADACINA/${p#*"$TAB"}"
+    [ -f "$f" ] || continue
+    LC_ALL=C awk -f "$W/cap.awk" "$f" | while IFS="$TAB" read -r n tit txt; do
+      printf '%s\t%s\t%s\t%s\t%s\n' "$id" "$l" "$n" "$tit" "$(printf '%s' "$txt" | cksum | awk '{print $1 "-" $2}')"
+    done >> "$W/capm"
+  done
+done < "$W/m"
+: > "$W/capv"; [ -f "$CAPV" ] && grep -v '^#' "$CAPV" | grep -v '^[[:space:]]*$' > "$W/capv"
+
+if [ "$MOD" = capitole ]; then
+  if [ ! -f "$CAPV" ]; then echo "  lipseste $CAPV"; exit 1; fi
+  { grep '^#' "$CAPV"
+    awk -F'\t' -v M="$W/capm" '
+      BEGIN { OFS = "\t"; while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
+              if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] } }
+      { k = $1 "\t" $2
+        if ((k in t) && (k in an)) { $3 = t[k]; $6 = ar[k]; $7 = an[k] }
+        print }' "$W/capv"
+  } > "$W/capnou"
+  cp "$W/capnou" "$CAPV"
+  echo ""
+  echo "  capitole-verificate.tsv rescris: $(wc -l < "$W/capv" | tr -d ' ') capitole.  Citeste diferenta inainte de commit:"
+  echo "    git -C $HUB diff scripts/capitole-verificate.tsv"
+  echo ""
+  exit 0
+fi
+
+# santinela: documente in manifest, dar niciun capitol citit = extragerea s-a stricat
+if [ ! -s "$W/capm" ]; then
+  problema "niciun capitol citit din documente — extragerea capitolelor s-a stricat"
+elif [ ! -f "$CAPV" ]; then
+  problema "lipseste scripts/capitole-verificate.tsv"
+else
+  awk -F'\t' -v M="$W/capm" -v MF="$W/m" '
+    BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
+            while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
+              if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] } }
+    NF != 8 { print "rand " NR ": " NF " coloane in loc de 8"; next }
+    { for (i = 1; i <= 8; i++) if ($i ~ /^[[:space:]]*$/) { print $1 " poz " $2 ": coloana " i " goala (se scrie \"-\")"; next } }
+    !($1 in doc) { print $1 ": nu e in manifest"; next }
+    $2 !~ /^[1-9][0-9]*$/ { print $1 ": pozitie gresita \"" $2 "\""; next }
+    $4 !~ /^pas[0-9]+[a-z]?$/ { print $1 " poz " $2 ": pas gresit \"" $4 "\" (ex: pas63)" }
+    $5 !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/ { print $1 " poz " $2 ": data gresita \"" $5 "\" (AAAA-LL-ZZ)" }
+    seen[$1 "\t" $2]++ == 1 { print $1 " poz " $2 ": rand dublat" }
+    { k = $1 "\t" $2
+      if (!(k in t) || !(k in an)) { print $1 ": capitolul " $2 " nu exista (in RO sau in NO)"; next }
+      if ($3 == "-" || $6 == "-" || $7 == "-") { print $1 " poz " $2 ": fara titlu sau amprenta — dupa verificarea la sursa: --capitole"; next }
+      if ($3 != t[k]) { print $1 " poz " $2 ": la pozitia asta nu mai e „" $3 "”, ci „" t[k] "” — capitolele s-au mutat sau titlul s-a schimbat dupa verificarea din " $4; next }
+      if ($6 != ar[k]) print $1 " poz " $2 " „" t[k] "”, RO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole"
+      if ($7 != an[k]) print $1 " poz " $2 " „" t[k] "”, NO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole" }
+  ' "$W/capv" > "$W/caperr"
+  if [ -s "$W/caperr" ]; then
+    while IFS= read -r l; do problema "$l"; done < "$W/caperr"
+  else
+    nv=$(wc -l < "$W/capv" | tr -d ' ')
+    if [ "$nv" -eq 0 ]; then ok "registrul capitolelor verificate e gol"
+    else ok "$nv capitole verificate la sursa, cu titlul la locul lui si textul RO si NO neschimbat de atunci"; fi
+  fi
+  # pozitiile pot sa nu corespunda cand RO si NO au numar diferit de capitole
+  awk -F'\t' -v M="$W/capm" '
+    BEGIN { while ((getline l < M) > 0) { split(l, x, "\t"); if (x[2] == "ro") r[x[1]]++; else o[x[1]]++ } }
+    !s[$1]++ && r[$1] != o[$1] { print $1 ": " r[$1] " capitole in RO, " o[$1] " in NO — pozitiile verificate pot sa nu corespunda" }
+  ' "$W/capv" | while IFS= read -r l; do atentie "$l"; done
+  # datoria de verificare: vizibila la fiecare rulare, fara sa blocheze
+  awk -F'\t' -v V="$W/capv" '
+    BEGIN { while ((getline l < V) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = 1 } }
+    $2 == "ro" { tot[$1]++; if (!(($1 "\t" $3) in v)) { nev[$1]++; N++ } else A++; if (!($1 in ord)) { ord[$1] = ++k; id[k] = $1 } }
+    END { if (N == 0) exit
+          printf "%d %d\n", N, N + A
+          for (i = 1; i <= k; i++) { d = id[i]; if (nev[d] > 0) printf "             %s: %d din %d\n", d, nev[d], tot[d] } }
+  ' "$W/capm" > "$W/capdat"
+  if [ -s "$W/capdat" ]; then
+    set -- $(head -1 "$W/capdat")
+    atentie "$1 din $2 capitole fara verificare intreaga inregistrata (datoria; afirmatiile marcate sunt verificate separat, in [13]):"
+    sed 1d "$W/capdat"
   fi
 fi
 
