@@ -878,9 +878,11 @@ if [ "$MOD" != ci ] && [ "$MOD" != tablou ]; then
     atentie "nu gasesc $JURNAL/DOCUMENTARE.md — jurnalul proiectului nu poate fi urmarit"
   else
     jd=$(grep -o '^| 20[0-9][0-9]-[01][0-9]-[0-3][0-9] |' "$JURNAL/DOCUMENTARE.md" | tr -d '| ' | sort | tail -1)
-    # %ci (nu %cs): merge si pe versiuni vechi de git; data = primele 10 caractere
-    hp=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%ci|%s' 2>/dev/null)
-    hd=$(printf '%s' "$hp" | cut -c1-10); hs=${hp#*|}; hs=${hs%%:*}
+    # %ci (nu %cs): merge si pe versiuni vechi de git; data = primele 10 caractere.
+    # Doua apeluri, fara separator taiat in shell (pas64): pe ksh-ul OpenBSD, ${hp#*|}
+    # nu taia la „|” (bara are alt sens in tipar) si mesajul arata ora in loc de pas.
+    hd=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%ci' 2>/dev/null | cut -c1-10)
+    hs=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%s' 2>/dev/null | cut -d: -f1)
     if [ -z "$jd" ]; then
       atentie "DOCUMENTARE.md nu are nicio data in „Istoricul acestui document” — nu se poate spune daca e la zi"
     # datele ca numere (AAAALLZZ): comparatie portabila, fara „>” in test

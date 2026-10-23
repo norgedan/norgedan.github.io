@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas63, 22 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas64, 22 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -68,7 +68,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (22 octombrie 2026, după pas63):
+STAREA PROIECTULUI (22 octombrie 2026, după pas64):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -91,7 +91,8 @@ Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării, 
 
 URMEAZĂ (detaliat în secțiunea „Ce urmează”, mai jos):
 1. corpus2 C NO — complet (pas58–pas62). Amprentele pe capitole — [18],
-   capitole-verificate.tsv, --capitole (pas63). Cap. III din C, încă de verificat.
+   capitole-verificate.tsv, --capitole (pas63); cap. III din C verificat (pas64).
+   De adăugat, separat: limitele metodologice ale raportului România Imună.
 2. corpus2 D NO — 12 din 14 capitole condensate; document medical, multe cifre.
    ORDINEA: la fiecare capitol, întâi toate cifrele din RO reverificate la sursă,
    apoi traducerea.
@@ -108,7 +109,7 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 18 secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 22 oct e la zi până la pas63 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 22 oct e la zi până la pas64 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
@@ -145,6 +146,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas61</td><td>corpus2, hub, jurnal</td><td>corpus2 C NO: cap. X „Project Glasswing”, complet; verificat și față de surse independente; caseta „Ce s-a întâmplat după” (acces neautorizat, Fable 5 și Mythos 5, restricțiile de export, bilanțul extern); <code>fable-mythos-iunie</code>, <code>glasswing-bilant</code>; cifrele ~39.000 / ~184.000</td><td>în <code>git log</code></td></tr>
 <tr><td>pas62</td><td>corpus2, hub, jurnal</td><td>corpus2 C complet în NO: cap. V „Galați” și lectura cap. II–III; șase corecturi RO și NO în cap. V (avertismentul rus din 27 mai, reacția reală a Rusiei, superlativul, cine a decis ce, traseul dronei, huiduielile); regula de aur din cap. II, contradictorie, reformulată; cifrele ~40.000 / ~185.000</td><td>în <code>git log</code></td></tr>
 <tr><td>pas63</td><td>hub, jurnal</td><td>[18] capitolele verificate la sursă: <code>capitole-verificate.tsv</code>, <code>--capitole</code>; 7 capitole din C; suita: T11 și T25 reparate, santinela mutațiilor, T40–T47</td><td>în <code>git log</code></td></tr>
+<tr><td>pas64</td><td>corpus2, hub, jurnal</td><td>[11] pe ksh: ora în loc de pas — reparat, T48, suita și cu <code>mksh</code>; cap. III din C: cele șase categorii atribuite corect, intră în registru; subsolul hub-ului: peste 185.000</td><td>în <code>git log</code></td></tr>
 </table>
 
 <p>Tot pe 20 oct, în afara proiectului: parola cheii SSH de GitHub schimbată (<code>ssh-keygen -p</code>); cheia rămâne aceeași, nimic de schimbat pe GitHub.</p>
@@ -265,6 +267,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 
 <p><strong>La push:</strong> verificarea rulează singură, local și apoi pe GitHub. Un pas pe mai multe repo-uri: întâi commit în toate, apoi push-urile unul după altul, hub-ul de obicei ultimul (ordinea exactă o dă fiecare pas). Reluarea din CI acoperă câteva minute; dacă o rulare rămâne totuși roșie doar din cauza unui frate încă neîmpins, „Re-run all jobs” după ultimul push. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda.</p>
 
+<p><strong>Suita gărzii</strong> (din pas64): completă, la fiecare pas care atinge garda, și o dată pe săptămână chiar fără schimbări — o plasă nefolosită se strică în tăcere (T11 și T25 au stat stricate de la pas59 la pas63). Pe Linux, cu shell-ul din familia celui de pe OpenBSD: <code>VSH=mksh sh …/teste-garda.sh</code>.</p>
 <p><strong>La sfârșit:</strong> golește Downloads. Verificarea semnalează singură orice fișier rătăcit în rădăcina unui repo.</p>
 
 <div class="alerta">
@@ -280,7 +283,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 22 octombrie 2026, după pas63
+  Document intern · norgedan · actualizat 22 octombrie 2026, după pas64
 </footer>
 
 </div>

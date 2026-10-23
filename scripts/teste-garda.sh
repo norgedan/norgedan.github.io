@@ -18,6 +18,8 @@
 #   SCRIPT=/cale/alt-verifica-site.sh sh ...teste-garda.sh      contra-proba:
 #        aceleasi teste pe alta versiune a verificarii (de ex. cea veche,
 #        care trebuie sa pice testele noi)
+#   VSH=mksh sh ...teste-garda.sh   verificarea rulata cu alt shell (pas64): pe
+#        Linux, mksh e din aceeasi familie (pdksh) cu ksh-ul OpenBSD
 # Cod de iesire: 0 = toate verdictele asteptate, 1 = cel putin unul gresit.
 # Portabil POSIX — BSD si GNU: fara sed -i, fara \n in sed, fara bash.
 
@@ -51,10 +53,11 @@ pregateste() {
   cp "$VERIF" "$C/norgedan.github.io/scripts/verifica-site.sh"
 }
 
-# t <id> <PICA|TRECE|DESCHIS> <tipar asteptat in iesire> <descriere>
-# mutatia se face in functia mut_<id>, in directorul copiei
+# t <id> <PICA|TRECE|DESCHIS> <tipar asteptat in iesire> <descriere> [mod]
+# mutatia se face in functia mut_<id>, in directorul copiei; modul implicit: --ci
+# („manual” = fara argument: ce tine de clona locala, ca [11], fara retea)
 t() {
-  id=$1; astept=$2; tip=$3; descr=$4
+  id=$1; astept=$2; tip=$3; descr=$4; mod=${5:---ci}; [ "$mod" = manual ] && mod=""
   if [ -n "$ALES" ] && ! echo " $ALES " | grep -qF " $id "; then return; fi
   pregateste || { echo "$id  NU POT COPIA CLONELE"; gresite=$((gresite + 1)); return; }
   ( cd "$C" && find . -type f ! -path '*/.git/*' -exec cksum {} + | sort ) > "$T/inainte"
@@ -66,7 +69,7 @@ t() {
     printf '  GRESIT   %-4s %-7s %s  (mutatia n-a schimbat nimic — testul nu mai corespunde site-ului)\n' "$id" "$astept" "$descr"
     gresite=$((gresite + 1)); return
   fi
-  ( cd "$C" && NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --ci ) > "$T/out" 2>&1
+  ( cd "$C" && NORGEDAN_API_DIR=/nu-exista ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod ) > "$T/out" 2>&1
   ex=$?; rulate=$((rulate + 1))
   grep -qF -- "$tip" "$T/out" && semnalat=1 || semnalat=0
   case "$astept" in
@@ -166,8 +169,13 @@ mut_T44() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citeșt
 mut_T46() { printf 'corpus2-C\t12\t-\tpas63\t2026-10-22\t-\t-\tnou\n' >> "$CV"; }
 # extragerea capitolelor stricata (in copia verificarii): zero capitole (santinela)
 mut_T47() { rep norgedan.github.io/scripts/verifica-site.sh 's/while ((i = index(s, "<h2")) > 0) {/while (0) {/'; }
-# datoria: un capitol neverificat (martorul neatins nu se poate folosi: mutatia trebuie sa schimbe ceva)
-mut_T45() { grep -v '^corpus2-C	11	' "$CV" > x && mv x "$CV"; }
+# datoria: capitolele lui C scoase toate din registru apar toate ca datorie
+# (independent de cate sunt inregistrate — un numar fix s-ar strica la primul rand nou)
+mut_T45() { grep -v '^corpus2-C	' "$CV" > x && mv x "$CV"; }
+
+# ── pas64: mesajul din [11] arata pasul, pe orice shell ────────────────────
+# un jurnal ramas in urma (data veche): atentionarea trebuie sa numeasca pasul
+mut_T48() { mkdir -p norgedan-jurnal && printf '| 2026-01-01 | test |\n' > norgedan-jurnal/DOCUMENTARE.md; }
 
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
@@ -207,9 +215,10 @@ t T41 PICA    "NO: textul s-a schimbat"  "[18] capitol verificat, text NO schimb
 t T42 PICA    "capitolele s-au mutat"   "[18] capitol nou inserat: pozitiile se muta"
 t T43 PICA    "capitolul 99 nu exista"  "[18] rand pentru un capitol inexistent"
 t T44 TRECE   "Poti face push"          "[18] text schimbat, reverificat, --capitole: trece"
-t T45 SEMNAL  "corpus2-C: 6 din 12"     "[18] datoria: capitolul scos din registru apare"
+t T45 SEMNAL  "corpus2-C: 12 din 12"    "[18] datoria: capitolele scoase din registru apar"
 t T46 PICA    "fara titlu sau amprenta" "[18] rand nou fara --capitole"
 t T47 PICA    "niciun capitol citit"    "[18] zero capitole citite (santinela)"
+t T48 SEMNAL  "ultimul pas din hub (pas" "[11] jurnal in urma: mesajul numeste pasul" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

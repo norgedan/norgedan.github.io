@@ -431,6 +431,9 @@ Changes to be committed:
 <span class="comment"># [behind N] = ceva nou pe GitHub (ex. editat din browser): git -C ~/repo pull origin main</span></pre>
   <p><code>fetch</code> doar aduce și arată; <code>pull</code> modifică. Întâi te uiți, apoi decizi. Cu <code>pull.ff only</code> (Capitolul X), un pull nu poate produce niciodată un merge sau un rebase surpriză.</p>
 
+  <h3>Suita gărzii — săptămânal și după orice schimbare a gărzii</h3>
+  <p>Din pas64: <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code> se rulează complet la fiecare pas care atinge garda și o dată pe săptămână, chiar dacă nu s-a schimbat nimic. Motivul e concret: T11 și T25 au stat stricate de la pas59 la pas63, fiindcă testau o cifră care se schimbase pe site, iar suita nu mai fusese rulată. O plasă nefolosită se strică în tăcere.</p>
+
   <h3>Curățenia în Downloads — obligatorie, nu opțională</h3>
 
   <p>Browserul nu suprascrie un fișier existent: salvează al doilea exemplar ca <code>fișier(1).html</code>. Iar <code>cp ~/Downloads/fișier.html</code> ia atunci <strong>versiunea veche</strong>, în tăcere. Capcana a fost nimerită de trei ori: <code>verifica(1).sh</code>, <code>ghid(1).html</code>, și o dată un ghid vechi reîncărcat în discuție, fără <code>noindex</code>.</p>
@@ -1007,6 +1010,12 @@ done &lt; /tmp/lista</pre>
   <div class="callout-red">
     <div class="callout-label">CE A GĂSIT PAS63 ÎN SUITĂ</div>
     <p><strong>T11 și T25 erau stricate din pas59.</strong> Căutau în <code>index.html</code> o cifră fixă din subsol (181 de mii); cifra s-a schimbat, mutația nu mai schimba nimic, iar testul raporta GREȘIT — dar suita nu mai fusese rulată din pas55, deci nu l-a văzut nimeni. Reparate cu un tipar general, plus o santinelă: o mutație care nu schimbă nimic face testul GREȘIT, cu motivul scris. Lecția: un verificator care nu găsește nimic de verificat trebuie să pice — și testele lui. Și suita se rulează după orice schimbare a verificării, nu doar când adăugăm teste.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">PAS64 — O IPOTEZĂ VERIFICATĂ ÎNAINTE DE REPARAȚIE</div>
+    <p>Mesajul din [11] arăta „(2026-10-21 14)” în loc de „(pas58)”. Ipoteza — ksh-ul OpenBSD nu taie la „|” în <code>${hp#*|}</code> — a stat notată două zile ca neverificată, până când o linie rulată pe mașina ta a confirmat-o; <code>mksh</code>, din aceeași familie, o reproduce. Reparat fără tăiere în shell; testul T48 pică pe scriptul vechi doar sub mksh. Garda, rulată cu dash și cu mksh, dă ieșire identică.<br><br>
+    <strong>Cap. III din C:</strong> raportul România Imună confirmă „șase mari categorii”, dar public numește doar una. Textul le prezenta pe toate șase ca fiind ale raportului; acum spune că sunt gruparea site-ului.</p>
   </div>
 </section>
 
