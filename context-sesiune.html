@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas67, 23 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas68, 24 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -68,7 +68,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (23 octombrie 2026, după pas67):
+STAREA PROIECTULUI (24 octombrie 2026, după pas68):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -77,7 +77,7 @@ Lucrul vine ca patch-uri pasNN-repo.patch: sha256 COMPARAT, git apply (o singur�
 dată!), git add -A, git diff --cached --raw comparat, commit, apoi push.
 
 DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
-1. Garda locală (pre-push): scripts/verifica-site.sh, 21 de secțiuni, tot site-ul.
+1. Garda locală (pre-push): scripts/verifica-site.sh, 22 de secțiuni, tot site-ul.
    Blochează (PROBLEMA) ce mașina poate judeca sigur, semnalează (ATENTIE) ce cere
    judecată. Lipsa de date nu mai trece în tăcere (santinele). La push pleacă doar
    HEAD-ul verificat. Textele Bibliei lipsă = PROBLEMA (ocolire doar conștientă:
@@ -108,8 +108,8 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
-  <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 21 de secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 23 oct e la zi până la pas67 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 22 de secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 24 oct e la zi până la pas68 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
@@ -150,6 +150,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas65</td><td>corpus2, hub, jurnal</td><td>corpus2 D: cap. I „Era comunistă” și II „Postcomunism”, verificate în RO, apoi traduse; patru corecturi în RO (analfabetismul, investițiile publice, Copșa Mică, satele); <code>securitate-informatori</code>, <code>investitii-publice-2024</code>; tabelul D trecut pe numerotarea din pagină</td><td>în <code>git log</code></td></tr>
 <tr><td>pas66</td><td>corpus2, hub, jurnal</td><td>corpus2 D: cap. III „Tabloul demografic”; trei corecturi Eurostat 2024 (speranța de viață, mortalitatea infantilă, diferența pe sexe); natalitatea exprimată prin numărul nașterilor; <code>demografie-2024</code>; cifrele ~186.000</td><td>în <code>git log</code></td></tr>
 <tr><td>pas67</td><td>hub, jurnal</td><td>auditul pe straturi; [19] riscul, [20] dovezile (<code>surse.tsv</code>, <code>surse-datorie.txt</code>), [21] erorile (<code>erori.tsv</code>); T50–T58</td><td>în <code>git log</code></td></tr>
+<tr><td>pas68</td><td>hub, jurnal</td><td>[22] text ascuns și fraze pentru mașini; <code>--surse</code> (citatele exacte recitite în pagina lor); <code>citeste-sursa.py</code> (textul brut al surselor); 11 citate exacte în <code>surse.tsv</code>; [11] nu mai greșește după miezul nopții; T49, T60–T69</td><td>în <code>git log</code></td></tr>
 </table>
 
 <p>Tot pe 20 oct, în afara proiectului: parola cheii SSH de GitHub schimbată (<code>ssh-keygen -p</code>); cheia rămâne aceeași, nimic de schimbat pe GitHub.</p>
@@ -168,7 +169,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
   <li><strong>[13]</strong> registrul afirmațiilor (<code>afirmatii.tsv</code>), perechile RO-NO, <strong>amprentele</strong> (text schimbat, mutat sau dispărut după verificare = PROBLEMA); datoria de verificare, termenele și detectorul de certitudine doar semnalează. Un fragment acceptat poate fi legat de fișierul lui: <code>cale TAB fragment</code> în <code>certitudini-ok.txt</code>.</li>
   <li><strong>[14]</strong> citatele biblice: blocul recunoscut după clasa care conține <code>verse</code>; trimitere biblică fără <code>cap:vers</code>, bloc fără trimitere, citat sub 4 cuvinte = PROBLEMA; în CI doar NO.</li>
   <li><strong>[15]</strong> paritatea RO-NO (semnalează); <strong>[16]</strong> pilonii; <strong>[17]</strong> vocea.</li>
-  <li><strong>[19]</strong> riscul: cifre și superlative în capitolele RO neverificate, primele 10 (semnalează). <strong>[20]</strong> dovezile: <code>surse.tsv</code> — nivel P/S/T, adresă, dată, cine a citit, citat; FAPT = o sursă P sau două S; afirmație nouă fără surse = PROBLEMA; <code>surse-datorie.txt</code> doar scade. <strong>[21]</strong> erorile găsite, pe tipuri (<code>erori.tsv</code>).</li>
+  <li><strong>[19]</strong> riscul: cifre și superlative în capitolele RO neverificate, primele 10 (semnalează). <strong>[20]</strong> dovezile: <code>surse.tsv</code> — nivel P/S/T, adresă, dată, cine a citit, citat; FAPT = o sursă P sau două S; afirmație nouă fără surse = PROBLEMA; <code>surse-datorie.txt</code> doar scade. <strong>[21]</strong> erorile găsite, pe tipuri (<code>erori.tsv</code>). <strong>[22]</strong> text ascuns: caractere invizibile (zero-width, bidi, BOM, etichete Unicode) în pagini și registre, element ascuns prin <code>style=</code> sau <code>hidden</code> = PROBLEMA; frazele adresate mașinilor și regulile CSS care ascund doar semnalează.</li>
   <li><strong>[18]</strong> capitolele verificate la sursă (<code>capitole-verificate.tsv</code>): text RO sau NO schimbat după verificare, capitol mutat, rând stricat = PROBLEMA; capitolele neverificate = datoria, semnalată.</li>
   <li><strong>Santinelele:</strong> zero pagini, zero linkuri, zero citate confruntate sau un document fără capitole = PROBLEMA, nu „OK”.</li>
 </ul>
@@ -179,8 +180,9 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --github     # plus paginile Gi
 sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou     # doar tabloul
 sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente   # după (re)verificarea unei afirmații
 sh ~/norgedan.github.io/scripts/verifica-site.sh --capitole   # după (re)verificarea unui capitol
+sh ~/norgedan.github.io/scripts/verifica-site.sh --surse      # citatele din surse.tsv recitite în pagina lor (rețea)
 sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii, ~35 min</pre>
-<p>Verdictele suitei: <strong>PICA</strong> (trebuie să blocheze, din motivul corect), <strong>TRECE</strong>, <strong>SEMNAL</strong> (atenționarea trebuie să apară), <strong>TACE</strong> (o acceptare trebuie să funcționeze), <strong>DESCHIS</strong> (vulnerabilitate cunoscută, nereparată — azi niciuna). Contra-proba: <code>SCRIPT=/cale/verifica-vechi.sh sh …/teste-garda.sh</code>.</p>
+<p>Verdictele suitei: <strong>PICA</strong> (trebuie să blocheze, din motivul corect), <strong>TRECE</strong>, <strong>SEMNAL</strong> (atenționarea trebuie să apară), <strong>TACE</strong> (o acceptare trebuie să funcționeze), <strong>ABSENT</strong> (tiparul nu apare, oricare ar fi rezultatul — pentru modurile care ating clona locală), <strong>DESCHIS</strong> (vulnerabilitate cunoscută, nereparată — azi niciuna). Contra-proba: <code>SCRIPT=/cale/verifica-vechi.sh sh …/teste-garda.sh</code>.</p>
 
 <h2>Ce urmează, în detaliu</h2>
 
@@ -287,7 +289,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 23 octombrie 2026, după pas67
+  Document intern · norgedan · actualizat 24 octombrie 2026, după pas68
 </footer>
 
 </div>

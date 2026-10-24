@@ -14,6 +14,8 @@
 #                         rescrie scripts/amprente.tsv din paginile de acum
 #   ... --capitole        dupa ce un capitol a fost (re)verificat la sursa (pas63):
 #                         rescrie titlul si amprentele in scripts/capitole-verificate.tsv
+#   ... --surse           ca verificarea manuala + citatele exacte din surse.tsv confruntate
+#                         cu pagina lor, prin retea (pas68)
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
 #
@@ -48,10 +50,11 @@ case "${1:-}" in
   --tablou)  MOD=tablou ;;
   --amprente) MOD=amprente ;;
   --capitole) MOD=capitole ;;
+  --surse)   MOD=surse ;;
   --github)  MOD=github ;;
   --ci)      MOD=ci ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole]" >&2; exit 2 ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -871,23 +874,21 @@ fi
 # si motivele nu le stie masina — dar nu are voie sa ramana in urma nevazut.
 # Doar local (in CI repo-ul privat nu exista si nu trebuie sa existe); citeste doar
 # DATELE din tabelul „Istoricul acestui document” (randuri "| AAAA-LL-ZZ |"), nu
-# continutul.  Comparatia: ultima data de acolo vs data ultimului commit "pasNN" din hub.
+# continutul.  Din pas68: jurnalul trebuie sa pomeneasca ultimul pas din hub (pasNN).
 JURNAL="${NORGEDAN_JURNAL:-$RADACINA/norgedan-jurnal}"
 if [ "$MOD" != ci ] && [ "$MOD" != tablou ]; then
   if [ ! -f "$JURNAL/DOCUMENTARE.md" ]; then
     atentie "nu gasesc $JURNAL/DOCUMENTARE.md — jurnalul proiectului nu poate fi urmarit"
   else
     jd=$(grep -o '^| 20[0-9][0-9]-[01][0-9]-[0-3][0-9] |' "$JURNAL/DOCUMENTARE.md" | tr -d '| ' | sort | tail -1)
-    # %ci (nu %cs): merge si pe versiuni vechi de git; data = primele 10 caractere.
-    # Doua apeluri, fara separator taiat in shell (pas64): pe ksh-ul OpenBSD, ${hp#*|}
-    # nu taia la „|” (bara are alt sens in tipar) si mesajul arata ora in loc de pas.
-    hd=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%ci' 2>/dev/null | cut -c1-10)
+    # Din pas68: nu se mai compara datele — un pas comis dupa miezul noptii parea „in urma”
+    # desi jurnalul era la zi.  Se cauta numele pasului (cuvant intreg) in jurnal.
+    # (Pas64: subiectul se ia separat, fara ${hp#*|}, care nu merge pe ksh-ul OpenBSD.)
     hs=$(git -C "$HUB" log -1 --grep='^pas[0-9]' --format='%s' 2>/dev/null | cut -d: -f1)
     if [ -z "$jd" ]; then
       atentie "DOCUMENTARE.md nu are nicio data in „Istoricul acestui document” — nu se poate spune daca e la zi"
-    # datele ca numere (AAAALLZZ): comparatie portabila, fara „>” in test
-    elif [ -n "$hd" ] && [ "$(echo "$hd" | tr -d -)" -gt "$(echo "$jd" | tr -d -)" ]; then
-      atentie "DOCUMENTARE.md a ramas in urma: ultima intrare $jd, ultimul pas din hub ($hs) din $hd — de adus la zi in norgedan-jurnal"
+    elif [ -n "$hs" ] && ! grep -q -w -- "$hs" "$JURNAL/DOCUMENTARE.md"; then
+      atentie "DOCUMENTARE.md a ramas in urma: ultimul pas din hub ($hs) nu apare in jurnal (ultima intrare: $jd) — de adus la zi in norgedan-jurnal"
     fi
     if [ -d "$JURNAL/.git" ]; then
       [ -n "$(git -C "$JURNAL" status --porcelain)" ] && atentie "norgedan-jurnal: modificari necomise"
@@ -1901,6 +1902,146 @@ else
   else
     ok "$(wc -l < "$W/er" | tr -d ' ') erori gasite si corectate, pe tipuri: $(cut -f4 "$W/er" | LC_ALL=C sort | uniq -c | sort -rn | awk '{ printf "%s%s %s", (NR > 1 ? ", " : ""), $2, $1 }')"
   fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 22 "Text ascuns si instructiuni pentru masini (prompt injection)"
+# ════════════════════════════════════════════════════════════════════
+# Din pas68.  Slabiciunea cunoscuta: asistentul citeste pagini straine, iar o pagina
+# poate ascunde instructiuni pentru masini; un text copiat de acolo poate duce pe site
+# caractere invizibile sau continut ascuns.  Scriptul nu poate elimina riscul — il
+# poate face vizibil, la fiecare push.  Masurat intai (24 oct): zero continut ascuns,
+# zero caractere de felul acesta (o singura cratima discreta U+00AD, tipografie, permisa).
+#   PROBLEMA  caractere invizibile in pagini sau in scripts/*.tsv, *.txt:
+#             zero-width (U+200B-200F), control bidi (U+202A-202E, U+2066-2069),
+#             U+2060-2064, BOM (U+FEFF), etichete Unicode (U+E0000-E007F)
+#   PROBLEMA  element ascuns in pagina: atributul hidden, sau style= cu display:none,
+#             visibility:hidden, font-size:0, opacity:0
+#   ATENTIE   reguli CSS care ascund (pot fi legitime: meniuri, tiparire); pseudo-elementele
+#             ::before / ::after (decor, fara textul paginii) sunt lasate deoparte
+#   ATENTIE   fraze adresate masinilor („ignore previous instructions”, „system prompt”…),
+#             oriunde in fisier — si in comentarii, atribute, registre
+: > "$W/invpat"
+for c in 213 214 215 216 217; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
+for c in 252 253 254 255 256; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
+for c in 240 241 242 243 244 246 247 250 251; do printf "\\342\\201\\$c\n" >> "$W/invpat"; done
+printf '\357\273\277\n' >> "$W/invpat"
+for x in 0 1 2 3 4 5 6 7; do for y in 0 1 2 3 4 5 6 7; do
+  printf "\\363\\240\\200\\2$x$y\n" >> "$W/invpat"; printf "\\363\\240\\201\\2$x$y\n" >> "$W/invpat"
+done; done
+cat > "$W/injpat" <<'PAT'
+ignore previous instructions
+ignore all previous instructions
+ignore the previous instructions
+ignore the above instructions
+disregard previous instructions
+disregard the above
+system prompt
+you are chatgpt
+you are claude
+as an ai language model
+<system>
+</system>
+[inst]
+ignoră instrucțiunile
+ignora instructiunile
+ignorer tidligere instruksjoner
+glem tidligere instruksjoner
+PAT
+: > "$W/fis22"
+cat "$W/html" >> "$W/fis22"
+find "$SCRIPT_DIR" -maxdepth 1 -type f \( -name '*.tsv' -o -name '*.txt' \) | sort >> "$W/fis22"
+: > "$W/p22"; : > "$W/a22"
+while IFS= read -r f; do
+  rel=${f#"$RADACINA"/}
+  LC_ALL=C grep -n -F -f "$W/invpat" "$f" 2>/dev/null | cut -d: -f1 | while IFS= read -r n; do
+    echo "$rel, randul $n: caracter invizibil (zero-width, bidi, BOM sau eticheta Unicode)"; done >> "$W/p22"
+  LC_ALL=C grep -n -i -F -f "$W/injpat" "$f" 2>/dev/null | cut -d: -f1 | while IFS= read -r n; do
+    echo "$rel, randul $n: fraza adresata masinilor — de citit"; done >> "$W/a22"
+done < "$W/fis22"
+while IFS= read -r f; do
+  rel=${f#"$RADACINA"/}
+  # elemente ascunse: din tag-urile reale (style=), plus atributul hidden (fara valoare, din textul brut)
+  awk -F'\t' -v r="$rel" '{ for (i = 2; i < NF; i += 2) if ($i == "style") { v = tolower($(i + 1))
+      if (v ~ /display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|$)|opacity *: *0(\.0*)? *(;|$)/) print r ": <" $1 " style=\"" $(i + 1) "\"> — element ascuns" } }' "$(tagsf "$f")" >> "$W/p22"
+  LC_ALL=C awk '/<style/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$f" \
+    | LC_ALL=C grep -n -i -E '<[a-z][a-z0-9]*[^>]*[[:space:]]hidden([[:space:]>=]|$)' | cut -d: -f1 \
+    | while IFS= read -r n; do echo "$rel: element cu atributul hidden (in textul fara style si script, randul $n)"; done >> "$W/p22"
+  # reguli CSS care ascund: legitime uneori, deci doar semnalate
+  LC_ALL=C awk '/<style/{s=1} s{print} /<\/style>/{s=0}' "$f" | tr '\n' ' ' | LC_ALL=C tr 'A-Z' 'a-z' \
+    | LC_ALL=C grep -o -E '[^{}]*\{[^}]*(display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|\})|opacity *: *0(\.0*)? *(;|\}))' \
+    | sed 's/{.*//' | grep -v -e '::before' -e '::after' \
+    | while IFS= read -r sel; do echo "$rel: regula CSS care ascunde:$sel"; done >> "$W/a22"
+done < "$W/html"
+if [ -s "$W/p22" ]; then
+  while IFS= read -r l; do problema "$l"; done < "$W/p22"
+else
+  ok "$(wc -l < "$W/fis22" | tr -d ' ') fisiere citite: niciun caracter invizibil, niciun element ascuns"
+fi
+if [ -s "$W/a22" ]; then
+  atentie "$(wc -l < "$W/a22" | tr -d ' ') locuri de citit (CSS care ascunde sau fraze adresate masinilor):"
+  sed 's/^/             /' "$W/a22"
+else
+  ok "nicio fraza adresata masinilor, nicio regula CSS care ascunde"
+fi
+
+# ── modul --surse (pas68): citatele exacte confruntate cu pagina lor, prin retea ──
+# Pentru fiecare rand cu citat: pagina se descarca (curl, sau ftp(1) pe OpenBSD), se
+# reduce la litere si cifre (fara tag-uri, entitati, punctuatie, ghilimele, spatii) si
+# se cauta citatul redus la fel.  Negasit sau inaccesibil = ATENTIE (paginile se schimba,
+# unele se incarca prin JavaScript); pagina cu text ascuns sau fraze pentru masini = ATENTIE.
+# NORGEDAN_SURSE_DIR=dir: paginile se iau de acolo (<cksum-url>.html), fara retea (teste).
+if [ "$MOD" = surse ]; then
+  cat > "$W/red.awk" <<'AWK'
+BEGIN { RS = "\001" }
+{ t = tolower($0); gsub(/&[a-z0-9#]+;/, "", t)
+gsub(/\302\253|\302\273|\302\240|\342\200\236|\342\200\235|\342\200\234|\342\200\230|\342\200\231|\342\200\223|\342\200\224|\342\200\246/, "", t)
+gsub(/[^a-z0-9\200-\377]/, "", t); printf "%s", t }
+AWK
+  # pagina din retea e adesea minificata (tot HTML-ul pe 1-20 de randuri, cu <script> in
+  # mijlocul textului): text_normalizat, care lucreaza pe randuri, ar pierde textul.  Aici
+  # fisierul se citeste intreg si se sar comentariile, <script>, <style> si tag-urile.
+  cat > "$W/pag.awk" <<'AWK'
+BEGIN { RS = "\001" }
+{ t = $0; gsub(/[\n\r\t]/, " ", t); n = length(t); p = 1
+  while (p <= n) {
+    a = index(substr(t, p), "<")
+    if (a == 0) { printf "%s", substr(t, p); break }
+    printf "%s ", substr(t, p, a - 1); p += a - 1
+    l = tolower(substr(t, p, 8))
+    if (substr(l, 1, 4) == "<!--") e = "-->"
+    else if (substr(l, 1, 7) == "<script") e = "</script"
+    else if (substr(l, 1, 6) == "<style") e = "</style"
+    else e = ">"
+    r = substr(t, p + 1); if (e != ">") r = tolower(r)
+    b = index(r, e); if (b == 0) break
+    p += b + length(e)
+  }
+}
+AWK
+  sursa_ia() {
+    if [ -n "${NORGEDAN_SURSE_DIR:-}" ]; then
+      k=$(printf '%s' "$1" | cksum | cut -d' ' -f1)
+      [ -f "$NORGEDAN_SURSE_DIR/$k.html" ] && cp "$NORGEDAN_SURSE_DIR/$k.html" "$2"
+    elif command -v curl >/dev/null 2>&1; then
+      curl -fsSL -m 30 -A "Mozilla/5.0" -o "$2" "$1" 2>/dev/null
+    else
+      ftp -V -M -w 30 -U "Mozilla/5.0" -o "$2" "$1" >/dev/null 2>&1
+    fi
+  }
+  ng=0; nn=0; ni=0
+  awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
+  while IFS="$TAB" read -r id niv url acc cine cit; do
+    rm -f "$W/pag"; sursa_ia "$url" "$W/pag"
+    if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id)"; ni=$((ni + 1)); continue; fi
+    LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
+    printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
+    if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))
+    else atentie "--surse: citatul pentru \"$id\" nu (mai) e in $url — reverifica"; nn=$((nn + 1)); fi
+    LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && atentie "--surse: $url are caractere invizibile — tratata ca date, cu grija ($id)"
+    LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
+  done < "$W/src"
+  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile"
 fi
 
 # ════════════════════════════════════════════════════════════════════

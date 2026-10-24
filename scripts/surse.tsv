@@ -5,23 +5,24 @@
 # accesat AAAA-LL-ZZ · cine: cine a citit sursa (claude, bogdan, ...)
 # citat   textul exact, intre « », copiat din pagina — NU din rezumatul unui instrument; altfel -
 # Regula: FAPT = o sursa P sau doua S din domenii diferite; ESTIMARE = o sursa P sau S.
-# Limita, spusa deschis: Claude citeste paginile prin rezumate facute de un instrument, nu
-# textul brut; de aceea citatele lui sunt „-”, iar „cine = claude” inseamna fara ochi independenti.
+# Din pas68 Claude citeste textul brut al paginii (scripts/citeste-sursa.py, trafilatura), iar
+# --surse reciteste pagina si cauta citatul mecanic. „-” = pagina inaccesibila sau date fara
+# text (JSON Eurostat). „cine = claude” ramane: fara ochi independenti.
 datacentre-energie	P	https://www.iea.org/reports/energy-and-ai/executive-summary	2026-10-21	claude	-
-huawei-5g	S	https://romania.europalibera.org/a/huawei-5g-romania/32844090.html	2026-10-21	claude	-
-huawei-5g	S	https://www.capital.ro/procesul-huawei-impotriva-statului-roman-privind-retelele-5g-a-fost-suspendat-instanta-asteapta-decizia-cjue-intr-un-caz-similar.html	2026-10-21	claude	-
-huawei-5g	S	https://www.puterea.ro/?p=564436	2026-10-21	claude	-
-fable-mythos-iunie	P	https://www.anthropic.com/news/fable-mythos-access	2026-10-21	claude	-
-fable-mythos-iunie	S	https://techcrunch.com/2026/06/09/anthropics-claude-fable-5-is-a-version-of-mythos-the-public-can-access-today/	2026-10-21	claude	-
+huawei-5g	S	https://romania.europalibera.org/a/huawei-5g-romania/32844090.html	2026-10-24	claude	«a respins cererea de autorizare „privind utilizarea echipamentelor de infrastructură 5G” formulată de patru companii ale producătorului chinez Huawei»
+huawei-5g	S	https://www.capital.ro/procesul-huawei-impotriva-statului-roman-privind-retelele-5g-a-fost-suspendat-instanta-asteapta-decizia-cjue-intr-un-caz-similar.html	2026-10-24	claude	«La termenul din 1 iulie 2026, Curtea de Apel București a decis suspendarea judecării cauzei.»
+huawei-5g	S	https://www.puterea.ro/?p=564436	2026-10-24	claude	«act normativ care stabilește condițiile de autorizare pentru utilizarea echipamentelor în rețelele 5G din România.»
+fable-mythos-iunie	P	https://www.anthropic.com/news/fable-mythos-access	2026-10-24	claude	«has issued an export control directive to suspend all access to Fable 5 and Mythos 5 by any foreign national»
+fable-mythos-iunie	S	https://techcrunch.com/2026/06/09/anthropics-claude-fable-5-is-a-version-of-mythos-the-public-can-access-today/	2026-10-24	claude	«On Tuesday, the AI firm launched Claude Fable 5, the first publicly available version of its Mythos model.»
 fable-mythos-iunie	S	https://yourstory.com/ai-story/anthropic-restores-fable-5-mythos-5-after-us-eases-ban	2026-10-21	claude	-
-glasswing-bilant	S	https://www.techtarget.com/it-infrastructure/news/366651381/Glasswing-results-put-AI-vulnpocalypse-to-the-test	2026-10-21	claude	-
-glasswing	P	https://www.anthropic.com/glasswing	2026-10-21	claude	-
+glasswing-bilant	S	https://www.techtarget.com/it-infrastructure/news/366651381/Glasswing-results-put-AI-vulnpocalypse-to-the-test	2026-10-24	claude	«2,096, or 8%, had been reported to maintainers.»
+glasswing	P	https://www.anthropic.com/glasswing	2026-10-24	claude	«Anthropic is committing up to $100M in usage credits for Mythos Preview across these efforts, as well as $4M in direct donations to open-source security organizations.»
 volt-typhoon	P	https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/prc-state-sponsored-actors-compromise-and-maintain-persistent-access-us-critical-infrastructure	2026-10-21	claude	-
-romania-imuna	S	https://www.digi24.ro/stiri/actualitate/raport-ingrijorator-doar-10-conturi-genereaza-aproape-80-din-dezinformarea-de-pe-tiktok-mesajul-lui-nicusor-dan-3787737	2026-10-21	claude	-
-securitate-informatori	S	https://romania.europalibera.org/a/informatori-securitate-statistica-cnsas/33102797.html	2026-10-23	claude	-
-securitate-informatori	S	https://www.digi24.ro/stiri/cnsas-intre-1980-1989-a-fost-un-record-istoric-de-recrutari-ale-securitatii-aproape-80-erau-barbati-ce-meserii-aveau-2917253	2026-10-23	claude	-
+romania-imuna	S	https://www.digi24.ro/stiri/actualitate/raport-ingrijorator-doar-10-conturi-genereaza-aproape-80-din-dezinformarea-de-pe-tiktok-mesajul-lui-nicusor-dan-3787737	2026-10-24	claude	«printre primele 50 de postări va vedea 9 postări de dezinformare și nici măcar o singură postare provenită dintr-o sursă oficială»
+securitate-informatori	S	https://romania.europalibera.org/a/informatori-securitate-statistica-cnsas/33102797.html	2026-10-24	claude	«au fost recrutați în total de Securitate, poliția politică din România, de la înființarea instituției, din 1948, până la Revoluția română, din decembrie 1989.»
+securitate-informatori	S	https://www.digi24.ro/stiri/cnsas-intre-1980-1989-a-fost-un-record-istoric-de-recrutari-ale-securitatii-aproape-80-erau-barbati-ce-meserii-aveau-2917253	2026-10-24	claude	«în perioada 1980-1989 au fost recrutaţi cei mai mulţi informatori din toată istoria României comuniste, peste 200.000 de persoane.»
 investitii-publice-2024	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10a_main?na_item=P51G&sector=S13&unit=PC_GDP&time=2024	2026-10-23	claude	-
-investitii-publice-2024	P	https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-22042025-ap	2026-10-23	claude	-
+investitii-publice-2024	P	https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-22042025-ap	2026-10-24	claude	«The highest deficits were recorded in Romania (‑9.3%)»
 demografie-2024	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_mlexpec?sex=T&age=Y_LT1&time=2024	2026-10-23	claude	-
 demografie-2024	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_minfind?indic_de=INFMORRT&time=2024	2026-10-23	claude	-
 demografie-2024	S	https://financialintelligence.ro/romania-cu-a-patra-diferenta-de-gen-la-speranta-de-viata-intre-statele-ue/	2026-10-23	claude	-
