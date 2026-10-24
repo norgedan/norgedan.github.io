@@ -1749,6 +1749,161 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
+titlu 19 "Unde e riscul: cifre si superlative in capitolele neverificate"
+# ════════════════════════════════════════════════════════════════════
+# Din pas67.  Auditul pasilor 56-66: erorile gasite la verificare au fost, de
+# fiecare data, intr-o cifra (invechita, rotunjita, atenuata) sau intr-un superlativ
+# fara sursa („cea mai dura”, „a doua cea mai mica”, „singurul”).  Masina nu stie
+# care cifra e gresita; stie unde sunt multe, in text inca neverificat.  De aici
+# lista: capitolele RO neverificate, ordonate dupa cifre + 2 x superlative —
+# unde se sapa intai.  Doar semnalare, nu blocaj.
+#   cifra      = grup de cifre, fara anii singuri (1000-2099) si fara cap:vers
+#   superlativ = tiparele din SUPERL (RO si NO), cautate in textul trecut la litere mici
+SUPERL="cel mai |cea mai |cei mai |cele mai |fără precedent|singurul |singura |unicul |unica |record |den største|det største|de største|høyeste|laveste|eneste |uten sidestykke|rekord"
+cat > "$W/risc.awk" <<'AWK'
+BEGIN { FS = "\t"; nr = split(SP, sp, "|") }
+{
+  t = $5; c = 0; s = t
+  while (match(s, /[0-9]+([.,][0-9]+)*/)) {
+    tok = substr(s, RSTART, RLENGTH); pre = (RSTART > 1) ? substr(s, RSTART - 1, 1) : " "
+    post = substr(s, RSTART + RLENGTH, 1); s = substr(s, RSTART + RLENGTH)
+    if (pre == ":" || post == ":") continue
+    if (tok ~ /^(1[0-9]|20)[0-9][0-9]$/) continue
+    c++
+  }
+  sup = 0; low = tolower(t)
+  for (i = 1; i <= nr; i++) { u = low; while ((k = index(u, sp[i])) > 0) { sup++; u = substr(u, k + length(sp[i])) } }
+  print $1 "\t" $2 "\t" $3 "\t" c "\t" sup "\t" $4
+}
+AWK
+: > "$W/riscin"
+while IFS="$TAB" read -r id col repo cro cno tro tno; do
+  for p in "ro$TAB$repo/$cro" "no$TAB$repo/$cno"; do
+    l=${p%%"$TAB"*}; f="$RADACINA/${p#*"$TAB"}"
+    [ -f "$f" ] || continue
+    LC_ALL=C awk -f "$W/cap.awk" "$f" | awk -F'\t' -v id="$id" -v l="$l" 'BEGIN { OFS = "\t" } { print id, l, $1, $2, $3 }' >> "$W/riscin"
+  done
+done < "$W/m"
+LC_ALL=C awk -v SP="$SUPERL" -f "$W/risc.awk" "$W/riscin" > "$W/risc"
+if [ ! -s "$W/risc" ]; then
+  problema "niciun capitol citit pentru masurarea riscului — extragerea s-a stricat"
+else
+  # doar capitolele RO neverificate (cele din capitole-verificate.tsv au fost citite la sursa)
+  awk -F'\t' -v V="$W/capv" '
+    BEGIN { while ((getline l < V) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = 1 } }
+    $2 == "ro" && !(($1 "\t" $3) in v) { C += $4; S += $5; n++
+      t = substr($6, 1, 50); sub(/[\300-\377][\200-\277]*$/, "", t)   # fara litera taiata pe jumatate
+      printf "%d\t%s poz %s\t%d cifre, %d superlative\t%s\n", $4 + 2 * $5, $1, $3, $4, $5, t }
+    END { printf "TOTAL\t%d\t%d\t%d\n", n, C, S > "/dev/stderr" }
+  ' "$W/risc" 2> "$W/risct" | LC_ALL=C sort -t "$TAB" -k1,1nr > "$W/riscs"
+  set -- $(cut -f2- "$W/risct" | tr '\t' ' ')
+  if [ -s "$W/riscs" ]; then
+    atentie "in $1 capitole RO neverificate: $2 cifre si $3 superlative — primele 10, unde se sapa intai:"
+    head -10 "$W/riscs" | awk -F'\t' '{ printf "             %-22s %-26s %s\n", $2, $3, $4 }'
+  else
+    ok "toate capitolele RO sunt verificate la sursa"
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 20 "Dovezile afirmatiilor: nivelul sursei, adresa, cine a citit-o"
+# ════════════════════════════════════════════════════════════════════
+# Din pas67.  „verificat” in afirmatii.tsv e o declaratie.  Aici sta dovada:
+#   scripts/surse.tsv — un rand = o sursa citita pentru o afirmatie (TAB):
+#     id  nivel  url  accesat  cine  citat
+#   nivel   P = primara (institutia care masoara, documentul oficial, studiul original)
+#           S = secundara serioasa (agentie, presa de referinta)
+#           T = tertiara (blog, agregator, enciclopedie) — nu ajunge niciodata singura
+#   accesat AAAA-LL-ZZ — ziua in care sursa a fost citita
+#   cine    cine a citit sursa: „claude” sau numele omului (litere mici).  Limita
+#           spusa deschis: o afirmatie citita doar de Claude n-a vazut ochi
+#           independenti; raportul le numara separat.
+#   citat   textul exact din sursa, intre « », sau "-".  Exact = copiat din pagina,
+#           nu din rezumatul unui instrument: altfel "-".
+# Regula: FAPT verificat = cel putin o sursa P, sau doua S din domenii diferite.
+#         ESTIMARE verificata = cel putin o sursa P sau S.  INTERPRETARE si CREDINTA:
+#         sursele sunt binevenite, nu obligatorii.
+#   scripts/surse-datorie.txt — afirmatiile mai vechi decat registrul de surse (pas67),
+#   inca fara dovezi; lista doar scade.  O afirmatie noua, fara surse, blocheaza.
+SURSE="$SCRIPT_DIR/surse.tsv"; SDAT="$SCRIPT_DIR/surse-datorie.txt"
+if [ ! -f "$SURSE" ] || [ ! -f "$SDAT" ]; then
+  problema "lipseste scripts/surse.tsv sau scripts/surse-datorie.txt"
+else
+  grep -v '^#' "$SURSE" | grep -v '^[[:space:]]*$' > "$W/sr"
+  grep -v '^#' "$SDAT" | grep -v '^[[:space:]]*$' | LC_ALL=C sort -u > "$W/sd"
+  AZI=$(date +%Y-%m-%d)
+  awk -F'\t' -v AF="$W/af" -v SD="$W/sd" -v AZI="$AZI" '
+    function dom(u,  d) { d = u; sub(/^https:\/\//, "", d); sub(/\/.*/, "", d); sub(/^www\./, "", d); return d }
+    BEGIN { while ((getline l < AF) > 0) { split(l, x, "\t"); et[x[1]] = x[2]; st[x[1]] = x[3] }
+            while ((getline l < SD) > 0) dat[l] = 1 }
+    NF != 6 { print "surse.tsv rand " NR ": " NF " coloane, trebuie 6"; next }
+    { for (i = 1; i <= 6; i++) if ($i ~ /^[[:space:]]*$/) { print "surse.tsv rand " NR ": coloana " i " goala (se scrie -)"; next } }
+    !($1 in et) { print "surse.tsv: \"" $1 "\" nu e in afirmatii.tsv"; next }
+    $2 !~ /^[PST]$/ { print "surse.tsv " $1 ": nivel \"" $2 "\" — P, S sau T" }
+    $3 !~ /^https:\/\/[^ ]+\.[^ ]+/ { print "surse.tsv " $1 ": adresa \"" $3 "\" — trebuie https://..." }
+    $4 !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/ { print "surse.tsv " $1 ": accesat \"" $4 "\" — AAAA-LL-ZZ" }
+    $4 > AZI { print "surse.tsv " $1 ": accesat " $4 " e in viitor" }
+    $5 !~ /^[a-z][a-z-]*$/ { print "surse.tsv " $1 ": cine \"" $5 "\" — un nume, litere mici" }
+    $6 != "-" && ($6 !~ /^«.*»$/ || split($6, w, " ") < 4) { print "surse.tsv " $1 ": citat — intre « », minim 4 cuvinte, sau -" }
+    { n[$1]++; if ($2 == "P") p[$1]++; if ($2 == "S" && !((($1) SUBSEP dom($3)) in sd)) { sd[$1, dom($3)] = 1; s[$1]++ }
+      if ($5 == "claude") cl[$1] = 1; else om[$1] = 1; if ($6 != "-") ct[$1] = 1 }
+    END {
+      for (i in et) {
+        if (st[i] != "verificat") continue
+        nevoie = (et[i] == "FAPT") ? "F" : (et[i] == "ESTIMARE") ? "E" : ""
+        if (nevoie == "") continue
+        ok = (nevoie == "F") ? (p[i] > 0 || s[i] >= 2) : (p[i] > 0 || s[i] > 0)
+        if (i in dat) { if (ok) print "DATORIE-STINSA\t" i; continue }
+        if (!(i in n)) print "afirmatia \"" i "\" (" et[i] ") nu are nicio sursa in surse.tsv si nu e in surse-datorie.txt"
+        else if (!ok) print "afirmatia \"" i "\" (" et[i] "): dovezi insuficiente — " (nevoie == "F" ? "un FAPT cere o sursa P sau doua S din domenii diferite" : "o ESTIMARE cere o sursa P sau S")
+      }
+      for (i in dat) if (!(i in et)) print "surse-datorie.txt: \"" i "\" nu mai e in afirmatii.tsv — scoate-l"
+      for (i in n) { N++; if (i in om) O++; else C++; if (!(i in ct)) X++ }
+      printf "STAT\t%d\t%d\t%d\t%d\n", N, C, O, X
+    }' "$W/sr" > "$W/srerr"
+  grep -v '^STAT	' "$W/srerr" | grep -v '^DATORIE-STINSA	' > "$W/srp"
+  if [ -s "$W/srp" ]; then
+    while IFS= read -r l; do problema "$l"; done < "$W/srp"
+  else
+    set -- $(grep '^STAT	' "$W/srerr" | cut -f2- | tr '\t' ' ')
+    ok "$1 afirmatii cu dovezi in surse.tsv, toate cu sursa suficienta; citite doar de Claude: $2, si de un om: $3; fara citat exact: $4"
+  fi
+  grep '^DATORIE-STINSA	' "$W/srerr" | cut -f2 | while IFS= read -r i; do atentie "surse-datorie.txt: \"$i\" are acum dovezi suficiente — scoate-l din datorie"; done
+  nd=$(wc -l < "$W/sd" | tr -d ' ')
+  [ "$nd" -gt 0 ] && atentie "$nd afirmatii verificate inainte de pas67, inca fara dovezi in surse.tsv (datoria; scade, nu creste)"
+fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu 21 "Erorile gasite: tipurile, ca sa stim unde sa cautam"
+# ════════════════════════════════════════════════════════════════════
+# Din pas67.  scripts/erori.tsv — o eroare gasita si corectata = un rand (TAB):
+#   pas  id  poz  tip  descriere  sursa
+#   tip: superlativ | atribuire | cifra | cronologie | atenuare | traducere | contradictie | alta
+#   poz: pozitia <h2> (ca in capitole-verificate.tsv) sau "-"; sursa: https://... sau "-"
+# Nu blocheaza decat un rand stricat; altfel numara erorile pe tipuri.
+ERORI="$SCRIPT_DIR/erori.tsv"
+if [ ! -f "$ERORI" ]; then
+  problema "lipseste scripts/erori.tsv"
+else
+  grep -v '^#' "$ERORI" | grep -v '^[[:space:]]*$' > "$W/er"
+  awk -F'\t' -v MF="$W/m" '
+    BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 } }
+    NF != 6 { print "erori.tsv rand " NR ": " NF " coloane, trebuie 6"; next }
+    $1 !~ /^pas[0-9]+[a-z]?$/ { print "erori.tsv rand " NR ": pas \"" $1 "\"" }
+    !($2 in doc) { print "erori.tsv rand " NR ": \"" $2 "\" nu e in manifest" }
+    $3 != "-" && $3 !~ /^[1-9][0-9]*$/ { print "erori.tsv rand " NR ": poz \"" $3 "\"" }
+    $4 !~ /^(superlativ|atribuire|cifra|cronologie|atenuare|traducere|contradictie|alta)$/ { print "erori.tsv rand " NR ": tip \"" $4 "\"" }
+    $5 ~ /^[[:space:]]*-?[[:space:]]*$/ { print "erori.tsv rand " NR ": fara descriere" }
+    $6 != "-" && $6 !~ /^https:\/\// { print "erori.tsv rand " NR ": sursa \"" $6 "\" — https://... sau -" }
+  ' "$W/er" > "$W/ererr"
+  if [ -s "$W/ererr" ]; then
+    while IFS= read -r l; do problema "$l"; done < "$W/ererr"
+  else
+    ok "$(wc -l < "$W/er" | tr -d ' ') erori gasite si corectate, pe tipuri: $(cut -f4 "$W/er" | LC_ALL=C sort | uniq -c | sort -rn | awk '{ printf "%s%s %s", (NR > 1 ? ", " : ""), $2, $1 }')"
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════
 tablou
 
 probleme=$(wc -l < "$W/prob" | tr -d ' ')

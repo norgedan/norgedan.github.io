@@ -177,6 +177,27 @@ mut_T45() { grep -v '^corpus2-C	' "$CV" > x && mv x "$CV"; }
 # un jurnal ramas in urma (data veche): atentionarea trebuie sa numeasca pasul
 mut_T48() { mkdir -p norgedan-jurnal && printf '| 2026-01-01 | test |\n' > norgedan-jurnal/DOCUMENTARE.md; }
 
+# ── pas67: dovezile, riscul, erorile ([19]-[21]) ──────────────────────────
+SR=norgedan.github.io/scripts/surse.tsv; SDT=norgedan.github.io/scripts/surse-datorie.txt; ER=norgedan.github.io/scripts/erori.tsv
+# o afirmatie verificata scoasa din datorie, fara surse: blocheaza
+mut_T50() { grep -v '^ai-act-calendar$' "$SDT" > x && mv x "$SDT"; }
+# nivel de sursa necunoscut
+mut_T51() { awk -F'\t' 'BEGIN{OFS="\t"} $1=="datacentre-energie"{$2="X"} {print}' "$SR" > x && mv x "$SR"; }
+# un FAPT ramas cu o singura sursa S
+mut_T52() { grep -v 'digi24.ro/stiri/cnsas' "$SR" > x && mv x "$SR"; }
+# doua surse S din acelasi domeniu nu ajung pentru un FAPT
+mut_T58() { rep "$SR" 's|https://www.digi24.ro/stiri/cnsas-intre-1980-1989|https://romania.europalibera.org/alt-articol|'; }
+# sursa pentru o afirmatie care nu exista
+mut_T53() { printf 'fantoma\tP\thttps://exemplu.org/x\t2026-10-23\tclaude\t-\n' >> "$SR"; }
+# citat prea scurt / fara « »
+mut_T54() { awk -F'\t' 'BEGIN{OFS="\t"} $1=="datacentre-energie"{$6="«doar»"} {print}' "$SR" > x && mv x "$SR"; }
+# o afirmatie din datorie primeste dovezi suficiente: garda cere sa iasa din datorie
+mut_T57() { printf 'ai-act-calendar\tP\thttps://eur-lex.europa.eu/eli/reg/2026/1744/oj\t2026-10-23\tclaude\t-\n' >> "$SR"; }
+# tip de eroare necunoscut
+mut_T56() { awk -F'\t' 'BEGIN{OFS="\t"} NR>1 && !/^#/ && !d {$4="gresala"; d=1} {print}' "$ER" > x && mv x "$ER"; }
+# riscul: un superlativ nou intr-un capitol neverificat urca in lista (si se vede)
+mut_T55() { rep norgedan.github.io/corpus3/ro/3-europa-la-rascruce-ro.html 's/<\/h1>/<\/h1><p>cel mai mare record fără precedent.<\/p>/'; }
+
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
 echo ""
@@ -219,6 +240,15 @@ t T45 SEMNAL  "corpus2-C: 12 din 12"    "[18] datoria: capitolele scoase din reg
 t T46 PICA    "fara titlu sau amprenta" "[18] rand nou fara --capitole"
 t T47 PICA    "niciun capitol citit"    "[18] zero capitole citite (santinela)"
 t T48 SEMNAL  "ultimul pas din hub (pas" "[11] jurnal in urma: mesajul numeste pasul" manual
+t T50 PICA    "nu are nicio sursa"      "[20] afirmatie verificata fara surse si fara datorie"
+t T51 PICA    "nivel \"X\""             "[20] nivel de sursa necunoscut"
+t T52 PICA    "dovezi insuficiente"     "[20] FAPT cu o singura sursa S"
+t T58 PICA    "dovezi insuficiente"     "[20] doua S din acelasi domeniu nu ajung"
+t T53 PICA    "nu e in afirmatii.tsv"   "[20] sursa pentru o afirmatie inexistenta"
+t T54 PICA    "citat — intre"           "[20] citat fara « » sau sub 4 cuvinte"
+t T57 SEMNAL  "scoate-l din datorie"    "[20] datoria stinsa trebuie scoasa"
+t T56 PICA    "tip \"gresala\""         "[21] tip de eroare necunoscut"
+t T55 SEMNAL  "unde se sapa intai"      "[19] riscul se vede"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

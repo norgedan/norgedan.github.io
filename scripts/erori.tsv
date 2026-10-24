@@ -1,0 +1,36 @@
+# erori.tsv — erorile de continut gasite si corectate (verifica-site.sh [21], din pas67).
+# 6 coloane, TAB:  pas  id  poz  tip  descriere  sursa
+# tip: superlativ | atribuire | cifra | cronologie | atenuare | traducere | contradictie | alta
+# poz: pozitia <h2> ca in capitole-verificate.tsv, sau -;  sursa: adresa care a corectat, sau -
+# Scopul: sa stim unde se ascund erorile, ca sa verificam tintit (auditul din pas67).
+pas56	corpus-06	-	cifra	„AI Act aplicat treptat pana in 2027” — depasit de Regulamentul (UE) 2026/1744	-
+pas59	corpus2-C	9	cifra	server AI de ~10 kW „cat o casa medie” — de fapt peste douazeci de locuinte UE	https://www.odyssee-mure.eu/publications/efficiency-by-sector/households/electricity-consumption-dwelling.html
+pas59	corpus2-C	9	cifra	datacenter de 100-500 MW „cat un oras mediu” — circa 250.000 – 1,2 milioane de locuinte UE	https://www.odyssee-mure.eu/publications/efficiency-by-sector/households/electricity-consumption-dwelling.html
+pas59	corpus2-C	9	cifra	High-NA „peste 350 de milioane” — circa 350	https://www.datacenterknowledge.com/ai-data-centers/asml-shows-off-380m-165-ton-machine-behind-ai-shift
+pas59	corpus2-C	9	alta	„cat de complet a fost aplicata Legea 163/2021 nu am putut verifica” — se putea: Huawei respins, 29 feb. 2024	https://romania.europalibera.org/a/huawei-5g-romania/32844090.html
+pas59	corpus2-C	9	traducere	caseta Norsk perspektiv: doua afirmatii nesustinute (1973, Norsk Hydro)	-
+pas60	corpus2-C	10	alta	Volt Typhoon „nu au furat date” — au exfiltrat parole si schite OT	https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/prc-state-sponsored-actors-compromise-and-maintain-persistent-access-us-critical-infrastructure
+pas60	corpus2-C	10	cifra	Salt Typhoon „3 ani nedetectat” — probabil 1-2 ani	https://en.wikipedia.org/wiki/Salt_Typhoon
+pas60	corpus2-C	10	cronologie	spitalele Hipocrate „paralizate simultan” — lovite esalonat, 10-12 feb. 2024	https://hotnews.ro/26-de-spitale-atacate-informatic-care-este-compania-care-furnizeaza-solutia-hipocrate-17118
+pas60	corpus2-C	10	cronologie	NIS2 „transpusa la timp de 4 din 27” — 4 erau la doua luni dupa termen	https://www.digitaleurope.org/resources/nis2-tranposition-overview/
+pas60	corpus2-C	10	superlativ	XZ „singurul semn ca ceva era gresit” — nu singurul	https://en.wikipedia.org/wiki/XZ_Utils_backdoor
+pas60	corpus2-C	10	traducere	NO „ubegrenset ekstern tilgang” mai larg decat RO „neautentificat”	-
+pas61	corpus2-C	11	alta	capitolul Glasswing doar cu versiunea companiei — adaugate surse independente	https://www.techtarget.com/it-infrastructure/news/366651381/Glasswing-results-put-AI-vulnpocalypse-to-the-test
+pas61	corpus2-C	11	traducere	NO „den tilbakeviste løgnen” inversa sensul RO „nedezmintita”	-
+pas61	corpus2-C	11	traducere	Luca 8:17 in proza NO, nu din Bibelen 1930	-
+pas61	corpus2-C	11	atribuire	metafora numelui Glasswing, alta decat explicatia Anthropic	https://www.anthropic.com/glasswing
+pas62	corpus2-C	6	cronologie	avertismentul rus despre „vietile si sanatatea” — dat pe 27 mai, inainte de drona, nu ca reactie	https://jurnalista.net/2026/05/29/amenintarea-rusiei-catre-romania-inainte-ca-o-drona-sa-loveasca-un-bloc-din-galati-mesajul-ambasadorului-rus-la-bucuresti/
+pas62	corpus2-C	6	atribuire	„negare totala”, „rusofobie” — negasite in surse; ce au spus Putin si Zaharova	https://agerpres.ro/romania-in-lume/2026/06/01/drona-cazuta-la-galati-kremlinul-sustine-ca-nu-a-primit-raspuns-la-cererea-adresata-romaniei-de-a-ex--1561890
+pas62	corpus2-C	6	superlativ	„cea mai dura masura diplomatica” — fara sursa	-
+pas62	corpus2-C	6	atribuire	cine a decis ce: presedintele, Toiu (72 de ore), von der Leyen	https://adevarul.ro/stiri-interne/evenimente/consulul-rus-de-la-constanta-are-72-de-ore-sa-2533163.html
+pas62	corpus2-C	6	alta	drona „parte dintr-un atac asupra porturilor” — grup de 43 peste sudul Ucrainei	https://ziare.com/drona-prabusita-bloc-galati/nicusor-dan-drona-romania-galati-2015645
+pas62	corpus2-C	6	alta	huiduielile „minute in sir”, „in fata blocului” — nesursate	https://www.stiripesurse.ro/nicusor-dan-huiduit-la-galati-dupa-incidentul-cu-drona-demisia_3890519
+pas62	corpus2-C	3	contradictie	regula de aur („nu conteaza cine scrie”) contrazicea introducerea	-
+pas64	corpus2-C	4	atribuire	cele sase categorii prezentate ca fiind ale raportului Romania Imuna — raportul o numeste public doar pe una	https://agerpres.ro/comunicate/2026/05/27/comunicat-de-presa---romania-imuna--1560452
+pas65	corpus2-D	2	cifra	analfabetismul „sub 2% in 1989” — recensamantul din 2002 arata 2,6%	https://en.wikipedia.org/wiki/Literacy_in_Romania
+pas65	corpus2-D	2	alta	Copsa Mica — „ascunse”, nesursat; inlocuit cu ce e documentat	https://en.wikipedia.org/wiki/Cop%C8%99a_Mic%C4%83_works
+pas65	corpus2-D	2	cifra	„8.000 de sate planificate” — 7.000-8.000 din ~13.000-14.000, estimare	https://adevarul.ro/stiri-locale/constanta/planul-diabolic-al-lui-ceausescu-de-a-rade-de-pe-2098214.html
+pas65	corpus2-D	3	cifra	investitiile publice „printre cele mai slabe din regiune” — 5,9% din PIB in 2024, locul 3 in UE	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10a_main?na_item=P51G&sector=S13&unit=PC_GDP&time=2024
+pas66	corpus2-D	4	superlativ	speranta de viata „a doua cea mai mica din UE”, 76,6 — a treia, 76,5	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_mlexpec?sex=T&age=Y_LT1&time=2024
+pas66	corpus2-D	4	atenuare	mortalitatea infantila „~6‰”, media „3,3‰” — 6,6‰, cea mai mare din UE, media 3,5‰	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_minfind?indic_de=INFMORRT&time=2024
+pas66	corpus2-D	4	cifra	natalitatea „de la 9,4” — baza neconfirmata; inlocuita cu numarul nasterilor	-
