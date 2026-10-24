@@ -50,3 +50,8 @@ pas69	corpus3-3	3	atenuare	Slovacia „blocheaza activ ajutorul militar pentru U
 pas69	corpus3-3	3	cifra	eticheta „AUR — 38-41%” — INSCOP 2025-2026: 37-40,9%, sept. 2026 39,7%; „circa 40%”	https://www.promptmedia.ro/2026/09/inscop-research-intentie-vot-alegeri-parlamentare-8/
 pas69	corpus3-3	3	traducere	NO: titlul „UNGARIA” lasat in romana — „UNGARN”	-
 pas69	corpus3-3	3	traducere	NO: capitolul incomplet — lipseau Cehia, jumatate din Romania (SAFE, deficitul, criza), fraze din Ungaria, Polonia, Slovacia, Moldova	-
+pas70	corpus2-D	5	cifra	BCV „circa jumatate din decese” — 56% (2022); cancerul „circa o cincime” — 17%	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf
+pas70	corpus2-D	5	superlativ	„cea mai ridicata mortalitate prin cancer de col uterin din UE” — in 2023 a doua, dupa Letonia (Eurostat)	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/hlth_cd_asdr2?icd10=C53&sex=F&unit=RT&age=TOTAL&time=2023
+pas70	corpus2-D	5	atribuire	OMS: „bolile cardiovasculare premature” si „controlul tensiunii” — fisa OMS vorbeste de cele mai multe BCV si de alti factori (alcool, poluare)	https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)
+pas70	corpus2-D	5	alta	„screeningul este cronic subfinantat” — nesustinut; inlocuit cu ce e documentat (screening oportunist, participare 2019)	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf
+pas70	corpus2-D	5	traducere	NO: caseta despre cancer lipsea, ca si sursele	-

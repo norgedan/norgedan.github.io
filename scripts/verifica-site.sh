@@ -2001,39 +2001,54 @@ AWK
   # pagina din retea e adesea minificata (tot HTML-ul pe 1-20 de randuri, cu <script> in
   # mijlocul textului): text_normalizat, care lucreaza pe randuri, ar pierde textul.  Aici
   # fisierul se citeste intreg si se sar comentariile, <script>, <style> si tag-urile.
+  # pas70: o singura impartire la „<”, apoi o trecere — liniar.  Varianta din pas68 copia
+  # restul paginii la fiecare tag: pe awk-ul OpenBSD, 2 minute pentru o pagina Eurostat de
+  # 700 KB (one-true-awk, masurat); acum 0,13 s, cu acelasi text redus, pe 4 awk-uri.
   cat > "$W/pag.awk" <<'AWK'
 BEGIN { RS = "\001" }
-{ t = $0; gsub(/[\n\r\t]/, " ", t); n = length(t); p = 1
-  while (p <= n) {
-    a = index(substr(t, p), "<")
-    if (a == 0) { printf "%s", substr(t, p); break }
-    printf "%s ", substr(t, p, a - 1); p += a - 1
-    l = tolower(substr(t, p, 8))
-    if (substr(l, 1, 4) == "<!--") e = "-->"
-    else if (substr(l, 1, 7) == "<script") e = "</script"
-    else if (substr(l, 1, 6) == "<style") e = "</style"
-    else e = ">"
-    r = substr(t, p + 1); if (e != ">") r = tolower(r)
-    b = index(r, e); if (b == 0) break
-    p += b + length(e)
+{ t = $0; gsub(/[\n\r\t]/, " ", t)
+  n = split(t, a, "<"); printf "%s", a[1]; m = ""
+  for (i = 2; i <= n; i++) {
+    s = a[i]
+    if (m == "c") { k = index(s, "-->"); if (k) { printf " %s", substr(s, k + 3); m = "" }; continue }
+    l = tolower(substr(s, 1, 8))
+    if (m != "") { if (substr(l, 1, length(m) + 1) == "/" m) { k = index(s, ">"); if (k) printf " %s", substr(s, k + 1); m = "" }; continue }
+    if (substr(s, 1, 3) == "!--") { k = index(substr(s, 4), "-->"); if (k) printf " %s", substr(s, k + 6); else m = "c"; continue }
+    if (l ~ /^script([ >\/]|$)/) { m = "script"; continue }
+    if (l ~ /^style([ >\/]|$)/) { m = "style"; continue }
+    k = index(s, ">"); if (k) printf " %s", substr(s, k + 1)
   }
 }
 AWK
+  # pas70: limita totala de timp pe pagina (implicit 45 s, NORGEDAN_SURSE_TIMEOUT), si
+  # pentru ftp(1), al carui -w limiteaza doar conectarea.  Descarcarea porneste in fundal;
+  # un paznic o opreste la limita.  Paznicul e un subshell: oprit el, kill-ul lui nu mai
+  # ruleaza (doar un sleep orfan, inofensiv, isi termina somnul).
+  ST=${NORGEDAN_SURSE_TIMEOUT:-45}
   sursa_ia() {
-    if [ -n "${NORGEDAN_SURSE_DIR:-}" ]; then
+    if [ -n "${NORGEDAN_SURSE_DIR:-}" ] && [ -d "$NORGEDAN_SURSE_DIR" ]; then
       k=$(printf '%s' "$1" | cksum | cut -d' ' -f1)
       [ -f "$NORGEDAN_SURSE_DIR/$k.html" ] && cp "$NORGEDAN_SURSE_DIR/$k.html" "$2"
-    elif command -v curl >/dev/null 2>&1; then
-      curl -fsSL -m 30 -A "Mozilla/5.0" -o "$2" "$1" 2>/dev/null
-    else
-      ftp -V -M -w 30 -U "Mozilla/5.0" -o "$2" "$1" >/dev/null 2>&1
+      return 0
     fi
+    if command -v curl >/dev/null 2>&1; then
+      curl -fsSL -m "$ST" -A "Mozilla/5.0" -o "$2" "$1" 2>/dev/null &
+    else
+      ftp -V -M -w 30 -U "Mozilla/5.0" -o "$2" "$1" >/dev/null 2>&1 &
+    fi
+    dp=$!
+    ( sleep "$ST" && kill "$dp" 2>/dev/null ) &
+    pz=$!
+    wait "$dp" 2>/dev/null; rz=$?
+    kill "$pz" 2>/dev/null; wait "$pz" 2>/dev/null
+    [ "$rz" -eq 0 ] || rm -f "$2"
   }
   ng=0; nn=0; ni=0
   awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
   while IFS="$TAB" read -r id niv url acc cine cit; do
-    rm -f "$W/pag"; sursa_ia "$url" "$W/pag"
-    if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id)"; ni=$((ni + 1)); continue; fi
+    np=$((ng + nn + ni + 1)); rm -f "$W/pag"; sursa_ia "$url" "$W/pag.$np"
+    [ -f "$W/pag.$np" ] && mv "$W/pag.$np" "$W/pag"
+    if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila sau peste ${ST} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
     if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))

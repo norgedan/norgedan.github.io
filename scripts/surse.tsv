@@ -43,3 +43,8 @@ romania-criza-2026	S	https://startupcafe.ro/guvernul-bolojan-a-fost-demis-dupa-m
 romania-criza-2026	T	https://ro.wikipedia.org/wiki/Criza_politic%C4%83_din_Rom%C3%A2nia_din_2026	2026-10-24	claude	«Pe 30 septembrie 2026, Parlamentul a respins învestirea guvernului Mureșan.»
 criza-cost-imm	S	https://hotnews.ro/?p=2301348	2026-10-24	claude	«economia României pierde aproximativ 63,8 milioane de euro în fiecare zi din cauza crizei politice»
 investitii-publice-2024	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10dd_edpt1?na_item=B9&sector=S13&unit=PC_GDP&time=2024	2026-10-24	claude	-
+boli-cauze-deces	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-24	claude	-
+boli-cauze-deces	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/hlth_cd_asdr2?icd10=I&sex=T&unit=RT&age=TOTAL&time=2023	2026-10-24	claude	-
+cancer-col-uterin	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/hlth_cd_asdr2?icd10=C53&sex=F&unit=RT&age=TOTAL&time=2023	2026-10-24	claude	-
+rezistenta-antimicrobiana	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-24	claude	-
+mortalitate-evitabila	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-24	claude	-
