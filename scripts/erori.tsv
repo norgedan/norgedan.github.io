@@ -34,3 +34,19 @@ pas65	corpus2-D	3	cifra	investitiile publice „printre cele mai slabe din regiu
 pas66	corpus2-D	4	superlativ	speranta de viata „a doua cea mai mica din UE”, 76,6 — a treia, 76,5	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_mlexpec?sex=T&age=Y_LT1&time=2024
 pas66	corpus2-D	4	atenuare	mortalitatea infantila „~6‰”, media „3,3‰” — 6,6‰, cea mai mare din UE, media 3,5‰	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_minfind?indic_de=INFMORRT&time=2024
 pas66	corpus2-D	4	cifra	natalitatea „de la 9,4” — baza neconfirmata; inlocuita cu numarul nasterilor	-
+pas69	corpus3-3	3	cronologie	„un nou vot de investitura programat pentru 20 octombrie” — depasit: guvernul Niculescu investit pe 20 oct. cu 280 de voturi	https://www.euronews.ro/articole/guvernul-luca-niculescu-vot-investitura-parlament
+pas69	corpus3-3	3	atribuire	64 mil. EUR/zi atribuite „patronatului Concordia” — estimarea e a IMM Romania (Florin Jianu)	https://hotnews.ro/?p=2301348
+pas69	corpus3-3	3	cifra	deficitul „oscileaza in jurul a 6% din PIB” — 7,8% in 2025, cel mai mare din UE (9,2% in 2024)	https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-21102026-ap
+pas69	corpus3-3	3	cronologie	Ziobro „a primit azil in Ungaria in ianuarie 2026” — in decembrie 2025	https://notesfrompoland.com/2026/05/10/former-polish-justice-minister-granted-asylum-by-orban-flees-from-hungary-to-us/
+pas69	corpus3-3	3	cifra	Ungaria: deficit „poate ajunge la 6,8% dupa noul guvern” — 7,5% fara masuri (Karman, iul. 2026); 6,8% era tinta nedeclarata a guvernului Orban	https://privatbankar.hu/cikkek/makro/elarulta-karman-andras-honnan-kell-lefaragniuk-az-idei-es-a-jovo-evi-hianyt.html
+pas69	corpus3-3	3	alta	bugetul apararii „aproximativ 11 miliarde de dolari” — sursa da 49,4 mld. lei; conversie nedeclarata	https://www.digi24.ro/stiri/actualitate/cum-va-fi-cheltuit-bugetul-mapn-in-2026-explicatiile-ministrului-radu-miruta-3687243
+pas69	corpus3-3	3	atribuire	Radev „a condamnat invazia Rusiei” si „cere reluarea importurilor de energie ruseasca” — neconfirmate; inlocuite cu pozitiile documentate	https://www.aljazeera.com/news/2026/4/19/exit-poll-shows-former-president-radevs-party-set-to-win-bulgaria-election
+pas69	corpus3-3	3	cifra	Bulgaria Progresista „circa 45%” — 44,59% (CEC, toate sectiile)	https://sofiaglobe.com/?p=127330
+pas69	corpus3-3	3	superlativ	„Scutul de Est este cel mai ambitios program de aparare dintr-un stat NATO” — nesustinut; inlocuit cu bugetul (4,8% din PIB, record)	https://www.euronews.ro/articole/polonia-va-aloca-4-8-din-pib-pentru-cheltuieli-legate-de-aparare-in-2026
+pas69	corpus3-3	3	superlativ	Babis: conflicte de interese „printre cele mai documentate din Europa” — nesustinut; inlocuit cu Agrofert si fondul fiduciar	https://www.news4jax.com/business/2025/12/09/czech-populist-billionaire-andrej-babis-sworn-in-as-new-prime-minister/
+pas69	corpus3-3	3	alta	„China investeste discret in sectoarele strategice cehe” — fara sursa; scos	-
+pas69	corpus3-3	3	superlativ	Bulgaria: componentele auto „una dintre ramurile cele mai dinamice” — fara sursa; scos	-
+pas69	corpus3-3	3	atenuare	Slovacia „blocheaza activ ajutorul militar pentru Ucraina” — a oprit ajutorul de stat; sanctiunile blocate temporar (veto ridicat iul. 2025)	https://en.wikipedia.org/wiki/Slovak_opposition_to_sanctions_on_Russia
+pas69	corpus3-3	3	cifra	eticheta „AUR — 38-41%” — INSCOP 2025-2026: 37-40,9%, sept. 2026 39,7%; „circa 40%”	https://www.promptmedia.ro/2026/09/inscop-research-intentie-vot-alegeri-parlamentare-8/
+pas69	corpus3-3	3	traducere	NO: titlul „UNGARIA” lasat in romana — „UNGARN”	-
+pas69	corpus3-3	3	traducere	NO: capitolul incomplet — lipseau Cehia, jumatate din Romania (SAFE, deficitul, criza), fraze din Ungaria, Polonia, Slovacia, Moldova	-
