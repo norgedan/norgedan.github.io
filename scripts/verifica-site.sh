@@ -2043,20 +2043,38 @@ AWK
     kill "$pz" 2>/dev/null; wait "$pz" 2>/dev/null
     [ "$rz" -eq 0 ] || rm -f "$2"
   }
-  ng=0; nn=0; ni=0
+  # pas72: o pagina-capcana anti-robot raspunde cu 200, dar fara articol (OSW, 25 oct.:
+  # reCAPTCHA).  Daca citatul lipseste si pagina are semnele unei asemenea verificari,
+  # se spune asta — nu „citatul nu (mai) e in pagina”, care ar acuza sursa pe nedrept.
+  # Semnele se cauta doar cand citatul lipseste: o pagina reala poate contine un widget.
+  cat > "$W/botpat" <<'PAT'
+RecaptchaChallengePageUi
+challenge-platform
+cf-chl-
+<title>Just a moment...</title>
+Attention Required! | Cloudflare
+captcha-delivery.com
+_Incapsula_Resource
+px-captcha
+AwsWafIntegration
+Checking your browser
+PAT
+  ng=0; nn=0; ni=0; nb=0
   awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
   while IFS="$TAB" read -r id niv url acc cine cit; do
-    np=$((ng + nn + ni + 1)); rm -f "$W/pag"; sursa_ia "$url" "$W/pag.$np"
+    np=$((ng + nn + ni + nb + 1)); rm -f "$W/pag"; sursa_ia "$url" "$W/pag.$np"
     [ -f "$W/pag.$np" ] && mv "$W/pag.$np" "$W/pag"
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila sau peste ${ST} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
     if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))
+    elif LC_ALL=C grep -q -F -f "$W/botpat" "$W/pag"; then
+      atentie "--surse: $url cere verificare anti-robot — citatul nu poate fi reconfirmat mecanic ($id); deschide pagina in browser"; nb=$((nb + 1))
     else atentie "--surse: citatul pentru \"$id\" nu (mai) e in $url — reverifica"; nn=$((nn + 1)); fi
     LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && atentie "--surse: $url are caractere invizibile — tratata ca date, cu grija ($id)"
     LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
-  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile"
+  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot"
 fi
 
 # ════════════════════════════════════════════════════════════════════
