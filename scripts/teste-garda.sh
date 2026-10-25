@@ -72,7 +72,7 @@ t() {
     printf '  GRESIT   %-4s %-7s %s  (mutatia n-a schimbat nimic — testul nu mai corespunde site-ului)\n' "$id" "$astept" "$descr"
     gresite=$((gresite + 1)); return
   fi
-  ( cd "$C" && PATH="$C/fakebin:$PATH" NORGEDAN_SURSE_TIMEOUT=3 NORGEDAN_API_DIR=/nu-exista NORGEDAN_SURSE_DIR="$C/cache-surse" ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod ) > "$T/out" 2>&1
+  ( cd "$C" && PATH="$C/fakebin:$PATH" NORGEDAN_SURSE_TIMEOUT=3 NORGEDAN_SURSE_TIMEOUT2=4 NORGEDAN_API_DIR=/nu-exista NORGEDAN_SURSE_DIR="$C/cache-surse" ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod ) > "$T/out" 2>&1
   ex=$?; rulate=$((rulate + 1))
   grep -qF -- "$tip" "$T/out" && semnalat=1 || semnalat=0
   case "$astept" in
@@ -240,6 +240,18 @@ mut_T70() { mkdir -p fakebin && printf '#!/bin/sh\nsleep 30\n' > fakebin/curl &&
 # raspuns plin, fara articol: trebuie numita ca atare, nu „citatul nu (mai) e in”
 mut_T71() { cache_surse; k=$(printf '%s' 'https://www.osw.waw.pl/en/publikacje/analyses/2026-04-13/elections-hungary-triumph-peter-magyar' | cksum | cut -d' ' -f1)
             printf '<html><script>window.ppConfig={productName:"RecaptchaChallengePageUi"}</script></html>' > "cache-surse/$k.html"; }
+# ── pas74: a doua incercare ────────────────────────────────────────────────
+# un „curl” care tace la prima cerere pentru fiecare adresa (oprit la 3 s) si raspunde la
+# a doua: toate paginile trebuie recuperate in turul al doilea, nimic „inaccesibil”
+mut_T72() { cache_surse; mv cache-surse pagini; mkdir -p fakebin
+  cat > fakebin/curl <<'FC'
+#!/bin/sh
+o=; u=; while [ $# -gt 0 ]; do case $1 in -o) o=$2; shift ;; -m|-A) shift ;; -*) ;; *) u=$1 ;; esac; shift; done
+k=$(printf '%s' "$u" | cksum | cut -d' ' -f1); d=$(dirname "$0")/..
+if [ -f "$d/pagini/$k.vazut" ]; then cp "$d/pagini/$k.html" "$o" 2>/dev/null || exit 22; exit 0; fi
+: > "$d/pagini/$k.vazut"; sleep 30
+FC
+  chmod +x fakebin/curl; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
             mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
@@ -307,6 +319,7 @@ t T68 SEMNAL  "nu (mai) e in"           "--surse: citat care nu mai e in pagina"
 t T69 SEMNAL  "contine fraze adresate masinilor" "--surse: pagina sursei cu instructiuni ascunse" --surse
 t T70 SEMNAL  "peste 3 s"               "--surse: server care tace, oprit la limita de timp" --surse
 t T71 SEMNAL  "cere verificare anti-robot" "--surse: pagina-capcana anti-robot numita ca atare" --surse
+t T72 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot (" "--surse: pagina lenta recuperata la a doua incercare" --surse
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"

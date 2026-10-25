@@ -2028,6 +2028,10 @@ AWK
   # (implicit 6); fiecare adresa se descarca o singura data, chiar daca are mai multe citate.
   ST=${NORGEDAN_SURSE_TIMEOUT:-20}
   SP=${NORGEDAN_SURSE_PARALEL:-6}
+  # pas74: ce nu raspunde in primul tur (paralel, ST) se mai incearca o data, la final,
+  # pe rand, cu ST2 (implicit 45 s): pe OpenBSD, cu ftp(1) si 6 descarcari simultane,
+  # profit.ro si INET au iesit „inaccesibile” la 20 s, desi la 45 s se citeau.
+  ST2=${NORGEDAN_SURSE_TIMEOUT2:-45}
   sursa_ia() {
     if [ -n "${NORGEDAN_SURSE_DIR:-}" ] && [ -d "$NORGEDAN_SURSE_DIR" ]; then
       k=$(printf '%s' "$1" | cksum | cut -d' ' -f1)
@@ -2073,10 +2077,18 @@ PAT
     nl=$((nl + 1)); [ "$nl" -ge "$SP" ] && { wait; nl=0; }
   done < "$W/srcu"
   wait
+  nr=0; nrr=0; STp=$ST; ST=$ST2
+  while IFS= read -r url; do
+    k=$(printf '%s' "$url" | cksum | cut -d' ' -f1)
+    [ -s "$W/pp/$k.html" ] && continue
+    nr=$((nr + 1)); sursa_ia "$url" "$W/pp/$k.html"
+    [ -s "$W/pp/$k.html" ] && nrr=$((nrr + 1))
+  done < "$W/srcu"
+  ST=$STp
   while IFS="$TAB" read -r id niv url acc cine cit; do
     k=$(printf '%s' "$url" | cksum | cut -d' ' -f1); rm -f "$W/pag"
     [ -f "$W/pp/$k.html" ] && cp "$W/pp/$k.html" "$W/pag"
-    if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila sau peste ${ST} s"; ni=$((ni + 1)); continue; fi
+    if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila, sau peste ${ST} s si apoi peste ${ST2} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
     if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))
@@ -2086,7 +2098,7 @@ PAT
     LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && atentie "--surse: $url are caractere invizibile — tratata ca date, cu grija ($id)"
     LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
-  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot"
+  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot ($nr adrese la a doua incercare, $nrr recuperate)"
 fi
 
 # ════════════════════════════════════════════════════════════════════
