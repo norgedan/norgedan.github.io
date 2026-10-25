@@ -12,8 +12,8 @@ alphafold	corpus/06-mennesket-og-kunstig-intelligens-no.html	4116158083-316
 alphafold	corpus/06-omul-si-inteligenta-artificiala-ro.html	311041484-322
 antrenament-mental	corpus/03-binele-raul-mintea-omului-ro.html	3063355924-167
 antrenament-mental	corpus/03-det-gode-det-onde-no.html	3253658713-138
-bacau-2026	corpus2/no/D-romania-fullstendig-diagnose-no.html	1490118763-482
-bacau-2026	corpus2/ro/D-romania-diagnostic-complet-ro.html	1115093060-513
+bacau-2026	corpus2/no/D-romania-fullstendig-diagnose-no.html	3119111543-504
+bacau-2026	corpus2/ro/D-romania-diagnostic-complet-ro.html	244349528-553
 boli-cauze-deces	corpus2/no/D-romania-fullstendig-diagnose-no.html	1553630882-216
 boli-cauze-deces	corpus2/ro/D-romania-diagnostic-complet-ro.html	555922749-210
 bulgaria-alegeri-2026	norgedan.github.io/corpus3/no/3-europa-ved-veiskillet-no.html	2826037812-173
@@ -142,6 +142,8 @@ limbaj-etape	corpus/02-ce-este-omul-ro.html	2728355753-360
 limbaj-etape	corpus/02-hva-er-mennesket-no.html	2977387308-319
 limbaj-etape	corpus2/no/A-den-rode-traden-i-historien-no.html	1118055201-149
 limbaj-etape	corpus2/ro/A-firul-rosu-al-istoriei-ro.html	583980932-175
+malpraxis-sesizari	corpus2/no/D-romania-fullstendig-diagnose-no.html	3499980400-186
+malpraxis-sesizari	corpus2/ro/D-romania-diagnostic-complet-ro.html	1327715052-188
 marea-neagra-oxigen	corpus/01-i-begynnelsen-var-ordet-no.html	3936481949-180
 marea-neagra-oxigen	corpus/01-la-inceput-era-cuvantul-ro.html	1171906658-199
 mediazona-nume	corpus/04-lumea-in-care-traim-ro.html	1584847018-113
@@ -214,6 +216,8 @@ rosia-montana	corpus/05-planeta-si-romania-ro.html	3379467011-251
 rosia-montana	corpus/05-planeten-og-romania-no.html	936318984-213
 rusia-pib-militar	corpus/04-lumea-in-care-traim-ro.html	479219360-57
 rusia-pib-militar	corpus/04-verden-vi-lever-i-no.html	1002101877-56
+sanatate-cheltuieli-2023	corpus2/no/D-romania-fullstendig-diagnose-no.html	3400195313-179
+sanatate-cheltuieli-2023	corpus2/ro/D-romania-diagnostic-complet-ro.html	688782279-215
 sandworm-2022	corpus2/no/C-den-usynlige-krigen-no.html	4237137085-378
 sandworm-2022	corpus2/ro/C-razboiul-invizibil-ro.html	906970630-385
 saracie-copii-2024	norgedan.github.io/corpus3/no/3-europa-ved-veiskillet-no.html	3580108113-189

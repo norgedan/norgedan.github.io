@@ -5,7 +5,6 @@ adn-probabilitate
 ai-act-calendar
 alphafold
 antrenament-mental
-bacau-2026
 canal-bosfor
 cas-substante
 ccr-anulare
@@ -16,7 +15,6 @@ consonanta-tsimane
 csis-rusia
 datatilsynet-meta
 delta-romania
-efpia-wait
 eichmann-stangneth
 firefox-271
 fluier-paleolitic

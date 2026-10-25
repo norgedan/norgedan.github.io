@@ -48,3 +48,10 @@ boli-cauze-deces	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.
 cancer-col-uterin	P	https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/hlth_cd_asdr2?icd10=C53&sex=F&unit=RT&age=TOTAL&time=2023	2026-10-24	claude	-
 rezistenta-antimicrobiana	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-24	claude	-
 mortalitate-evitabila	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-24	claude	-
+sanatate-cheltuieli-2023	P	https://health.ec.europa.eu/system/files/2025-12/2025_chp_ro_english.pdf	2026-10-25	claude	-
+malpraxis-sesizari	S	https://www.forbes.ro/?p=466991	2026-10-25	claude	«doar 15 dintre acestea (aproximativ 5%) au fost confirmate, toate fiind ulterior contestate în instanță.»
+malpraxis-sesizari	S	https://hotnews.ro/?p=189145	2026-10-25	claude	«Doar 4,3 % din sesizările înregistrate la nivelul Comisiilor de malpraxis în perioada 2015 – 2019 au fost confirmate ca fiind malpraxis.»
+bacau-2026	S	https://www.digi24.ro/stiri/actualitate/rezultatele-anchetei-in-cazul-elevului-care-a-murit-la-scoala-in-bacau-ce-a-descoperit-dsu-in-urma-verificarilor-3800931	2026-10-25	claude	«fiind alertat la ora 13.51 şi ajungând la locul solicitării la ora 14.22»
+bacau-2026	S	https://www.g4media.ro/cazul-copilului-din-bacau-decedat-la-scoala-dsu-medicul-nu-a-valorificat-toate-resursele-disponibile-la-momentul-solicitarii.html	2026-10-25	claude	«medicul coordonator nu a valorificat toate resursele disponibile la momentul solicitării, deşi acestea erau disponibile»
+efpia-wait	S	https://www.euronews.com/health/2026/05/20/where-do-europeans-wait-longest-for-new-medicines	2026-10-25	claude	«those in Romania have to wait for 1,201 days.»
+efpia-wait	S	https://www.digi24.ro/stiri/actualitate/romania-ultima-din-ue-la-accesul-la-medicamente-noi-cat-costa-de-fapt-aceasta-asteptare-3781805	2026-10-25	claude	«Din cele 168 de medicamente inovatoare aprobate în Uniunea Europeană între 2021 şi 2024, doar 28 erau compensate în România»
