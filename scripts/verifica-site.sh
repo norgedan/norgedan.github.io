@@ -2024,7 +2024,10 @@ AWK
   # pentru ftp(1), al carui -w limiteaza doar conectarea.  Descarcarea porneste in fundal;
   # un paznic o opreste la limita.  Paznicul e un subshell: oprit el, kill-ul lui nu mai
   # ruleaza (doar un sleep orfan, inofensiv, isi termina somnul).
-  ST=${NORGEDAN_SURSE_TIMEOUT:-45}
+  # pas73: implicit 20 s (era 45) si descarcari in paralel, cate NORGEDAN_SURSE_PARALEL
+  # (implicit 6); fiecare adresa se descarca o singura data, chiar daca are mai multe citate.
+  ST=${NORGEDAN_SURSE_TIMEOUT:-20}
+  SP=${NORGEDAN_SURSE_PARALEL:-6}
   sursa_ia() {
     if [ -n "${NORGEDAN_SURSE_DIR:-}" ] && [ -d "$NORGEDAN_SURSE_DIR" ]; then
       k=$(printf '%s' "$1" | cksum | cut -d' ' -f1)
@@ -2061,9 +2064,18 @@ Checking your browser
 PAT
   ng=0; nn=0; ni=0; nb=0
   awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
+  # intai descarcarile, in loturi paralele; fiecare in fisierul ei (cksum-ul adresei)
+  mkdir -p "$W/pp"; nl=0
+  cut -f3 "$W/src" | sort -u > "$W/srcu"
+  while IFS= read -r url; do
+    k=$(printf '%s' "$url" | cksum | cut -d' ' -f1)
+    sursa_ia "$url" "$W/pp/$k.html" &
+    nl=$((nl + 1)); [ "$nl" -ge "$SP" ] && { wait; nl=0; }
+  done < "$W/srcu"
+  wait
   while IFS="$TAB" read -r id niv url acc cine cit; do
-    np=$((ng + nn + ni + nb + 1)); rm -f "$W/pag"; sursa_ia "$url" "$W/pag.$np"
-    [ -f "$W/pag.$np" ] && mv "$W/pag.$np" "$W/pag"
+    k=$(printf '%s' "$url" | cksum | cut -d' ' -f1); rm -f "$W/pag"
+    [ -f "$W/pp/$k.html" ] && cp "$W/pp/$k.html" "$W/pag"
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila sau peste ${ST} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"

@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas72, 25 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas73, 25 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -68,7 +68,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (25 octombrie 2026, după pas72):
+STAREA PROIECTULUI (25 octombrie 2026, după pas73):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -93,7 +93,7 @@ URMEAZĂ (detaliat în secțiunea „Ce urmează”, mai jos):
 1. corpus2 C NO — complet (pas58–pas62). Amprentele pe capitole — [18],
    capitole-verificate.tsv, --capitole (pas63); cap. III din C verificat (pas64).
    De adăugat, separat: limitele metodologice ale raportului România Imună.
-2. corpus2 D NO — cap. I–VI complete (pas65–66, pas70–71); rămân VII–XIII, numerotarea din pagină.
+2. corpus2 D NO — cap. I–VIII complete (pas65–66, pas70–71, pas73); rămân IX–XIII, numerotarea din pagină.
    ORDINEA: la fiecare capitol, întâi toate cifrele din RO reverificate la sursă,
    apoi traducerea.
 3. Celelalte 11 perechi din [15]; apoi cele ~30 de citate biblice din proză.
@@ -112,7 +112,7 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 22 de secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 25 oct e la zi până la pas72 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 25 oct e la zi până la pas73 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
@@ -158,6 +158,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas70</td><td>corpus2, hub, jurnal</td><td><code>--surse</code>: <code>pag.awk</code> liniar (2 min → 0,13 s pe awk-ul OpenBSD), limită de timp pe pagină și pentru <code>ftp(1)</code>, T70; D cap. IV „Principalele boli”: 5 corecturi (56% și 17% din decese, col uterin a doua din UE în 2023, OMS, screeningul), NO completat; 4 afirmații noi</td><td>în <code>git log</code></td></tr>
 <tr><td>pas71</td><td>corpus2, hub, jurnal</td><td>D cap. V „Sistemul medical” și VI „Cazuri”: 11 corecturi (cheltuieli 5,8% din PIB, malpraxis 15 din 400, Hexi, medicina operațională propusă, centrele de mari arși fără pacienți, Bacău), NO completat; 2 afirmații noi, 2 ieșite din datorie</td><td>în <code>git log</code></td></tr>
 <tr><td>pas72</td><td>hub, jurnal</td><td><code>--surse</code>: pagina-capcană anti-robot numită ca atare (T71); corpus3-4 „Criza politică” și „Flancul estic NATO”: 13 erori (criza încheiată pe 20 oct., Ciolacu II fără USR, Patriot, Fitch, deficitul 7,8%), NO completat; 4 afirmații noi</td><td>în <code>git log</code></td></tr>
+<tr><td>pas73</td><td>corpus2, hub, jurnal</td><td><code>--surse</code> în paralel (6), 20 s pe pagină; D cap. VII–VIII: rujeola (2024 vs. 2026, ROR1 47,4%), DOJ (distribuitori), opioide; NO completat; 2 afirmații noi</td><td>în <code>git log</code></td></tr>
 </table>
 
 <p>Tot pe 20 oct, în afara proiectului: parola cheii SSH de GitHub schimbată (<code>ssh-keygen -p</code>); cheia rămâne aceeași, nimic de schimbat pe GitHub.</p>
@@ -217,8 +218,8 @@ sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii, ~
 <tr><td>III — Tabloul demografic 2026</td><td class="n">204</td><td class="n">107%</td></tr>
 <tr><td>IV — Principalele boli</td><td class="n">192 → 265</td><td class="n">56% → 97% (pas70)</td></tr>
 <tr><td>VI — Cazuri care au definit criza</td><td class="n">365</td><td class="n">71% → completat (pas71)</td></tr>
-<tr><td>VII — Dezinformarea medicală</td><td class="n">237</td><td class="n">53%</td></tr>
-<tr><td>VIII — Industria farmaceutică</td><td class="n">308</td><td class="n">52%</td></tr>
+<tr><td>VII — Dezinformarea medicală</td><td class="n">237</td><td class="n">53% → completat (pas73)</td></tr>
+<tr><td>VIII — Industria farmaceutică</td><td class="n">308</td><td class="n">52% → completat (pas73)</td></tr>
 <tr><td>IX — Criza globală a drogurilor</td><td class="n">325</td><td class="n">57%</td></tr>
 <tr><td>X — De ce nu există antidot universal</td><td class="n">482</td><td class="n">47%</td></tr>
 <tr><td>XI — Sistemul glimfatic</td><td class="n">284</td><td class="n">57%</td></tr>
@@ -296,7 +297,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 25 octombrie 2026, după pas72
+  Document intern · norgedan · actualizat 25 octombrie 2026, după pas73
 </footer>
 
 </div>
