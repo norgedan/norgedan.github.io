@@ -273,6 +273,21 @@ mut_T75() { rep "$C3R" 's/hero-meta-item stare-la/hero-meta-item/'; }
 mut_T76() { rep "$C3R" 's/<strong>Stare la<\/strong><br>Septembrie 2026/<strong>Stare la<\/strong><br>Septembrie 2099/'
             rep "$C3N" 's/<strong>Status per<\/strong><br>September 2026/<strong>Status per<\/strong><br>September 2099/'; }
 mut_T77() { rep "$C3N" 's/<strong>Status per<\/strong><br>September 2026/<strong>Status per<\/strong><br>August 2026/'; }
+# -- pas78: HTTP 429 (evz.ro, bzi.ro, 26 oct.: Cloudflare, „Retry-After: 30”) ----------------
+# un „curl” care raspunde 429 cu Retry-After: 1 la prima cerere pentru o adresa si pagina la a
+# doua (T78), sau mereu 429 (T79).  Intelege -o, -D si -w, ca garda din pas78.
+fakecurl429() { cache_surse; mv cache-surse pagini; mkdir -p fakebin
+  cat > fakebin/curl <<FC
+#!/bin/sh
+o=; u=; h=; while [ \$# -gt 0 ]; do case \$1 in -o) o=\$2; shift ;; -D) h=\$2; shift ;; -m|-A|-w) shift ;; -*) ;; *) u=\$1 ;; esac; shift; done
+k=\$(printf '%s' "\$u" | cksum | cut -d' ' -f1); d=\$(dirname "\$0")/..
+if [ "$1" = o-data ] && [ -f "\$d/pagini/\$k.vazut" ]; then cp "\$d/pagini/\$k.html" "\$o" 2>/dev/null || exit 22; printf 200; exit 0; fi
+: > "\$d/pagini/\$k.vazut"; [ -n "\$h" ] && printf 'HTTP/2 429\\r\\nretry-after: 1\\r\\n\\r\\n' > "\$h"
+printf '<html>Eroare temporara</html>' > "\$o"; printf 429; exit 0
+FC
+  chmod +x fakebin/curl; }
+mut_T78() { fakecurl429 o-data; }
+mut_T79() { fakecurl429 mereu; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
             mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
@@ -340,12 +355,14 @@ t T68 SEMNAL  "nu (mai) e in"           "--surse: citat care nu mai e in pagina"
 t T69 SEMNAL  "contine fraze adresate masinilor" "--surse: pagina sursei cu instructiuni ascunse" --surse
 t T70 SEMNAL  "peste 3 s"               "--surse: server care tace, oprit la limita de timp" --surse
 t T71 SEMNAL  "cere verificare anti-robot" "--surse: pagina-capcana anti-robot numita ca atare" --surse
-t T72 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot (" "--surse: pagina lenta recuperata la a doua incercare" --surse
+t T72 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot; 0 limitate" "--surse: pagina lenta recuperata la a doua incercare" --surse
 t T73 SEMNAL  " 0 negasite; 0 pagini inaccesibile" "--surse: diacritice scrise ca entitati HTML in pagina" --surse
 t T74 SEMNAL  " 0 negasite; 0 pagini inaccesibile" "--surse: s/t cu sedila in pagina, cu virgula in citat" --surse
 t T75 PICA    "Corpus III trebuie datat" "[3] document din Corpus III fara Stare la"
 t T76 PICA    "in viitor:"              "[3] Stare la in viitor"
 t T77 PICA    "difera intre RO si NO"   "[3] Stare la diferit intre RO si NO"
+t T78 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot; 0 limitate" "--surse: 429 la prima cerere, recuperat dupa Retry-After" --surse
+t T79 SEMNAL  "limiteaza cererile (HTTP 429" "--surse: server care raspunde mereu 429 numit ca atare" --surse
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"

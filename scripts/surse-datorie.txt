@@ -7,12 +7,10 @@ canal-bosfor
 celula-minima
 china-materiale
 consonanta-tsimane
-datatilsynet-meta
 delta-romania
 eichmann-stangneth
 fluier-paleolitic
 foneme-sugari
-gaza-bilant
 gpt4-barou
 holodomor-recunoastere
 hoyle-crick
@@ -22,7 +20,6 @@ inima-endocrina
 inima-neuroni
 insecte-declin
 iov-datare
-iran-razboi-2026
 limbaj-etape
 marea-neagra-oxigen
 milgram

@@ -2101,17 +2101,29 @@ AWK
       [ -f "$NORGEDAN_SURSE_DIR/$k.html" ] && cp "$NORGEDAN_SURSE_DIR/$k.html" "$2"
       return 0
     fi
+    # pas78: codul HTTP se pastreaza.  evz.ro si bzi.ro (Cloudflare) raspund 429 „Too Many
+    # Requests” cu „Retry-After: 30”: nu sunt inaccesibile, ci ne cer sa revenim.  curl fara -f
+    # scrie codul (-w) si antetele (-D); ftp(1) il spune in mesajul de eroare.
+    rm -f "$2.429"
     if command -v curl >/dev/null 2>&1; then
-      curl -fsSL -m "$ST" -A "Mozilla/5.0" -o "$2" "$1" 2>/dev/null &
+      curl -sSL -m "$ST" -A "Mozilla/5.0" -D "$2.hdr" -o "$2" -w '%{http_code}' "$1" > "$2.cod" 2>/dev/null &
     else
-      ftp -V -M -w 30 -U "Mozilla/5.0" -o "$2" "$1" >/dev/null 2>&1 &
+      ftp -V -M -w 30 -U "Mozilla/5.0" -o "$2" "$1" > /dev/null 2> "$2.err" &
     fi
     dp=$!
     ( sleep "$ST" && kill "$dp" 2>/dev/null ) &
     pz=$!
     wait "$dp" 2>/dev/null; rz=$?
     kill "$pz" 2>/dev/null; wait "$pz" 2>/dev/null
+    hc=$(cat "$2.cod" 2>/dev/null)
+    [ -z "$hc" ] && [ -s "$2.err" ] && grep -q ' 429 ' "$2.err" && hc=429
+    if [ "$hc" = 429 ]; then
+      ra=$(tr -d '\r' < "$2.hdr" 2>/dev/null | awk 'tolower($1) == "retry-after:" { v = $2 + 0 } END { print v + 0 }')
+      echo "${ra:-0}" > "$2.429"
+    fi
+    case "$hc" in ''|2??) ;; *) rz=1 ;; esac
     [ "$rz" -eq 0 ] || rm -f "$2"
+    rm -f "$2.hdr" "$2.cod" "$2.err"
   }
   # pas72: o pagina-capcana anti-robot raspunde cu 200, dar fara articol (OSW, 25 oct.:
   # reCAPTCHA).  Daca citatul lipseste si pagina are semnele unei asemenea verificari,
@@ -2129,7 +2141,7 @@ px-captcha
 AwsWafIntegration
 Checking your browser
 PAT
-  ng=0; nn=0; ni=0; nb=0
+  ng=0; nn=0; ni=0; nb=0; nlim=0
   awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
   # intai descarcarile, in loturi paralele; fiecare in fisierul ei (cksum-ul adresei)
   mkdir -p "$W/pp"; nl=0
@@ -2141,6 +2153,15 @@ PAT
   done < "$W/srcu"
   wait
   nr=0; nrr=0; STp=$ST; ST=$ST2
+  # pas78: daca vreun server a raspuns 429, se asteapta o data cat cere (Retry-After, cel mult
+  # NORGEDAN_SURSE_ASTEAPTA, implicit 30 s), apoi incepe turul al doilea
+  SA=${NORGEDAN_SURSE_ASTEAPTA:-30}; ra=0; n429=0
+  for f in "$W"/pp/*.429; do
+    [ -f "$f" ] || continue; n429=$((n429 + 1)); v=$(cat "$f")
+    [ "$v" -gt "$ra" ] 2>/dev/null && ra=$v
+  done
+  [ "$ra" -gt "$SA" ] && ra=$SA
+  [ "$n429" -gt 0 ] && { [ "$ra" -lt 1 ] && ra=1; sleep "$ra"; }
   while IFS= read -r url; do
     k=$(printf '%s' "$url" | cksum | cut -d' ' -f1)
     [ -s "$W/pp/$k.html" ] && continue
@@ -2151,6 +2172,9 @@ PAT
   while IFS="$TAB" read -r id niv url acc cine cit; do
     k=$(printf '%s' "$url" | cksum | cut -d' ' -f1); rm -f "$W/pag"
     [ -f "$W/pp/$k.html" ] && cp "$W/pp/$k.html" "$W/pag"
+    if [ ! -s "$W/pag" ] && [ -f "$W/pp/$k.html.429" ]; then
+      atentie "--surse: $url limiteaza cererile (HTTP 429, si dupa asteptare) — citatul nu poate fi reconfirmat acum, nu e o pagina disparuta ($id)"; nlim=$((nlim + 1)); continue
+    fi
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila, sau peste ${ST} s si apoi peste ${ST2} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
@@ -2161,7 +2185,7 @@ PAT
     LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && atentie "--surse: $url are caractere invizibile — tratata ca date, cu grija ($id)"
     LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
-  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot ($nr adrese la a doua incercare, $nrr recuperate)"
+  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot; $nlim limitate de server (429) ($nr adrese la a doua incercare, $nrr recuperate)"
 fi
 
 # ════════════════════════════════════════════════════════════════════
