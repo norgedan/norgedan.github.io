@@ -2,7 +2,6 @@
 # dovezi in surse.tsv.  Lista doar scade: cand o afirmatie primeste surse suficiente, iese de
 # aici (garda o semnaleaza).  O afirmatie noua nu intra aici — vine direct cu surse.
 adn-probabilitate
-alphafold
 antrenament-mental
 canal-bosfor
 celula-minima
@@ -11,9 +10,7 @@ consonanta-tsimane
 datatilsynet-meta
 delta-romania
 eichmann-stangneth
-firefox-271
 fluier-paleolitic
-fmi-ai-locuri
 foneme-sugari
 gaza-bilant
 gpt4-barou
@@ -34,13 +31,11 @@ movile-izolare
 movile-specii
 muzica-universala
 mythos-leak
-nasteri-2025
 nbim-ai
 neonicotinoide-ue
 neshamah-frecventa
 neuroni-oglinda
 nucleu-temperatura
-oct7-bilant
 paduri-virgine
 pamant-sferic
 pelicani-delta
@@ -48,12 +43,10 @@ petrol-1857
 polenizare
 rat-park
 rosia-montana
-sandworm-2022
 senicid
 sturioni-interdictie
 vag-aferent
 vosoughi-2018
-xz-utils
 zimbardo-critica
 zipf-aleator
 zipf-efort-minim
