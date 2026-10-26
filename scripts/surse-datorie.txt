@@ -16,7 +16,6 @@ fluier-paleolitic
 fmi-ai-locuri
 foneme-sugari
 gaza-bilant
-glimfatic
 gpt4-barou
 holodomor-recunoastere
 hoyle-crick

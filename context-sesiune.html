@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas75, 26 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas76, 26 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -68,7 +68,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Verifică, nu presupune. Inclusiv diagnosticul, nu doar rezultatul.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (26 octombrie 2026, după pas75):
+STAREA PROIECTULUI (26 octombrie 2026, după pas76):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -93,7 +93,7 @@ URMEAZĂ (detaliat în secțiunea „Ce urmează”, mai jos):
 1. corpus2 C NO — complet (pas58–pas62). Amprentele pe capitole — [18],
    capitole-verificate.tsv, --capitole (pas63); cap. III din C verificat (pas64).
    De adăugat, separat: limitele metodologice ale raportului România Imună.
-2. corpus2 D NO — cap. I–X complete (pas65–66, pas70–71, pas73–74); rămân XI–XIII, numerotarea din pagină.
+2. corpus2 D — ÎNCHIS (pas65–76): introducerea și toate cele 13 capitole verificate la sursă, NO complet.
    ORDINEA: la fiecare capitol, întâi toate cifrele din RO reverificate la sursă,
    apoi traducerea.
 3. Celelalte 11 perechi din [15]; apoi cele ~30 de citate biblice din proză.
@@ -102,7 +102,7 @@ URMEAZĂ (detaliat în secțiunea „Ce urmează”, mai jos):
 5. Riscul [19], de sus în jos, alternat cu D: corpus3-3 cap. III „Europa de Est”
    verificat (pas69); corpus3-4 „Criza politică” și „Flancul estic NATO” (pas72) —
    criza adusă la zi (încheiată pe 20 oct.), deficitul 7,8%.
-6. Datoria de surse (surse-datorie.txt): 57 după pas75, în loturi de ~15–20;
+6. Datoria de surse (surse-datorie.txt): 56 după pas76, în loturi de ~15–20;
    rămase din lotul 1: Iran, Gaza, China/minerale, Holodomor.
 
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
@@ -114,7 +114,7 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 22 de secțiuni, lecțiile BSD/POSIX, jurnalul sesiunilor (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 26 oct e la zi până la pas75 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 26 oct e la zi până la pas76 (commit-ul: <code>git -C ~/norgedan-jurnal log -1</code>). Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate</li>
 </ul>
 
@@ -163,6 +163,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas73</td><td>corpus2, hub, jurnal</td><td><code>--surse</code> în paralel (6), 20 s pe pagină; D cap. VII–VIII: rujeola (2024 vs. 2026, ROR1 47,4%), DOJ (distribuitori), opioide; NO completat; 2 afirmații noi</td><td>în <code>git log</code></td></tr>
 <tr><td>pas74</td><td>corpus2, hub, jurnal</td><td><code>--surse</code>: a doua încercare pentru paginile lente (45 s, T72); D cap. IX–X: 13 erori (SUA ~60% nu 69%, nitazenele după 2018, România 25/40 de decese, consumul tinerilor scade, auditul Curții de Conturi, Afganistan după 2022, amfetaminele, vaccinurile), NO completat; 11 afirmații noi</td><td>în <code>git log</code></td></tr>
 <tr><td>pas75</td><td>corpus, corpus2, hub, jurnal</td><td><code>--surse</code> decodează entitățile HTML (T73, T74); Corpus III datat, verificat în [3] (T75–T77); mențiunea pe hub; datoria de surse 72 → 57, 3 erori (SUA, Galați, Holodomor)</td><td>în <code>git log</code></td></tr>
+<tr><td>pas76</td><td>corpus2, hub, jurnal</td><td>D închis: introducerea și cap. XI–XIII; 9 erori (PNRR încheiat, Paulescu, diaspora, Canal, Bitdefender, Lancet), NO completat; 8 afirmații noi</td><td>în <code>git log</code></td></tr>
 </table>
 
 <p>Tot pe 20 oct, în afara proiectului: parola cheii SSH de GitHub schimbată (<code>ssh-keygen -p</code>); cheia rămâne aceeași, nimic de schimbat pe GitHub.</p>
@@ -226,11 +227,11 @@ sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii, ~
 <tr><td>VIII — Industria farmaceutică</td><td class="n">308</td><td class="n">52% → completat (pas73)</td></tr>
 <tr><td>IX — Criza globală a drogurilor</td><td class="n">325</td><td class="n">57% → completat (pas74)</td></tr>
 <tr><td>X — De ce nu există antidot universal</td><td class="n">482</td><td class="n">47% → completat (pas74)</td></tr>
-<tr><td>XI — Sistemul glimfatic</td><td class="n">284</td><td class="n">57%</td></tr>
-<tr><td>XII — Rezerva neurologică</td><td class="n">347</td><td class="n">38%</td></tr>
-<tr><td>XIII — De ce România supraviețuiește</td><td class="n">480</td><td class="n">81%</td></tr>
+<tr><td>XI — Sistemul glimfatic</td><td class="n">284</td><td class="n">57% → completat (pas76)</td></tr>
+<tr><td>XII — Rezerva neurologică</td><td class="n">347</td><td class="n">38% → completat (pas76)</td></tr>
+<tr><td>XIII — De ce România supraviețuiește</td><td class="n">480</td><td class="n">81% → completat (pas76)</td></tr>
 </table>
-<p>Introducerea și cap. V (Sistemul medical) erau complete în NO — încă neverificate la sursă în RO, deci nu în registru. Cifrele demografice și medicale care se învechesc intră în <code>afirmatii.tsv</code> cu termen de reverificare.</p>
+<p>Introducerea și cap. V (Sistemul medical) erau complete în NO de la început; cap. V a fost verificat în pas71, introducerea în pas76 — acum toate cele 14 sunt în registru. Cifrele demografice și medicale care se învechesc intră în <code>afirmatii.tsv</code> cu termen de reverificare.</p>
 
 <h3>3. Celelalte perechi din [15] (pe 20 oct, RO/NO)</h3>
 <table>
@@ -301,7 +302,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 26 octombrie 2026, după pas75
+  Document intern · norgedan · actualizat 26 octombrie 2026, după pas76
 </footer>
 
 </div>

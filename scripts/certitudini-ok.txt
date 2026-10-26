@@ -121,3 +121,5 @@ Dacă un articol confirmă perfect tot
 Confirmă emoția, nu conținutul
 # --- pas57 (20 oct 2026): legat de fisier — perechea NO a fragmentului RO acceptat „pierzi și singura cale de influență” ---
 corpus2/no/C-den-usynlige-krigen-no.html	mister du også den eneste veien til innflytelse
+# --- pas76 (26 oct 2026): legat de fisier — naloxona e intr-adevar singurul antidot care inverseaza supradoza de opioide (cap. X, verificat in pas74) ---
+corpus2/no/D-romania-fullstendig-diagnose-no.html	Nalokson er det eneste reelle, delvise unntaket
