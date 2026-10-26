@@ -2104,7 +2104,10 @@ AWK
     # pas78: codul HTTP se pastreaza.  evz.ro si bzi.ro (Cloudflare) raspund 429 „Too Many
     # Requests” cu „Retry-After: 30”: nu sunt inaccesibile, ci ne cer sa revenim.  curl fara -f
     # scrie codul (-w) si antetele (-D); ftp(1) il spune in mesajul de eroare.
-    rm -f "$2.429"
+    # pas80: si celelalte coduri se pastreaza (in "$2.http"): capitalfm.co.ke si csis.org
+    # raspundeau 403, iar mesajul spunea doar „inaccesibila”.  newsweek.com si euronews.com
+    # raspund 406 oricarui curl (si cu antetul Accept al unui browser — incercat): tot refuz.
+    rm -f "$2.429" "$2.http"
     if command -v curl >/dev/null 2>&1; then
       curl -sSL -m "$ST" -A "Mozilla/5.0" -D "$2.hdr" -o "$2" -w '%{http_code}' "$1" > "$2.cod" 2>/dev/null &
     else
@@ -2116,12 +2119,12 @@ AWK
     wait "$dp" 2>/dev/null; rz=$?
     kill "$pz" 2>/dev/null; wait "$pz" 2>/dev/null
     hc=$(cat "$2.cod" 2>/dev/null)
-    [ -z "$hc" ] && [ -s "$2.err" ] && grep -q ' 429 ' "$2.err" && hc=429
+    [ -z "$hc" ] && [ -s "$2.err" ] && hc=$(grep -o ' [1-5][0-9][0-9] ' "$2.err" | head -1 | tr -d ' ')
     if [ "$hc" = 429 ]; then
       ra=$(tr -d '\r' < "$2.hdr" 2>/dev/null | awk 'tolower($1) == "retry-after:" { v = $2 + 0 } END { print v + 0 }')
       echo "${ra:-0}" > "$2.429"
     fi
-    case "$hc" in ''|2??) ;; *) rz=1 ;; esac
+    case "$hc" in ''|2??) ;; 000|429) rz=1 ;; *) rz=1; echo "$hc" > "$2.http" ;; esac
     [ "$rz" -eq 0 ] || rm -f "$2"
     rm -f "$2.hdr" "$2.cod" "$2.err"
   }
@@ -2174,6 +2177,16 @@ PAT
     [ -f "$W/pp/$k.html" ] && cp "$W/pp/$k.html" "$W/pag"
     if [ ! -s "$W/pag" ] && [ -f "$W/pp/$k.html.429" ]; then
       atentie "--surse: $url limiteaza cererile (HTTP 429, si dupa asteptare) — citatul nu poate fi reconfirmat acum, nu e o pagina disparuta ($id)"; nlim=$((nlim + 1)); continue
+    fi
+    if [ ! -s "$W/pag" ] && [ -f "$W/pp/$k.html.http" ]; then
+      hc=$(cat "$W/pp/$k.html.http")
+      case "$hc" in
+        401|403|406) de="serverul refuza descarcarea automata — citatul se confirma in browser" ;;
+        404|410) de="pagina nu mai e la adresa asta — de cautat adresa noua sau o copie (web.archive.org)" ;;
+        5??) de="eroare a serverului — de reincercat mai tarziu" ;;
+        *) de="raspuns fara pagina" ;;
+      esac
+      atentie "--surse: nu pot citi $url ($id) — HTTP $hc: $de"; ni=$((ni + 1)); continue
     fi
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila, sau peste ${ST} s si apoi peste ${ST2} s"; ni=$((ni + 1)); continue; fi
     LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"

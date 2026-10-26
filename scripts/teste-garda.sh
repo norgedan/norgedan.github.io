@@ -279,7 +279,7 @@ mut_T77() { rep "$C3N" 's/<strong>Status per<\/strong><br>September 2026/<strong
 fakecurl429() { cache_surse; mv cache-surse pagini; mkdir -p fakebin
   cat > fakebin/curl <<FC
 #!/bin/sh
-o=; u=; h=; while [ \$# -gt 0 ]; do case \$1 in -o) o=\$2; shift ;; -D) h=\$2; shift ;; -m|-A|-w) shift ;; -*) ;; *) u=\$1 ;; esac; shift; done
+o=; u=; h=; while [ \$# -gt 0 ]; do case \$1 in -o) o=\$2; shift ;; -D) h=\$2; shift ;; -m|-A|-w|-H) shift ;; -*) ;; *) u=\$1 ;; esac; shift; done
 k=\$(printf '%s' "\$u" | cksum | cut -d' ' -f1); d=\$(dirname "\$0")/..
 if [ "$1" = o-data ] && [ -f "\$d/pagini/\$k.vazut" ]; then cp "\$d/pagini/\$k.html" "\$o" 2>/dev/null || exit 22; printf 200; exit 0; fi
 : > "\$d/pagini/\$k.vazut"; [ -n "\$h" ] && printf 'HTTP/2 429\\r\\nretry-after: 1\\r\\n\\r\\n' > "\$h"
@@ -288,6 +288,18 @@ FC
   chmod +x fakebin/curl; }
 mut_T78() { fakecurl429 o-data; }
 mut_T79() { fakecurl429 mereu; }
+# -- pas80: celelalte coduri HTTP (capitalfm.co.ke si csis.org, 26 oct.: 403) -------------------
+# un „curl” care raspunde mereu cu codul dat si o pagina de eroare: mesajul trebuie sa spuna
+# codul si ce inseamna, nu doar „inaccesibila”
+fakecurlcod() { mkdir -p fakebin
+  cat > fakebin/curl <<FC
+#!/bin/sh
+o=; while [ \$# -gt 0 ]; do case \$1 in -o) o=\$2; shift ;; -m|-A|-w|-H|-D) shift ;; esac; shift; done
+printf '<html>Eroare</html>' > "\$o"; printf $1; exit 0
+FC
+  chmod +x fakebin/curl; }
+mut_T80() { fakecurlcod 406; }
+mut_T81() { fakecurlcod 410; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
             mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
@@ -363,6 +375,8 @@ t T76 PICA    "in viitor:"              "[3] Stare la in viitor"
 t T77 PICA    "difera intre RO si NO"   "[3] Stare la diferit intre RO si NO"
 t T78 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot; 0 limitate" "--surse: 429 la prima cerere, recuperat dupa Retry-After" --surse
 t T79 SEMNAL  "limiteaza cererile (HTTP 429" "--surse: server care raspunde mereu 429 numit ca atare" --surse
+t T80 SEMNAL  "HTTP 406: serverul refuza descarcarea automata" "--surse: 406 (newsweek, euronews) numit refuz, cu codul lui" --surse
+t T81 SEMNAL  "HTTP 410: pagina nu mai e la adresa asta" "--surse: 410 (pagina stearsa) numit cu codul lui" --surse
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
