@@ -2,26 +2,19 @@
 # dovezi in surse.tsv.  Lista doar scade: cand o afirmatie primeste surse suficiente, iese de
 # aici (garda o semnaleaza).  O afirmatie noua nu intra aici — vine direct cu surse.
 adn-probabilitate
-ai-act-calendar
 alphafold
 antrenament-mental
 canal-bosfor
-cas-substante
-ccr-anulare
 celula-minima
 china-materiale
-clima-2025
 consonanta-tsimane
-csis-rusia
 datatilsynet-meta
 delta-romania
 eichmann-stangneth
 firefox-271
 fluier-paleolitic
 fmi-ai-locuri
-fond-norvegia
 foneme-sugari
-galati-drona
 gaza-bilant
 glimfatic
 gpt4-barou
@@ -36,7 +29,6 @@ iov-datare
 iran-razboi-2026
 limbaj-etape
 marea-neagra-oxigen
-mediazona-nume
 milgram
 movile-chemosinteza
 movile-izolare
@@ -46,12 +38,10 @@ mythos-leak
 nasteri-2025
 nbim-ai
 neonicotinoide-ue
-neptun-deep
 neshamah-frecventa
 neuroni-oglinda
 nucleu-temperatura
 oct7-bilant
-ohchr-ucraina
 paduri-virgine
 pamant-sferic
 pelicani-delta
@@ -59,14 +49,9 @@ petrol-1857
 polenizare
 rat-park
 rosia-montana
-rusia-pib-militar
 sandworm-2022
 senicid
-sipri-europa-2025
 sturioni-interdictie
-sua-romania-2025
-tartus-2026
-ursi-romania
 vag-aferent
 vosoughi-2018
 xz-utils

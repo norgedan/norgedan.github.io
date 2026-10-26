@@ -184,7 +184,10 @@ mut_T48() { mkdir -p norgedan-jurnal && printf '| 2026-01-01 | test |\n' > norge
 # ── pas67: dovezile, riscul, erorile ([19]-[21]) ──────────────────────────
 SR=norgedan.github.io/scripts/surse.tsv; SDT=norgedan.github.io/scripts/surse-datorie.txt; ER=norgedan.github.io/scripts/erori.tsv
 # o afirmatie verificata scoasa din datorie, fara surse: blocheaza
-mut_T50() { grep -v '^ai-act-calendar$' "$SDT" > x && mv x "$SDT"; }
+# pas75: prima afirmatie ramasa in datorie, nu un id fix — ai-act-calendar a iesit din
+# datorie in pas75, iar mutatia n-a mai schimbat nimic (santinela a prins-o)
+datoria1() { grep -v '^#' "$SDT" | grep . | head -1; }
+mut_T50() { d=$(datoria1); [ -n "$d" ] && grep -v "^$d\$" "$SDT" > x && mv x "$SDT"; }
 # nivel de sursa necunoscut
 mut_T51() { awk -F'\t' 'BEGIN{OFS="\t"} $1=="datacentre-energie"{$2="X"} {print}' "$SR" > x && mv x "$SR"; }
 # un FAPT ramas cu o singura sursa S
@@ -196,7 +199,7 @@ mut_T53() { printf 'fantoma\tP\thttps://exemplu.org/x\t2026-10-23\tclaude\t-\n' 
 # citat prea scurt / fara « »
 mut_T54() { awk -F'\t' 'BEGIN{OFS="\t"} $1=="datacentre-energie"{$6="«doar»"} {print}' "$SR" > x && mv x "$SR"; }
 # o afirmatie din datorie primeste dovezi suficiente: garda cere sa iasa din datorie
-mut_T57() { printf 'ai-act-calendar\tP\thttps://eur-lex.europa.eu/eli/reg/2026/1744/oj\t2026-10-23\tclaude\t-\n' >> "$SR"; }
+mut_T57() { d=$(datoria1); [ -n "$d" ] && printf '%s\tP\thttps://exemplu.org/sursa-primara\t2026-10-23\tclaude\t-\n' "$d" >> "$SR"; }
 # tip de eroare necunoscut
 mut_T56() { awk -F'\t' 'BEGIN{OFS="\t"} NR>1 && !/^#/ && !d {$4="gresala"; d=1} {print}' "$ER" > x && mv x "$ER"; }
 # riscul: un superlativ nou intr-un capitol neverificat urca in lista (si se vede)
@@ -252,6 +255,24 @@ if [ -f "$d/pagini/$k.vazut" ]; then cp "$d/pagini/$k.html" "$o" 2>/dev/null || 
 : > "$d/pagini/$k.vazut"; sleep 30
 FC
   chmod +x fakebin/curl; }
+# ── pas75: entitatile HTML in pagina sursei ─────────────────────────────────
+# Stirileprotv.ro (25 oct.) scrie diacriticele ca entitati; inainte erau sterse, iar
+# citatul copiat corect dadea „negasit”.  Pagina Digi24 din cache primeste diacriticele
+# ca entitati zecimale, hexazecimale si cu nume: citatele trebuie gasite.
+DIGI='https://www.digi24.ro/stiri/actualitate/social/raport-creste-consumul-de-droguri-in-randul-femeilor-tinere-din-romania-specialistii-vorbesc-despre-o-inversare-a-tendintelor-3855043'
+mut_T73() { cache_surse; k=$(printf '%s' "$DIGI" | cksum | cut -d' ' -f1)
+  LC_ALL=C sed -e "s/$(printf '\304\203')/\&#259;/g" -e "s/$(printf '\310\231')/\&#x219;/g" -e "s/$(printf '\303\256')/\&icirc;/g" -e "s/$(printf '\310\233')/\&#539;/g" -e "s/$(printf '\303\242')/\&acirc;/g" "cache-surse/$k.html" > x && mv x "cache-surse/$k.html"
+  LC_ALL=C grep -q '&#259;' "cache-surse/$k.html"; }
+# aceeasi litera scrisa altfel: s/t cu sedila in pagina, cu virgula in citat
+mut_T74() { cache_surse; k=$(printf '%s' "$DIGI" | cksum | cut -d' ' -f1)
+  LC_ALL=C sed -e "s/$(printf '\310\231')/$(printf '\305\237')/g" -e "s/$(printf '\310\233')/$(printf '\305\243')/g" "cache-surse/$k.html" > x && mv x "cache-surse/$k.html"
+  LC_ALL=C grep -q "$(printf '\305\237')" "cache-surse/$k.html"; }
+# -- pas75: Corpus III datat ("Stare la" / "Status per") --------------------------
+C3R=norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html; C3N=norgedan.github.io/corpus3/no/2-verden-i-2026-no.html
+mut_T75() { rep "$C3R" 's/hero-meta-item stare-la/hero-meta-item/'; }
+mut_T76() { rep "$C3R" 's/<strong>Stare la<\/strong><br>Septembrie 2026/<strong>Stare la<\/strong><br>Septembrie 2099/'
+            rep "$C3N" 's/<strong>Status per<\/strong><br>September 2026/<strong>Status per<\/strong><br>September 2099/'; }
+mut_T77() { rep "$C3N" 's/<strong>Status per<\/strong><br>September 2026/<strong>Status per<\/strong><br>August 2026/'; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
             mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
@@ -320,6 +341,11 @@ t T69 SEMNAL  "contine fraze adresate masinilor" "--surse: pagina sursei cu inst
 t T70 SEMNAL  "peste 3 s"               "--surse: server care tace, oprit la limita de timp" --surse
 t T71 SEMNAL  "cere verificare anti-robot" "--surse: pagina-capcana anti-robot numita ca atare" --surse
 t T72 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot (" "--surse: pagina lenta recuperata la a doua incercare" --surse
+t T73 SEMNAL  " 0 negasite; 0 pagini inaccesibile" "--surse: diacritice scrise ca entitati HTML in pagina" --surse
+t T74 SEMNAL  " 0 negasite; 0 pagini inaccesibile" "--surse: s/t cu sedila in pagina, cu virgula in citat" --surse
+t T75 PICA    "Corpus III trebuie datat" "[3] document din Corpus III fara Stare la"
+t T76 PICA    "in viitor:"              "[3] Stare la in viitor"
+t T77 PICA    "difera intre RO si NO"   "[3] Stare la diferit intre RO si NO"
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"

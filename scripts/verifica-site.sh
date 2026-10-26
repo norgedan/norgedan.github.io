@@ -426,6 +426,31 @@ done < "$W/html"
 
 grep -q "${TAB}og:image$TAB" "$W"/t/* 2>/dev/null || atentie "nicio pagina nu are og:image — distribuirile apar fara imagine"
 
+# pas75: Corpus III descrie prezentul politic, care imbatraneste in saptamani.  Fiecare
+# document spune deci, sub titlu, „Stare la” / „Status per” (luna si anul), in elementul
+# class="hero-meta-item stare-la".  Lipsa, luna necunoscuta, o data in viitor sau RO si NO
+# cu luni diferite = PROBLEMA; mai veche de 3 luni = ATENTIE (de reverificat).
+acum=$(( $(date +%Y) * 12 + $(date +%m | sed 's/^0//') - 1 ))
+: > "$W/stare"
+while IFS="$TAB" read -r repo cale limba id col tit; do
+  [ "$col" = corpus3 ] || continue
+  f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
+  v=$(tr '\n' ' ' < "$f" | grep -o 'class="hero-meta-item stare-la"><strong>[^<]*</strong><br>[^<]*' | head -1 | sed 's/.*<br>//')
+  if [ -z "$v" ]; then problema "$id ($limba) $repo/$cale: lipseste „Stare la” (class=\"hero-meta-item stare-la\") — Corpus III trebuie datat"; continue; fi
+  ym=$(printf '%s\n' "$v" | awk -v l="$limba" '{ m = tolower($1); y = $2 + 0
+    n = split(l == "ro" ? "ianuarie februarie martie aprilie mai iunie iulie august septembrie octombrie noiembrie decembrie" : "januar februar mars april mai juni juli august september oktober november desember", L, " ")
+    for (i = 1; i <= n; i++) if (L[i] == m && y >= 2000 && y < 2100) { print y * 12 + i - 1; exit } }')
+  if [ -z "$ym" ]; then problema "$id ($limba) $repo/$cale: „Stare la” ilizibil: \"$v\" (luna in limba paginii, apoi anul)"; continue; fi
+  [ "$ym" -gt "$acum" ] && problema "$id ($limba) $repo/$cale: „Stare la” in viitor: \"$v\""
+  [ $((acum - ym)) -ge 3 ] && atentie "$id ($limba): „Stare la $v” — mai vechi de 3 luni, de reverificat"
+  printf '%s\t%s\t%s\n' "$id" "$limba" "$ym" >> "$W/stare"
+done < "$W/docs"
+awk -F'\t' '{ if ($2 == "ro") r[$1] = $3; else n[$1] = $3 } END { for (k in r) if ((k in n) && r[k] != n[k]) print k }' "$W/stare" \
+  | while IFS= read -r k; do problema "$k: „Stare la” difera intre RO si NO"; done
+nst=$(wc -l < "$W/stare" | tr -d ' ')
+[ "$nst" -gt 0 ] || problema "Corpus III: niciun „Stare la” citit (santinela)"
+[ "$nst" -gt 0 ] && ok "Corpus III: $nst fisiere datate („Stare la”), RO si NO cu aceeasi luna"
+
 # ════════════════════════════════════════════════════════════════════
 titlu 4 "Linkuri interne si ancore — tot site-ul, din tag-uri reale"
 # ════════════════════════════════════════════════════════════════════
@@ -1992,11 +2017,49 @@ fi
 # unele se incarca prin JavaScript); pagina cu text ascuns sau fraze pentru masini = ATENTIE.
 # NORGEDAN_SURSE_DIR=dir: paginile se iau de acolo (<cksum-url>.html), fara retea (teste).
 if [ "$MOD" = surse ]; then
+  # pas75: entitatile se decodeaza, nu se mai sterg.  Stirileprotv.ro scrie „supus&#259;”,
+  # „&icirc;n”: sterse, din „supusă” ramanea „supus”, iar citatul copiat corect dadea
+  # „negasit”.  Acum &#NNN;, &#xHH; si numele uzuale (RO, NO, latin-1) devin litera lor
+  # UTF-8, de ambele parti; necunoscutele dispar ca inainte.  Liniar: o singura impartire
+  # la „&” si bucatile scrise pe rand, nu lipite intr-un sir care creste (lectia pas70);
+  # de aceea decodarea (ent.awk) e separata de reducere (red.awk).  Apoi aceeasi forma
+  # pentru aceeasi litera: ş/ţ cu sedila devin ș/ț cu virgula (ProTV le amesteca), iar
+  # majusculele RO/NO devin minuscule.  Punctuatia generala U+2000–U+206F (ghilimele, liniute, spatii de latime zero) dispare intreaga
+  # (doua gsub-uri separate: alternanta lor intr-unul singur dura 3 s pe mawk, 1 MB).
+  cat > "$W/ent.awk" <<'AWK'
+function u8(c) {
+  if (c < 128) return sprintf("%c", c)
+  if (c < 2048) return sprintf("%c%c", 192 + int(c / 64), 128 + c % 64)
+  if (c < 65536) return sprintf("%c%c%c", 224 + int(c / 4096), 128 + int(c / 64) % 64, 128 + c % 64)
+  if (c < 1114112) return sprintf("%c%c%c%c", 240 + int(c / 262144), 128 + int(c / 4096) % 64, 128 + int(c / 64) % 64, 128 + c % 64)
+  return ""
+}
+function hx(h,   i, v) { v = 0; h = tolower(h)
+  for (i = 1; i <= length(h); i++) v = v * 16 + index("0123456789abcdef", substr(h, i, 1)) - 1
+  return v }
+BEGIN { RS = "\001"
+  ne = split("acirc 226 Acirc 194 icirc 238 Icirc 206 aring 229 Aring 197 aelig 230 AElig 198 oslash 248 Oslash 216 eacute 233 Eacute 201 egrave 232 ecirc 234 agrave 224 aacute 225 iacute 237 oacute 243 ocirc 244 uacute 250 ucirc 251 auml 228 Auml 196 ouml 246 Ouml 214 uuml 252 Uuml 220 szlig 223 ccedil 231 ntilde 241 abreve 259 Abreve 258 scedil 351 Scedil 350 tcedil 355 Tcedil 354 scommaaccent 537 tcommaaccent 539", e, " ")
+  for (i = 1; i < ne; i += 2) ent[e[i]] = u8(e[i + 1] + 0) }
+{ n = split($0, a, "&"); printf "%s", a[1]
+  for (i = 2; i <= n; i++) {
+    s = a[i]; k = index(s, ";"); r = "&"
+    if (k > 1 && k < 34) { nm = substr(s, 1, k - 1)
+      if (nm ~ /^#[0-9]+$/) r = u8(substr(nm, 2) + 0)
+      else if (nm ~ /^#[xX][0-9a-fA-F]+$/) r = u8(hx(substr(nm, 3)))
+      else if (nm ~ /^[A-Za-z][A-Za-z0-9]*$/) r = (nm in ent) ? ent[nm] : ""
+      if (r != "&") s = substr(s, k + 1) }
+    printf "%s%s", r, s }
+}
+AWK
   cat > "$W/red.awk" <<'AWK'
 BEGIN { RS = "\001" }
-{ t = tolower($0); gsub(/&[a-z0-9#]+;/, "", t)
-gsub(/\302\253|\302\273|\302\240|\342\200\236|\342\200\235|\342\200\234|\342\200\230|\342\200\231|\342\200\223|\342\200\224|\342\200\246/, "", t)
-gsub(/[^a-z0-9\200-\377]/, "", t); printf "%s", t }
+{ t = tolower($0)
+  gsub(/\305\237|\305\236|\310\230/, "\310\231", t); gsub(/\305\243|\305\242|\310\232/, "\310\233", t)
+  gsub(/\304\202/, "\304\203", t); gsub(/\303\202/, "\303\242", t); gsub(/\303\216/, "\303\256", t)
+  gsub(/\303\206/, "\303\246", t); gsub(/\303\230/, "\303\270", t); gsub(/\303\205/, "\303\245", t)
+  gsub(/\302\253|\302\273|\302\240/, "", t)
+  gsub(/\342\200[\200-\277]/, "", t); gsub(/\342\201[\200-\257]/, "", t)
+  gsub(/[^a-z0-9\200-\377]/, "", t); printf "%s", t }
 AWK
   # pagina din retea e adesea minificata (tot HTML-ul pe 1-20 de randuri, cu <script> in
   # mijlocul textului): text_normalizat, care lucreaza pe randuri, ar pierde textul.  Aici
@@ -2089,8 +2152,8 @@ PAT
     k=$(printf '%s' "$url" | cksum | cut -d' ' -f1); rm -f "$W/pag"
     [ -f "$W/pp/$k.html" ] && cp "$W/pp/$k.html" "$W/pag"
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila, sau peste ${ST} s si apoi peste ${ST2} s"; ni=$((ni + 1)); continue; fi
-    LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
-    printf '%s' "$cit" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
+    LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
+    printf '%s' "$cit" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
     if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))
     elif LC_ALL=C grep -q -F -f "$W/botpat" "$W/pag"; then
       atentie "--surse: $url cere verificare anti-robot — citatul nu poate fi reconfirmat mecanic ($id); deschide pagina in browser"; nb=$((nb + 1))
