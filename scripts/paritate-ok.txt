@@ -5,3 +5,13 @@
 #   RO/NO    valoarea EXACTA afisata de verificare (ex: 8/9, sau 6405/4168 (65%))
 # Intra aici doar o diferenta voita (o adaptare pentru cititorul norvegian),
 # nu una de reparat.  Daca valorile se schimba, semnalarea revine singura.
+# --- pas85 (28 oct 2026): citit RO langa NO; ce lipsea din NO a fost tradus, raman adaptarile ---
+# corpus-04: NO are in plus capitolul „Norges Særlige Rolle” (Nansen, Oslo-avtalen, PRIO, Oljefondet,
+#   cu Jeremia 29:7 mutat aici din cap. II), subcapitolul „Norsk kontekst — mellommannen” (Israel og Gaza)
+#   si, in incheiere, „Romania — Norges undervurderte partner” (EOS-midlene: eeagrants.ro, regjeringen.no)
+corpus-04	capitole	8/9
+corpus-04	subcapitole	8/10
+# corpus-05: NO are in plus capitolul „Norge og Romania” si subcapitolul „Norsk perspektiv — naturen
+#   som pakt” (Nansen, Heyerdahl, allemannsretten, Næss)
+corpus-05	capitole	10/11
+corpus-05	subcapitole	13/14
