@@ -300,6 +300,11 @@ FC
   chmod +x fakebin/curl; }
 mut_T80() { fakecurlcod 406; }
 mut_T81() { fakecurlcod 410; }
+# -- pas82: imaginea de distribuire (og.png, 1200x630) -------------------------------------
+mut_T82() { rep corpus/01-la-inceput-era-cuvantul-ro.html 's|<meta property="og:image" content="[^"]*">||'; }
+mut_T83() { rm norgedan.github.io/og.png; }
+# un PNG de 512x256: semnatura si antetul IHDR, atat cat citeste garda
+mut_T84() { printf '\211PNG\r\n\032\n\000\000\000\015IHDR\000\000\002\000\000\000\001\000\010\002\000\000\000' > norgedan.github.io/og.png; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
             mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
@@ -377,6 +382,9 @@ t T78 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot; 0 limitate" "
 t T79 SEMNAL  "limiteaza cererile (HTTP 429" "--surse: server care raspunde mereu 429 numit ca atare" --surse
 t T80 SEMNAL  "HTTP 406: serverul refuza descarcarea automata" "--surse: 406 (newsweek, euronews) numit refuz, cu codul lui" --surse
 t T81 SEMNAL  "HTTP 410: pagina nu mai e la adresa asta" "--surse: 410 (pagina stearsa) numit cu codul lui" --surse
+t T82 PICA    "og:image \"lipsa\""     "[3] document fara og:image"
+t T83 PICA    "og.png lipseste"         "[3] og.png sters din hub"
+t T84 PICA    "nu e PNG 1200x630"       "[3] og.png de alta marime (512x256)"
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"

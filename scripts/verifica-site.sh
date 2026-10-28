@@ -29,6 +29,7 @@
 #  - OK se afiseaza o data pe sectiune; problemele, fiecare in parte.
 
 BASE="https://norgedan.github.io"
+OG_IMG="$BASE/og.png"     # pas82: imaginea de distribuire a tuturor documentelor
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 1
 HUB=$(dirname "$SCRIPT_DIR")
@@ -397,6 +398,9 @@ while IFS="$TAB" read -r repo cale limba id col tit; do
   done
   ou=$(val "$f" meta property og:url content)
   [ "$ou" = "$eu" ] || problema "$e: og:url \"${ou:-lipsa}\", trebuie $eu"
+  # pas82: imaginea de distribuire, aceeasi pentru tot site-ul (og.png din hub, 1200x630)
+  oi=$(val "$f" meta property og:image content)
+  [ "$oi" = "$OG_IMG" ] || problema "$e: og:image \"${oi:-lipsa}\", trebuie $OG_IMG"
 
   [ "$(wc -l < "$W/prob")" -gt "$before" ] && greseli=$((greseli + 1))
 done < "$W/docs"
@@ -424,7 +428,19 @@ while read -r f; do
   [ -n "$(val "$f" link hreflang no href)" ] && problema "$rel: foloseste hreflang=\"no\" — standardul site-ului e \"nb\""
 done < "$W/html"
 
-grep -q "${TAB}og:image$TAB" "$W"/t/* 2>/dev/null || atentie "nicio pagina nu are og:image — distribuirile apar fara imagine"
+# pas82: og.png trebuie sa existe si sa fie PNG 1200x630 (latimea si inaltimea, din antetul IHDR)
+og="$RADACINA/norgedan.github.io/og.png"
+if [ ! -f "$og" ]; then
+  problema "og.png lipseste din hub — toate documentele trimit la $OG_IMG"
+else
+  dim=$(od -An -tu1 -j16 -N8 "$og" | awk '{ for (i = 1; i <= NF; i++) b[++n] = $i } END { print b[1]*16777216 + b[2]*65536 + b[3]*256 + b[4] "x" b[5]*16777216 + b[6]*65536 + b[7]*256 + b[8] }')
+  sig=$(od -An -c -j1 -N3 "$og" | tr -d ' ')
+  if [ "$sig" != PNG ] || [ "$dim" != 1200x630 ]; then
+    problema "og.png nu e PNG 1200x630 (gasit: ${sig:-?} ${dim:-?}) — Facebook si LinkedIn il taie sau il ignora"
+  else
+    ok "og.png: PNG 1200x630, aceeasi imagine pentru toate documentele"
+  fi
+fi
 
 # pas75: Corpus III descrie prezentul politic, care imbatraneste in saptamani.  Fiecare
 # document spune deci, sub titlu, „Stare la” / „Status per” (luna si anul), in elementul
@@ -795,7 +811,7 @@ while read -r repo; do
       .git|.github|.gitignore|.nojekyll|LICENSE|README.md|sitemap.xml|scripts|*.html) continue ;;
     esac
     if [ "$repo" = "$HUBNAME" ]; then
-      case "$b" in robots.txt|sitemap-hub.xml|asculta.js) continue ;; esac
+      case "$b" in robots.txt|sitemap-hub.xml|asculta.js|og.png) continue ;; esac
     fi
     if [ -d "$x" ] && echo " $dirs_ok " | grep -qF " $b "; then continue; fi
     problema "$repo: \"$b\" nu are ce cauta in radacina (fisier-fantoma sau uitat?)"; greseli=1
