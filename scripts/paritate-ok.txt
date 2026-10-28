@@ -15,3 +15,6 @@ corpus-04	subcapitole	8/10
 #   som pakt” (Nansen, Heyerdahl, allemannsretten, Næss)
 corpus-05	capitole	10/11
 corpus-05	subcapitole	13/14
+# --- pas87 (28 oct 2026): corpus2-B — NO are in plus capitolul „Norges Særlige Rolle” (Nansen, Oslo-avtalen,
+#   Oljefondet — corectat dupa NBIM, paradoxul climatic), cu Jeremia 29:7 mutat aici din cap. IX
+corpus2-B	capitole	11/12
