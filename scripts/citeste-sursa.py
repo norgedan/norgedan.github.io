@@ -14,11 +14,13 @@ se semnaleaza si se ignora.  Ruleaza cu python3 -I (fara module din directorul c
 """
 import re, sys, urllib.error, urllib.parse, urllib.request
 
-INVIZ = re.compile('[​-‏‪-‮⁠-⁤⁦-⁩﻿\U000e0000-\U000e007f]')
+INVIZ = re.compile('[​-‏‪-‮⁠-⁤⁦-⁩﻿\U000e0000-\U000e007f  ͏᠎ᅟᅠㅤﾠ]')
 INJ = re.compile(r'(ignore (all |the )?(previous|above) instructions|disregard (previous|the above)'
                  r'|system prompt|you are (chatgpt|claude)|as an ai language model|</?system>|\[inst\]'
                  r'|ignor[ăa] instruc[țt]iunile|ignorer tidligere instruksjoner|glem tidligere instruksjoner)', re.I)
 ASCUNS = re.compile(r'style="[^"]*(display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0(px|pt|em|rem|%)?\s*(;|"))', re.I)
+
+MAX = 20 * 1000 * 1000
 
 def adresa(url):
     """Adresa cu caractere non-ASCII (de ex. „–” in mapn.ro) se codeaza, ca sa poata fi ceruta (pas80):
@@ -36,10 +38,16 @@ def main():
     if len(sys.argv) < 2:
         print(__doc__); return 2
     url, termeni = sys.argv[1], sys.argv[2:]
+    # pas91: doar pagini web; urllib ar deschide si file:// (fisiere locale) sau ftp://
+    if urllib.parse.urlsplit(url).scheme not in ('http', 'https'):
+        print(f'# {url}\n# REFUZAT: doar adrese http:// sau https://'); return 2
     req = urllib.request.Request(adresa(url), headers={'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/json'})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            raw = r.read().decode(r.headers.get_content_charset() or 'utf-8', errors='replace')
+            # pas91: cel mult 20 MB (o pagina uriasa sau fara sfarsit nu mai umple memoria)
+            date = r.read(MAX + 1)
+            taiat = len(date) > MAX
+            raw = date[:MAX].decode(r.headers.get_content_charset() or 'utf-8', errors='replace')
     except urllib.error.HTTPError as e:   # serverul a raspuns, dar nu cu pagina: codul spune de ce
         print(f'# {url}\n# INACCESIBIL: HTTP {e.code} {e.reason} — sursa se citeste altfel (WebFetch, de mana) si citatul ramane „-”')
         return 1
@@ -55,6 +63,8 @@ def main():
         text = re.sub(r'<[^>]+>', ' ', text)
         cum = 'fara tag-uri'
     print(f'# {url}\n# {len(raw)} octeti bruti, {len(text)} caractere text ({cum})')
+    if taiat:
+        print(f'# ATENTIE: pagina are peste {MAX // 1000000} MB — s-a citit doar inceputul')
     for nume, rx, sursa in (('caractere invizibile', INVIZ, raw), ('fraze adresate masinilor', INJ, raw),
                             ('elemente ascunse (style)', ASCUNS, raw)):
         n = len(rx.findall(sursa))

@@ -335,6 +335,26 @@ mut_T92() { s=$(printf '\302\255'); rep corpus/05-planeta-si-romania-ro.html "s|
 mut_T93() { for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do git -C "$r" remote set-url origin "$PWD/$r"; done
             echo "origin local (T93)" > martor-T93.txt; }
 
+# -- pas91: restul auditului ---------------------------------------------------------------------
+# [13] expresie de certitudine rupta pe doua randuri
+mut_T94() { rep corpus/04-lumea-in-care-traim-ro.html 's|<footer|<p>Este, fără\
+îndoială, adevărat.</p><footer|'; }
+# [20] doua S de la aceeasi publicatie, pe subdomenii diferite: o singura sursa
+mut_T95() { rep norgedan.github.io/scripts/surse.tsv 's|https://wbj.pl/katyn-massacre-80th-anniversary/post/126299|https://amp.themoscowtimes.com/katyn|'; }
+# [22] element mutat in afara ecranului
+mut_T96() { rep corpus/03-binele-raul-mintea-omului-ro.html 's|<footer|<p style="position:absolute;left:-9999px">ascuns</p><footer|'; }
+# [22] separatorul de paragraf U+2029, invizibil
+mut_T97() { x=$(printf '\342\200\251'); rep corpus/03-binele-raul-mintea-omului-ro.html "s|<footer|<p>un${x}doi</p><footer|"; }
+# [8] cifra de cuvinte scrisa fara separator
+mut_T98() { rep norgedan.github.io/index.html 's|</body>|<p>196000 de cuvinte</p></body>|'; }
+# [15] NO mult mai lung decat RO: text care exista doar in NO
+mut_T99() { w=$(awk 'BEGIN { for (i = 0; i < 1200; i++) printf "ord "; }')
+            rep opera/voci-care-nu-mor-no.html "s|</body>|<p>$w</p></body>|"; }
+# [22] <template>: continut care nu se afiseaza niciodata
+mut_T100() { rep corpus/03-binele-raul-mintea-omului-ro.html 's|<footer|<template><p>ascuns</p></template><footer|'; }
+# [22] aria-hidden: semnalat, de citit
+mut_T101() { rep corpus/03-binele-raul-mintea-omului-ro.html 's|<footer|<p aria-hidden="true">decor</p><footer|'; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -384,7 +404,7 @@ t T54 PICA    "citat — intre"           "[20] citat fara « » sau sub 4 cuvin
 t T57 SEMNAL  "scoate-l din datorie"    "[20] datoria stinsa trebuie scoasa"
 t T56 PICA    "tip \"gresala\""         "[21] tip de eroare necunoscut"
 t T55 SEMNAL  "unde se sapa intai"      "[19] riscul se vede"
-t T60 PICA    "caracter invizibil"      "[22] spatiu de latime zero intr-o pagina"
+t T60 PICA    "caracter invizibil (zero-width" "[22] spatiu de latime zero intr-o pagina"
 t T61 PICA    "element ascuns"          "[22] element cu style=display:none"
 t T62 PICA    "atributul hidden"        "[22] element cu atributul hidden"
 t T63 SEMNAL  "fraza adresata masinilor" "[22] instructiune pentru masini intr-un comentariu"
@@ -419,6 +439,14 @@ t T90 PICA    "in interiorul marcajului" "[13] span in span"
 t T91 SEMNAL  "[a demonstrat]"          "[13] cratima discreta in cuvantul de certitudine"
 t T92 PICA    "\"1 din 10^120\" apare in" "[7] cratima discreta in formularea retrasa"
 t T93 PICA    "variabila de test NORGEDAN_API_DIR" "[11] variabila de test setata la push" "--push norgedan.github.io"
+t T94 SEMNAL  "[fără îndoială]"         "[13] expresie de certitudine rupta pe doua randuri"
+t T95 PICA    "katyn-1990\" (FAPT): dovezi insuficiente" "[20] doua S pe subdomenii ale aceleiasi publicatii"
+t T96 PICA    "left:-9999px\"> — element ascuns" "[22] element mutat in afara ecranului"
+t T97 PICA    "caracter invizibil (zero-width" "[22] separator de paragraf U+2029"
+t T98 PICA    "declara \"196000 de cuvinte\"" "[8] cifra fara separator"
+t T99 SEMNAL  "opera-1: lungime"        "[15] NO mult mai lung decat RO"
+t T100 PICA   "<template>"              "[22] continut in <template>"
+t T101 SEMNAL "aria-hidden"             "[22] aria-hidden semnalat"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

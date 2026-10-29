@@ -67,7 +67,7 @@ done
 
 W=$(mktemp -d /tmp/verifica-site.XXXXXX) || exit 1
 trap 'rm -rf "$W"' EXIT
-trap 'exit 1' INT TERM
+trap 'exit 1' INT TERM HUP
 mkdir "$W/t"
 : > "$W/prob"; : > "$W/aten"
 
@@ -610,20 +610,37 @@ else
     n="$W/n7/$(echo "${f#"$RADACINA"/}" | sed 's|/|_|g')"
     text_normalizat "$f" > "$n"; printf '%s\t%s\n' "$f" "$n" >> "$W/pubn"
   done < "$W/pub"
-  gasit=0
+  # tiparele care contin tag-uri (de ex. „sub 50 de dolari</strong>”) au fost gandite
+  # pe marcaj: raman confruntate cu textul brut, ca sa nu devina mai largi; celelalte,
+  # cu spatiile unificate, pe textul normalizat.
+  # pas91: intai, cu un singur grep -F -f pe pagina, se afla ce pagini contin vreun tipar;
+  # doar acolo se cauta tipar cu tipar (inainte: un grep pe tipar si pe pagina, ~18.000
+  # de procese, 22 s din 47).  Rezultatul e acelasi.
+  : > "$W/tip_tn"; : > "$W/tip_m"
   while read -r tipar; do
-    : > "$W/hit"
-    # tiparele care contin tag-uri (de ex. „sub 50 de dolari</strong>”) au fost gandite
-    # pe marcaj: raman confruntate cu textul brut, ca sa nu devina mai largi
     case "$tipar" in
-      *"<"*) while IFS="$TAB" read -r f n; do grep -qF -- "$tipar" "$f" && echo "${f#"$RADACINA"/}" >> "$W/hit"; done < "$W/pubn" ;;
-      *)     tn=$(printf '%s' "$tipar" | tr -s ' ')
-             while IFS="$TAB" read -r f n; do grep -qF -- "$tn" "$n" && echo "${f#"$RADACINA"/}" >> "$W/hit"; done < "$W/pubn" ;;
+      *"<"*) printf '%s\n' "$tipar" >> "$W/tip_m" ;;
+      *)     printf '%s\t%s\n' "$tipar" "$(printf '%s' "$tipar" | tr -s ' ')" >> "$W/tip_tn" ;;
     esac
-    if [ -s "$W/hit" ]; then
-      problema "\"$tipar\" apare in:"; sed 's|^|             |' "$W/hit"; gasit=1
-    fi
   done < "$W/tipare"
+  cut -f2 "$W/tip_tn" > "$W/tip_n"
+  while IFS="$TAB" read -r f n; do
+    if [ -s "$W/tip_n" ] && grep -q -F -f "$W/tip_n" "$n"; then
+      while IFS="$TAB" read -r tipar tn; do grep -qF -- "$tn" "$n" && printf '%s\t%s\n' "$tipar" "${f#"$RADACINA"/}"; done < "$W/tip_tn"
+    fi
+    if [ -s "$W/tip_m" ] && grep -q -F -f "$W/tip_m" "$f"; then
+      while IFS= read -r tipar; do grep -qF -- "$tipar" "$f" && printf '%s\t%s\n' "$tipar" "${f#"$RADACINA"/}"; done < "$W/tip_m"
+    fi
+  done < "$W/pubn" > "$W/hits7"
+  gasit=0
+  if [ -s "$W/hits7" ]; then
+    while read -r tipar; do
+      T7="$tipar" awk -F'\t' '$1 == ENVIRON["T7"] { print $2 }' "$W/hits7" | sort -u > "$W/hit"
+      if [ -s "$W/hit" ]; then
+        problema "\"$tipar\" apare in:"; sed 's|^|             |' "$W/hit"; gasit=1
+      fi
+    done < "$W/tipare"
+  fi
   [ "$gasit" -eq 0 ] && ok "$(wc -l < "$W/tipare" | tr -d ' ') tipare, nicio formulare retrasa in paginile publice"
 fi
 
@@ -671,7 +688,8 @@ BEGIN {
 }
 AWK
 
-RE_CUV='(~|peste |over )?[0-9]{1,3}([. ][0-9]{3})+( de)? (cuvinte|ord)'
+# pas91: si cifrele scrise fara separator („196000 de cuvinte”)
+RE_CUV='(~|peste |over )?([0-9]{1,3}([. ][0-9]{3})+|[0-9]{4,})( de)? (cuvinte|ord)'
 # textul fara tag-uri, cu ghilimelele si parantezele transformate in spatii
 decl_docs() {
   sed 's/<[^>]*>/ /g; s/&nbsp;/ /g; s/[("*>]/ /g; s/„/ /g; s/”/ /g; s/«/ /g; s/»/ /g' "$1" | LC_ALL=C sed "s/$NBSP/ /g" | awk -f "$W/nr.awk"
@@ -770,16 +788,19 @@ titlu 9 "Structura HTML a documentelor"
 # ════════════════════════════════════════════════════════════════════
 
 greseli=0
+TAG9="html head body section blockquote div p a em strong span ul ol li h1 h2 h3 h4 table tr td th nav header footer main article aside figure pre code"
 while IFS="$TAB" read -r repo cale limba id col tit; do
   f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
   dez=""
   # din pas55 si tag-urile de text: un <em> sau un <a> neinchis colora sau lega
   # tot restul paginii, nevazut (asa a stat un </em> ratacit in Firul Rosu A)
-  for tag in html head body section blockquote div p a em strong span ul ol li h1 h2 h3 h4 table tr td th nav header footer main article aside figure pre code; do
-    d=$(awk -F'\t' -v t="$tag" '$1==t' "$(tagsf "$f")" | wc -l | tr -d ' ')
-    i=$(grep -o "</$tag>" "$f" | wc -l | tr -d ' ')
-    [ "$d" = "$i" ] || dez="$dez $tag($d/$i)"
-  done
+  # pas91: un singur awk pe document (deschise din tag-uri, inchise din textul brut);
+  # inainte, doua procese pe tag si pe document (~2.400), 9 s din 47
+  dez=$(awk -F'\t' -v L="$TAG9" '
+    BEGIN { n = split(L, t, " "); for (i = 1; i <= n; i++) vrea[t[i]] = 1 }
+    FILENAME == ARGV[1] { if ($1 in vrea) d[$1]++; next }
+    { s = $0; while (match(s, /<\/[a-z0-9]+>/)) { x = substr(s, RSTART + 2, RLENGTH - 3); if (x in vrea) c[x]++; s = substr(s, RSTART + RLENGTH) } }
+    END { for (i = 1; i <= n; i++) { k = t[i]; if (d[k] + 0 != c[k] + 0) printf " %s(%d/%d)", k, d[k], c[k] } }' "$(tagsf "$f")" "$f")
   [ -n "$dez" ] && { problema "$repo/$cale dezechilibrat:$dez"; greseli=1; }
   grep -q '">n<' "$f" && { problema "$repo/$cale: artefact '\">n<' (newline pierdut de sed BSD)"; greseli=1; }
 done < "$W/docs"
@@ -1242,29 +1263,43 @@ BEGIN {
   while ((getline l < OKF) > 0) { nk++; t = index(l, "\t"); if (t > 0) { kf[nk] = substr(l, 1, t - 1); k[nk] = substr(l, t + 1) } else { kf[nk] = ""; k[nk] = l } }
   M = "<span data-afirmatie=\""
 }
-{
-  s = $0
-  # afirmatiile marcate sunt deja in registru: se scot din text
+# afirmatiile marcate sunt deja in registru: se scot din text; apoi tag-urile, cratima
+# discreta, spatiile unificate
+function curat(s,   i, r, j) {
   while ((i = index(s, M)) > 0) {
     r = substr(s, i); j = index(r, "</span>")
     if (j == 0) break
     s = substr(s, 1, i - 1) " " substr(r, j + 7)
   }
   gsub(/<[^>]*>/, " ", s); gsub(/\302\255/, "", s); gsub(/[ \t\r]+/, " ", s)
-  # fragmentele citite si acceptate
-  for (q = 1; q <= nk; q++) { if (kf[q] != "" && kf[q] != R) continue; while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q])) }
-  ls = tolower(s); gasit = ""; prim = 0
-  for (q = 1; q <= np; q++) if ((i = cuvant(ls, pl[q])) > 0) {
-    gasit = gasit (gasit == "" ? "" : ", ") p[q]
-    if (prim == 0) prim = i
+  sub(/^ /, "", s); sub(/ $/, "", s)
+  return s
+}
+{ L[FNR] = $0; N = FNR }
+# pas91: fiecare rand se citeste impreuna cu inceputul randului urmator, ca o expresie
+# rupta pe doua randuri („a” / „demonstrat”) sa fie prinsa; se raporteaza doar ce incepe
+# pe randul curent, deci nimic de doua ori.  Granita: \001, pe care niciun fragment nu-l are.
+END {
+  for (n = 1; n <= N; n++) {
+    cs = curat(L[n]); if (cs == "") continue
+    cn = (n < N) ? curat(substr(L[n + 1], 1, 80)) : ""
+    s = cs "\001" cn
+    # fragmentele citite si acceptate
+    for (q = 1; q <= nk; q++) { if (kf[q] != "" && kf[q] != R) continue; while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q])) }
+    b = index(s, "\001"); gsub(/\001/, " ", s)
+    ls = tolower(s); gasit = ""; prim = 0
+    for (q = 1; q <= np; q++) if ((i = cuvant(ls, pl[q])) > 0 && i < b) {
+      gasit = gasit (gasit == "" ? "" : ", ") p[q]
+      if (prim == 0) prim = i
+    }
+    if (gasit == "") continue
+    a = prim - 50; if (a < 1) a = 1
+    f = substr(s, a, 130)
+    if (a > 1) sub(/^[^ ]* /, "", f)
+    if (a + 130 <= length(s)) sub(/ [^ ]*$/, "", f)
+    sub(/^ +/, "", f); sub(/ +$/, "", f)
+    print R ":" n "\t" gasit "\t" f
   }
-  if (gasit == "") next
-  a = prim - 50; if (a < 1) a = 1
-  f = substr(s, a, 130)
-  if (a > 1) sub(/^[^ ]* /, "", f)
-  if (a + 130 <= length(s)) sub(/ [^ ]*$/, "", f)
-  sub(/^ +/, "", f); sub(/ +$/, "", f)
-  print R ":" FNR "\t" gasit "\t" f
 }
 AWK
 if [ ! -f "$CERT" ]; then
@@ -1620,7 +1655,8 @@ while IFS="$TAB" read -r id col repo cro cno tro tno; do
     [ "${v%/*}" = "${v#*/}" ] && continue
     printf '%s\t%s\t%s\n' "$id" "$n" "$v" >> "$W/par"
   done
-  if [ "$wro" -gt 0 ] && [ $((wno * 100 / wro)) -lt 70 ]; then
+  # pas91: si NO cu mult mai lung decat RO (peste 115%): text care exista doar in NO
+  if [ "$wro" -gt 0 ] && { [ $((wno * 100 / wro)) -lt 70 ] || [ $((wno * 100 / wro)) -gt 115 ]; }; then
     printf '%s\t%s\t%s\n' "$id" "lungime" "$wro/$wno ($((wno * 100 / wro))%)" >> "$W/par"
   fi
 done < "$W/m"
@@ -1926,7 +1962,12 @@ else
   grep -v '^#' "$SDAT" | grep -v '^[[:space:]]*$' | LC_ALL=C sort -u > "$W/sd"
   AZI=$(date +%Y-%m-%d)
   awk -F'\t' -v AF="$W/af" -v SD="$W/sd" -v AZI="$AZI" '
-    function dom(u,  d) { d = u; sub(/^https:\/\//, "", d); sub(/\/.*/, "", d); sub(/^www\./, "", d); return d }
+    # pas91: domeniul inregistrat (amp.cnn.com si edition.cnn.com = cnn.com), cu sufixele
+    # de doua niveluri uzuale (co.uk, com.ua, gov.ua ...): aceeasi publicatie e o singura sursa
+    function dom(u,  d, n, p, b) { d = tolower(u); sub(/^https:\/\//, "", d); sub(/[\/:?#].*/, "", d)
+      n = split(d, p, "."); if (n < 2) return d; b = p[n - 1] "." p[n]
+      if (n > 2 && length(p[n]) == 2 && p[n - 1] ~ /^(co|com|org|net|gov|ac|edu)$/) b = p[n - 2] "." b
+      return b }
     BEGIN { while ((getline l < AF) > 0) { split(l, x, "\t"); et[x[1]] = x[2]; st[x[1]] = x[3] }
             while ((getline l < SD) > 0) dat[l] = 1 }
     NF != 6 { print "surse.tsv rand " NR ": " NF " coloane, trebuie 6"; next }
@@ -2018,6 +2059,11 @@ for c in 213 214 215 216 217; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
 for c in 252 253 254 255 256; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
 for c in 240 241 242 243 244 246 247 250 251; do printf "\\342\\201\\$c\n" >> "$W/invpat"; done
 printf '\357\273\277\n' >> "$W/invpat"
+# pas91: separatorul de rand si de paragraf (U+2028, U+2029), CGJ (U+034F), U+180E si
+# umplutura Hangul (U+115F, U+1160, U+3164, U+FFA0) — toate se vad ca nimic
+for x in '\342\200\250' '\342\200\251' '\315\217' '\341\240\216' '\341\205\237' '\341\205\240' '\343\205\244' '\357\276\240'; do
+  printf "$x\n" >> "$W/invpat"
+done
 for x in 0 1 2 3 4 5 6 7; do for y in 0 1 2 3 4 5 6 7; do
   printf "\\363\\240\\200\\2$x$y\n" >> "$W/invpat"; printf "\\363\\240\\201\\2$x$y\n" >> "$W/invpat"
 done; done
@@ -2064,7 +2110,14 @@ while IFS= read -r f; do
   rel=${f#"$RADACINA"/}
   # elemente ascunse: din tag-urile reale (style=), plus atributul hidden (fara valoare, din textul brut)
   awk -F'\t' -v r="$rel" '{ for (i = 2; i < NF; i += 2) if ($i == "style") { v = tolower($(i + 1))
-      if (v ~ /display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|$)|opacity *: *0(\.0*)? *(;|$)/) print r ": <" $1 " style=\"" $(i + 1) "\"> — element ascuns" } }' "$(tagsf "$f")" >> "$W/p22"
+      # pas91: si mutat in afara ecranului, taiat (clip), micsorat la zero, sau cu
+      # inaltimea/latimea 0 si overflow ascuns
+      if (v ~ /display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|$)|opacity *: *0(\.0*)? *(;|$)/ ||
+          v ~ /(left|top|text-indent) *: *-[0-9][0-9][0-9]+|clip *: *rect *\( *0|clip-path *: *inset *\( *50%|scale *\( *0 *\)/ ||
+          (v ~ /(^|;| )(height|width) *: *0(px)? *(;|$)/ && v ~ /overflow *: *hidden/)) print r ": <" $1 " style=\"" $(i + 1) "\"> — element ascuns" }
+      # pas91: <template> nu se afiseaza niciodata; aria-hidden ascunde de cititoarele de ecran
+      if ($1 == "template") print r ": <template> — continut care nu se afiseaza" }' "$(tagsf "$f")" >> "$W/p22"
+  awk -F'\t' -v r="$rel" '{ for (i = 2; i < NF; i += 2) if ($i == "aria-hidden" && $(i + 1) == "true") print r ": <" $1 " aria-hidden=\"true\"> — ascuns pentru cititoarele de ecran (de citit: e doar decor?)" }' "$(tagsf "$f")" >> "$W/a22"
   LC_ALL=C awk '/<style/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$f" \
     | LC_ALL=C grep -n -i -E '<[a-z][a-z0-9]*[^>]*[[:space:]]hidden([[:space:]>=]|$)' | cut -d: -f1 \
     | while IFS= read -r n; do echo "$rel: element cu atributul hidden (in textul fara style si script, randul $n)"; done >> "$W/p22"
