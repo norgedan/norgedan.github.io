@@ -1449,6 +1449,9 @@ function norm(s) {
   s = lower(s)
   # semnele de punctuatie nu decid: se scot, ca virgula din citat sa nu conteze fata de punct
   gsub(/[.,;:!?()]/, " ", s)
+  # pas90b: apostroful de la marginea unui cuvant e ghilimea, nu litera (Biblia 1688
+  # scrie „zi lor 'viu eu...”); cel dintre litere ramane (v'am, n'au).  La fel de ambele parti.
+  s = " " s " "; gsub(/ '+/, " ", s); gsub(/'+ /, " ", s)
   gsub(/ +/, " ", s); sub(/^ /, "", s); sub(/ $/, "", s)
   return s
 }
@@ -1540,7 +1543,16 @@ BEGIN {
       poz = poz + r - 1 + length(x) + 1
     }
     if (bun) print "OK\t" R "\t" ref "\t-"
-    else print "GRESIT\t" R "\t" ref "\tpe site: \"" substr(rau, 1, 70) "\" | editia: \"" substr(nt, 1, 70) "\""
+    else {
+      # pas90b: se arata primul cuvant care nu se potriveste si ce scrie editia in locul lui
+      nr = split(rau, rw, " "); pre = ""; un = 0
+      for (q = 1; q <= nr; q++) { if (index(substr(nts, poz), " " pre rw[q] " ") == 0) break; pre = pre rw[q] " " }
+      if (q > nr) q = nr
+      un = index(substr(nts, poz), " " pre)
+      ed = (un > 0) ? substr(nts, poz + un + length(pre), 40) : substr(nt, 1, 40)
+      sub(/^ /, "", ed)
+      print "GRESIT\t" R "\t" ref "\tcuvantul „" rw[q] "” (dupa „" substr(pre, length(pre) > 40 ? length(pre) - 39 : 1) "”) | editia continua: „" ed "”"
+    }
   }
 }
 AWK
