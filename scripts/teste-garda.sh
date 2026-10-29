@@ -72,7 +72,8 @@ t() {
     printf '  GRESIT   %-4s %-7s %s  (mutatia n-a schimbat nimic — testul nu mai corespunde site-ului)\n' "$id" "$astept" "$descr"
     gresite=$((gresite + 1)); return
   fi
-  ( cd "$C" && PATH="$C/fakebin:$PATH" NORGEDAN_SURSE_TIMEOUT=3 NORGEDAN_SURSE_TIMEOUT2=4 NORGEDAN_API_DIR=/nu-exista NORGEDAN_SURSE_DIR="$C/cache-surse" ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod ) > "$T/out" 2>&1
+  # stdin din /dev/null (pas90): la --push garda citeste de pe stdin ce pleaca; altfel ar astepta
+  ( cd "$C" && PATH="$C/fakebin:$PATH" NORGEDAN_SURSE_TIMEOUT=3 NORGEDAN_SURSE_TIMEOUT2=4 NORGEDAN_API_DIR=/nu-exista NORGEDAN_SURSE_DIR="$C/cache-surse" ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod < /dev/null ) > "$T/out" 2>&1
   ex=$?; rulate=$((rulate + 1))
   grep -qF -- "$tip" "$T/out" && semnalat=1 || semnalat=0
   case "$astept" in
@@ -311,6 +312,29 @@ mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%
 
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
+# -- pas90: reparatiile din auditul din 28 oct ------------------------------------------------
+# [14] un cuvant taiat la final („sj” in loc de „sjel”) trecea: bucata se cauta acum ca cuvinte intregi
+mut_T85() { rep corpus/02-hva-er-mennesket-no.html 's/levende sjel\.»/levende sj.»/'; }
+# [7] formulare retrasa cu o litera scrisa ca entitate (^ = &#94;)
+mut_T86() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Șansa este de 1 din 10\&#94;120.</p><footer|'; }
+# [13] cuvant de certitudine cu o litera scrisa ca entitate (a = &#97;)
+mut_T87() { rep corpus/04-lumea-in-care-traim-ro.html 's|<footer|<p>Știința a demonstr\&#97;t clar acest lucru.</p><footer|'; }
+# [22] element ascuns cu atributul intre ghilimele simple
+mut_T88() { rep corpus/03-binele-raul-mintea-omului-ro.html "s|<footer|<p style='display:none'>ascuns</p><footer|"; }
+# [13] marcaj cu alt atribut inainte: era vazut, dar fara amprenta
+mut_T89() { rep norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html 's|<footer|<p><span class="x" data-afirmatie="cij-2009">alt text</span></p><footer|'; }
+# [13] span in interiorul unui marcaj: amprenta s-ar opri la primul </span>
+mut_T90() { rep norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html 's|adică 79,34%|adică <span>79,34%</span>|'; }
+# [13] cratima discreta (U+00AD) in mijlocul cuvantului de certitudine
+mut_T91() { s=$(printf '\302\255'); rep corpus/04-lumea-in-care-traim-ro.html "s|<footer|<p>Știința a demon${s}strat clar acest lucru.</p><footer|"; }
+# [7] cratima discreta in formularea retrasa
+mut_T92() { s=$(printf '\302\255'); rep corpus/05-planeta-si-romania-ro.html "s|<footer|<p>Șansa este de 1 din 10^1${s}20.</p><footer|"; }
+# [11] la push, o variabila de test setata (suita seteaza NORGEDAN_API_DIR) = PROBLEMA;
+# origin trimite la copia insasi, ca fetch-ul sa mearga fara retea; schimbarea sta in .git,
+# pe care santinela nu-l citeste, deci un fisier-martor in afara repo-urilor o face vizibila
+mut_T93() { for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do git -C "$r" remote set-url origin "$PWD/$r"; done
+            echo "origin local (T93)" > martor-T93.txt; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -386,6 +410,15 @@ t T82 PICA    "og:image \"lipsa\""     "[3] document fara og:image"
 t T83 PICA    "og.png lipseste"         "[3] og.png sters din hub"
 t T84 PICA    "nu e PNG 1200x630"       "[3] og.png de alta marime (512x256)"
 t T49 ABSENT  "ultimul pas din hub"     "[11] jurnal scris dupa miezul noptii: pasul apare, tace" manual
+t T85 PICA    "1 Mosebok 2:7"           "[14] cuvant taiat la sfarsitul citatului (sj/sjel)"
+t T86 PICA    "caracter codat &#94;"    "[7] formulare retrasa cu entitate HTML"
+t T87 PICA    "caracter codat &#97;"    "[13] cuvant de certitudine cu entitate HTML"
+t T88 PICA    "fara ghilimele duble"    "[22] style='display:none' cu ghilimele simple"
+t T89 PICA    "fara alt atribut inainte" "[13] marcaj in alta forma, fara amprenta"
+t T90 PICA    "in interiorul marcajului" "[13] span in span"
+t T91 SEMNAL  "[a demonstrat]"          "[13] cratima discreta in cuvantul de certitudine"
+t T92 PICA    "\"1 din 10^120\" apare in" "[7] cratima discreta in formularea retrasa"
+t T93 PICA    "variabila de test NORGEDAN_API_DIR" "[11] variabila de test setata la push" "--push norgedan.github.io"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

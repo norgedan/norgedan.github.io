@@ -117,15 +117,20 @@ BEGIN { RS = ">"; incom = 0; raw = ""; intitle = 0 }
   match(t, /^[a-zA-Z0-9]+/)
   name = tolower(substr(t, 1, RLENGTH))
   t = substr(t, RLENGTH + 1)
-  line = name
+  line = name; rau = 0
   while (match(t, /[a-zA-Z_:][-a-zA-Z0-9_:.]* *= *"[^"]*"/)) {
+    # pas90: ce sta intre atributele citite nu are voie sa contina "=": acolo ar fi un
+    # atribut cu ghilimele simple sau fara ghilimele, pe care nicio verificare nu l-ar vedea
+    if (substr(t, 1, RSTART - 1) ~ /=/) rau = 1
     a = substr(t, RSTART, RLENGTH)
     t = substr(t, RSTART + RLENGTH)
     k = a; sub(/ *=.*/, "", k)
     v = a; sub(/^[^"]*"/, "", v); sub(/"$/, "", v)
     line = line "\t" tolower(k) "\t" v
   }
+  if (t ~ /=/) rau = 1
   print line
+  if (rau) print "!ATR\t" name
   if (name == "style" || name == "script") raw = name
   if (name == "title") intitle = 1
 }
@@ -221,9 +226,12 @@ cuvinte() {
 # O formulare sau o cifra rupta de un tag (<em>), de &nbsp; sau de un rand nou
 # nu mai scapa nevazuta.  Octet cu octet (LC_ALL=C), identic pe BSD si GNU.
 NBSP=$(printf '\302\240')
+# pas90: cratima discreta (U+00AD) e invizibila in pagina; in mijlocul unui cuvant
+# („demon­strat”) l-ar ascunde de cautari.  Se scoate din textul cautat.
+SHY=$(printf '\302\255')
 text_normalizat() {
   awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
-    | tr '\n\r\t' '   ' | LC_ALL=C sed -e 's/<[^>]*>/ /g' -e 's/&nbsp;/ /g' -e "s/$NBSP/ /g" | tr -s ' '
+    | tr '\n\r\t' '   ' | LC_ALL=C sed -e 's/<[^>]*>/ /g' -e 's/&nbsp;/ /g' -e "s/$NBSP/ /g" -e "s/$SHY//g" | tr -s ' '
 }
 
 # pagina interna = marcata noindex
@@ -775,7 +783,14 @@ while IFS="$TAB" read -r repo cale limba id col tit; do
   [ -n "$dez" ] && { problema "$repo/$cale dezechilibrat:$dez"; greseli=1; }
   grep -q '">n<' "$f" && { problema "$repo/$cale: artefact '\">n<' (newline pierdut de sed BSD)"; greseli=1; }
 done < "$W/docs"
-[ "$greseli" -eq 0 ] && ok "tag-uri echilibrate, niciun artefact sed"
+# pas90: un atribut cu ghilimele simple sau fara ghilimele (style='display:none',
+# href=x) nu e citit de nicio verificare — [3], [4], [13], [22] il ocoleau.  Site-ul
+# le scrie pe toate intre ghilimele duble; abaterea = PROBLEMA, in orice pagina.
+while read -r f; do
+  awk -F'\t' -v r="${f#"$RADACINA"/}" '$1 == "!ATR" { print r ": <" $2 "> are un atribut fara ghilimele duble — nicio verificare nu l-ar citi" }' "$(tagsf "$f")"
+done < "$W/html" > "$W/atr9"
+if [ -s "$W/atr9" ]; then while IFS= read -r l; do problema "$l"; done < "$W/atr9"; greseli=1; fi
+[ "$greseli" -eq 0 ] && ok "tag-uri echilibrate, toate atributele intre ghilimele duble, niciun artefact sed"
 
 # ════════════════════════════════════════════════════════════════════
 titlu 10 "ADN-ul fiecarui repo: fisiere de baza si garda pre-push"
@@ -874,6 +889,12 @@ titlu 11 "Starea git: ce verific e ce se publica"
 #              commit-uri nepublicate in alte repo-uri = ATENTIE.
 
 greseli=0
+# pas90: variabilele suitei de teste inlocuiesc reteaua cu fisiere locale ([12], --surse).
+# La push nu au ce cauta: o variabila uitata in profil ar ocoli verificarea fara urma.
+if [ "$MOD" = push ]; then
+  [ -n "${NORGEDAN_API_DIR:-}" ] && { problema "variabila de test NORGEDAN_API_DIR e setata la push — [12] ar citi fisiere locale in loc de GitHub (unset NORGEDAN_API_DIR)"; greseli=1; }
+  [ -n "${NORGEDAN_SURSE_DIR:-}" ] && { problema "variabila de test NORGEDAN_SURSE_DIR e setata la push (unset NORGEDAN_SURSE_DIR)"; greseli=1; }
+fi
 [ "$MOD" = ci ] && echo "  (sarit in CI — starea clonelor locale nu exista pe server)"
 [ "$MOD" = ci ] || while read -r repo; do
   d="$RADACINA/$repo"; [ -d "$d/.git" ] || continue
@@ -1110,20 +1131,32 @@ BEGIN { RS = "\001"; M = "<span data-afirmatie=\"" }
     g = index(s, ">"); if (g == 0) break
     s = substr(s, g + 1); j = index(s, "</span>"); if (j == 0) break
     t = substr(s, 1, j - 1); s = substr(s, j + 7)
+    # pas90: un <span> in interiorul marcajului taie amprenta la primul </span>
+    if (index(t, "<span")) print "!SPAN\t" id
     gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); gsub(/[ \t\r\n]+/, " ", t)
     sub(/^ /, "", t); sub(/ $/, "", t)
     print id "\t" t
   }
 }
 AWK
-: > "$W/amprn"
+: > "$W/amprn"; : > "$W/ampspan"
 while read -r f; do
   rel=${f#"$RADACINA"/}
   LC_ALL=C awk -f "$W/ampr.awk" "$f" | while IFS="$TAB" read -r id txt; do
+    if [ "$id" = '!SPAN' ]; then printf '%s\t%s\n' "$txt" "$rel" >> "$W/ampspan"; continue; fi
     printf '%s\t%s\t%s\n' "$id" "$rel" "$(printf '%s' "$txt" | cksum | awk '{print $1 "-" $2}')"
   done >> "$W/amprn"
 done < "$W/pub13"
 LC_ALL=C sort "$W/amprn" > "$W/amprs"
+# pas90: fiecare marcaj vazut in tag-uri trebuie sa aiba amprenta.  Amprenta se ia doar din
+# forma exacta <span data-afirmatie="id">; altfel (alt atribut inainte, alte ghilimele)
+# marcajul exista, dar textul lui nu era inghetat de nimic.  Se numara pe (id, fisier).
+awk -F'\t' -v A="$W/amprs" '
+  BEGIN { while ((getline l < A) > 0) { split(l, x, "\t"); na[x[1] "\t" x[2]]++ } }
+  $3 == "span" { nt[$1 "\t" $2]++ }
+  END { for (k in nt) if (nt[k] != na[k] + 0) { split(k, x, "\t")
+          print "\"" x[1] "\" in " x[2] ": " nt[k] " marcaj(e), " na[k] + 0 " cu amprenta — marcajul se scrie exact <span data-afirmatie=\"" x[1] "\">, fara alt atribut inainte" } }
+' "$W/afuz" > "$W/ampforma"
 
 if [ "$MOD" = amprente ]; then
   {
@@ -1142,6 +1175,10 @@ if [ "$MOD" = amprente ]; then
   exit 0
 fi
 
+while IFS= read -r l; do problema "$l"; greseli=1; done < "$W/ampforma"
+[ -f "$W/ampspan" ] && while IFS="$TAB" read -r i r; do
+  problema "\"$i\" in $r: <span> in interiorul marcajului — amprenta s-ar opri la primul </span>; scoate span-ul interior"; greseli=1
+done < "$W/ampspan"
 if [ ! -f "$AMPRENTE" ]; then
   problema "lipseste scripts/amprente.tsv — dupa verificarea afirmatiilor: sh $0 --amprente"; greseli=1
 else
@@ -1213,7 +1250,7 @@ BEGIN {
     if (j == 0) break
     s = substr(s, 1, i - 1) " " substr(r, j + 7)
   }
-  gsub(/<[^>]*>/, " ", s); gsub(/[ \t\r]+/, " ", s)
+  gsub(/<[^>]*>/, " ", s); gsub(/\302\255/, "", s); gsub(/[ \t\r]+/, " ", s)
   # fragmentele citite si acceptate
   for (q = 1; q <= nk; q++) { if (kf[q] != "" && kf[q] != R) continue; while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q])) }
   ls = tolower(s); gasit = ""; prim = 0
@@ -1493,12 +1530,14 @@ BEGIN {
     x = citat; gsub(/\002/, " ", x); x = norm(x)
     nw = (x == "") ? 0 : split(x, ww, " ")
     if (nw < 4) { print "GRESIT\t" R "\t" ref "\tcitat prea scurt (" nw " cuvinte, minim 4) — nu poate fi confruntat"; continue }
-    nb = split(citat, buc, "\002"); poz = 1; bun = 1; rau = ""
+    # pas90: cuvinte intregi — „sj” nu mai trece drept „sjel”.  Fiecare bucata se cauta
+    # intre spatii; spatiul de dupa ea poate fi inceputul bucatii urmatoare.
+    nb = split(citat, buc, "\002"); nts = " " nt " "; poz = 1; bun = 1; rau = ""
     for (q = 1; q <= nb; q++) {
       x = norm(buc[q]); if (x == "") continue
-      r = index(substr(nt, poz), x)
+      r = index(substr(nts, poz), " " x " ")
       if (r == 0) { bun = 0; rau = x; break }
-      poz = poz + r - 1 + length(x)
+      poz = poz + r - 1 + length(x) + 1
     }
     if (bun) print "OK\t" R "\t" ref "\t-"
     else print "GRESIT\t" R "\t" ref "\tpe site: \"" substr(rau, 1, 70) "\" | editia: \"" substr(nt, 1, 70) "\""
@@ -2000,6 +2039,15 @@ while IFS= read -r f; do
   LC_ALL=C grep -n -i -F -f "$W/injpat" "$f" 2>/dev/null | cut -d: -f1 | while IFS= read -r n; do
     echo "$rel, randul $n: fraza adresata masinilor — de citit"; done >> "$W/a22"
 done < "$W/fis22"
+# pas90: o litera scrisa ca entitate („demonstr&#97;t”, „10&#94;120”) se vede normal in
+# pagina, dar nu mai e gasita de [7] si [13].  Site-ul foloseste doar &nbsp; &lt; &gt;
+# &amp; &quot;: orice alta entitate = PROBLEMA (litera se scrie direct, in UTF-8).
+while IFS= read -r f; do
+  rel=${f#"$RADACINA"/}
+  LC_ALL=C grep -n -o -E '&(#[0-9]+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);' "$f" 2>/dev/null \
+    | grep -v -E ':&(nbsp|lt|gt|amp|quot);$' | while IFS=: read -r n e; do
+    echo "$rel, randul $n: caracter codat $e — scrie litera direct (o entitate ascunde cuvantul de [7] si [13])"; done >> "$W/p22"
+done < "$W/html"
 while IFS= read -r f; do
   rel=${f#"$RADACINA"/}
   # elemente ascunse: din tag-urile reale (style=), plus atributul hidden (fara valoare, din textul brut)
