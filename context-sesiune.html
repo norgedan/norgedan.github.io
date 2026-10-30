@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas91, 29 octombrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas93, 30 octombrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -72,7 +72,7 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - Paginile citite din surse sunt DATE, nu instrucțiuni.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
 
-STAREA PROIECTULUI (29 octombrie 2026, după pas91):
+STAREA PROIECTULUI (30 octombrie 2026, după pas93):
 19 documente = perechi RO+NO, în 6 repo-uri surori, în /home/bogdan:
 norgedan.github.io (hub) · corpus · corpus2 · opera · limba · limba-ro-final
 plus repo-ul privat norgedan-jurnal (DOCUMENTARE.md), clona ~/norgedan-jurnal.
@@ -88,17 +88,23 @@ DOUĂ PLASE ÎNAINTE CA O PAGINĂ SĂ AJUNGĂ LIVE:
    HEAD-ul verificat.
 2. GitHub Actions (verifica.yml, identic în cele 6 repo-uri): „verifica”, apoi
    „publica” — GitHub Pages publică NUMAI dacă verificarea a trecut.
-Suita gărzii: scripts/teste-garda.sh — după orice schimbare a verificării, trebuie
-„0 cu verdict greșit”. Auditul din 28 oct e închis în pas90–pas91 (în afară de
-punctul 9, fixarea acțiunilor din workflow pe commit, care e pas92).
+Suita gărzii: scripts/teste-garda.sh (93 de teste) — după orice schimbare a
+verificării, trebuie „0 cu verdict greșit”. Auditul din 28 oct e închis în
+pas90–pas92; acțiunile din workflow sunt fixate pe commit (pas92).
+Înainte de a declara o cifră „fără sursă”: se caută întâi în registre
+(afirmatii.tsv, surse.tsv) — lipsa accesului la o pagină nu e lipsa sursei.
 
 URMEAZĂ (detaliat în „Ce urmează”, mai jos):
-1. pas92 — acțiunile din verifica.yml fixate pe commit-ul exact (în toate 6
-   repo-urile) și regula din [10] care o cere; apoi primele funcții mici în gardă.
-2. Rularea săptămânală: --surse, apoi suita pe dash și pe mksh.
-3. „Fine-tuning-ul cosmologic” (corpus-01, cap. III) — primul pe lista de risc [19].
-4. Corpus III, perechile rămase în [15]: 3-5, 3-3, 3-4, 3-2 — RO verificat, NO completat.
-5. Datoria de surse (surse-datorie.txt): afirmațiile verificate înainte de pas67.
+1. Rularea săptămânală (sâmbătă): --surse, apoi suita pe dash și pe mksh
+   (suita: ~40 min pe dash, peste o oră pe mksh); versiunile acțiunilor.
+2. Auditul structural pe straturi (cerut pe 30 oct): întâi constatările, ca listă,
+   apoi reparațiile — fiecare cu testul ei, contra-proba și suita completă.
+   Înăuntru: registrele (căutarea în ele, coerența între ele), afirmațiile
+   contradictorii între documente, „bilion/trilion” în RO, funcțiile mici.
+3. corpus3-3, cap. 2 „Europa de Vest” — acum primul pe lista de risc [19];
+   împreună cu NO completat (3-3 e și în [15]).
+4. Corpus III, perechile rămase în [15]: 3-5, 3-4, 3-2.
+5. Datoria de surse (surse-datorie.txt, 44): afirmațiile verificate înainte de pas67.
 
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
 separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>
@@ -109,7 +115,7 @@ separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, cele 22 de secțiuni, lecțiile BSD/POSIX (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 29 oct e la zi până la pas91. Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Pe 30 oct e la zi până la pas93. Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate. Biblia 1688 nu există în mediul lui Claude: o regulă nouă din [14] se confirmă pe mașina lui Bogdan, înainte de commit.</li>
 </ul>
 
@@ -122,7 +128,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
   <p>Ultima comandă, după atașare. Status și ghidul se pot da și ca link (sunt publice, cu noindex).</p>
 </div>
 
-<h2>Ce s-a făcut, pas cu pas (pas48–pas91)</h2>
+<h2>Ce s-a făcut, pas cu pas (pas48–pas93)</h2>
 
 <p>Fiecare pas a fost livrat ca patch, cu amprenta <code>sha256</code> și cu <code>git diff --cached --raw</code> comparate înainte de commit, verificat pe o copie a celor 6 repo-uri înainte de livrare și apoi de garda de pe mașina ta. Commit-urile sunt pe GitHub; <code>git log</code> are datele exacte.</p>
 
@@ -147,6 +153,8 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas88–89</td><td>hub</td><td>corpus3-1 „România și Rusia” verificat integral: Transnistria după raportul Wiesel, Fântâna Albă fără cifre inventate, Katyn în RO, încrederea interpersonală după Eurostat 2024, „voldtatt” corectat în NO; [15] 20/20</td></tr>
 <tr><td>pas90, 90b</td><td>hub</td><td>Reparațiile 1–6 din auditul din 28 oct (T85–T93); apostroful-ghilimea din Biblia 1688</td></tr>
 <tr><td>pas91</td><td>hub</td><td>Restul auditului (T94–T101); [7] și [9] rescrise: o rulare de la 47 s la 17 s, cu același raport</td></tr>
+<tr><td>pas92</td><td>toate 6</td><td>Acțiunile din <code>verifica.yml</code> fixate pe commit (checkout v6.1.0, configure-pages v6.0.0, upload-pages-artifact v5.0.0, deploy-pages v5.0.1); [10] cere fixarea; T102–T106; 93 de teste</td></tr>
+<tr><td>pas93</td><td>corpus, hub</td><td>corpus-01 cap. III „Fine-tuning-ul cosmologic” verificat după Lewis, Barnes, Goff (2025): 15 erori, cea mai gravă „trilion” în RO (10<sup>18</sup> în loc de 10<sup>12</sup>); Hoyle, Goff atribuiți corect; NO completat</td></tr>
 </table>
 
 <h2>Garda: cum a crescut, strat cu strat</h2>
@@ -167,6 +175,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
 <tr><td>pas90</td><td>Din auditul din 28 oct, confirmat prin experiment: [14] pe cuvinte întregi („sj” nu mai trece drept „sjel”); orice entitate HTML în afară de <code>&amp;nbsp; &amp;lt; &amp;gt; &amp;amp; &amp;quot;</code> = PROBLEMA; atribut fără ghilimele duble = PROBLEMA; fiecare marcaj cu amprentă, span în span = PROBLEMA; cratima discretă scoasă din căutare; variabilele de test la push = PROBLEMA</td><td>Un audit adevărat strică intenționat și se uită dacă garda vede — apoi controlul: aceleași greșeli în forma obișnuită trebuie să fie prinse.</td></tr>
 <tr><td>pas90b</td><td>Apostroful de la marginea cuvântului devine spațiu în [14]; mesajul numește cuvântul care nu se potrivește și ce scrie ediția în locul lui</td><td>O regulă mai strictă poate lovi date pe care nu le vezi (Biblia 1688 scrie ghilimeaua ca apostrof). Garda a oprit push-ul — exact rostul ei; mesajul bun scurtează diagnosticul.</td></tr>
 <tr><td>pas91</td><td>[13] expresii rupte pe două rânduri; [20] domeniul înregistrat (subdomeniile = o publicație); [22] text mutat în afara ecranului, tăiat, micșorat, în <code>&lt;template&gt;</code>, încă 8 caractere invizibile, <code>aria-hidden</code> semnalat; [8] cifre fără separator; [15] NO peste 115%; <code>citeste-sursa.py</code> doar http/https, cel mult 20 MB; [7] și [9] rescrise</td><td>Pe OpenBSD contează numărul de procese: 18.000 de <code>grep</code>-uri înseamnă minute. Un singur <code>grep -F -f</code> pe pagină, apoi detaliu doar unde e ceva.</td></tr>
+<tr><td>pas92</td><td>[10] orice <code>uses:</code> fără 40 de caractere hexazecimale = PROBLEMA; fără <code># vX.Y.Z</code> = ATENTIE; zero acțiuni citite = PROBLEMA</td><td>O etichetă poate fi mutată, un commit nu. Prețul: reparațiile nu mai vin singure — versiunile se reverifică săptămânal. La o etichetă adnotată, commit-ul e rândul cu <code>^{}</code>.</td></tr>
 </table>
 
 <h2>Garda, așa cum e acum</h2>
@@ -177,7 +186,7 @@ rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
   <li><strong>[7]</strong> formulările retrase (<code>retrase.txt</code>) pe text normalizat (fără tag-uri, <code>&amp;nbsp;</code> și spațiul neseparabil ca spațiu, cratima discretă scoasă, rândurile unite); tiparele cu tag-uri rămân pe textul brut.</li>
   <li><strong>[8]</strong> cifrele declarate = măsurate: „~N” rotunjit, „peste N” în jos, N simplu exact; și cu cifra scrisă fără separator.</li>
   <li><strong>[9]</strong> tag-urile echilibrate în documente; orice atribut fără ghilimele duble, în orice pagină = PROBLEMA.</li>
-  <li><strong>[10]</strong> ADN-ul repo-urilor: fișiere de bază, rădăcina curată, garda și workflow-ul identice, licența, identitatea noreply, push prin SSH.</li>
+  <li><strong>[10]</strong> ADN-ul repo-urilor: fișiere de bază, rădăcina curată, garda și workflow-ul identice, acțiunile fixate pe commit, licența, identitatea noreply, push prin SSH.</li>
   <li><strong>[11]</strong> (local) arbori curați, nimic în urmă; la push, ce pleacă spre <code>main</code> = HEAD-ul verificat; variabilele de test (<code>NORGEDAN_API_DIR</code>, <code>NORGEDAN_SURSE_DIR</code>) setate la push = PROBLEMA; DOCUMENTARE.md rămas în urmă = ATENTIE.</li>
   <li><strong>[12]</strong> caseta About de pe GitHub = <code>about.tsv</code>.</li>
   <li><strong>[13]</strong> registrul afirmațiilor, perechile RO-NO, amprentele (text schimbat, mutat, dispărut, marcaj în altă formă decât <code>&lt;span data-afirmatie="id"&gt;</code>, span în span = PROBLEMA); datoria, termenele și detectorul de certitudine (și pe două rânduri) doar semnalează.</li>
@@ -196,25 +205,25 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou     # doar tabloul
 sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente   # după (re)verificarea unei afirmații
 sh ~/norgedan.github.io/scripts/verifica-site.sh --capitole   # după (re)verificarea unui capitol
 sh ~/norgedan.github.io/scripts/verifica-site.sh --surse      # citatele din surse.tsv recitite în pagina lor (rețea)
-sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii (88 de teste la pas91)
+sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita gărzii (93 de teste la pas92)
 sh ~/norgedan.github.io/scripts/teste-garda.sh T85 T90        # doar testele numite</pre>
 <p>Verdictele suitei: <strong>PICA</strong> (trebuie să blocheze, din motivul corect), <strong>TRECE</strong>, <strong>SEMNAL</strong> (atenționarea trebuie să apară), <strong>TACE</strong>, <strong>ABSENT</strong>, <strong>DESCHIS</strong> (vulnerabilitate cunoscută — azi niciuna). Contra-proba: <code>SCRIPT=/cale/verifica-vechi.sh sh …/teste-garda.sh</code>. Testele <code>--surse</code> sunt cele lente (așteaptă limitele de timp), mai ales pe <code>mksh</code>.</p>
 
 <h2>Ce urmează, în detaliu</h2>
 
-<h3>1. pas92 — acțiunile din workflow fixate pe commit</h3>
-<p><code>verifica.yml</code> folosește patru acțiuni scrise de GitHub: <code>actions/checkout</code>, <code>actions/configure-pages</code>, <code>actions/upload-pages-artifact</code>, <code>actions/deploy-pages</code>, chemate azi după etichetă (<code>@v6</code>, <code>@v5</code>). O etichetă poate fi mutată pe alt cod; un commit nu. Concret: fiecare <code>uses: actions/checkout@v6</code> devine <code>uses: actions/checkout@&lt;cele 40 de caractere ale commit-ului&gt; # v6.x.y</code>, cu commit-urile citite de pe GitHub. Același fișier în toate cele 6 repo-uri ([10] cere workflow-uri identice), deci 6 patch-uri, 6 commit-uri și 6 push-uri. Plus o regulă nouă în [10]: orice <code>uses:</code> care nu e fixat pe 40 de caractere hexazecimale = PROBLEMA, cu testul ei. Dacă un commit ar fi greșit, CI-ul pică la „verifica” și nu se publică nimic — site-ul rămâne cum e. Apoi, separat: primele funcții mici în gardă (filtrarea comentariilor din registre, numărarea rândurilor, raportarea liniilor) — doar sub suita completă și contra-probă.</p>
+<h3>1. Rularea săptămânală (sâmbăta)</h3>
+<p><code>--surse</code> (citatele din toate sursele, reconfirmate prin rețea), apoi suita pe dash, apoi pe mksh, separat — fără editări cât rulează; suita durează ~40 de minute pe dash și peste o oră pe mksh. Plus versiunile acțiunilor: <code>git ls-remote --tags https://github.com/actions/checkout.git</code> și celelalte trei; o versiune nouă se ia doar după ce i se citesc notele, cu commit-ul confirmat (checkout are deja v7 — decizie separată).</p>
 
-<h3>2. Rularea săptămânală (sâmbăta)</h3>
-<p><code>--surse</code> (citatele din toate sursele, reconfirmate prin rețea), apoi suita pe dash, apoi pe mksh, separat.</p>
+<h3>2. Auditul structural pe straturi</h3>
+<p>Cerut de Bogdan pe 30 oct. Se face ca auditul din 28 oct: întâi constatările, ca listă, strat cu strat (registrele, afirmațiile și dovezile, citatele, structura, git și CI, testele), fiecare confirmată prin experiment sau spusă ca atare („citit în cod, netestat”); apoi reparațiile, fiecare cu testul ei, contra-proba pe garda veche și suita completă pe dash și pe mksh. Pe listă de la început: o căutare în registre (o cifră sau un nume → afirmația, sursa, citatul); afirmații despre același fapt formulate diferit în documente diferite (Hoyle „ateu” în corpus-06, scos în corpus-01); „bilion/trilion” în RO, semnalate; primele funcții mici (filtrarea comentariilor din registre, numărarea rândurilor, raportarea liniilor).</p>
 
 <h3>3. Conținutul, după lista de risc [19]</h3>
 <ol>
-  <li><strong>„Fine-tuning-ul cosmologic”</strong> (corpus-01, cap. III) — cele mai multe cifre și superlative neverificate.</li>
-  <li><strong>Corpus III, perechile rămase în [15]:</strong> corpus3-5, 3-3, 3-4, 3-2 (subcapitole lipsă în NO) — RO verificat la sursă, apoi NO completat, ca la corpus3-1.</li>
-  <li><strong>Datoria de surse</strong> (<code>surse-datorie.txt</code>): afirmațiile verificate înainte de pas67, fără dovadă în <code>surse.tsv</code>; lista doar scade.</li>
-  <li><strong>Corpus III, următoarea datare</strong> („Stare la”): linia Vulcănești–Chișinău — pe 16 oct, Logos Press scria că termenul a fost amânat a șasea oară, spre sfârșitul lui octombrie – începutul lui noiembrie; de adus la zi împreună cu restul documentului.</li>
-  <li><strong>Citatele biblice din proză</strong> — circa 30, în <code>&lt;em&gt;</code>, adesea fără trimitere, încă în traducere modernă; aduse la 1688/1930, apoi o regulă în [14] care să le confrunte (și citatele din tabele).</li>
+  <li><strong>corpus3-3, cap. 2 „Europa de Vest”</strong> — acum primul (15 cifre, 10 superlative); odată cu NO completat, pentru că 3-3 e și în [15].</li>
+  <li><strong>Corpus III, perechile rămase în [15]:</strong> corpus3-5, 3-4, 3-2 (subcapitole lipsă în NO) — RO verificat la sursă, apoi NO completat.</li>
+  <li><strong>Datoria de surse</strong> (<code>surse-datorie.txt</code>, 44): afirmațiile verificate înainte de pas67, fără dovadă în <code>surse.tsv</code>; lista doar scade. Printre ele <code>hoyle-crick</code> (corpus-06, Hoyle numit „ateu”).</li>
+  <li><strong>Corpus III, următoarea datare</strong> („Stare la”): linia Vulcănești–Chișinău — termenul era sfârșitul lui octombrie – începutul lui noiembrie; de adus la zi împreună cu restul documentului.</li>
+  <li><strong>Citatele biblice din proză</strong> — circa 30, în <code>&lt;em&gt;</code>, adesea fără trimitere; aduse la 1688/1930, apoi o regulă în [14] care să le confrunte. Biblia 1688 e acum și ca PDF (transcrierea BOR), cu trimiterile de sub versete.</li>
   <li><strong>opera, „Voci care nu mor”</strong> — verificarea afirmațiilor (Herlea).</li>
   <li><strong>Revizuirea NO de un vorbitor nativ</strong> — tot textul NO e tradus de mașină sau de Claude, nerevizuit de un nativ.</li>
   <li><strong>Documentul nou „Știința și credința față în față”</strong>; apoi Doc VII (Familia și Societatea — structura se discută întâi).</li>
@@ -224,6 +233,7 @@ sh ~/norgedan.github.io/scripts/teste-garda.sh T85 T90        # doar testele num
 <ul>
   <li><strong>Până pe 19 noiembrie 2026:</strong> <code>ubuntu-latest</code> trece la Ubuntu 26 în CI; pe 29 oct, verde. Dacă CI devine roșu fără altă cauză: diferență de mediu, se investighează.</li>
   <li><strong>15 ianuarie 2027:</strong> primele termene de reverificare din <code>afirmatii.tsv</code>; [13] le semnalează singură.</li>
+  <li><strong>Săptămânal, din pas92:</strong> versiunile celor patru acțiuni din <code>verifica.yml</code>, cu <code>git ls-remote</code>.</li>
   <li><strong>60 de zile fără activitate în hub:</strong> GitHub dezactivează rularea zilnică; reactivare: Actions → verifica-site → Enable workflow.</li>
 </ul>
 
@@ -255,6 +265,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
     <li>O mutație pe care santinela nu o vede (o schimbare doar în <code>.git</code>) face testul să pară stricat; un fișier-martor o face vizibilă (T93). Garda rulată în suită primește stdin din <code>/dev/null</code>, altfel la <code>--push</code> așteaptă la nesfârșit.</li>
     <li>Un audit serios se face prin experiment: greșeala introdusă intenționat, garda rulată, apoi controlul — aceeași greșeală în forma obișnuită trebuie prinsă. Ce e doar citit în cod se spune ca atare, „netestat încă”.</li>
     <li>O regulă mai strictă poate lovi date pe care nu le vezi: Biblia 1688 stă doar la Bogdan. O regulă nouă din [14] se confirmă acolo înainte de commit — iar dacă scapă, garda de la push o prinde.</li>
+    <li>O plasă nouă se fixează pe ce rula deja (pas92: aceleași versiuni, doar pe commit) — schimbarea de comportament e un pas separat.</li>
     <li>Un mesaj de eroare bun numește cauza (cuvântul care nu se potrivește, ce scrie ediția), nu doar locul.</li>
     <li>Pe OpenBSD contează numărul de procese: o buclă de <code>grep</code> pe tipar și pe pagină înseamnă minute.</li>
     <li>O plasă care pică fără motiv real învață pe toată lumea să ignore roșul — se repară, nu doar se explică.</li>
@@ -272,12 +283,15 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
     <li>O sursă cu surse anonime se atribuie („potrivit RBC, care a citat surse anonime”), nu se dă drept fapt.</li>
     <li>Superlativele („cel mai”, „singurul”, „fără precedent”) sunt locul unde stau cele mai multe erori.</li>
     <li>O eroare de traducere poate schimba sensul cu totul („silită” tradus „voldtatt”): NO se citește, nu doar se numără.</li>
+    <li>O traducere prinde o eroare când cealaltă limbă are altă convenție: engl. <em>trillion</em> = 10<sup>12</sup> = rom. „bilion”; „trilion” era greșit în RO și corect în NO („billion”), din aceeași sursă.</li>
+    <li>Înainte de a declara o cifră „fără sursă”, se caută în registre: pe 30 oct Claude a propus scoaterea cifrei CAS, deja verificată în pas75, fiindcă nu putea deschide pagina.</li>
+    <li>Un autor citat pentru un argument nu e aliatul concluziei noastre: se spune ce susține el (Goff respinge teismul tradițional), iar argumentul nostru se marchează „credem”.</li>
     <li>O sursă care refuză descărcarea automată (403) se citește altfel, iar citatul ei rămâne „-” — niciodată copiat dintr-un rezumat.</li>
   </ul>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 29 octombrie 2026, după pas91
+  Document intern · norgedan · actualizat 30 octombrie 2026, după pas93
 </footer>
 
 </div>
