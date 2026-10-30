@@ -896,11 +896,36 @@ while read -r repo; do
     [ -f "$d/$v" ] && { problema "$repo: $v inca exista — verificarea trebuie sa aiba o singura sursa"; greseli=1; }
   done
 done < "$W/repos"
+# pas92: actiunile din workflow fixate pe commit.  O eticheta (@v6) poate fi mutata
+# pe alt cod de oricine o controleaza; un commit de 40 de caractere hexazecimale nu.
+# Workflow-urile sunt identice (mai sus), deci se citeste o data, cel din hub.
+# Versiunea se scrie in comentariu (# v6.1.0), ca un om sa stie ce ruleaza.
+# Santinela: un workflow in care nu se citeste niciun „uses:” = PROBLEMA.
+if [ -f "$REF_WF" ]; then
+  awk '
+    { l = $0; sub(/^[[:space:]]*-?[[:space:]]*/, "", l) }
+    l !~ /^uses:/ { next }
+    { n++; v = l; sub(/^uses:[[:space:]]*/, "", v)
+      c = ""; if (index(v, "#") > 0) { c = substr(v, index(v, "#") + 1); v = substr(v, 1, index(v, "#") - 1) }
+      sub(/[[:space:]]+$/, "", v); gsub(/["\047]/, "", v); gsub(/^[[:space:]]+|[[:space:]]+$/, "", c)
+      a = index(v, "@"); s = a ? substr(v, a + 1) : ""
+      if (a == 0 || length(s) != 40 || s !~ /^[0-9a-f]+$/)
+        print "P\trandul " NR ": \"" v "\" nu e fixat pe commit (40 de caractere hexazecimale dupa @)"
+      else if (c !~ /^v[0-9]/)
+        print "A\trandul " NR ": \"" v "\" fixat, dar fara versiunea in comentariu (# vX.Y.Z)" }
+    END { if (n + 0 == 0) print "P\tniciun \"uses:\" citit — santinela" ; else print "N\t" n }' "$REF_WF" > "$W/uses10"
+  while IFS="$(printf '\t')" read -r k m; do
+    case "$k" in
+      P) problema "verifica.yml, $m"; greseli=1 ;;
+      A) atentie "verifica.yml, $m" ;;
+    esac
+  done < "$W/uses10"
+fi
 if [ "$MOD" != ci ]; then
   ch=$(git config --global --get credential.helper 2>/dev/null)
   [ -n "$ch" ] && atentie "credential.helper=\"$ch\" — parolele/tokenurile s-ar salva din nou pe disc; push-ul merge prin SSH"
 fi
-[ "$greseli" -eq 0 ] && ok "toate repo-urile au fisierele de baza si aceeasi garda activa"
+[ "$greseli" -eq 0 ] && ok "toate repo-urile au fisierele de baza si aceeasi garda activa; $(awk -F'\t' '$1 == "N" { print $2 }' "$W/uses10" 2>/dev/null) actiuni in workflow, toate fixate pe commit"
 
 # ════════════════════════════════════════════════════════════════════
 titlu 11 "Starea git: ce verific e ce se publica"

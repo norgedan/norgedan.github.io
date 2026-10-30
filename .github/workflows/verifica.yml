@@ -13,6 +13,13 @@
 # un site cu probleme nu ajunge pe GitHub Pages, oricum ar fi ajuns pe GitHub.
 # Cere, o singura data per repo: Settings -> Pages -> Source: GitHub Actions.
 # Fiecare repo isi publica doar propriul site; verificarea e a site-ului intreg.
+#
+# Actiunile sunt fixate pe commit-ul exact (pas92), nu pe eticheta: o eticheta
+# (@v6) poate fi mutata pe alt cod, un commit nu.  Versiunea sta in comentariu.
+# Commit-urile citite pe 30 oct 2026 cu git ls-remote (eticheta usoara -> commit;
+# la o eticheta adnotata se ia randul cu ^{}).  [10] cere fixarea pe 40 de
+# caractere hexazecimale.  Pretul: reparatiile noi nu mai vin singure; versiunile
+# se reverifica la rularea saptamanala.
 
 name: verifica-site
 
@@ -33,17 +40,17 @@ jobs:
     if: github.event_name != 'schedule' || github.repository == 'norgedan/norgedan.github.io'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/norgedan.github.io, path: norgedan.github.io }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/corpus, path: corpus }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/corpus2, path: corpus2 }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/opera, path: opera }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/limba, path: limba }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { repository: norgedan/limba-ro-final, path: limba-ro-final }
       # [14] NO: Bibelen 1930, text public, fixat pe commit; scriptul ii verifica
       # amprenta (cksum).  RO 1688 sta doar local, deci in CI se confrunta doar NO.
@@ -90,12 +97,12 @@ jobs:
       group: pages-${{ github.repository }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with: { path: repo }
       - name: arborele publicat (fara .git si .github, ca pana acum)
         run: mkdir _site && tar -C repo --exclude=./.git --exclude=./.github -cf - . | tar -C _site -xf -
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with: { path: _site }
       - id: publicare
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

@@ -355,6 +355,21 @@ mut_T100() { rep corpus/03-binele-raul-mintea-omului-ro.html 's|<footer|<templat
 # [22] aria-hidden: semnalat, de citit
 mut_T101() { rep corpus/03-binele-raul-mintea-omului-ro.html 's|<footer|<p aria-hidden="true">decor</p><footer|'; }
 
+# -- pas92: actiunile din workflow fixate pe commit ([10]) -----------------------------------------
+# workflow-urile sunt identice in cele 6 repo-uri: mutatia se face in toate, ca sa nu
+# raspunda in locul ei regula „difera de cel din hub”
+wf() { for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do rep "$r/.github/workflows/verifica.yml" "$1"; done; }
+# inapoi pe eticheta: @v6
+mut_T102() { wf 's|actions/deploy-pages@[0-9a-f]* # v5.0.1|actions/deploy-pages@v5|'; }
+# commit scurt (7 caractere): tot nefixat
+mut_T103() { wf 's|actions/configure-pages@\([0-9a-f]\{7\}\)[0-9a-f]* # v6.0.0|actions/configure-pages@\1 # v6.0.0|'; }
+# eticheta intre ghilimele: aceeasi regula
+mut_T104() { wf 's|uses: actions/upload-pages-artifact@[0-9a-f]* # v5.0.0|uses: "actions/upload-pages-artifact@v5"|'; }
+# fixat, dar fara versiunea in comentariu: semnalat
+mut_T105() { wf 's|\(actions/deploy-pages@[0-9a-f]*\) # v5.0.1|\1|'; }
+# santinela: niciun „uses:” citit
+mut_T106() { wf 's|uses:|foloseste:|'; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -447,6 +462,11 @@ t T98 PICA    "declara \"196000 de cuvinte\"" "[8] cifra fara separator"
 t T99 SEMNAL  "opera-1: lungime"        "[15] NO mult mai lung decat RO"
 t T100 PICA   "<template>"              "[22] continut in <template>"
 t T101 SEMNAL "aria-hidden"             "[22] aria-hidden semnalat"
+t T102 PICA   "actions/deploy-pages@v5\" nu e fixat pe commit" "[10] actiune pe eticheta, nu pe commit"
+t T103 PICA   "nu e fixat pe commit"    "[10] commit scurt (7 caractere)"
+t T104 PICA   "actions/upload-pages-artifact@v5\" nu e fixat" "[10] eticheta intre ghilimele"
+t T105 SEMNAL "fara versiunea in comentariu" "[10] fixat, fara versiunea in comentariu"
+t T106 PICA   "niciun \"uses:\" citit" "[10] zero actiuni citite (santinela)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
