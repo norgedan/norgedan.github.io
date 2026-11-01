@@ -400,6 +400,12 @@ mut_T115() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>De un trilio
 mut_T116() { rep corpus/05-planeten-og-romania-no.html 's|<footer|<p>En billion ganger mer.</p><footer|'; }
 mut_T117() { cache_surse "<p>tekst$(printf '\342\200\213')skjult</p>"; }
 
+# -- pas96: uneltele --cauta si --cifre ---------------------------------------------------------
+# un cuvant-martor intr-o pagina RO: --cauta trebuie sa-l gaseasca, cu pagina lui
+mut_T118() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987 aici.</p><footer|'; }
+# o cifra-martor doar in RO, in primul capitol: --cifre trebuie s-o arate
+mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -508,6 +514,8 @@ t T114 PICA   "data gresita \"2026-10-32\"" "[18] data verificarii imposibila (3
 t T115 SEMNAL "verifica scara"          "[7] „trilion” in RO semnalat"
 t T116 TACE   "verifica scara"          "[7] „billion” in NO nu e semnalat"
 t T117 SEMNAL "pagini-sursa au caractere invizibile" "--surse: caracterele invizibile adunate intr-un rand" --surse
+t T118 SEMNAL "Cuvantmartor987 aici" "--cauta: textul gasit in pagina lui" "--cauta cuvantmartor987"
+t T119 SEMNAL "doar RO: 987654"         "--cifre: cifra doar in RO aratata" "--cifre corpus-02"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

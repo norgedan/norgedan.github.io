@@ -55,7 +55,9 @@ case "${1:-}" in
   --github)  MOD=github ;;
   --ci)      MOD=ci ;;
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse]" >&2; exit 2 ;;
+  --cauta)   MOD=cauta; CAUTA="${2:-}" ;;
+  --cifre)   MOD=cifre; CIFRE_DOC="${2:-}" ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document>]" >&2; exit 2 ;;
 esac
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
@@ -80,6 +82,96 @@ ok()       { echo "  OK       $1"; }
 problema() { echo "  PROBLEMA $1"; echo x >> "$W/prob"; }
 atentie()  { echo "  ATENTIE  $1"; echo x >> "$W/aten"; }
 titlu()    { echo ""; echo "[$1] $2"; }
+
+# ════════════════════════════════════════════════════════════════════
+# Uneltele de lucru (pas96) — nu verifica nimic, doar arata; ies inainte de verificare
+# ════════════════════════════════════════════════════════════════════
+# --cauta <text>   unde apare un text: in registre (afirmatii, surse, erori, capitole,
+#                  acceptari, retrase) si in paginile celor 6 repo-uri, cu contextul.
+#                  Inainte de a declara o cifra „fara sursa” sau de a schimba un fapt
+#                  intr-un document: ce stim deja despre el, si unde altundeva apare.
+#                  Literele mari/mici nu conteaza (doar la literele fara diacritice).
+# --cifre <id>     pentru un document din documente.tsv: capitol cu capitol, cifrele care
+#                  apar doar in RO sau doar in NO (fara trimiterile biblice si anii
+#                  editiilor 1688/1930).  O cifra doar in RO e adesea un pasaj netradus.
+# text_simplu: o pagina HTML ca text, fara <script>, <style>, comentarii si tag-uri
+text_simplu() { LC_ALL=C awk 'BEGIN { RS = "\001" } { s = $0
+    while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break } s = substr(s, 1, i - 1) " " substr(s, i + j + 2) }
+    for (q = 1; q <= 2; q++) { tg = (q == 1) ? "script" : "style"
+      while ((i = index(s, "<" tg)) > 0) { j = index(substr(s, i), "</" tg ">"); if (j == 0) { s = substr(s, 1, i - 1); break } s = substr(s, 1, i - 1) " " substr(s, i + j + length(tg) + 2) } }
+    gsub(/<[^>]*>/, " ", s); gsub(/&nbsp;/, " ", s); gsub(/\302\240/, " ", s); gsub(/[ \t\r\n]+/, " ", s); print s }' "$1"; }
+if [ "$MOD" = cauta ]; then
+  [ -n "$CAUTA" ] || { echo "utilizare: sh $0 --cauta <text>" >&2; exit 2; }
+  echo ""; echo "  --cauta: „$CAUTA”"; echo ""
+  echo "  In registre:"
+  gr=0
+  for f in afirmatii.tsv surse.tsv erori.tsv capitole-verificate.tsv cifre-ok.txt certitudini-ok.txt paritate-ok.txt retrase.txt surse-datorie.txt; do
+    [ -f "$SCRIPT_DIR/$f" ] || continue
+    LC_ALL=C grep -n -i -F -- "$CAUTA" "$SCRIPT_DIR/$f" | grep -v '^[0-9]*:#' | while IFS= read -r l; do
+      printf '    %s:%s\n' "$f" "$(printf '%s' "$l" | tr '\t' ' ' | cut -c1-220)"; done
+  done > "$W/c_reg"
+  if [ -s "$W/c_reg" ]; then cat "$W/c_reg"; else echo "    nimic"; fi
+  echo ""; echo "  In pagini:"
+  for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final; do
+    [ -d "$RADACINA/$r" ] || continue
+    find "$RADACINA/$r" -name .git -prune -o -type f -name '*.html' -print
+  done | LC_ALL=C sort > "$W/c_html"
+  while IFS= read -r f; do
+    text_simplu "$f" | LC_ALL=C awk -v T="$CAUTA" -v R="${f#"$RADACINA"/}" '
+      { s = $0; ls = tolower(s); lt = tolower(T); n = 0
+        while ((i = index(ls, lt)) > 0 && n < 5) { n++
+          a = i - 80; if (a < 1) a = 1; f = substr(s, a, 160 + length(T))
+          sub(/^[^ ]* /, "", f); sub(/ [^ ]*$/, "", f)
+          printf "    %s:  … %s …\n", R, f
+          s = substr(s, i + length(T)); ls = substr(ls, i + length(T)) }
+        if (index(ls, lt) > 0) printf "    %s:  (si alte aparitii)\n", R }'
+  done < "$W/c_html" > "$W/c_pag"
+  if [ -s "$W/c_pag" ]; then cat "$W/c_pag"; else echo "    nimic"; fi
+  echo ""
+  echo "  $(wc -l < "$W/c_reg" | tr -d ' ') randuri in registre; $(cut -d: -f1 "$W/c_pag" | sort -u | grep -c .) pagini"
+  echo ""
+  exit 0
+fi
+if [ "$MOD" = cifre ]; then
+  [ -n "$CIFRE_DOC" ] || { echo "utilizare: sh $0 --cifre <document> (de ex. corpus-06)" >&2; exit 2; }
+  rand=$(grep -v '^#' "$MANIFEST" | awk -F'\t' -v d="$CIFRE_DOC" '$1 == d')
+  [ -n "$rand" ] || { echo "  --cifre: „$CIFRE_DOC” nu e in documente.tsv" >&2; exit 2; }
+  repo=$(printf '%s' "$rand" | cut -f3); ro=$(printf '%s' "$rand" | cut -f4); no=$(printf '%s' "$rand" | cut -f5)
+  for p in "ro $RADACINA/$repo/$ro" "no $RADACINA/$repo/$no"; do
+    LC_ALL=C awk -v L="${p%% *}" 'BEGIN { RS = "\001" }
+      function norm(t,   o, i, c, n) {
+        gsub(/\302\240|\342\200\257|\342\200\211/, " ", t); o = ""; n = length(t)
+        for (i = 1; i <= n; i++) { c = substr(t, i, 1)
+          if ((c == "." || c == " ") && i > 1 && substr(t, i - 1, 1) ~ /[0-9]/ && substr(t, i + 1, 3) ~ /^[0-9][0-9][0-9]$/ && substr(t, i + 4, 1) !~ /[0-9]/) continue
+          o = o c }
+        return o }
+      { s = $0
+        while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break } s = substr(s, 1, i - 1) " " substr(s, i + j + 2) }
+        gsub(/<cite[^>]*>[^<]*<\/cite>/, " ", s); gsub(/<style[^>]*>[^<]*<\/style>/, " ", s)
+        n = split(s, cap, "<h2")
+        for (k = 2; k <= n; k++) { t = cap[k]
+          tit = t; sub(/<\/h2>.*/, "", tit); sub(/^[^>]*>/, "", tit); gsub(/<[^>]*>/, "", tit)
+          gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); t = norm(t)
+          gsub(/[0-9]+:[0-9]+([-–][0-9]+)?/, " ", t)
+          while (match(t, /[0-9]+([.,][0-9]+)?/)) { m = substr(t, RSTART, RLENGTH); gsub(/,/, ".", m)
+            if (m != "1688" && m != "1930") print L "\t" (k - 1) "\t" m "\t" tit
+            t = substr(t, RSTART + RLENGTH) } } }' "${p#* }"
+  done > "$W/cifre_all"
+  echo ""; echo "  --cifre $CIFRE_DOC: cifrele care apar doar intr-o limba, capitol cu capitol (poz = al catelea <h2>)"; echo ""
+  awk -F'\t' '
+    { k = $2; v[$1, k, $3] = 1; if ($1 == "ro") tr[k] = $4; cap[k] = 1 }
+    END { for (k = 1; k <= 400; k++) if (k in cap) { dr = ""; dn = ""
+            for (q in v) { split(q, y, SUBSEP); if (y[2] != k) continue
+              if (y[1] == "ro" && !(("no", k, y[3]) in v)) dr = dr " " y[3]
+              if (y[1] == "no" && !(("ro", k, y[3]) in v)) dn = dn " " y[3] }
+            if (dr != "" || dn != "") { n++; printf "  poz %d  %s\n      doar RO:%s\n      doar NO:%s\n", k, substr(tr[k], 1, 60), (dr == "" ? " -" : dr), (dn == "" ? " -" : dn) } }
+          if (n == 0) print "  aceleasi cifre in RO si NO, in fiecare capitol" }' "$W/cifre_all"
+  echo ""
+  echo "  O cifra doar in RO poate fi un pasaj netradus; doar in NO, o adaptare (ex. „Norsk perspektiv”)"
+  echo "  sau o cifra scrisa in litere in RO.  Daca NO are alt numar de capitole, pozitiile nu corespund."
+  echo ""
+  exit 0
+fi
 
 # ════════════════════════════════════════════════════════════════════
 # Uneltele awk — scrise o data, folosite peste tot
