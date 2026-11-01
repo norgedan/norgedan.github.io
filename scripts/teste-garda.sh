@@ -413,6 +413,17 @@ mut_T121() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor
 mut_T122() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987xyz aici.</p><footer|'; }
 # aceeasi regula in registre
 mut_T123() { echo 'cuvantmartor987xyz' >> norgedan.github.io/scripts/retrase.txt; }
+# ── pas100: sursele PDF in --surse ─────────────────────────────────────────
+# un raport PDF in cache (octetii lui nu contin textul, ca la un PDF comprimat) si un
+# „pdftotext” falsificat: citatul trebuie gasit in textul scos (T124); fara text scos,
+# se spune ca PDF-ul nu s-a putut citi, nu ca citatul lipseste din sursa (T125)
+PDFU='https://exemplu.invalid/raport-oficial.pdf'
+pdf_sursa() { cache_surse; k=$(printf '%s' "$PDFU" | cksum | cut -d' ' -f1)
+  printf '%%PDF-1.4\n1 0 obj <</Filter /FlateDecode>> stream\nx\234+.)JM\314\005\000\nendstream\n%%%%EOF\n' > "cache-surse/$k.html"
+  printf 'rujeola-2024\tP\t%s\t2026-11-01\tclaude\t%s\n' "$PDFU" '«Cuvantmartor pdf 4242 aici»' >> "$SR"
+  mkdir -p fakebin; printf '#!/bin/sh\nfor a; do o=$a; done\n%s\n' "$1" > fakebin/pdftotext; chmod +x fakebin/pdftotext; }
+mut_T124() { pdf_sursa 'printf "Raport. Cuvantmartor pdf 4242\\naici. Final.\\n" > "$o"'; }
+mut_T125() { pdf_sursa 'exit 1'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -529,6 +540,8 @@ t T120 ABSENT "Cuvantmartor987xyz"   "--cauta: o bucata de cuvant nu e gasita" "
 t T121 ABSENT "Cuvantmartor987ăz"    "--cauta: litera cu diacritice nu e granita" "--cauta cuvantmartor987"
 t T122 SEMNAL "Cuvantmartor987xyz aici" "--cauta: cu * la sfarsit, prefix" "--cauta cuvantmartor987*"
 t T123 ABSENT "cuvantmartor987xyz"   "--cauta: cuvinte intregi si in registre" "--cauta cuvantmartor987"
+t T124 SEMNAL " 0 negasite;"          "--surse: citatul gasit in textul unui PDF" --surse
+t T125 SEMNAL "e PDF, dar textul lui nu poate fi scos" "--surse: PDF fara text scos, numit ca atare" --surse
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

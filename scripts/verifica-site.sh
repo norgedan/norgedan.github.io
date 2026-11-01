@@ -2514,7 +2514,7 @@ px-captcha
 AwsWafIntegration
 Checking your browser
 PAT
-  ng=0; nn=0; ni=0; nb=0; nlim=0
+  ng=0; nn=0; ni=0; nb=0; nlim=0; npdf=0
   awk -F'\t' '$6 != "-"' "$W/sr" > "$W/src"
   # intai descarcarile, in loturi paralele; fiecare in fisierul ei (cksum-ul adresei)
   mkdir -p "$W/pp"; nl=0
@@ -2559,7 +2559,21 @@ PAT
       atentie "--surse: nu pot citi $url ($id) — HTTP $hc: $de"; ni=$((ni + 1)); continue
     fi
     if [ ! -s "$W/pag" ]; then atentie "--surse: nu pot citi $url ($id) — inaccesibila, sau peste ${ST} s si apoi peste ${ST2} s"; ni=$((ni + 1)); continue; fi
-    LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
+    # pas100: rapoartele oficiale (Comisia, ECDC, FBI) sunt PDF: octetii lor comprimati nu
+    # contin textul, iar citatul ar iesi „negasit”, acuzand sursa pe nedrept.  Un PDF se
+    # recunoaste dupa primii 5 octeti („%PDF-”) si se citeste prin pdftotext (poppler); fara
+    # el, sau daca nu scoate text (PDF scanat), se spune asta — nu „citatul nu (mai) e in”.
+    pt="$W/pag"
+    if [ "$(LC_ALL=C dd if="$W/pag" bs=5 count=1 2>/dev/null)" = "%PDF-" ]; then
+      rm -f "$W/pagt"
+      command -v pdftotext >/dev/null 2>&1 && pdftotext -enc UTF-8 -q "$W/pag" "$W/pagt" 2>/dev/null
+      if [ ! -s "$W/pagt" ]; then
+        atentie "--surse: $url e PDF, dar textul lui nu poate fi scos (pdftotext lipseste sau n-a scos text; OpenBSD: pkg_add poppler-utils) — citatul nu e reconfirmat ($id)"; npdf=$((npdf + 1)); continue
+      fi
+      pt="$W/pagt"; LC_ALL=C awk -f "$W/red.awk" "$W/pagt" > "$W/pagr"
+    else
+      LC_ALL=C awk -f "$W/pag.awk" "$W/pag" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/pagr"
+    fi
     printf '%s' "$cit" | LC_ALL=C awk -f "$W/ent.awk" | LC_ALL=C awk -f "$W/red.awk" > "$W/citr"
     if [ -s "$W/citr" ] && LC_ALL=C grep -q -F -f "$W/citr" "$W/pagr"; then ng=$((ng + 1))
     elif LC_ALL=C grep -q -F -f "$W/botpat" "$W/pag"; then
@@ -2567,14 +2581,14 @@ PAT
     else atentie "--surse: citatul pentru \"$id\" nu (mai) e in $url — reverifica"; nn=$((nn + 1)); fi
     # pas95: paginile cu caractere invizibile se aduna intr-un singur rand (de obicei spatii de
     # latime zero, inofensive); altfel zeci de randuri ascund citatul negasit, care conteaza
-    LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && printf '%s (%s)\n' "$url" "$id" >> "$W/srinv"
-    LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
+    LC_ALL=C grep -q -F -f "$W/invpat" "$pt" && printf '%s (%s)\n' "$url" "$id" >> "$W/srinv"
+    LC_ALL=C grep -q -i -F -f "$W/injpat" "$pt" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
   if [ -s "$W/srinv" ]; then
     atentie "--surse: $(LC_ALL=C sort -u "$W/srinv" | wc -l | tr -d ' ') pagini-sursa au caractere invizibile — tratate ca date, cu grija (de obicei spatii de latime zero, inofensive):"
     LC_ALL=C sort -u "$W/srinv" | sed 's|^|             |'
   fi
-  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot; $nlim limitate de server (429) ($nr adrese la a doua incercare, $nrr recuperate)"
+  ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot; $nlim limitate de server (429); $npdf PDF fara text ($nr adrese la a doua incercare, $nrr recuperate)"
 fi
 
 # ════════════════════════════════════════════════════════════════════
