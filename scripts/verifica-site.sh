@@ -1185,11 +1185,12 @@ BEGIN { RS = "\001"; M = "<span data-afirmatie=\"" }
   }
 }
 AWK
-: > "$W/amprn"; : > "$W/ampspan"
+: > "$W/amprn"; : > "$W/ampspan"; : > "$W/amptxt"
 while read -r f; do
   rel=${f#"$RADACINA"/}
   LC_ALL=C awk -f "$W/ampr.awk" "$f" | while IFS="$TAB" read -r id txt; do
     if [ "$id" = '!SPAN' ]; then printf '%s\t%s\n' "$txt" "$rel" >> "$W/ampspan"; continue; fi
+    printf '%s\t%s\t%s\n' "$id" "$rel" "$txt" >> "$W/amptxt"
     printf '%s\t%s\t%s\n' "$id" "$rel" "$(printf '%s' "$txt" | cksum | awk '{print $1 "-" $2}')"
   done >> "$W/amprn"
 done < "$W/pub13"
@@ -1205,6 +1206,27 @@ awk -F'\t' -v A="$W/amprs" '
 ' "$W/afuz" > "$W/ampforma"
 
 if [ "$MOD" = amprente ]; then
+  # pas94: --amprente re-ingheata doar afirmatiile reverificate.  Regula de lucru:
+  # „amprenta si dovada vin in acelasi patch” — deci o amprenta schimbata (sau noua) se
+  # scrie doar daca randul afirmatiei din afirmatii.tsv sau un rand al ei din surse.tsv
+  # s-a schimbat fata de ultimul commit.  Altfel amprenta veche ramane, iar garda blocheaza
+  # mai departe.  Fiecare schimbare e spusa pe nume.
+  : > "$W/ampold"; [ -f "$AMPRENTE" ] && grep -v '^#' "$AMPRENTE" | grep -v '^[[:space:]]*$' > "$W/ampold"
+  : > "$W/afhead"; : > "$W/srhead"
+  git -C "$HUB" show HEAD:scripts/afirmatii.tsv 2>/dev/null | grep -v '^#' | grep -v '^[[:space:]]*$' > "$W/afhead"
+  git -C "$HUB" show HEAD:scripts/surse.tsv 2>/dev/null | grep -v '^#' | grep -v '^[[:space:]]*$' > "$W/srhead"
+  : > "$W/srnow"; [ -f "$SCRIPT_DIR/surse.tsv" ] && grep -v '^#' "$SCRIPT_DIR/surse.tsv" | grep -v '^[[:space:]]*$' > "$W/srnow"
+  awk -F'\t' -v AH="$W/afhead" -v AN="$W/af" -v SH="$W/srhead" -v SN="$W/srnow" -v OLD="$W/ampold" -v RAP="$W/amprap" '
+    function citeste(f, arr,   l, x) { while ((getline l < f) > 0) { split(l, x, "\t"); arr[x[1]] = arr[x[1]] "\n" l } close(f) }
+    BEGIN { OFS = "\t"; citeste(AH, ah); citeste(AN, an); citeste(SH, sh); citeste(SN, sn)
+            while ((getline l < OLD) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = x[3] } }
+    { k = $1 "\t" $2; vazut[k] = 1; atins = (ah[$1] != an[$1]) || (sh[$1] != sn[$1])
+      if ((k in v) && v[k] == $3) { print; next }
+      if (atins) { print; print ((k in v) ? "SCHIMBAT" : "NOU") "\t\"" $1 "\" in " $2 > RAP; next }
+      print "REFUZ\t\"" $1 "\" in " $2 ": " ((k in v) ? "textul s-a schimbat" : "marcaj nou sau mutat") ", dar randul lui din afirmatii.tsv si sursele lui din surse.tsv sunt neschimbate — dupa reverificarea la sursa actualizeaza dovada, apoi --amprente" > RAP
+      if (k in v) print $1, $2, v[k] }
+    END { for (k in v) if (!(k in vazut)) { split(k, x, "\t"); print "SCOS\t\"" x[1] "\" in " x[2] > RAP } }
+  ' "$W/amprs" | LC_ALL=C sort > "$W/amprnou"
   {
     echo "# amprente.tsv — amprentele afirmatiilor verificate (verifica-site.sh [13], din pas54)."
     echo "# Un rand = un marcaj <span data-afirmatie> pe o pagina publica:  id TAB fisier TAB cksum"
@@ -1212,12 +1234,16 @@ if [ "$MOD" = amprente ]; then
     echo "# NU se editeaza de mana.  Dupa ce o afirmatie a fost (re)verificata la sursa:"
     echo "#   sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente"
     echo "# si diferenta (git diff scripts/amprente.tsv) se citeste inainte de commit."
-    cat "$W/amprs"
+    cat "$W/amprnou"
   } > "$AMPRENTE"
   echo ""
-  echo "  amprente.tsv rescris: $(wc -l < "$W/amprs" | tr -d ' ') marcaje.  Citeste diferenta inainte de commit:"
-  echo "    git -C $HUB diff --stat scripts/amprente.tsv"
+  [ -f "$W/amprap" ] && LC_ALL=C sort "$W/amprap" | while IFS="$TAB" read -r k m; do
+    case "$k" in NOU) echo "  nou:          $m" ;; SCHIMBAT) echo "  re-inghetat:  $m" ;; SCOS) echo "  scos:         $m" ;; REFUZ) echo "  REFUZAT:      $m" ;; esac
+  done
+  echo "  amprente.tsv rescris: $(wc -l < "$W/amprnou" | tr -d ' ') marcaje.  Citeste diferenta inainte de commit:"
+  echo "    git -C $HUB diff scripts/amprente.tsv"
   echo ""
+  if [ -f "$W/amprap" ] && grep -q '^REFUZ' "$W/amprap"; then exit 1; fi
   exit 0
 fi
 
@@ -1239,6 +1265,44 @@ else
   ' "$W/amprs" | LC_ALL=C sort > "$W/amprerr"
   while IFS= read -r l; do problema "$l"; greseli=1; done < "$W/amprerr"
 fi
+
+# pas94: aceeasi afirmatie, aceleasi cifre in RO si in NO.  O afirmatie verificata a carei
+# traducere are alta cifra (999 in loc de 124, un „trilion” cu alt sens) nu are voie sa treaca:
+# amprenta ar ingheta fiecare limba separat, cu greseala cu tot.  Cifrele se compara ca
+# multimi, dupa normalizare: separatorul de mii (punct sau spatiu, si cel neseparabil)
+# scos, virgula zecimala = punct.  Diferentele doar de forma (un numar scris in litere,
+# 13:51 fata de 13.51) se accepta in scripts/cifre-ok.txt:  id TAB motiv.
+CIFRE_OK="$SCRIPT_DIR/cifre-ok.txt"
+: > "$W/cifok"; [ -f "$CIFRE_OK" ] && grep -v '^#' "$CIFRE_OK" | grep -v '^[[:space:]]*$' > "$W/cifok"
+LC_ALL=C awk -F'\t' -v MF="$W/m" -v OK="$W/cifok" -v AFI="$W/afid" '
+  function norm(t,   o, i, c, n, j) {
+    gsub(/\302\240|\342\200\257|\342\200\211/, " ", t); o = ""; n = length(t)
+    for (i = 1; i <= n; i++) { c = substr(t, i, 1)
+      if ((c == "." || c == " ") && i > 1 && substr(t, i - 1, 1) ~ /[0-9]/ && substr(t, i + 1, 3) ~ /^[0-9][0-9][0-9]$/ && substr(t, i + 4, 1) !~ /[0-9]/) continue
+      o = o c }
+    return o }
+  function cifre(t, arr,   m) { t = norm(t)
+    while (match(t, /[0-9]+([.,][0-9]+)?/)) { m = substr(t, RSTART, RLENGTH); gsub(/,/, ".", m); arr[m] = 1; t = substr(t, RSTART + RLENGTH) } }
+  BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); lb[x[3] "/" x[4]] = "ro"; dc[x[3] "/" x[4]] = x[1]; lb[x[3] "/" x[5]] = "no"; dc[x[3] "/" x[5]] = x[1] }
+          while ((getline l < OK) > 0) { split(l, x, "\t"); acc[x[1]] = 1 }
+          while ((getline l < AFI) > 0) reg[l] = 1 }
+  !($2 in lb) { next }
+  { k = dc[$2] SUBSEP $1; ids[k] = 1; delete tmp; cifre($3, tmp)
+    for (c in tmp) if (lb[$2] == "ro") ro[k, c] = 1; else no[k, c] = 1 }
+  END {
+    for (k in ids) { split(k, x, SUBSEP); dr = ""; dn = ""
+      for (q in ro) { split(q, y, SUBSEP); if (y[1] SUBSEP y[2] == k && !((k, y[3]) in no)) dr = dr " " y[3] }
+      for (q in no) { split(q, y, SUBSEP); if (y[1] SUBSEP y[2] == k && !((k, y[3]) in ro)) dn = dn " " y[3] }
+      if (dr == "" && dn == "") { if (x[2] in acc) inutil[x[2]] = 1; continue }
+      dif[x[2]] = 1
+      if (x[2] in acc) continue
+      print "P\t\"" x[2] "\" (" x[1] "): cifre diferite intre RO si NO — doar in RO:" (dr == "" ? " -" : dr) "; doar in NO:" (dn == "" ? " -" : dn) " — reverifica traducerea; daca e doar forma, accepta in cifre-ok.txt cu motivul" }
+    for (i in acc) { if (!(i in reg)) print "P\tcifre-ok.txt: \"" i "\" nu e in afirmatii.tsv — scoate-l"
+      else if ((i in inutil) && !(i in dif)) print "A\tcifre-ok.txt: \"" i "\" are acum aceleasi cifre in RO si NO — acceptarea nu mai trebuie, scoate-o" } }
+' "$W/amptxt" | LC_ALL=C sort > "$W/cifrerr"
+while IFS="$TAB" read -r k l; do
+  case "$k" in P) problema "$l"; greseli=1 ;; A) atentie "$l" ;; esac
+done < "$W/cifrerr"
 
 if [ "$greseli" -eq 0 ]; then
   n=$(wc -l < "$W/af" | tr -d ' ')
@@ -1835,19 +1899,36 @@ done < "$W/m"
 
 if [ "$MOD" = capitole ]; then
   if [ ! -f "$CAPV" ]; then echo "  lipseste $CAPV"; exit 1; fi
+  # pas94: un capitol al carui text s-a schimbat se re-ingheata doar daca randul lui are
+  # pasul sau data reverificarii schimbate fata de ultimul commit.  Altfel --capitole ar
+  # scrie amprenta noua sub „verificat in pasNN” vechi — textul nou ar trece drept verificat.
+  : > "$W/caphead"
+  git -C "$HUB" show HEAD:scripts/capitole-verificate.tsv 2>/dev/null | grep -v '^#' | grep -v '^[[:space:]]*$' > "$W/caphead"
   { grep '^#' "$CAPV"
-    awk -F'\t' -v M="$W/capm" '
+    awk -F'\t' -v M="$W/capm" -v H="$W/caphead" -v RAP="$W/caprap" '
       BEGIN { OFS = "\t"; while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
-              if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] } }
+              if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] }
+              while ((getline l < H) > 0) { split(l, x, "\t"); hp[x[1] "\t" x[2]] = x[4] "\t" x[5] } }
       { k = $1 "\t" $2
-        if ((k in t) && (k in an)) { $3 = t[k]; $6 = ar[k]; $7 = an[k] }
+        if ((k in t) && (k in an)) {
+          schimbat = ($6 != "-" && $6 != ar[k]) || ($7 != "-" && $7 != an[k])
+          if (schimbat && (k in hp) && hp[k] == $4 "\t" $5) {
+            print "REFUZ\t" $1 " poz " $2 " „" t[k] "”: textul s-a schimbat, dar randul are tot " $4 ", " $5 " — dupa reverificarea la sursa scrie pasul si data noi in rand, apoi --capitole" > RAP
+          } else {
+            if ($6 == "-" || $7 == "-") print "NOU\t" $1 " poz " $2 " „" t[k] "”" > RAP
+            else if (schimbat || $3 != t[k]) print "REINGHETAT\t" $1 " poz " $2 " „" t[k] "” (" $4 ", " $5 ")" > RAP
+            $3 = t[k]; $6 = ar[k]; $7 = an[k] } }
         print }' "$W/capv"
   } > "$W/capnou"
   cp "$W/capnou" "$CAPV"
   echo ""
+  [ -f "$W/caprap" ] && while IFS="$TAB" read -r k m; do
+    case "$k" in NOU) echo "  nou:          $m" ;; REINGHETAT) echo "  re-inghetat:  $m" ;; REFUZ) echo "  REFUZAT:      $m" ;; esac
+  done < "$W/caprap"
   echo "  capitole-verificate.tsv rescris: $(wc -l < "$W/capv" | tr -d ' ') capitole.  Citeste diferenta inainte de commit:"
   echo "    git -C $HUB diff scripts/capitole-verificate.tsv"
   echo ""
+  if [ -f "$W/caprap" ] && grep -q '^REFUZ' "$W/caprap"; then exit 1; fi
   exit 0
 fi
 

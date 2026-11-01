@@ -1,0 +1,8 @@
+# cifre-ok.txt — afirmatii marcate cu cifre diferite intre RO si NO doar ca forma
+# (verifica-site.sh [13], din pas94).  Un rand = o afirmatie:  id TAB motiv
+# Fiecare rand a fost citit de un om: diferenta e de scriere, nu de continut.
+# Cand cifrele ajung aceleasi, garda cere sa scoti randul.
+bacau-2026	ora scrisa 13:51 / 14:22 in RO si 13.51 / 14.22 in NO (conventia norvegiana)
+demografie-2024	„la mie” in RO, „per 1000” in NO
+galati-drona	„paisprezece ani” in litere in RO, „14 år” in NO
+iov-datare	„secolele al VI-lea si al IV-lea î.Hr.” in RO, „500- og 300-tallet f.Kr.” in NO — aceleasi secole

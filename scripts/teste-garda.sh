@@ -132,8 +132,12 @@ mut_T28() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/^    Ordsp
 # o amprenta stearsa din amprente.tsv: marcajul ramane fara amprenta
 mut_T29() { grep -v '^iit-disputa' norgedan.github.io/scripts/amprente.tsv > x && mv x norgedan.github.io/scripts/amprente.tsv; }
 # fluxul corect: afirmatia schimbata, reverificata, apoi --amprente = trece
+# pas94: si dovada atinsa in acelasi patch (aici nota randului din afirmatii.tsv)
 mut_T30() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 124 forskere (124)/'
+            atinge_af iit-disputa
             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --amprente > /dev/null 2>&1; }
+# atinge_af <id> — randul afirmatiei schimbat (nota), cum se intampla la o reverificare
+atinge_af() { awk -F'\t' -v i="$1" 'BEGIN { OFS = "\t" } $1 == i { $7 = $7 " (reverificat)" } { print }' norgedan.github.io/scripts/afirmatii.tsv > x && mv x norgedan.github.io/scripts/afirmatii.tsv; }
 # o clasa care doar incepe cu "verse" nu e citat biblic: nu se confrunta
 mut_T31() { f=corpus/06-mennesket-og-kunstig-intelligens-no.html
             awk '{ l[NR] = $0 } END { for (i = 1; i <= NR; i++) {
@@ -168,7 +172,9 @@ mut_T42() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's|<h2 class="ch-title">
 # rand pentru un capitol care nu exista
 mut_T43() { printf 'corpus2-C\t99\t-\tpas63\t2026-10-22\t-\t-\tnimic\n' >> "$CV"; }
 # fluxul corect: text schimbat, reverificat, pas nou, --capitole = trece
+# pas94: pas si data noi in rand, cum cere --capitole
 mut_T44() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citește știrile/Algoritmul nu citește toate știrile/'
+            awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "7" { $4 = "pas999"; $5 = "2026-10-31" } { print }' "$CV" > x && mv x "$CV"
             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --capitole > /dev/null 2>&1; }
 # rand nou fara amprente (inainte de --capitole)
 mut_T46() { printf 'corpus2-C\t12\t-\tpas63\t2026-10-22\t-\t-\tnou\n' >> "$CV"; }
@@ -370,6 +376,22 @@ mut_T105() { wf 's|\(actions/deploy-pages@[0-9a-f]*\) # v5.0.1|\1|'; }
 # santinela: niciun „uses:” citit
 mut_T106() { wf 's|uses:|foloseste:|'; }
 
+# -- pas94: re-inghetarea doar cu dovada; cifrele RO = NO in afirmatiile marcate ----------------
+# capitol verificat schimbat, --capitole fara pas si data noi: amprenta nu se rescrie
+mut_T107() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citește știrile/Algoritmul nu citește toate știrile/'
+             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --capitole > /dev/null 2>&1; :; }
+# afirmatie schimbata, --amprente fara dovada atinsa: amprenta nu se rescrie
+mut_T108() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 124 forskere (124)/'
+             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --amprente > /dev/null 2>&1; :; }
+# afirmatie tradusa cu alta cifra (999 in NO, 124 in RO), chiar cu dovada atinsa si --amprente
+mut_T109() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 999 forskere/'
+             atinge_af iit-disputa
+             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --amprente > /dev/null 2>&1; :; }
+# acceptare pentru o afirmatie inexistenta
+mut_T110() { printf 'fantoma\tnimic\n' >> norgedan.github.io/scripts/cifre-ok.txt; }
+# acceptare ramasa fara obiect: aceeasi afirmatie, acum cu cifra si in RO
+mut_T111() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/un băiat de paisprezece ani/un băiat de 14 ani/'; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -467,6 +489,11 @@ t T103 PICA   "nu e fixat pe commit"    "[10] commit scurt (7 caractere)"
 t T104 PICA   "actions/upload-pages-artifact@v5\" nu e fixat" "[10] eticheta intre ghilimele"
 t T105 SEMNAL "fara versiunea in comentariu" "[10] fixat, fara versiunea in comentariu"
 t T106 PICA   "niciun \"uses:\" citit" "[10] zero actiuni citite (santinela)"
+t T107 PICA   "RO: textul s-a schimbat dupa verificarea din pas58" "[18] --capitole fara pas nou nu re-ingheata"
+t T108 PICA   "textul afirmatiei s-a schimbat dupa verificare" "[13] --amprente fara dovada atinsa nu re-ingheata"
+t T109 PICA   "cifre diferite intre RO si NO — doar in RO: 124" "[13] afirmatie tradusa cu alta cifra"
+t T110 PICA   "cifre-ok.txt: \"fantoma\" nu e in afirmatii.tsv" "[13] acceptare pentru o afirmatie inexistenta"
+t T111 SEMNAL "acceptarea nu mai trebuie" "[13] acceptare ramasa fara obiect"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
