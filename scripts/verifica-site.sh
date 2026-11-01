@@ -91,10 +91,24 @@ titlu()    { echo ""; echo "[$1] $2"; }
 #                  Inainte de a declara o cifra „fara sursa” sau de a schimba un fapt
 #                  intr-un document: ce stim deja despre el, si unde altundeva apare.
 #                  Literele mari/mici nu conteaza (doar la literele fara diacritice).
+#                  pas99: cuvinte intregi — „Le Pen” nu mai gaseste „ele pentru”; o
+#                  litera cu diacritice e litera, nu granita.  Cu * la sfarsit, prefix:
+#                  „Austri*” gaseste si „Austriei”.
 # --cifre <id>     pentru un document din documente.tsv: capitol cu capitol, cifrele care
 #                  apar doar in RO sau doar in NO (fara trimiterile biblice si anii
 #                  editiilor 1688/1930).  O cifra doar in RO e adesea un pasaj netradus.
 # text_simplu: o pagina HTML ca text, fara <script>, <style>, comentarii si tag-uri
+# cauta_awk (pas99): gasit(ls, lt, de) = prima pozitie >= de unde lt apare in ls ca text
+# intreg (0 = nicaieri).  Litera = A-Z a-z 0-9 sau orice octet UTF-8 (>= \200: diacriticele,
+# chirilica).  Granita se cere doar unde T insusi incepe / se termina cu o litera;
+# P=1 (steluta la sfarsit) = prefix, fara granita la dreapta.
+cauta_awk='function lit(c) { return c ~ /[A-Za-z0-9]/ || c >= "\200" }
+function gasit(ls, lt, de,   i, k, p, u) { k = de
+    while ((i = index(substr(ls, k), lt)) > 0) { p = k + i - 1; u = p + length(lt)
+      if ((!lit(substr(lt, 1, 1)) || p == 1 || !lit(substr(ls, p - 1, 1))) &&
+          (P || !lit(substr(lt, length(lt), 1)) || !lit(substr(ls, u, 1)))) return p
+      k = p + 1 }
+    return 0 }'
 text_simplu() { LC_ALL=C awk 'BEGIN { RS = "\001" } { s = $0
     while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break } s = substr(s, 1, i - 1) " " substr(s, i + j + 2) }
     for (q = 1; q <= 2; q++) { tg = (q == 1) ? "script" : "style"
@@ -102,12 +116,15 @@ text_simplu() { LC_ALL=C awk 'BEGIN { RS = "\001" } { s = $0
     gsub(/<[^>]*>/, " ", s); gsub(/&nbsp;/, " ", s); gsub(/\302\240/, " ", s); gsub(/[ \t\r\n]+/, " ", s); print s }' "$1"; }
 if [ "$MOD" = cauta ]; then
   [ -n "$CAUTA" ] || { echo "utilizare: sh $0 --cauta <text>" >&2; exit 2; }
-  echo ""; echo "  --cauta: „$CAUTA”"; echo ""
+  PREF=0; case $CAUTA in *'*') PREF=1; CAUTA=${CAUTA%'*'} ;; esac
+  [ -n "$CAUTA" ] || { echo "utilizare: sh $0 --cauta <text>" >&2; exit 2; }
+  echo ""; echo "  --cauta: „$CAUTA”$( [ "$PREF" = 1 ] && echo ' (prefix)')"; echo ""
   echo "  In registre:"
   gr=0
   for f in afirmatii.tsv surse.tsv erori.tsv capitole-verificate.tsv cifre-ok.txt certitudini-ok.txt paritate-ok.txt retrase.txt surse-datorie.txt; do
     [ -f "$SCRIPT_DIR/$f" ] || continue
-    LC_ALL=C grep -n -i -F -- "$CAUTA" "$SCRIPT_DIR/$f" | grep -v '^[0-9]*:#' | while IFS= read -r l; do
+    LC_ALL=C awk -v T="$CAUTA" -v P="$PREF" "$cauta_awk"'
+      /^#/ { next } gasit(tolower($0), tolower(T), 1) { print NR ":" $0 }' "$SCRIPT_DIR/$f" | while IFS= read -r l; do
       printf '    %s:%s\n' "$f" "$(printf '%s' "$l" | tr '\t' ' ' | cut -c1-220)"; done
   done > "$W/c_reg"
   if [ -s "$W/c_reg" ]; then cat "$W/c_reg"; else echo "    nimic"; fi
@@ -117,14 +134,14 @@ if [ "$MOD" = cauta ]; then
     find "$RADACINA/$r" -name .git -prune -o -type f -name '*.html' -print
   done | LC_ALL=C sort > "$W/c_html"
   while IFS= read -r f; do
-    text_simplu "$f" | LC_ALL=C awk -v T="$CAUTA" -v R="${f#"$RADACINA"/}" '
-      { s = $0; ls = tolower(s); lt = tolower(T); n = 0
-        while ((i = index(ls, lt)) > 0 && n < 5) { n++
+    text_simplu "$f" | LC_ALL=C awk -v T="$CAUTA" -v P="$PREF" -v R="${f#"$RADACINA"/}" "$cauta_awk"'
+      { s = $0; ls = tolower(s); lt = tolower(T); n = 0; k = 1
+        while ((i = gasit(ls, lt, k)) > 0 && n < 5) { n++
           a = i - 80; if (a < 1) a = 1; f = substr(s, a, 160 + length(T))
           sub(/^[^ ]* /, "", f); sub(/ [^ ]*$/, "", f)
           printf "    %s:  … %s …\n", R, f
-          s = substr(s, i + length(T)); ls = substr(ls, i + length(T)) }
-        if (index(ls, lt) > 0) printf "    %s:  (si alte aparitii)\n", R }'
+          k = i + length(T) }
+        if (gasit(ls, lt, k) > 0) printf "    %s:  (si alte aparitii)\n", R }'
   done < "$W/c_html" > "$W/c_pag"
   if [ -s "$W/c_pag" ]; then cat "$W/c_pag"; else echo "    nimic"; fi
   echo ""

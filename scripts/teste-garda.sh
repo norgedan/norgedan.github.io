@@ -404,6 +404,15 @@ mut_T117() { cache_surse "<p>tekst$(printf '\342\200\213')skjult</p>"; }
 # un cuvant-martor intr-o pagina RO: --cauta trebuie sa-l gaseasca, cu pagina lui
 mut_T118() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987 aici.</p><footer|'; }
 # o cifra-martor doar in RO, in primul capitol: --cifre trebuie s-o arate
+# ── pas99: --cauta pe cuvinte intregi ────────────────────────────────────
+# o bucata de cuvant nu e o potrivire („Le Pen” gasea „ele pentru”)
+mut_T120() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987xyz aici.</p><footer|'; }
+# litera cu diacritice e litera, nu granita
+mut_T121() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987ăz aici.</p><footer|'; }
+# cu * la sfarsit, prefix: bucata de la inceputul cuvantului se gaseste
+mut_T122() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987xyz aici.</p><footer|'; }
+# aceeasi regula in registre
+mut_T123() { echo 'cuvantmartor987xyz' >> norgedan.github.io/scripts/retrase.txt; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -516,6 +525,10 @@ t T116 TACE   "verifica scara"          "[7] „billion” in NO nu e semnalat"
 t T117 SEMNAL "pagini-sursa au caractere invizibile" "--surse: caracterele invizibile adunate intr-un rand" --surse
 t T118 SEMNAL "Cuvantmartor987 aici" "--cauta: textul gasit in pagina lui" "--cauta cuvantmartor987"
 t T119 SEMNAL "doar RO: 987654"         "--cifre: cifra doar in RO aratata" "--cifre corpus-02"
+t T120 ABSENT "Cuvantmartor987xyz"   "--cauta: o bucata de cuvant nu e gasita" "--cauta cuvantmartor987"
+t T121 ABSENT "Cuvantmartor987ăz"    "--cauta: litera cu diacritice nu e granita" "--cauta cuvantmartor987"
+t T122 SEMNAL "Cuvantmartor987xyz aici" "--cauta: cu * la sfarsit, prefix" "--cauta cuvantmartor987*"
+t T123 ABSENT "cuvantmartor987xyz"   "--cauta: cuvinte intregi si in registre" "--cauta cuvantmartor987"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
