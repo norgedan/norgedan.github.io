@@ -392,6 +392,14 @@ mut_T110() { printf 'fantoma\tnimic\n' >> norgedan.github.io/scripts/cifre-ok.tx
 # acceptare ramasa fara obiect: aceeasi afirmatie, acum cu cifra si in RO
 mut_T111() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/un băiat de paisprezece ani/un băiat de 14 ani/'; }
 
+# -- pas95: datele reale, „bilion/trilion” in RO, caracterele invizibile din surse adunate ---------
+mut_T112() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "cas-substante" { $8 = "2027-02-30" } { print }' norgedan.github.io/scripts/afirmatii.tsv > x && mv x norgedan.github.io/scripts/afirmatii.tsv; }
+mut_T113() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "cas-substante" { $4 = "2026-00-15" } { print }' "$SR" > x && mv x "$SR"; }
+mut_T114() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "7" { $5 = "2026-10-32" } { print }' "$CV" > x && mv x "$CV"; }
+mut_T115() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>De un trilion de ori mai mult.</p><footer|'; }
+mut_T116() { rep corpus/05-planeten-og-romania-no.html 's|<footer|<p>En billion ganger mer.</p><footer|'; }
+mut_T117() { cache_surse "<p>tekst$(printf '\342\200\213')skjult</p>"; }
+
 echo ""
 echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
@@ -494,6 +502,12 @@ t T108 PICA   "textul afirmatiei s-a schimbat dupa verificare" "[13] --amprente 
 t T109 PICA   "cifre diferite intre RO si NO — doar in RO: 124" "[13] afirmatie tradusa cu alta cifra"
 t T110 PICA   "cifre-ok.txt: \"fantoma\" nu e in afirmatii.tsv" "[13] acceptare pentru o afirmatie inexistenta"
 t T111 SEMNAL "acceptarea nu mai trebuie" "[13] acceptare ramasa fara obiect"
+t T112 PICA   "reverifica \"2027-02-30\"" "[13] termen de reverificare imposibil (30 feb.)"
+t T113 PICA   "accesat \"2026-00-15\"" "[20] data accesarii imposibila (luna 00)"
+t T114 PICA   "data gresita \"2026-10-32\"" "[18] data verificarii imposibila (32 oct.)"
+t T115 SEMNAL "verifica scara"          "[7] „trilion” in RO semnalat"
+t T116 TACE   "verifica scara"          "[7] „billion” in NO nu e semnalat"
+t T117 SEMNAL "pagini-sursa au caractere invizibile" "--surse: caracterele invizibile adunate intr-un rand" --surse
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

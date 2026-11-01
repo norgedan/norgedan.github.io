@@ -642,6 +642,19 @@ else
     done < "$W/tipare"
   fi
   [ "$gasit" -eq 0 ] && ok "$(wc -l < "$W/tipare" | tr -d ' ') tipare, nicio formulare retrasa in paginile publice"
+  # pas95: capcana de traducere din pas93.  Engl. billion = 10^9 = rom. „miliard”, engl.
+  # trillion = 10^12 = rom. „bilion”; rom. „trilion” = 10^18.  Un „bilion” sau „trilion” in
+  # textul RO poate fi corect, dar se citeste: doar semnalare.
+  : > "$W/scara7"
+  while IFS="$TAB" read -r f n; do
+    grep -q 'lang="ro"' "$f" || continue
+    c7=$(LC_ALL=C grep -o -i -w -E 'bilion|bilioane|bilioanele|trilion|trilioane|trilioanele' "$n" | LC_ALL=C sort -u | tr '\n' ' ')
+    [ -n "$c7" ] && printf '%s: %s\n' "${f#"$RADACINA"/}" "$c7" >> "$W/scara7"
+  done < "$W/pubn"
+  if [ -s "$W/scara7" ]; then
+    atentie "„bilion” sau „trilion” in RO — verifica scara (engl. trillion = 10^12 = rom. bilion; rom. trilion = 10^18):"
+    sed 's|^|             |' "$W/scara7"
+  fi
 fi
 
 # ════════════════════════════════════════════════════════════════════
@@ -1109,11 +1122,16 @@ if [ ! -f "$AFIRMATII" ]; then
   atentie "lipseste scripts/afirmatii.tsv — registrul nu poate fi verificat"
 else
   grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' > "$W/af"
+  # pas95: data trebuie sa existe in calendar (2027-19-39 trecea)
   awk -F'\t' '
+    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
+      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
+      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
+      return l >= 1 && l <= 12 && z >= 1 && z <= n }
     NF != 8 { print "rand " NR ": " NF " coloane, trebuie 8"; next }
     {
       for (i = 1; i <= 8; i++) if ($i == "") print "rand " NR ": coloana " i " e goala (fara continut se scrie -)"
-      if ($8 != "-" && $8 !~ /^[0-9][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]$/) print $1 ": reverifica \"" $8 "\" — trebuie AAAA-LL-ZZ sau -"
+      if ($8 != "-" && !dataok($8)) print $1 ": reverifica \"" $8 "\" — trebuie o data reala AAAA-LL-ZZ sau -"
       if ($1 !~ /^[a-z0-9][a-z0-9-]*$/) print "rand " NR ": id \"" $1 "\" — doar litere mici fara diacritice, cifre si -"
       if (id[$1]++) print "id duplicat: " $1
       if ($2 != "FAPT" && $2 != "ESTIMARE" && $2 != "INTERPRETARE" && $2 != "CREDINTA")
@@ -1939,6 +1957,10 @@ elif [ ! -f "$CAPV" ]; then
   problema "lipseste scripts/capitole-verificate.tsv"
 else
   awk -F'\t' -v M="$W/capm" -v MF="$W/m" '
+    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
+      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
+      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
+      return l >= 1 && l <= 12 && z >= 1 && z <= n }
     BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
             while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
               if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] } }
@@ -1947,7 +1969,7 @@ else
     !($1 in doc) { print $1 ": nu e in manifest"; next }
     $2 !~ /^[1-9][0-9]*$/ { print $1 ": pozitie gresita \"" $2 "\""; next }
     $4 !~ /^pas[0-9]+[a-z]?$/ { print $1 " poz " $2 ": pas gresit \"" $4 "\" (ex: pas63)" }
-    $5 !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/ { print $1 " poz " $2 ": data gresita \"" $5 "\" (AAAA-LL-ZZ)" }
+    !dataok($5) { print $1 " poz " $2 ": data gresita \"" $5 "\" (o data reala AAAA-LL-ZZ)" }
     seen[$1 "\t" $2]++ == 1 { print $1 " poz " $2 ": rand dublat" }
     { k = $1 "\t" $2
       if (!(k in t) || !(k in an)) { print $1 ": capitolul " $2 " nu exista (in RO sau in NO)"; next }
@@ -2070,6 +2092,10 @@ else
   awk -F'\t' -v AF="$W/af" -v SD="$W/sd" -v AZI="$AZI" '
     # pas91: domeniul inregistrat (amp.cnn.com si edition.cnn.com = cnn.com), cu sufixele
     # de doua niveluri uzuale (co.uk, com.ua, gov.ua ...): aceeasi publicatie e o singura sursa
+    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
+      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
+      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
+      return l >= 1 && l <= 12 && z >= 1 && z <= n }
     function dom(u,  d, n, p, b) { d = tolower(u); sub(/^https:\/\//, "", d); sub(/[\/:?#].*/, "", d)
       n = split(d, p, "."); if (n < 2) return d; b = p[n - 1] "." p[n]
       if (n > 2 && length(p[n]) == 2 && p[n - 1] ~ /^(co|com|org|net|gov|ac|edu)$/) b = p[n - 2] "." b
@@ -2081,7 +2107,7 @@ else
     !($1 in et) { print "surse.tsv: \"" $1 "\" nu e in afirmatii.tsv"; next }
     $2 !~ /^[PST]$/ { print "surse.tsv " $1 ": nivel \"" $2 "\" — P, S sau T" }
     $3 !~ /^https:\/\/[^ ]+\.[^ ]+/ { print "surse.tsv " $1 ": adresa \"" $3 "\" — trebuie https://..." }
-    $4 !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/ { print "surse.tsv " $1 ": accesat \"" $4 "\" — AAAA-LL-ZZ" }
+    !dataok($4) { print "surse.tsv " $1 ": accesat \"" $4 "\" — trebuie o data reala AAAA-LL-ZZ" }
     $4 > AZI { print "surse.tsv " $1 ": accesat " $4 " e in viitor" }
     $5 !~ /^[a-z][a-z-]*$/ { print "surse.tsv " $1 ": cine \"" $5 "\" — un nume, litere mici" }
     $6 != "-" && ($6 !~ /^«.*»$/ || split($6, w, " ") < 4) { print "surse.tsv " $1 ": citat — intre « », minim 4 cuvinte, sau -" }
@@ -2430,9 +2456,15 @@ PAT
     elif LC_ALL=C grep -q -F -f "$W/botpat" "$W/pag"; then
       atentie "--surse: $url cere verificare anti-robot — citatul nu poate fi reconfirmat mecanic ($id); deschide pagina in browser"; nb=$((nb + 1))
     else atentie "--surse: citatul pentru \"$id\" nu (mai) e in $url — reverifica"; nn=$((nn + 1)); fi
-    LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && atentie "--surse: $url are caractere invizibile — tratata ca date, cu grija ($id)"
+    # pas95: paginile cu caractere invizibile se aduna intr-un singur rand (de obicei spatii de
+    # latime zero, inofensive); altfel zeci de randuri ascund citatul negasit, care conteaza
+    LC_ALL=C grep -q -F -f "$W/invpat" "$W/pag" && printf '%s (%s)\n' "$url" "$id" >> "$W/srinv"
     LC_ALL=C grep -q -i -F -f "$W/injpat" "$W/pag" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
+  if [ -s "$W/srinv" ]; then
+    atentie "--surse: $(LC_ALL=C sort -u "$W/srinv" | wc -l | tr -d ' ') pagini-sursa au caractere invizibile — tratate ca date, cu grija (de obicei spatii de latime zero, inofensive):"
+    LC_ALL=C sort -u "$W/srinv" | sed 's|^|             |'
+  fi
   ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot; $nlim limitate de server (429) ($nr adrese la a doua incercare, $nrr recuperate)"
 fi
 
