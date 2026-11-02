@@ -23,6 +23,9 @@
 #        care trebuie sa pice testele noi)
 #   VSH=mksh sh ...teste-garda.sh   verificarea rulata cu alt shell (pas64): pe
 #        Linux, mksh e din aceeasi familie (pdksh) cu ksh-ul OpenBSD
+# Cand (pas102): suita completa o data pe saptamana, sambata, pe dash si pe mksh.  La o
+#   schimbare a verificarii: testele noi, contra-proba (SCRIPT=garda veche) si testele
+#   sectiunii atinse, pe ambele shell-uri.
 # Cod de iesire: 0 = toate verdictele asteptate, 1 = cel putin unul gresit.
 # Portabil POSIX — BSD si GNU: fara sed -i, fara \n in sed, fara bash.
 
@@ -413,6 +416,7 @@ mut_T121() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor
 mut_T122() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Cuvantmartor987xyz aici.</p><footer|'; }
 # aceeasi regula in registre
 mut_T123() { echo 'cuvantmartor987xyz' >> norgedan.github.io/scripts/retrase.txt; }
+# pas102: T81 cere si regula noua — o sursa moarta iese din registru, nu se cauta in arhive
 # ── pas100: sursele PDF in --surse ─────────────────────────────────────────
 # un raport PDF in cache (octetii lui nu contin textul, ca la un PDF comprimat) si un
 # „pdftotext” falsificat: citatul trebuie gasit in textul scos (T124); fara text scos,
@@ -496,7 +500,7 @@ t T77 PICA    "difera intre RO si NO"   "[3] Stare la diferit intre RO si NO"
 t T78 SEMNAL  " 0 pagini inaccesibile; 0 cu verificare anti-robot; 0 limitate" "--surse: 429 la prima cerere, recuperat dupa Retry-After" --surse
 t T79 SEMNAL  "limiteaza cererile (HTTP 429" "--surse: server care raspunde mereu 429 numit ca atare" --surse
 t T80 SEMNAL  "HTTP 406: serverul refuza descarcarea automata" "--surse: 406 (newsweek, euronews) numit refuz, cu codul lui" --surse
-t T81 SEMNAL  "HTTP 410: pagina nu mai e la adresa asta" "--surse: 410 (pagina stearsa) numit cu codul lui" --surse
+t T81 SEMNAL  "HTTP 410: pagina nu mai e la adresa asta — sursa moarta" "--surse: 410 (pagina stearsa) numit cu codul lui" --surse
 t T82 PICA    "og:image \"lipsa\""     "[3] document fara og:image"
 t T83 PICA    "og.png lipseste"         "[3] og.png sters din hub"
 t T84 PICA    "nu e PNG 1200x630"       "[3] og.png de alta marime (512x256)"

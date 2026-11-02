@@ -2552,7 +2552,10 @@ PAT
       hc=$(cat "$W/pp/$k.html.http")
       case "$hc" in
         401|403|406) de="serverul refuza descarcarea automata — citatul se confirma in browser" ;;
-        404|410) de="pagina nu mai e la adresa asta — de cautat adresa noua sau o copie (web.archive.org)" ;;
+        # pas102: o sursa moarta nu se mai urmareste (fara arhive, fara vanatoare de adrese):
+        # randul iese din surse.tsv, iar afirmatia isi cauta O SINGURA DATA o sursa vie;
+        # daca nu gaseste, afirmatia se inmoaie sau se scoate
+        404|410) de="pagina nu mai e la adresa asta — sursa moarta: randul iese din surse.tsv; afirmatia cauta o data o sursa vie, altfel se inmoaie sau se scoate" ;;
         5??) de="eroare a serverului — de reincercat mai tarziu" ;;
         *) de="raspuns fara pagina" ;;
       esac
