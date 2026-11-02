@@ -218,3 +218,14 @@ pas98	corpus3-3	2	traducere	NO comprima Franta, Spania, Italia, Olanda, Belgia i
 pas101	corpus3-3	6	contradictie	Legătura 5: Ziobro „azil in Ungaria in ianuarie 2026” — capitolul 3 al aceluiasi document fusese corectat in pas69 la decembrie 2025 (si plecarea in SUA, mai 2026); corectura nu ajunsese aici	https://notesfrompoland.com/2026/05/10/former-polish-justice-minister-granted-asylum-by-orban-flees-from-hungary-to-us/
 pas101	corpus3-3	6	alta	„Bosnia-Herțegovina, Muntenegru, Macedonia de Nord — state fragile” prin care ajunge influenta rusa — Muntenegru (2017) si Macedonia de Nord (2020) sunt membre NATO; precizat, Republica Srpska numita	-
 pas101	corpus3-3	6	traducere	NO fara Legăturile 4 si 5 (cetatenia romana; Ungaria-Serbia) — traduse; „Norges rolle” trecut din <h3> in caseta „Norsk perspektiv”	-
+pas103	corpus3-2	8	contradictie	AfD „28% național” — cap. III al aceluiasi document si corpus3-3 spun 26–28% (INSA aprilie, Forsa octombrie 2026); aliniat, cu datele	-
+pas103	corpus3-3	1	contradictie	caseta de cifre: AfD „28% … lider detasat” — textul spune 26–28%; aliniat	-
+pas103	corpus3-3	1	contradictie	caseta de cifre: Spania „~2%” in 2026 — textul corectat in pas98 spune 2,3–2,5% (Banca Spaniei, FMI); caseta nu fusese verificata atunci	-
+pas103	corpus3-2	1	alta	„43.8%” cu punct (casetele corpus3-2 si corpus3-3, Legatura 3, concluzia corpus3-3; RO si NO) — in rest „43,8%”	-
+pas103	corpus3-2	5	cronologie	Rusia ar miza pe „o noua administratie americana mai favorabila Moscovei” — formulata ca ipoteza, desi administratia exista din ianuarie 2025; inlocuita cu „schimbari de guvern si de politica la Washington si in capitalele europene”	-
+pas103	corpus3-3	5	atenuare	„SUA sub Trump … cu certitudine un aliat imprevizibil”, „presiunea … este, in sine, justificata” — judecati ale noastre fara „credem”; NO nu avea frazele despre tarife si presiune — traduse	-
+pas103	corpus3-3	2	atribuire	„SUA sub Trump — care vede in slabiciunea franceza o oportunitate” — intentie atribuita fara sursa; scos (RO si NO)	-
+pas103	corpus2-C	3	alta	Arendt/Eichmann fara rezerva pe care corpus-03 o face (Stangneth, 2011: portretul de simplu executant contestat) — adaugata, aceeasi formulare	-
+pas103	corpus-03	4	cronologie	„Stanley Milgram, 1963” — experimentele: 1961–1962, publicate in 1963 (corpus2-C spunea corect 1961–1962); aliniat	-
+pas103	corpus3-2	1	cronologie	„Stare la: Septembrie 2026” desi documentul are date din octombrie; la fel corpus3-3 si corpus3-4 — luna reala adaugata	-
+pas103	corpus3-4	4	alta	„Flancul estic NATO” fara reducerea trupelor americane din octombrie 2025 (circa 1.000 raman), spusa doar in corpus-04 — adaugata, datata	https://agerpres.ro/english/2025/10/29/defmin-mosteanu-number-of-us-troops-unchanged-at-deveselu-campia-turzii-bases-only-change-at-mihail---1498069
