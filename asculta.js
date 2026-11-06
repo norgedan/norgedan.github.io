@@ -21,13 +21,13 @@
   var NO = /^(nb|no|nn)/.test(LANG);
   var T = NO ? {
     asculta: '🔊 Les opp', pauza: '⏸ Pause', reia: '▶ Fortsett', stop: '⏹ Stopp',
-    viteza: 'Hastighet', capitol: '🔊', capitolTitlu: 'Les opp fra dette kapittelet',
+    viteza: 'Hastighet', voce: 'Stemme', capitol: '🔊', capitolTitlu: 'Les opp fra dette kapittelet',
     farav: 'Nettleseren din kan ikke lese opp tekst.',
     faravoce: 'Ingen norsk stemme er installert på denne enheten; opplesningen kan bli på et annet språk. Se innstillingene for tekst-til-tale.',
     bara: 'Opplesning'
   } : {
     asculta: '🔊 Ascultă', pauza: '⏸ Pauză', reia: '▶ Continuă', stop: '⏹ Stop',
-    viteza: 'Viteză', capitol: '🔊', capitolTitlu: 'Ascultă de la acest capitol',
+    viteza: 'Viteză', voce: 'Voce', capitol: '🔊', capitolTitlu: 'Ascultă de la acest capitol',
     farav: 'Browserul tău nu poate citi textul cu voce.',
     faravoce: 'Pe acest dispozitiv nu e instalată o voce românească; citirea poate ieși în altă limbă. Vezi setările de text-în-vorbire.',
     bara: 'Citire cu voce'
@@ -88,13 +88,35 @@
     if (cur.trim()) out.push(cur);
     return out;
   }
-  var voce = null, avertizat = false;
+  var voce = null, avertizat = false, potrivite = [], selVoce = null, labVoce = null;
+  var CHEIE_VOCE = 'asculta-voce-' + (NO ? 'no' : 'ro');
+  function idVoce(x) { return x.voiceURI || x.name; }
+  // vocile vin de la browser si de la sistem, nu de la site; pastram alegerea cititorului
   function alegeVoce() {
     var v = S.getVoices() || [];
     var re = NO ? /^(nb|no|nn)\b/i : /^ro\b/i;
-    voce = null;
-    for (var i = 0; i < v.length; i++) if (re.test(v[i].lang.replace('_', '-'))) { voce = v[i]; if (v[i].localService) break; }
+    voce = null; potrivite = [];
+    for (var i = 0; i < v.length; i++) if (re.test(v[i].lang.replace('_', '-'))) {
+      potrivite.push(v[i]);
+      if (!voce || (v[i].localService && !voce.localService)) voce = v[i];
+    }
+    var ales = null;
+    try { ales = localStorage.getItem(CHEIE_VOCE); } catch (e) {}
+    for (var j = 0; j < potrivite.length; j++) if (idVoce(potrivite[j]) === ales) voce = potrivite[j];
+    umpleVoci();
     return v.length;
+  }
+  function umpleVoci() {
+    if (!selVoce) return;
+    selVoce.innerHTML = '';
+    potrivite.forEach(function (x) {
+      var o = document.createElement('option'); o.value = idVoce(x);
+      o.textContent = x.name + (x.localService ? '' : ' (online)');
+      if (voce && idVoce(x) === idVoce(voce)) o.selected = true;
+      selVoce.appendChild(o);
+    });
+    labVoce.hidden = potrivite.length === 0;
+    selVoce.disabled = potrivite.length < 2;
   }
   function marcheaza(el) {
     var vechi = document.querySelector('.asculta-acum');
@@ -166,6 +188,8 @@
       '#asculta-bara button:hover:not(:disabled){background:#2a3550}' +
       '#asculta-bara button:disabled{opacity:.45;cursor:default}' +
       '#asculta-bara label{display:flex;align-items:center;gap:4px;opacity:.85}' +
+      '#asculta-bara label[hidden]{display:none}' +
+      '#asculta-bara select{max-width:210px}' +
       '#asculta-bara .asculta-mesaj{flex-basis:100%;max-width:340px;font-size:12px;color:#e0b070;cursor:pointer}' +
       'body{padding-bottom:84px}' +
       '.asculta-cap{margin-left:.5em;font-size:.55em;vertical-align:middle;background:transparent;border:1px solid currentColor;border-radius:6px;' +
@@ -199,10 +223,18 @@
       if (activ && !pauza) { S.cancel(); setTimeout(urmator, 60); }   // fraza curenta, cu noua viteza
     });
     lab.appendChild(sel);
+    labVoce = document.createElement('label'); labVoce.textContent = T.voce + ' ';
+    selVoce = document.createElement('select');
+    selVoce.addEventListener('change', function () {
+      for (var i = 0; i < potrivite.length; i++) if (idVoce(potrivite[i]) === selVoce.value) voce = potrivite[i];
+      try { localStorage.setItem(CHEIE_VOCE, selVoce.value); } catch (e) {}
+      if (activ && !pauza) { S.cancel(); setTimeout(urmator, 60); }   // fraza curenta, cu noua voce
+    });
+    labVoce.appendChild(selVoce); labVoce.hidden = true;
     mesaj = document.createElement('div'); mesaj.className = 'asculta-mesaj'; mesaj.hidden = true;
     mesaj.title = NO ? 'Trykk for å skjule' : 'Atinge ca să ascunzi';
     mesaj.addEventListener('click', function () { mesaj.hidden = true; });
-    bara.appendChild(bAsc); bara.appendChild(bPauza); bara.appendChild(bStop); bara.appendChild(lab); bara.appendChild(mesaj);
+    bara.appendChild(bAsc); bara.appendChild(bPauza); bara.appendChild(bStop); bara.appendChild(lab); bara.appendChild(labVoce); bara.appendChild(mesaj);
     document.body.appendChild(bara);
     stare();
 
