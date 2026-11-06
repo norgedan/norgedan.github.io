@@ -432,7 +432,7 @@ if [ "$MOD" = "tablou" ]; then tablou; echo ""; exit 0; fi
 titlu 2 "Inventar: fiecare pagina de pe disc e cunoscuta"
 # ════════════════════════════════════════════════════════════════════
 # Orice .html e fie document din manifest, fie pagina de structura
-# (index.html, 404.html, verificarea Google), fie pagina interna (noindex).
+# (index.html, 404.html, verificarea Google, teme.html in hub), fie pagina interna (noindex).
 # Altceva = fisier pe care tabloul nu-l cunoaste.
 
 : > "$W/html"
@@ -450,6 +450,10 @@ while read -r f; do
   repo=${rel%%/*}; cale=${rel#*/}
   if awk -F'\t' -v r="$repo" -v c="$cale" '$1==r && $2==c {g=1} END {exit !g}' "$W/docs"; then continue; fi
   case "$cale" in index.html|*/index.html|404.html|google*.html) continue ;; esac
+  # pas119 (garda versionata): teme.html e pagina de structura a hub-ului — indexul
+  # tematic, generat de scripts/legaturi.sh din teme.tsv; publica, in sitemap-hub.xml.
+  # Doar in hub: in alt repo, o teme.html ramane necunoscuta (T127).
+  [ "$repo" = "$HUBNAME" ] && [ "$cale" = teme.html ] && continue
   e_intern "$f" && continue
   problema "$rel nu e in manifest (nici structura, nici noindex)"
   necunoscute=$((necunoscute + 1))

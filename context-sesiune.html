@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas102, 2 noiembrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas119, 6 noiembrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -47,6 +47,9 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 și DOCUMENTARE.md. Restul detaliilor sunt în context-sesiune.html, sub acest bloc.
 
 STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
+- Regula de sus (pas119): standardul se poate îmbunătăți oricând, cu motiv scris.
+  Nicio regulă nu are voie să împiedice verificarea întregului conținut. O regulă care
+  încurcă se spune și se propune schimbată — nu se ocolește.
 - Adevărul complet, nu cel convenabil — inclusiv când e incomod sau contrazice o preferință.
 - Verificare înainte de scriere. Nicio cifră, dată sau afirmație factuală din memorie;
   se caută și se confirmă. O traducere e și o a doua verificare a originalului:
@@ -60,10 +63,14 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
 - O afirmație marcată (data-afirmatie) se schimbă doar reverificată la sursă; amprenta
   ei (--amprente) și dovada (scripts/surse.tsv, citat exact) vin în același patch.
 - Un pas care adaugă text măsoară dinainte și aduce cifrele declarate în același patch.
-- Garda e înghețată (pas102): o regulă nouă apare doar după o greșeală reală care
-  a trecut de ea. O regulă nouă se măsoară întâi pe site, vine cu testul ei în
-  scripts/teste-garda.sh, cu contra-proba pe garda veche și cu testele secțiunii
-  atinse, pe dash și pe mksh. Suita completă rulează o dată pe săptămână, sâmbăta.
+- Garda e versionată, nu înghețată (pas119; înainte, din pas102, înghețată). Se schimbă
+  oricând e motiv — o greșeală care a trecut sau o îmbunătățire a structurii — cu patru
+  condiții: (1) într-un pas separat, nu amestecată cu text; (2) fiecare verificare nouă
+  are în scripts/teste-garda.sh un test care o face să pice; (3) contra-proba pe garda
+  veche și testele secțiunii atinse, pe dash și pe mksh; (4) nicio verificare nu se
+  slăbește fără motiv scris în jurnal. Suita completă rulează o dată pe săptămână, sâmbăta.
+- Contorul din pas102 rămâne ca semnal, nu ca piedică: în jurnal fiecare pas poartă
+  [structură] sau [conținut]; dacă structura începe să domine, discutăm.
 - Conținut nou, verificat la scriere (pas102): întâi fișa de surse (5–15 fapte, fiecare
   cu sursă vie și citat exact; 2–3 citite de Bogdan), apoi textul scris DOAR din fișă,
   3–5 afirmații marcate, RO și NO deodată; capitolul intră verificat din prima zi.
@@ -156,8 +163,8 @@ LISTA DE VERIFICARE A UNUI CAPITOL (pas104 — lecțiile, ca să nu le repetăm)
 17. Temele au case declarate (pas118): scripts/teme.tsv (id, titluri, casa, tipar).
     sh ~/norgedan.github.io/scripts/legaturi.sh verifică L1–L7 (ancore, casă unică,
     legături lipsă, cifre repetate, paritate RO-NO a trimiterilor, orfani, teme.html la zi);
-    după o schimbare de text sau de temă, dacă L7 cere: --scrie, apoi git diff. Script separat
-    de gardă, în probă o săptămână-două; Bogdan hotărăște dacă intră în gardă.
+    după o schimbare de text sau de temă, dacă L7 cere: --scrie, apoi git diff. Intră în
+    gardă în pas121 (hotărât pe 6 nov), după stratul comun de capitole (pas120).
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
 separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>
 </div>
@@ -352,7 +359,8 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
     <li>Un citat „citit” printr-un instrument care rezumă pagina poate să nu existe (pas97, OCCRP): de aceea textul brut și confruntarea mecanică.</li>
     <li>O corectură făcută într-un capitol nu ajunge singură în celelalte locuri unde apare același fapt (pas101, Ziobro): <code>--cauta</code> înainte de corectură.</li>
     <li>Sursele mor: 3 din 9 pagini citite de Bogdan pe 2 nov. erau moarte. Ce e mort iese din registru; afirmația caută o dată o sursă vie.</li>
-    <li>Unealta crește mai ușor decât conținutul, pentru că e măsurabilă: din pas63 până în pas101, 15 pași doar pentru gardă și niciun text nou. De aceea garda e înghețată.</li>
+    <li>Unealta crește mai ușor decât conținutul, pentru că e măsurabilă: din pas63 până în pas101, 15 pași doar pentru gardă și niciun text nou. De aceea, din pas102, garda a fost înghețată; în pas118 înghețarea a blocat o îmbunătățire (teme.html a rămas noindex, scriptul de legături separat), așa că din pas119 garda e versionată, iar contorul [structură]/[conținut] din jurnal păstrează avertismentul.</li>
+    <li>O regulă ocolită în loc să fie discutată e o vulnerabilitate a standardului (pas118): Claude a construit pe lângă „garda înghețată” fără să propună schimbarea ei.</li>
     <li>O sursă care refuză descărcarea automată (403) se citește altfel, iar citatul ei rămâne „-” — niciodată copiat dintr-un rezumat.</li>
   </ul>
 </div>

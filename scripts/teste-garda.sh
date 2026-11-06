@@ -428,6 +428,12 @@ pdf_sursa() { cache_surse; k=$(printf '%s' "$PDFU" | cksum | cut -d' ' -f1)
   mkdir -p fakebin; printf '#!/bin/sh\nfor a; do o=$a; done\n%s\n' "$1" > fakebin/pdftotext; chmod +x fakebin/pdftotext; }
 mut_T124() { pdf_sursa 'printf "Raport. Cuvantmartor pdf 4242\\naici. Final.\\n" > "$o"'; }
 mut_T125() { pdf_sursa 'exit 1'; }
+# pas119: teme.html devine pagina de structura a hub-ului (garda versionata).
+# Exceptia e ingusta: alta pagina din radacina hub-ului, sau o teme.html in alt repo,
+# raman necunoscute; teme.html marcata noindex, dar ramasa in sitemap, e prinsa de [6].
+mut_T126() { cp norgedan.github.io/teme.html norgedan.github.io/alta.html; }
+mut_T127() { cp norgedan.github.io/teme.html corpus/teme.html; }
+mut_T128() { rep norgedan.github.io/teme.html 's|<meta charset="UTF-8">|<meta charset="UTF-8"><meta name="robots" content="noindex">|'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -546,6 +552,9 @@ t T122 SEMNAL "Cuvantmartor987xyz aici" "--cauta: cu * la sfarsit, prefix" "--ca
 t T123 ABSENT "cuvantmartor987xyz"   "--cauta: cuvinte intregi si in registre" "--cauta cuvantmartor987"
 t T124 SEMNAL " 0 negasite;"          "--surse: citatul gasit in textul unui PDF" --surse
 t T125 SEMNAL "e PDF, dar textul lui nu poate fi scos" "--surse: PDF fara text scos, numit ca atare" --surse
+t T126 PICA    "alta.html nu e in manifest"       "[2] exceptia teme.html nu deschide radacina hub-ului"
+t T127 PICA    "corpus/teme.html nu e in manifest" "[2] teme.html e structura doar in hub"
+t T128 PICA    "teme.html e marcat noindex"       "[6] teme.html din sitemap trebuie sa fie publica"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

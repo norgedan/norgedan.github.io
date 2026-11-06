@@ -18,9 +18,8 @@
 #   L6  orfanii: capitole fara nicio tema si fara nicio trimitere primita;
 #       case de tema spre care nu trimite niciun alt document
 #   L7  pagina teme.html == ce se genereaza acum din teme.tsv
-#       (teme.html sta in radacina hub-ului, cu noindex: garda inghetata permite in
-#       radacina doar fisiere .html, iar o pagina din afara manifestului trebuie sa
-#       fie interna.  Daca scriptul intra in garda, pagina poate deveni indexabila.)
+#       (teme.html sta in radacina hub-ului, publica si in sitemap-hub.xml; garda o
+#       cunoaste ca pagina de structura din pas119.)
 #
 # PROBLEMA = stricat (L1, L2, L5, L7); ATENTIE = de lucru (L3, L4, L6).
 # Iesire 1 daca exista cel putin o PROBLEMA.
@@ -407,7 +406,7 @@ awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
     print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
     print "<title>Index tematic · Temaregister — norgedan</title>"
     print "<meta name=\"description\" content=\"Temele care străbat documentele norgedan, fiecare cu o singură casă și cu capitolele în care mai apare. · Temaene som går gjennom norgedan-dokumentene, hvert med ett hjem.\">"
-    print "<meta name=\"robots\" content=\"noindex\">"
+    print "<link rel=\"canonical\" href=\"" base "/teme.html\">"
     print "<style>"
     print ":root{--bg:#0d0f14;--fg:#e8e6e1;--muted:#9a978f;--gold:#d4a843;--line:#2a2d36;}"
     print "body{margin:0;background:var(--bg);color:var(--fg);font-family:Georgia,\"Times New Roman\",serif;line-height:1.6;}"
