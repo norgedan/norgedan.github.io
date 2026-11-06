@@ -76,8 +76,11 @@ STANDARDUL NOSTRU, FĂRĂ EXCEPȚIE:
   3–5 afirmații marcate, RO și NO deodată; capitolul intră verificat din prima zi.
 - Actualitatea se datează: „în octombrie 2026…”, „la 7 iulie 2026…”. O actualizare se
   scrie lângă faptul vechi, nu în locul lui; se actualizează doar subiectele care contează.
-- O sursă moartă (404, 410, cere parolă) iese din surse.tsv; afirmația își caută O SINGURĂ
-  DATĂ o sursă vie — altfel se înmoaie sau se scoate. Fără arhive, fără vânătoare de adrese.
+- O sursă moartă (404, 410, cere parolă) rămâne moartă: iese din surse.tsv și nu se
+  înlocuiește cu o arhivă a ei. Faptul se confirmă sau se infirmă pe altă cale — altă sursă
+  vie, de preferință primară (pas120, hotărât de Bogdan; din pas102 era o singură căutare).
+  Confirmat: sursa nouă intră în surse.tsv. Infirmat: corectura, cu rând în erori.tsv.
+  Negăsit: afirmația se înmoaie sau se scoate.
 - Coerența: același fapt spus la fel în toate documentele, RO și NO. Înainte de o
   corectură, --cauta arată toate locurile unde apare.
 - Comenzi POSIX portabile — mașina e OpenBSD (ksh). Comenzi concrete, niciodată
@@ -165,6 +168,13 @@ LISTA DE VERIFICARE A UNUI CAPITOL (pas104 — lecțiile, ca să nu le repetăm)
     legături lipsă, cifre repetate, paritate RO-NO a trimiterilor, orfani, teme.html la zi);
     după o schimbare de text sau de temă, dacă L7 cere: --scrie, apoi git diff. Intră în
     gardă în pas121 (hotărât pe 6 nov), după stratul comun de capitole (pas120).
+18. Un capitol are un singur nume: doc#ancoră (pas120) — în gardă ([18], [19]), în
+    capitole-verificate.tsv, în teme.tsv și în legaturi.sh. Cititorul e unul singur,
+    scripts/capitole.awk, iar perechea RO-NO o dă scripts/harta.awk: ancorele NO pot fi
+    traduse (minte-inima / hjerte), capitolele doar-NO despre Norvegia (norge…) se sar.
+19. Mesajul de commit: „pasNNN: [structura] …” sau „pasNNN: [continut] …” — eticheta DUPĂ
+    două puncte: [11] caută în jurnal textul dinaintea lui „:” (pas119: „pas119 [structura]:”
+    a dat o atenționare falsă, „jurnalul a rămas în urmă”).
 Teren contestat (istorie, politică, origini): datele verificabile, cu sursă și an,
 separate de interpretare; interpretarea asumată ca poziție, nu ca fapt neutru.</pre>
 </div>
@@ -358,7 +368,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
     <li>Un autor citat pentru un argument nu e aliatul concluziei noastre: se spune ce susține el (Goff respinge teismul tradițional), iar argumentul nostru se marchează „credem”.</li>
     <li>Un citat „citit” printr-un instrument care rezumă pagina poate să nu existe (pas97, OCCRP): de aceea textul brut și confruntarea mecanică.</li>
     <li>O corectură făcută într-un capitol nu ajunge singură în celelalte locuri unde apare același fapt (pas101, Ziobro): <code>--cauta</code> înainte de corectură.</li>
-    <li>Sursele mor: 3 din 9 pagini citite de Bogdan pe 2 nov. erau moarte. Ce e mort iese din registru; afirmația caută o dată o sursă vie.</li>
+    <li>Sursele mor: 3 din 9 pagini citite de Bogdan pe 2 nov. erau moarte. Ce e mort iese din registru; faptul se confirmă sau se infirmă pe altă cale (pas120).</li>
     <li>Unealta crește mai ușor decât conținutul, pentru că e măsurabilă: din pas63 până în pas101, 15 pași doar pentru gardă și niciun text nou. De aceea, din pas102, garda a fost înghețată; în pas118 înghețarea a blocat o îmbunătățire (teme.html a rămas noindex, scriptul de legături separat), așa că din pas119 garda e versionată, iar contorul [structură]/[conținut] din jurnal păstrează avertismentul.</li>
     <li>O regulă ocolită în loc să fie discutată e o vulnerabilitate a standardului (pas118): Claude a construit pe lângă „garda înghețată” fără să propună schimbarea ei.</li>
     <li>O sursă care refuză descărcarea automată (403) se citește altfel, iar citatul ei rămâne „-” — niciodată copiat dintr-un rezumat.</li>

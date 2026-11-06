@@ -1963,18 +1963,21 @@ titlu 18 "Capitolele verificate la sursa: textul de dupa verificare"
 # ce s-a schimbat DUPA verificare si ce n-a fost verificat niciodata.
 #
 #   scripts/capitole-verificate.tsv — un rand = un capitol verificat la sursa:
-#     id  poz  titlu-RO  pas  data  amprenta-RO  amprenta-NO  nota      (TAB)
-#   poz    = al catelea <h2> din pagina, numarat de sus (introducerea inclusa);
-#            perechea NO = acelasi <h2> ca pozitie
-#   titlu  = titlul RO al capitolului, asa cum e in pagina: daca la pozitia
-#            aceea apare alt titlu, capitolele s-au mutat — PROBLEMA
+#     id  ancora  titlu-RO  pas  data  amprenta-RO  amprenta-NO  nota      (TAB)
+#   ancora = numele capitolului RO (pas120; inainte, pozitia): id-ul de pe <h2> sau
+#            al <section>-ului lui, citit de scripts/capitole.awk — acelasi cititor
+#            ca in legaturi.sh.  Perechea NO vine din scripts/harta.awk: pe pozitie,
+#            sarind capitolele doar-NO (norge...), fiindca ancorele NO pot fi traduse.
+#   titlu  = titlul RO al capitolului, asa cum e in pagina: daca sub ancora aceea
+#            apare alt titlu, titlul s-a schimbat — PROBLEMA
 #   capitolul N = de la al N-lea <h2> pana la urmatorul; ultimul, pana la primul
 #            <footer, </main> sau </body>; fara comentarii, <style>, <script>,
 #            fara tag-uri, spatiile unificate; amprenta = cksum, ca in amprente.tsv
 # Blocheaza: rand stricat, capitol inexistent, titlu mutat, amprenta lipsa,
 #            text RO sau NO schimbat dupa verificare.
-# Semnaleaza: capitolele neverificate inca (datoria), perechile cu numar diferit
-#            de capitole (pozitiile pot sa nu corespunda).
+# Blocheaza si (pas120): RO si NO care nu se pot pune fata in fata; cele doua citiri
+#            ale capitolelor (amprente / ancore) care nu numara la fel.
+# Semnaleaza: capitolele neverificate inca (datoria).
 # Dupa reverificarea la sursa a unui capitol schimbat: pas si data noi in rand,
 #   apoi  sh verifica-site.sh --capitole  (rescrie titlul si amprentele),
 #   apoi  git diff scripts/capitole-verificate.tsv  citit inainte de commit.
@@ -2026,7 +2029,33 @@ while IFS="$TAB" read -r id col repo cro cno tro tno; do
     done >> "$W/capm"
   done
 done < "$W/m"
+# pas120: cititorul comun (scripts/capitole.awk) si perechea RO-NO (scripts/harta.awk).
+# capa:  id limba poz ancora titlu        harta: MAP / DOARNO / NEPOTRIVIT
+: > "$W/capa"
+while IFS="$TAB" read -r id col repo cro cno tro tno; do
+  for p in "ro$TAB$repo/$cro" "no$TAB$repo/$cno"; do
+    l=${p%%"$TAB"*}; f="$RADACINA/${p#*"$TAB"}"
+    [ -f "$f" ] || continue
+    LC_ALL=C awk -v doc="$id" -v lang="$l" -v site="${p#*"$TAB"}" -v base="$BASE" -f "$SCRIPT_DIR/capitole.awk" "$f" >> "$W/capa"
+  done
+done < "$W/m"
+LC_ALL=C awk -F'\t' -f "$SCRIPT_DIR/harta.awk" "$W/capa" > "$W/harta"
+# santinela: cele doua citiri (amprente: fiecare <h2>; ancore: fara nav, aside, comentarii)
+# trebuie sa numere la fel — altfel un capitol are amprenta, dar nu nume, sau invers
+awk -F'\t' 'FILENAME == ARGV[1] { a[$1 " (" $2 ")"]++; next } { b[$1 " (" $2 ")"]++ }
+  END { for (k in a) if (a[k] != b[k]) print k ": " a[k] " capitole citite pentru amprente, " b[k] + 0 " pentru ancore"
+        for (k in b) if (!(k in a)) print k ": 0 capitole citite pentru amprente, " b[k] " pentru ancore" }' \
+  "$W/capm" "$W/capa" | sort > "$W/capsent"
+# perechea NO din harta: randurile NO din capm primesc pozitia RO a perechii;
+# capitolele doar-NO ies (nu au pereche RO de verificat)
+awk -F'\t' 'BEGIN { OFS = "\t" } FILENAME == ARGV[1] { if ($1 == "MAP") r[$2 "\t" $4] = $3; next }
+  $2 == "no" { k = $1 "\t" $3; if (!(k in r)) next; $3 = r[k] } { print }' "$W/harta" "$W/capm" > "$W/capm2" && mv "$W/capm2" "$W/capm"
+# ancorele RO:  id poz ancora
+awk -F'\t' '$2 == "ro" { print $1 "\t" $3 "\t" $4 }' "$W/capa" > "$W/capanc"
 : > "$W/capv"; [ -f "$CAPV" ] && grep -v '^#' "$CAPV" | grep -v '^[[:space:]]*$' > "$W/capv"
+# capvp: randurile registrului cu ancora tradusa in pozitia RO (pentru datorie si [19])
+awk -F'\t' 'BEGIN { OFS = "\t" } FILENAME == ARGV[1] { ap[$1 "\t" $3] = $2; next }
+  (($1 "\t" $2) in ap) { $2 = ap[$1 "\t" $2]; print }' "$W/capanc" "$W/capv" > "$W/capvp"
 
 if [ "$MOD" = capitole ]; then
   if [ ! -f "$CAPV" ]; then echo "  lipseste $CAPV"; exit 1; fi
@@ -2036,18 +2065,19 @@ if [ "$MOD" = capitole ]; then
   : > "$W/caphead"
   git -C "$HUB" show HEAD:scripts/capitole-verificate.tsv 2>/dev/null | grep -v '^#' | grep -v '^[[:space:]]*$' > "$W/caphead"
   { grep '^#' "$CAPV"
-    awk -F'\t' -v M="$W/capm" -v H="$W/caphead" -v RAP="$W/caprap" '
-      BEGIN { OFS = "\t"; while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
+    awk -F'\t' -v M="$W/capm" -v H="$W/caphead" -v RAP="$W/caprap" -v A="$W/capanc" '
+      BEGIN { OFS = "\t"; while ((getline l < A) > 0) { split(l, x, "\t"); ap[x[1] "\t" x[3]] = x[2] }
+              while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
               if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] }
               while ((getline l < H) > 0) { split(l, x, "\t"); hp[x[1] "\t" x[2]] = x[4] "\t" x[5] } }
-      { k = $1 "\t" $2
+      { k = $1 "\t" ap[$1 "\t" $2]
         if ((k in t) && (k in an)) {
           schimbat = ($6 != "-" && $6 != ar[k]) || ($7 != "-" && $7 != an[k])
           if (schimbat && (k in hp) && hp[k] == $4 "\t" $5) {
-            print "REFUZ\t" $1 " poz " $2 " „" t[k] "”: textul s-a schimbat, dar randul are tot " $4 ", " $5 " — dupa reverificarea la sursa scrie pasul si data noi in rand, apoi --capitole" > RAP
+            print "REFUZ\t" $1 "#" $2 " „" t[k] "”: textul s-a schimbat, dar randul are tot " $4 ", " $5 " — dupa reverificarea la sursa scrie pasul si data noi in rand, apoi --capitole" > RAP
           } else {
-            if ($6 == "-" || $7 == "-") print "NOU\t" $1 " poz " $2 " „" t[k] "”" > RAP
-            else if (schimbat || $3 != t[k]) print "REINGHETAT\t" $1 " poz " $2 " „" t[k] "” (" $4 ", " $5 ")" > RAP
+            if ($6 == "-" || $7 == "-") print "NOU\t" $1 "#" $2 " „" t[k] "”" > RAP
+            else if (schimbat || $3 != t[k]) print "REINGHETAT\t" $1 "#" $2 " „" t[k] "” (" $4 ", " $5 ")" > RAP
             $3 = t[k]; $6 = ar[k]; $7 = an[k] } }
         print }' "$W/capv"
   } > "$W/capnou"
@@ -2069,27 +2099,28 @@ if [ ! -s "$W/capm" ]; then
 elif [ ! -f "$CAPV" ]; then
   problema "lipseste scripts/capitole-verificate.tsv"
 else
-  awk -F'\t' -v M="$W/capm" -v MF="$W/m" '
+  awk -F'\t' -v M="$W/capm" -v MF="$W/m" -v A="$W/capanc" '
     function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
       a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
       n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
       return l >= 1 && l <= 12 && z >= 1 && z <= n }
     BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
+            while ((getline l < A) > 0) { split(l, x, "\t"); ap[x[1] "\t" x[3]] = x[2] }
             while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
               if (x[2] == "ro") { t[k] = x[4]; ar[k] = x[5] } else an[k] = x[5] } }
     NF != 8 { print "rand " NR ": " NF " coloane in loc de 8"; next }
-    { for (i = 1; i <= 8; i++) if ($i ~ /^[[:space:]]*$/) { print $1 " poz " $2 ": coloana " i " goala (se scrie \"-\")"; next } }
+    { for (i = 1; i <= 8; i++) if ($i ~ /^[[:space:]]*$/) { print $1 "#" $2 ": coloana " i " goala (se scrie \"-\")"; next } }
     !($1 in doc) { print $1 ": nu e in manifest"; next }
-    $2 !~ /^[1-9][0-9]*$/ { print $1 ": pozitie gresita \"" $2 "\""; next }
-    $4 !~ /^pas[0-9]+[a-z]?$/ { print $1 " poz " $2 ": pas gresit \"" $4 "\" (ex: pas63)" }
-    !dataok($5) { print $1 " poz " $2 ": data gresita \"" $5 "\" (o data reala AAAA-LL-ZZ)" }
-    seen[$1 "\t" $2]++ == 1 { print $1 " poz " $2 ": rand dublat" }
-    { k = $1 "\t" $2
-      if (!(k in t) || !(k in an)) { print $1 ": capitolul " $2 " nu exista (in RO sau in NO)"; next }
-      if ($3 == "-" || $6 == "-" || $7 == "-") { print $1 " poz " $2 ": fara titlu sau amprenta — dupa verificarea la sursa: --capitole"; next }
-      if ($3 != t[k]) { print $1 " poz " $2 ": la pozitia asta nu mai e „" $3 "”, ci „" t[k] "” — capitolele s-au mutat sau titlul s-a schimbat dupa verificarea din " $4; next }
-      if ($6 != ar[k]) print $1 " poz " $2 " „" t[k] "”, RO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole"
-      if ($7 != an[k]) print $1 " poz " $2 " „" t[k] "”, NO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole" }
+    !(($1 "\t" $2) in ap) { print $1 "#" $2 ": nu e ancora unui capitol din fisierul RO (coloana 2 = ancora, ex: corpus3-2 cap10)"; next }
+    $4 !~ /^pas[0-9]+[a-z]?$/ { print $1 "#" $2 ": pas gresit \"" $4 "\" (ex: pas63)" }
+    !dataok($5) { print $1 "#" $2 ": data gresita \"" $5 "\" (o data reala AAAA-LL-ZZ)" }
+    seen[$1 "\t" $2]++ == 1 { print $1 "#" $2 ": rand dublat" }
+    { k = $1 "\t" ap[$1 "\t" $2]
+      if (!(k in t) || !(k in an)) { print $1 "#" $2 ": capitolul nu are pereche in NO"; next }
+      if ($3 == "-" || $6 == "-" || $7 == "-") { print $1 "#" $2 ": fara titlu sau amprenta — dupa verificarea la sursa: --capitole"; next }
+      if ($3 != t[k]) { print $1 "#" $2 ": sub ancora asta nu mai e „" $3 "”, ci „" t[k] "” — titlul s-a schimbat dupa verificarea din " $4; next }
+      if ($6 != ar[k]) print $1 "#" $2 " „" t[k] "”, RO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole"
+      if ($7 != an[k]) print $1 "#" $2 " „" t[k] "”, NO: textul s-a schimbat dupa verificarea din " $4 " — reverifica la sursa, pas si data noi, apoi --capitole" }
   ' "$W/capv" > "$W/caperr"
   if [ -s "$W/caperr" ]; then
     while IFS= read -r l; do problema "$l"; done < "$W/caperr"
@@ -2098,13 +2129,14 @@ else
     if [ "$nv" -eq 0 ]; then ok "registrul capitolelor verificate e gol"
     else ok "$nv capitole verificate la sursa, cu titlul la locul lui si textul RO si NO neschimbat de atunci"; fi
   fi
-  # pozitiile pot sa nu corespunda cand RO si NO au numar diferit de capitole
-  awk -F'\t' -v M="$W/capm" '
-    BEGIN { while ((getline l < M) > 0) { split(l, x, "\t"); if (x[2] == "ro") r[x[1]]++; else o[x[1]]++ } }
-    !s[$1]++ && r[$1] != o[$1] { print $1 ": " r[$1] " capitole in RO, " o[$1] " in NO — pozitiile verificate pot sa nu corespunda" }
-  ' "$W/capv" | while IFS= read -r l; do atentie "$l"; done
+  # pas120: perechea RO-NO din harta (inainte: atentionarea „pozitiile pot sa nu corespunda”)
+  while IFS= read -r l; do problema "cele doua citiri ale capitolelor nu se potrivesc — $l"; done < "$W/capsent"
+  awk -F'\t' '$1 == "NEPOTRIVIT" { print $2 ": " $3 " capitole RO, " $4 " NO — nu se pot pune fata in fata (doar capitolele norge... pot lipsi din RO)" }' "$W/harta" |
+    while IFS= read -r l; do problema "$l"; done
+  dn=$(awk -F'\t' '$1 == "DOARNO" { printf " %s#%s", $2, $4 }' "$W/harta")
+  [ -n "$dn" ] && ok "capitole doar in NO (rolul Norvegiei), sarite la perechea RO-NO:$dn"
   # datoria de verificare: vizibila la fiecare rulare, fara sa blocheze
-  awk -F'\t' -v V="$W/capv" '
+  awk -F'\t' -v V="$W/capvp" '
     BEGIN { while ((getline l < V) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = 1 } }
     $2 == "ro" { tot[$1]++; if (!(($1 "\t" $3) in v)) { nev[$1]++; N++ } else A++; if (!($1 in ord)) { ord[$1] = ++k; id[k] = $1 } }
     END { if (N == 0) exit
@@ -2159,17 +2191,18 @@ if [ ! -s "$W/risc" ]; then
   problema "niciun capitol citit pentru masurarea riscului — extragerea s-a stricat"
 else
   # doar capitolele RO neverificate (cele din capitole-verificate.tsv au fost citite la sursa)
-  awk -F'\t' -v V="$W/capv" '
-    BEGIN { while ((getline l < V) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = 1 } }
+  awk -F'\t' -v V="$W/capvp" -v A="$W/capanc" '
+    BEGIN { while ((getline l < V) > 0) { split(l, x, "\t"); v[x[1] "\t" x[2]] = 1 }
+            while ((getline l < A) > 0) { split(l, x, "\t"); an[x[1] "\t" x[2]] = x[3] } }
     $2 == "ro" && !(($1 "\t" $3) in v) { C += $4; S += $5; n++
       t = substr($6, 1, 50); sub(/[\300-\377][\200-\277]*$/, "", t)   # fara litera taiata pe jumatate
-      printf "%d\t%s poz %s\t%d cifre, %d superlative\t%s\n", $4 + 2 * $5, $1, $3, $4, $5, t }
+      printf "%d\t%s#%s\t%d cifre, %d superlative\t%s\n", $4 + 2 * $5, $1, an[$1 "\t" $3], $4, $5, t }
     END { printf "TOTAL\t%d\t%d\t%d\n", n, C, S > "/dev/stderr" }
   ' "$W/risc" 2> "$W/risct" | LC_ALL=C sort -t "$TAB" -k1,1nr > "$W/riscs"
   set -- $(cut -f2- "$W/risct" | tr '\t' ' ')
   if [ -s "$W/riscs" ]; then
     atentie "in $1 capitole RO neverificate: $2 cifre si $3 superlative — primele 10, unde se sapa intai:"
-    head -10 "$W/riscs" | awk -F'\t' '{ printf "             %-22s %-26s %s\n", $2, $3, $4 }'
+    head -10 "$W/riscs" | awk -F'\t' '{ printf "             %-32s %-26s %s\n", $2, $3, $4 }'
   else
     ok "toate capitolele RO sunt verificate la sursa"
   fi
@@ -2556,10 +2589,10 @@ PAT
       hc=$(cat "$W/pp/$k.html.http")
       case "$hc" in
         401|403|406) de="serverul refuza descarcarea automata — citatul se confirma in browser" ;;
-        # pas102: o sursa moarta nu se mai urmareste (fara arhive, fara vanatoare de adrese):
-        # randul iese din surse.tsv, iar afirmatia isi cauta O SINGURA DATA o sursa vie;
-        # daca nu gaseste, afirmatia se inmoaie sau se scoate
-        404|410) de="pagina nu mai e la adresa asta — sursa moarta: randul iese din surse.tsv; afirmatia cauta o data o sursa vie, altfel se inmoaie sau se scoate" ;;
+        # pas102, pas120: o sursa moarta ramane moarta — randul iese din surse.tsv, fara
+        # arhiva ei; faptul se confirma sau se infirma pe alta cale (alta sursa vie, de
+        # preferinta primara).  Negasit: afirmatia se inmoaie sau se scoate.
+        404|410) de="pagina nu mai e la adresa asta — sursa moarta: randul iese din surse.tsv; faptul se confirma sau se infirma pe alta cale (alta sursa vie), altfel afirmatia se inmoaie sau se scoate" ;;
         5??) de="eroare a serverului — de reincercat mai tarziu" ;;
         *) de="raspuns fara pagina" ;;
       esac

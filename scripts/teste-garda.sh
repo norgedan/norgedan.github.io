@@ -173,14 +173,15 @@ mut_T41() { rep corpus2/no/C-den-usynlige-krigen-no.html 's/Algoritmen leser ikk
 # un capitol nou inserat inaintea celor verificate: pozitiile se muta
 mut_T42() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's|<h2 class="ch-title">Economia atenției|<h2>Capitol nou</h2><p>text</p><h2 class="ch-title">Economia atenției|'; }
 # rand pentru un capitol care nu exista
-mut_T43() { printf 'corpus2-C\t99\t-\tpas63\t2026-10-22\t-\t-\tnimic\n' >> "$CV"; }
+# pas120: registrul numeste capitolele prin ancora (inainte: pozitia)
+mut_T43() { printf 'corpus2-C\tnuexista\t-\tpas63\t2026-10-22\t-\t-\tnimic\n' >> "$CV"; }
 # fluxul corect: text schimbat, reverificat, pas nou, --capitole = trece
 # pas94: pas si data noi in rand, cum cere --capitole
 mut_T44() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/Algoritmul nu citește știrile/Algoritmul nu citește toate știrile/'
-            awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "7" { $4 = "pas999"; $5 = "2026-10-31" } { print }' "$CV" > x && mv x "$CV"
+            awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "algoritm" { $4 = "pas999"; $5 = "2026-10-31" } { print }' "$CV" > x && mv x "$CV"
             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --capitole > /dev/null 2>&1; }
 # rand nou fara amprente (inainte de --capitole)
-mut_T46() { printf 'corpus2-C\t12\t-\tpas63\t2026-10-22\t-\t-\tnou\n' >> "$CV"; }
+mut_T46() { printf 'corpus2-C\tce-faci\t-\tpas63\t2026-10-22\t-\t-\tnou\n' >> "$CV"; }
 # extragerea capitolelor stricata (in copia verificarii): zero capitole (santinela)
 mut_T47() { rep norgedan.github.io/scripts/verifica-site.sh 's/while ((i = index(s, "<h2")) > 0) {/while (0) {/'; }
 # datoria: capitolele lui C scoase toate din registru apar toate ca datorie
@@ -398,7 +399,7 @@ mut_T111() { rep corpus2/ro/C-razboiul-invizibil-ro.html 's/un băiat de paispre
 # -- pas95: datele reale, „bilion/trilion” in RO, caracterele invizibile din surse adunate ---------
 mut_T112() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "cas-substante" { $8 = "2027-02-30" } { print }' norgedan.github.io/scripts/afirmatii.tsv > x && mv x norgedan.github.io/scripts/afirmatii.tsv; }
 mut_T113() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "cas-substante" { $4 = "2026-00-15" } { print }' "$SR" > x && mv x "$SR"; }
-mut_T114() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "7" { $5 = "2026-10-32" } { print }' "$CV" > x && mv x "$CV"; }
+mut_T114() { awk -F'\t' 'BEGIN { OFS = "\t" } $1 == "corpus2-C" && $2 == "algoritm" { $5 = "2026-10-32" } { print }' "$CV" > x && mv x "$CV"; }
 mut_T115() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>De un trilion de ori mai mult.</p><footer|'; }
 mut_T116() { rep corpus/05-planeten-og-romania-no.html 's|<footer|<p>En billion ganger mer.</p><footer|'; }
 mut_T117() { cache_surse "<p>tekst$(printf '\342\200\213')skjult</p>"; }
@@ -434,6 +435,15 @@ mut_T125() { pdf_sursa 'exit 1'; }
 mut_T126() { cp norgedan.github.io/teme.html norgedan.github.io/alta.html; }
 mut_T127() { cp norgedan.github.io/teme.html corpus/teme.html; }
 mut_T128() { rep norgedan.github.io/teme.html 's|<meta charset="UTF-8">|<meta charset="UTF-8"><meta name="robots" content="noindex">|'; }
+# pas120: capitolele au nume (ancora) si perechea NO vine din harta, nu din pozitie.
+# T130 e testul care arata de ce: un capitol doar-NO (norge...) inainte de un capitol
+# verificat muta pozitiile NO; perechea pe pozitie (garda veche) ar vedea text schimbat.
+cv_ancora() { awk 'BEGIN { FS = OFS = "\t" } $1 == "corpus3-2" && $2 == "cap10" { $2 = "cap99" } { print }' \
+  norgedan.github.io/scripts/capitole-verificate.tsv > x && mv x norgedan.github.io/scripts/capitole-verificate.tsv; }
+mut_T129() { cv_ancora; }
+mut_T130() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|<section class="chapter" id="cap10">|<section class="chapter" id="norge-test"><h2>Norge i 2026</h2><p>Prove.</p></section><section class="chapter" id="cap10">|'; }
+mut_T131() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|<section class="chapter" id="cap10">|<section class="chapter" id="ekstra"><h2>Ekstra</h2><p>Prove.</p></section><section class="chapter" id="cap10">|'; }
+mut_T132() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|<footer|<aside><h2>Caseta</h2></aside><footer|'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -469,8 +479,8 @@ t T35 SEMNAL  "a demonstrat"            "[13] fragment acceptat pentru alt fisie
 t T36 TACE    "a demonstrat"            "[13] fragment acceptat pentru fisierul lui: tace"
 t T40 PICA    "RO: textul s-a schimbat"  "[18] capitol verificat, text RO schimbat"
 t T41 PICA    "NO: textul s-a schimbat"  "[18] capitol verificat, text NO schimbat"
-t T42 PICA    "capitolele s-au mutat"   "[18] capitol nou inserat: pozitiile se muta"
-t T43 PICA    "capitolul 99 nu exista"  "[18] rand pentru un capitol inexistent"
+t T42 PICA    "sub ancora asta nu mai e" "[18] capitol nou inserat fara ancora proprie: sub ancora vine alt titlu"
+t T43 PICA    "corpus2-C#nuexista: nu e ancora unui capitol" "[18] rand pentru un capitol inexistent"
 t T44 TRECE   "Poti face push"          "[18] text schimbat, reverificat, --capitole: trece"
 t T45 SEMNAL  "corpus2-C: 12 din 12"    "[18] datoria: capitolele scoase din registru apar"
 t T46 PICA    "fara titlu sau amprenta" "[18] rand nou fara --capitole"
@@ -555,6 +565,10 @@ t T125 SEMNAL "e PDF, dar textul lui nu poate fi scos" "--surse: PDF fara text s
 t T126 PICA    "alta.html nu e in manifest"       "[2] exceptia teme.html nu deschide radacina hub-ului"
 t T127 PICA    "corpus/teme.html nu e in manifest" "[2] teme.html e structura doar in hub"
 t T128 PICA    "teme.html e marcat noindex"       "[6] teme.html din sitemap trebuie sa fie publica"
+t T129 PICA    "corpus3-2#cap99: nu e ancora unui capitol" "[18] registrul numeste capitolele prin ancora"
+t T130 TRECE   "-"                                "[18] capitol doar-NO (norge...) inaintea unui capitol verificat: perechea NO ramane corecta"
+t T131 PICA    "corpus3-2: 11 capitole RO, 12 NO" "[18] un capitol NO in plus, fara norge..., nu se poate pune fata in fata"
+t T132 PICA    "cele doua citiri ale capitolelor nu se potrivesc" "[18] santinela: <h2> intr-un aside — amprenta fara nume"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

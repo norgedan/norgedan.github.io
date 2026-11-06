@@ -77,96 +77,7 @@ awk -F'\t' -v hub="$HUBNAME" '
     print $1 "\tno\t" $3 "\t" $5 "\t" s $5 }' "$MAN" > "$W/f"
 
 # ── extragerea: capitole, texte, trimiteri ─────────────────────────
-# Un capitol = de la un <h2> la urmatorul (sau </main>).  Nu intra in text:
-# script, style, nav, aside (casetele "Legaturi"), footer.
-cat > "$W/ext.awk" <<'EOF'
-function attr(tag, a) {
-  if (match(tag, "[ \t\n]" a "=\"[^\"]*\""))
-    return substr(tag, RSTART + length(a) + 3, RLENGTH - length(a) - 4)
-  return ""
-}
-function ent(s) {
-  gsub(/&nbsp;/, " ", s); gsub(/&lt;/, "<", s); gsub(/&gt;/, ">", s)
-  gsub(/&quot;/, "\"", s); gsub(/&#39;/, "'", s); gsub(/&amp;/, "\\&", s)
-  gsub(/[ \t\r\n]+/, " ", s)
-  return s
-}
-# adresa -> "cale<TAB>ancora" pe site; "" pentru adrese externe
-function rezolva(h,   anc, i, n, p, k, out, seg) {
-  anc = ""
-  i = index(h, "#"); if (i > 0) { anc = substr(h, i + 1); h = substr(h, 1, i - 1) }
-  i = index(h, "?"); if (i > 0) h = substr(h, 1, i - 1)
-  if (h == "") p = site
-  else if (index(h, base "/") == 1) p = substr(h, length(base) + 2)
-  else if (h == base) p = ""
-  else if (h ~ /^[a-zA-Z][a-zA-Z0-9+.-]*:/ || h ~ /^\/\//) return ""
-  else if (h ~ /^\//) p = substr(h, 2)
-  else p = dir h
-  n = split(p, seg, "/"); k = 0
-  for (i = 1; i <= n; i++) {
-    if (seg[i] == "." || (seg[i] == "" && i < n)) continue
-    if (seg[i] == "..") { if (k > 0) k--; continue }
-    out[++k] = seg[i]
-  }
-  p = ""
-  for (i = 1; i <= k; i++) p = p (i > 1 ? "/" : "") out[i]
-  if (p == "" || p ~ /\/$/) p = p "index.html"
-  return p "\t" anc
-}
-BEGIN {
-  RS = "<"; pos = 0; inch = 0; skip = ""; sd = 0; mark = 0; sdep = 0
-  sec = ""; inh2 = 0
-  dir = site; sub(/[^\/]*$/, "", dir)
-  bloc = " p li h2 h3 h4 div br td th tr section blockquote ul ol dd dt figcaption "
-}
-NR == 1 { next }
-{
-  i = index($0, ">")
-  if (i == 0) { tag = $0; txt = "" } else { tag = substr($0, 1, i - 1); txt = substr($0, i + 1) }
-  nm = tag; sub(/[ \t\r\n].*/, "", nm); nm = tolower(nm); sub(/\/$/, "", nm)
-
-  if (skip != "") {
-    if (nm == skip) sd++
-    else if (nm == "/" skip && --sd == 0) skip = ""
-    next
-  }
-  if (nm == "script" || nm == "style" || nm == "nav" || nm == "aside" || nm == "footer") {
-    skip = nm; sd = 1; next
-  }
-  if (nm == "section") { a = attr(tag, "id"); if (a != "") sec = a }
-  if (nm == "/main") inch = 0
-  if (nm == "h2") {
-    if (pos > 0) { close(tf); close(uf) }
-    pos++; inch = 1; inh2 = 1; ttl = ""
-    anc = attr(tag, "id"); if (anc == "") anc = sec
-    sec = ""
-    tf = tdir "/" doc "." lang "." pos; uf = udir "/" doc "." lang "." pos
-    printf "" > tf; printf "" > uf
-  }
-  if (nm == "span") {
-    if (mark > 0) sdep++
-    else if (tag ~ /[ \t\n]data-afirmatie=/) { mark = 1; sdep = 1 }
-  } else if (nm == "/span" && mark > 0) {
-    if (--sdep == 0) mark = 0
-  }
-  if (pos > 0 && inch && nm == "a") {
-    h = attr(tag, "href")
-    if (h != "") { r = rezolva(h); if (r != "") print doc "\t" lang "\t" pos "\t" r >> lnk }
-  }
-  if (pos > 0 && inch) {
-    x = ent(txt)
-    if (index(bloc, " " nm " ") || index(bloc, " " substr(nm, 2) " ")) x = " " x
-    if (inh2) ttl = ttl x
-    printf "%s", x >> tf
-    if (!mark) printf "%s", x >> uf
-  }
-  if (nm == "/h2" && inh2) {
-    inh2 = 0; gsub(/^ +| +$/, "", ttl); gsub(/ +/, " ", ttl)
-    print doc "\t" lang "\t" pos "\t" anc "\t" ttl >> capf
-  }
-}
-END { if (pos > 0) { close(tf); close(uf) } }
-EOF
+# Cititorul comun: scripts/capitole.awk (acelasi ca in garda, din pas120).
 
 : > "$W/cap"; : > "$W/lnk"
 while IFS="$(printf '\t')" read -r doc lang repo cale site; do
@@ -174,7 +85,7 @@ while IFS="$(printf '\t')" read -r doc lang repo cale site; do
   [ -f "$fis" ] || { echo "lipseste $fis" >&2; exit 2; }
   awk -v doc="$doc" -v lang="$lang" -v site="$site" -v base="$BASE" \
       -v tdir="$W/t" -v udir="$W/u" -v lnk="$W/lnk" -v capf="$W/cap" \
-      -f "$W/ext.awk" "$fis" || exit 2
+      -f "$SCRIPT_DIR/capitole.awk" "$fis" || exit 2
 done < "$W/f"
 
 # trimiterile, cu tinta tradusa in document: doc lang pos tdoc tlang tanc
@@ -182,16 +93,11 @@ awk -F'\t' 'FILENAME == ARGV[1] { d[$5] = $1 "\t" $2; next }
   { t = ($4 in d) ? d[$4] : "-\t-"; print $1 "\t" $2 "\t" $3 "\t" t "\t" $5 }' \
   "$W/f" "$W/lnk" > "$W/trim"
 
-# harta capitolelor RO -> NO: doc rpos npos nanc ranc
+# harta capitolelor RO -> NO: doc rpos npos nanc ranc  (scripts/harta.awk, comun cu garda)
 # In corpus si corpus2 ancorele NO sunt traduse (minte-inima / hjerte), deci
 # perechea se face pe pozitie.  Capitolele doar-NO (rolul Norvegiei, ancora
 # norge...) se sar; orice alta diferenta de numar e PROBLEMA in L1.
-awk -F'\t' '{ k = $1 "\t" $2; n[k]++; a[k "\t" n[k]] = $4; if ($2 == "ro" && !($1 in v)) { v[$1] = 1; ord[++nd] = $1 } }
-  END { for (q = 1; q <= nd; q++) { d = ord[q]; nr = n[d "\tro"]; nn = n[d "\tno"]; extra = nn - nr; j = 0
-          for (i = 1; i <= nn; i++) { an = a[d "\tno\t" i]
-            if (extra > 0 && an ~ /^norge/) { print "DOARNO\t" d "\t" i "\t" an; extra--; continue }
-            j++; if (j <= nr) print "MAP\t" d "\t" j "\t" i "\t" an "\t" a[d "\tro\t" j] }
-          if (j != nr) print "NEPOTRIVIT\t" d "\t" nr "\t" nn } }' "$W/cap" > "$W/harta"
+awk -F'\t' -f "$SCRIPT_DIR/harta.awk" "$W/cap" > "$W/harta"
 grep '^MAP' "$W/harta" | cut -f2- > "$W/map"
 
 # ════════════════════════════════════════════════════════════════════
