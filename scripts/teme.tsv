@@ -1,0 +1,34 @@
+# teme.tsv — vocabularul controlat al temelor norgedan (pas118).
+# Citit de scripts/legaturi.sh; din el se genereaza pagina teme.html.
+#
+# Un rand = o tema.  5 coloane, separate prin TAB:
+#   id        litere mici fara diacritice, cifre si "-"; stabil (ancora in teme.html)
+#   titlu_ro, titlu_no
+#   casa      UNDE locuieste tema (regula 16: o singura casa pe fapt):
+#               id-document#ancora   = un capitol anume   (ex: corpus3-2#cap4)
+#               id-document          = tot documentul      (ex: corpus3-5)
+#             Casa e locul unde tema se trateaza pe larg si se tine la zi; celelalte
+#             capitole trimit spre ea, nu repeta faptele (sau le repeta cu acelasi id
+#             de afirmatie, ca garda [13] sa le urmareasca impreuna).
+#   tipar     expresie regulata (ERE), cautata cu majusculele exacte in textul RO al
+#             fiecarui capitol.  Un capitol "trateaza tema" daca tiparul revine de cel
+#             putin PRAG ori (legaturi.sh, implicit 3).
+#             Fara \b, fara {n}, fara litere cu diacritice intre [ ] — awk-ul de pe
+#             OpenBSD lucreaza pe octeti: ă intre paranteze drepte se rupe in doi octeti.
+#             Diacriticele merg in afara parantezelor:  inim(a|ă|ii)
+#             Fara alternative redundante cu acelasi inceput (imperialism.*|imperial.*):
+#             mawk (Linux) pierde atunci potriviri; one-true-awk (OpenBSD) nu.
+#
+# Casele de mai jos sunt cele aprobate de Bogdan pe 6 nov 2026, dupa masurarea pe
+# capitole.  "Limba romana" asteapta pas119 (suprapunerea limba-1 / limba-ro-final-1).
+#id	titlu_ro	titlu_no	casa	tipar
+ucraina-razboi	Războiul din Ucraina	Krigen i Ukraina	corpus3-2#cap4	Zelensk|Donbas|Kiev|Kyiv|Bahmut|Harkov|Zaporoj|Crimeea|invazi[a-z]* (rus|din|la scar)|războ[a-z]* din Ucraina|frontul|ucrainen
+romania-ucraina	România și Ucraina	Romania og Ukraina	corpus3-1#cap7	Bucovin|Cernăuți|Insula Șerpilor|[Rr]omânii din Ucraina|Bugeac|Herța|România și Ucraina|României cu Ucraina|Ucraina și România
+dezinformare	Dezinformarea	Desinformasjon	corpus3-5	[Dd]ezinform|[Pp]ropagand|Meliorator|deepfake|fake news|manipul
+moldova	Moldova	Moldova	corpus3-1#cap8	Moldov|Chișinău|Transnistri|Maia Sandu
+ai	Inteligența artificială	Kunstig intelligens	corpus-06	[Ii]nteligenț[a-z]* [Aa]rtificial|ChatGPT|[^A-Za-z]AI[^A-Za-z]|algoritm
+nato	NATO și flancul estic	NATO og østflanken	corpus3-4#cap4	NATO|Articolul 5
+china	China	Kina	corpus3-2#cap6	China|Chinei|Beijing|Xi Jinping|chinez
+rusia-imperiala	Logica imperială a Rusiei	Russlands imperielle logikk	corpus3-1#cap1	[Ii]mperial[a-z]* rus|[Ii]mperiul [Rr]us|[Ii]mperiului [Rr]us|țarist|[Ii]mperiu[a-z]* sovietic|Kremlin
+sanatate	Sănătate, medicină și droguri	Helse, medisin og rusmidler	corpus2-D	[Ss]ănăt|[Mm]edical|spital|[Dd]rog[uia]|opioid|fentanil
+inima	Inima — organ și centru al omului	Hjertet — organ og menneskets sentrum	corpus-02#minte-inima	[Ii]nim(a|ă|ii|ile|ilor)[^a-z]|[Ii]nimi
