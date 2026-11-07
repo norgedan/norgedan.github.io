@@ -2670,6 +2670,8 @@ AWK
   # reCAPTCHA).  Daca citatul lipseste si pagina are semnele unei asemenea verificari,
   # se spune asta — nu „citatul nu (mai) e in pagina”, care ar acuza sursa pe nedrept.
   # Semnele se cauta doar cand citatul lipseste: o pagina reala poate contine un widget.
+  # pas129: si verificarea PubMed (7 nov.: „cookies-required”, „challengeDomain”, 206
+  # caractere de text, fara articol) — inainte raportata ca citat disparut.
   cat > "$W/botpat" <<'PAT'
 RecaptchaChallengePageUi
 challenge-platform
@@ -2678,6 +2680,8 @@ cf-chl-
 Attention Required! | Cloudflare
 captcha-delivery.com
 _Incapsula_Resource
+challengeDomain
+cookies-required
 px-captcha
 AwsWafIntegration
 Checking your browser

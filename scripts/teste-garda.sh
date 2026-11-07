@@ -504,6 +504,10 @@ mut_T154() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Unii spun c�
 mut_T155() { rep norgedan.github.io/scripts/erori.tsv 's|^\(pas59	corpus2-C	\)silicon	|\19	|'; }
 mut_T156() { rep norgedan.github.io/scripts/erori.tsv 's|^\(pas59	corpus2-C	\)silicon	|\1fantoma	|'; }
 mut_T157() { echo '{ }' > norgedan.github.io/scripts/capitole.awk; }
+
+# ── pas129: pagina-capcana PubMed (7 nov.: cookie-uri + JavaScript, 206 caractere) ──
+pm_k() { printf '%s' 'https://pubmed.ncbi.nlm.nih.gov/21534650/' | cksum | cut -d' ' -f1; }
+mut_T158() { cache_surse; printf '<html><head><title>pubmed.ncbi.nlm.nih.gov</title></head><body class="x"><script>var challengeDomain="x";</script></body></html>' > "cache-surse/$(pm_k).html"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -660,6 +664,7 @@ t T154 TACE    "fără etichetă, că știința"         "[13] aceeasi propoziti
 t T155 PICA    "se numeste prin ancora"            "[21] erori.tsv cu pozitie numerica in loc de ancora"
 t T156 PICA    "nu e un capitol RO din"            "[21] erori.tsv cu ancora inexistenta"
 t T157 PICA    "[21] lista ancorelor"              "[21] santinela: lista ancorelor e goala"
+t T158 SEMNAL  "pubmed.ncbi.nlm.nih.gov/21534650/ cere verificare anti-robot" "--surse: pagina PubMed cu verificare (challengeDomain) numita ca atare" --surse
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
