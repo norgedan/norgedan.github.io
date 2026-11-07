@@ -437,7 +437,7 @@ Changes to be committed:
   <p><code>fetch</code> doar aduce și arată; <code>pull</code> modifică. Întâi te uiți, apoi decizi. Cu <code>pull.ff only</code> (Capitolul X), un pull nu poate produce niciodată un merge sau un rebase surpriză.</p>
 
   <h3>Suita gărzii — completă sâmbăta; la o schimbare a gărzii, testele ei</h3>
-  <p>Din pas64, cu regula de azi (pas102, pas119): <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code> rulează complet o dată pe săptămână, sâmbăta, pe dash și pe mksh, chiar dacă nu s-a schimbat nimic; la un pas care atinge garda rulează testele noi, contra-proba pe garda veche și testele secțiunii atinse, după commitul local. Motivul e concret: T11 și T25 au stat stricate de la pas59 la pas63, fiindcă testau o cifră care se schimbase pe site, iar suita nu mai fusese rulată. O plasă nefolosită se strică în tăcere.</p>
+  <p>Din pas64, cu regula de azi (pas102, pas119): <code>sh ~/norgedan.github.io/scripts/teste-garda.sh</code> rulează complet o dată pe săptămână, sâmbăta, chiar dacă nu s-a schimbat nimic: la Bogdan cu <code>sh</code> (ksh-ul OpenBSD), la Claude pe dash și pe mksh; la un pas care atinge garda rulează testele noi, contra-proba pe garda veche și testele secțiunii atinse, după commitul local. Motivul e concret: T11 și T25 au stat stricate de la pas59 la pas63, fiindcă testau o cifră care se schimbase pe site, iar suita nu mai fusese rulată. O plasă nefolosită se strică în tăcere. Din pas127a suita nu mai poate „trece” fără să ruleze: se oprește dacă shell-ul cerut (<code>VSH</code>) nu există sau dacă martorul T00 pică, iar un exit 126/127 înseamnă „verificarea n-a rulat”, la orice test.</p>
 
   <h3>Curățenia în Downloads — obligatorie, nu opțională</h3>
 

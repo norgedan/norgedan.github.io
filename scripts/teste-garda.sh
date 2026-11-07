@@ -38,6 +38,11 @@ REPOS="norgedan.github.io corpus corpus2 opera limba limba-ro-final"
 NO1930="$RADACINA/biblii/Norsk-1930.json"
 [ -f "$NO1930" ] || { echo "teste-garda: lipseste $NO1930 (testele [14] au nevoie de el)" >&2; exit 2; }
 
+# santinela (pas127a): shell-ul cerut trebuie sa existe.  In 7 nov., VSH=mksh pe o masina
+# fara mksh a dat 132 de GRESIT cu exit 127, iar 4 teste ABSENT au iesit „ok” fara ca
+# verificarea sa fi rulat.  Oprim inainte, cu numele shell-ului.
+command -v "${VSH:-sh}" > /dev/null 2>&1 || { echo "teste-garda: shell-ul cerut (VSH=${VSH:-sh}) nu e instalat — nicio verificare nu poate rula; oprit" >&2; exit 2; }
+
 T=$(mktemp -d /tmp/teste-garda.XXXXXX) || exit 1
 trap 'rm -rf "$T"' EXIT
 trap 'exit 1' INT TERM
@@ -79,7 +84,14 @@ t() {
   ( cd "$C" && PATH="$C/fakebin:$PATH" NORGEDAN_SURSE_TIMEOUT=3 NORGEDAN_SURSE_TIMEOUT2=4 NORGEDAN_API_DIR=/nu-exista NORGEDAN_SURSE_DIR="$C/cache-surse" ${VSH:-sh} norgedan.github.io/scripts/verifica-site.sh $mod < /dev/null ) > "$T/out" 2>&1
   ex=$?; rulate=$((rulate + 1))
   grep -qF -- "$tip" "$T/out" && semnalat=1 || semnalat=0
-  case "$astept" in
+  # pas127a: 126/127 = shell sau comanda negasita — verificarea n-a rulat, oricare ar fi
+  # verdictul asteptat.  ABSENT cere in plus o iesire: tacerea unui script care n-a
+  # pornit nu e „tiparul nu apare”.
+  if [ "$ex" -eq 126 ] || [ "$ex" -eq 127 ]; then astept_v=nerulat
+  elif [ "$astept" = ABSENT ] && [ ! -s "$T/out" ]; then astept_v=nerulat
+  else astept_v=$astept; fi
+  case "$astept_v" in
+    nerulat) v=GRESIT ;;
     PICA)    [ "$ex" -eq 1 ] && [ "$semnalat" -eq 1 ] && v=bun || v=GRESIT ;;
     TRECE)   [ "$ex" -eq 0 ] && v=bun || v=GRESIT ;;
     SEMNAL)  [ "$semnalat" -eq 1 ] && v=bun || v=GRESIT ;;
@@ -90,7 +102,11 @@ t() {
   case "$v" in
     bun)     printf '  ok       %-4s %-7s %s\n' "$id" "$astept" "$descr" ;;
     deschis) printf '  deschis  %-4s %-7s %s\n' "$id" "$astept" "$descr"; deschise=$((deschise + 1)) ;;
-    *)       printf '  GRESIT   %-4s %-7s %s  (exit %s, semnalat %s)\n' "$id" "$astept" "$descr" "$ex" "$semnalat"
+    *)       if [ "$astept_v" = nerulat ]; then
+               printf '  GRESIT   %-4s %-7s %s  (verificarea n-a rulat: exit %s, iesire %s octeti)\n' "$id" "$astept" "$descr" "$ex" "$(wc -c < "$T/out" | tr -d ' ')"
+             else
+               printf '  GRESIT   %-4s %-7s %s  (exit %s, semnalat %s)\n' "$id" "$astept" "$descr" "$ex" "$semnalat"
+             fi
              grep -e PROBLEMA -e REZULTAT "$T/out" | head -5 | sed 's/^/             /'
              gresite=$((gresite + 1)) ;;
   esac
@@ -485,6 +501,12 @@ echo "===================================================="
 echo "  teste-garda.sh  ·  verificarea testata: $VERIF"
 echo "===================================================="
 t T00 TRECE   "Poti face push"          "martor: copia neatinsa trece"
+# pas127a: daca martorul pica, copia neatinsa nu trece — verdictele de mai jos n-ar spune
+# nimic despre mutatii.  Oprim aici, cu motivul.
+if [ "$gresite" -gt 0 ]; then
+  echo ""; echo "  OPRIT: martorul T00 pica — copia neatinsa nu trece; repara asta intai (restul testelor n-ar spune nimic)"; echo ""
+  exit 1
+fi
 t T01 PICA    "Norsk-1930.json"         "[14] textul NO lipseste"
 t T02 PICA    "cksum"                   "[14] textul NO are alta amprenta"
 t T03 PICA    "niciun citat"            "[14] zero citate confruntate (santinela)"
@@ -618,7 +640,7 @@ t T144 PICA    "text in afara legaturilor"        "[23] L9: text strecurat in ra
 t T145 PICA    "nu e titlul temei"                "[23] L9: legatura cu alt text decat titlul temei"
 t T146 PICA    "nu duce la casa unei teme"        "[23] L9: legatura spre altceva decat casa temei"
 t T147 PICA    "teme diferite in RO"              "[23] L9: rand de tema doar in RO"
-t T148 PICA    "1 randuri nd-tema in fisier, 0 citite" "[23] L9 santinela: rand de tema ascuns intr-un comentariu"
+t T148 PICA    "unul sta intr-un comentariu" "[23] L9 santinela: rand de tema ascuns intr-un comentariu"
 t T149 PICA    "randul de tema are <strong>"     "[23] L9: alt tag decat <a> in randul de tema"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
