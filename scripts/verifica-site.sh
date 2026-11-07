@@ -2424,7 +2424,7 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu 23 "Legaturile, temele si cifrele RO-NO: scripts/legaturi.sh (L1-L8)"
+titlu 23 "Legaturile, temele si cifrele RO-NO: scripts/legaturi.sh (L1-L9)"
 # ════════════════════════════════════════════════════════════════════
 # pas121: legaturi.sh (pas118, in proba pana acum) ruleaza aici.  Un singur cod: garda
 # ii citeste iesirea, strat cu strat.  PROBLEMA (L1 ancore, L2 casa temei, L5 paritatea
