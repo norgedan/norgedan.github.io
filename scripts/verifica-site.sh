@@ -2421,12 +2421,13 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu 23 "Legaturile si temele: scripts/legaturi.sh (L1-L7)"
+titlu 23 "Legaturile, temele si cifrele RO-NO: scripts/legaturi.sh (L1-L8)"
 # ════════════════════════════════════════════════════════════════════
 # pas121: legaturi.sh (pas118, in proba pana acum) ruleaza aici.  Un singur cod: garda
 # ii citeste iesirea, strat cu strat.  PROBLEMA (L1 ancore, L2 casa temei, L5 paritatea
 # trimiterilor RO-NO, L7 teme.html la zi) opreste push-ul; ATENTIE (L3 legaturi lipsa,
-# L4 cifre repetate in afara casei, L6 orfani) e lucru de facut.  Aici OK apare o data pe
+# L4 cifre repetate in afara casei, L6 orfani, L8 numere doar intr-o limba — pas122)
+# e lucru de facut.  Aici OK apare o data pe
 # strat, nu o data pe sectiune: fiecare strat e o verificare de sine statatoare.
 # Lista completa si rescrierea lui teme.html: sh scripts/legaturi.sh [--scrie]
 if [ ! -f "$SCRIPT_DIR/legaturi.sh" ]; then

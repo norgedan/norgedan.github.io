@@ -21,10 +21,11 @@
 #   L6  orfanii: capitole fara nicio tema si fara nicio trimitere primita;
 #       case de tema spre care nu trimite niciun alt document
 #   L7  pagina teme.html == ce se genereaza acum din teme.tsv
+#   L8  cifrele RO-NO: numere care apar intr-o limba si lipsesc din cealalta (pas122)
 #       (teme.html sta in radacina hub-ului, publica si in sitemap-hub.xml; garda o
 #       cunoaste ca pagina de structura din pas119.)
 #
-# PROBLEMA = stricat (L1, L2, L5, L7); ATENTIE = de lucru (L3, L4, L6).
+# PROBLEMA = stricat (L1, L2, L5, L7); ATENTIE = de lucru (L3, L4, L6, L8).
 # Iesire 1 daca exista cel putin o PROBLEMA.
 #
 # POSIX: sh (ksh pe OpenBSD), awk (one-true-awk pe OpenBSD), sort, cmp, mktemp.
@@ -381,6 +382,72 @@ elif cmp -s "$W/index.html" "$INDEX"; then
 else
   problema "teme.html nu mai corespunde teme.tsv sau capitolelor de acum — sh $0 --scrie, apoi git diff"
 fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu L8 "Cifrele RO-NO: acelasi capitol, aceleasi numere in ambele limbi"
+# ════════════════════════════════════════════════════════════════════
+# pas122.  NO e traducerea lui RO: un numar care apare intr-o limba si lipseste din
+# cealalta e o posibila greseala de traducere (34 din 240 de erori gasite pana acum).
+# Filtre, ca sa ramana doar diferentele adevarate:
+#   - separatorul de mii: 43.000 (RO) = 43 000 (NO) = 43000; procentul fara „%”
+#   - trimiterile la versete (3:16, 3:5,8, 22:1-5): editiile difera prin numerotare
+#   - psalmii numiti fara verset (Psalmul 103 / Salme 104): numerotarea LXX / ebraica
+#   - anul editiilor: 1688 (Biblia de la Bucuresti) nu se numara; „Bibelen 1930” nici
+#     atat — NO de obicei nu numeste editia langa verset, RO da
+#   - secolele si deceniile: NO scrie „1400-tallet”, „1990-årene”, RO „secolul al
+#     XV-lea”, „anii '90” / „anii 1990” — se scot din ambele; la fel „det 21. århundre”
+#     (RO: „secolul XXI”, cu cifre romane)
+#   - intervalul de ani scurtat: 1946–47 = 1946–1947
+#   - numerele de o singura cifra: se scriu des in cuvinte („trei” / „tre”)
+# ATENTIE, nu PROBLEMA: o diferenta poate fi legitima — de citit capitol cu capitol.
+cat > "$W/l8.awk" <<'EOF'
+function norm(s, lg) {
+  gsub("\302\240", " ", s); gsub("\342\200\223", "-", s); gsub("\342\200\224", "-", s)
+  if (lg == "no") { gsub(/[0-9]+-(tallet|årene|tallets)/, " ", s); gsub(/Bibel(en)? (fra )?1930|1930-(bibelen|oversettelsen)/, " ", s)
+                    gsub(/[0-9]+\. (århundre|årtusen)/, " ", s) }
+  else gsub(/anii '?[0-9]+/, " ", s)
+  gsub(/[0-9]+:[0-9]+([-,][0-9]+)*/, " ", s)
+  gsub(/Psalm[a-z]* [0-9]+/, " ", s); gsub(/Salm[a-z]* [0-9]+/, " ", s); gsub(/Sal [0-9]+/, " ", s)
+  return s
+}
+function cifre(f, lg, dest,   l, s, t) {
+  s = ""; prev = ""; sep = ""
+  while ((getline l < f) > 0) s = s " " l
+  close(f); s = norm(s, lg)
+  while (match(s, /[0-9]+([. ][0-9][0-9][0-9])*(,[0-9]+)?/)) {
+    t = substr(s, RSTART, RLENGTH); s = substr(s, RSTART + RLENGTH)
+    gsub(/[. ]/, "", t)
+    # 1946-47: al doilea an, scurtat, se completeaza din primul
+    if (t ~ /^[0-9][0-9]$/ && prev ~ /^1[0-9][0-9][0-9]$|^20[0-9][0-9]$/ && sep == "-") t = substr(prev, 1, 2) t
+    prev = t; sep = substr(s, 1, 1)
+    if (t ~ /^[0-9]$/ || t == "1688") continue
+    dest[t] = 1
+  }
+}
+$1 == "MAP" {
+  split("", r); split("", n)
+  cifre(dir "/" $2 ".ro." $3, "ro", r); cifre(dir "/" $2 ".no." $4, "no", n)
+  if (("1688" in r) && ("1930" in n) && !("1688" in n) && !("1930" in r)) { delete r["1688"]; delete n["1930"] }
+  dr = ""; dn = ""
+  for (c in r) if (!(c in n)) dr = dr " " c
+  for (c in n) if (!(c in r)) dn = dn " " c
+  if (dr != "" || dn != "") print $2 "#" $6 "\t" dr "\t" dn
+  tot++
+}
+END { print "TOTAL\t" tot + 0 }
+EOF
+awk -F'\t' -v dir="$W/t" -f "$W/l8.awk" "$W/harta" > "$W/l8"
+n8=$(grep -c -v '^TOTAL' "$W/l8")
+t8=$(sed -n 's/^TOTAL\t//p' "$W/l8")
+# fiecare lista sortata, ca iesirea sa nu depinda de ordinea interna a lui awk
+grep -v '^TOTAL' "$W/l8" | awk -F'\t' '
+  function srt(s,   a, n, i, j, x, o) { n = split(s, a, " ")
+    for (i = 2; i <= n; i++) { x = a[i]; for (j = i - 1; j > 0 && (a[j] + 0 > x + 0 || (a[j] + 0 == x + 0 && a[j] > x)); j--) a[j + 1] = a[j]; a[j + 1] = x }
+    o = ""; for (i = 1; i <= n; i++) o = o " " a[i]; return o }
+  { r = srt($2); no = srt($3)
+    printf "%s —%s%s\n", $1, (r != "" ? " doar RO:" r : ""), (no != "" ? (r != "" ? ";" : "") " doar NO:" no : "") }' > "$W/l8b"
+if [ "$n8" -eq 0 ]; then ok "$t8 perechi de capitole, aceleasi numere in RO si NO"
+else atentie "$n8 din $t8 perechi de capitole au numere doar intr-o limba — de citit: traducere gresita sau diferenta legitima?"; lista "$W/l8b"; fi
 
 if [ "$GARDA" != 1 ]; then
   echo ""
