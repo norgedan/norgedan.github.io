@@ -494,6 +494,16 @@ mut_T146() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"https://norgedan.github
 mut_T147() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a></p>"; }
 mut_T148() { nd_ro "<!-- <p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a></p> -->"; }
 mut_T149() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a> <strong>falsificat</strong></p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
+
+# ── pas128: cifrele despre garda, regula „Știința și Creatorul”, erori.tsv pe ancore ──
+mut_T150() { rep norgedan.github.io/context-sesiune.html 's|</body>|<p>Garda are 22 de secțiuni.</p></body>|'; }
+mut_T151() { rep norgedan.github.io/context-sesiune.html 's|</body>|<p>La pas80, garda avea 22 de secțiuni.</p></body>|'; }
+mut_T152() { rm norgedan.github.io/scripts/teste-garda.sh; }
+mut_T153() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Știința a dovedit că Dumnezeu nu există.</p><footer|'; }
+mut_T154() { rep corpus/05-planeta-si-romania-ro.html 's|<footer|<p>Unii spun că știința a dovedit că Dumnezeu nu există; credem că e un pas filozofic.</p><footer|'; }
+mut_T155() { rep norgedan.github.io/scripts/erori.tsv 's|^\(pas59	corpus2-C	\)silicon	|\19	|'; }
+mut_T156() { rep norgedan.github.io/scripts/erori.tsv 's|^\(pas59	corpus2-C	\)silicon	|\1fantoma	|'; }
+mut_T157() { echo '{ }' > norgedan.github.io/scripts/capitole.awk; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -642,6 +652,14 @@ t T146 PICA    "nu duce la casa unei teme"        "[23] L9: legatura spre altcev
 t T147 PICA    "teme diferite in RO"              "[23] L9: rand de tema doar in RO"
 t T148 PICA    "unul sta intr-un comentariu" "[23] L9 santinela: rand de tema ascuns intr-un comentariu"
 t T149 PICA    "randul de tema are <strong>"     "[23] L9: alt tag decat <a> in randul de tema"
+t T150 PICA    "declara „22 de secțiuni” fara pas" "[8] „N de secțiuni” nedatat, alta cifra decat garda"
+t T151 TACE    "declara „22"                       "[8] „N de secțiuni” datat cu pasul: istorie, necomparat"
+t T152 PICA    "nu pot masura"                     "[8] santinela: suita de teste lipseste, cifra nu se masoara"
+t T153 SEMNAL  "fără etichetă, că știința"         "[13] „știința a dovedit că Dumnezeu nu există”, fara eticheta"
+t T154 TACE    "fără etichetă, că știința"         "[13] aceeasi propozitie, cu „credem”: tace"
+t T155 PICA    "se numeste prin ancora"            "[21] erori.tsv cu pozitie numerica in loc de ancora"
+t T156 PICA    "nu e un capitol RO din"            "[21] erori.tsv cu ancora inexistenta"
+t T157 PICA    "[21] lista ancorelor"              "[21] santinela: lista ancorelor e goala"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

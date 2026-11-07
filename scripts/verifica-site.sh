@@ -903,11 +903,36 @@ else
   echo "PROBLEMA lipseste $HUBNAME/status-proiect.html — tabloul de continuitate" >> "$W/nrerr"
 fi
 
+# pas128: cifrele despre garda insasi („N de secțiuni”, „N de teste”), in documentele de
+# lucru ale hub-ului.  Auditul din pas126 a gasit „22 de secțiuni” si „125 de teste”
+# ramase in urma, nevazute.  Masurat: secțiunile = randurile „titlu N” din garda,
+# testele = randurile „t T…” din teste-garda.sh.  Un rand care numeste un pas („pas92”,
+# „Pasul 92”) e istorie datata si nu se compara — cifra de atunci ramane a atunci.
+# Limita: o cifra curenta pe acelasi rand cu un pas nu e verificata.
+NSECT=$(grep -c '^titlu [0-9]' "$SCRIPT_DIR/verifica-site.sh")
+NTEST=0; [ -f "$SCRIPT_DIR/teste-garda.sh" ] && NTEST=$(grep -c '^t T' "$SCRIPT_DIR/teste-garda.sh")
+# santinela: fara masuratoare, verificarea n-ar vedea nimic
+[ "$NSECT" -gt 0 ] && [ "$NTEST" -gt 0 ] || echo "PROBLEMA [8] nu pot masura secțiunile ($NSECT) sau testele ($NTEST) gărzii — cifrele despre gardă nu sunt verificate" >> "$W/nrerr"
+RE_GARDA='[0-9]+ (de )?(secțiuni|sectiuni|teste)([^[:alnum:]]|$)'
+: > "$W/gardadat"
+for f in "$HUB/index.html" "$HUB/README.md" "$HUB/status-proiect.html" "$HUB/context-sesiune.html" "$HUB/ghid-github-norgedan.html"; do
+  [ -f "$f" ] || continue
+  sed 's/<[^>]*>/ /g; s/&nbsp;/ /g' "$f" | LC_ALL=C sed "s/$NBSP/ /g" | grep -iE 'pas[0-9]|pasul|pasii|pașii' | grep -oE "$RE_GARDA" >> "$W/gardadat"
+  sed 's/<[^>]*>/ /g; s/&nbsp;/ /g' "$f" | LC_ALL=C sed "s/$NBSP/ /g" | grep -viE 'pas[0-9]|pasul|pasii|pașii' |
+    grep -oE '[0-9]+ (de )?(secțiuni|sectiuni|teste)([^[:alnum:]]|$)' | while read -r nr cuv rest; do
+    rest=${rest%[!a-z]}; cuv=${cuv%[!a-z]}   # punctuatia de dupa cuvant nu intra in mesaj
+    case "$cuv $rest" in *secți*|*secti*) m=$NSECT; ce="secțiuni (randurile titlu din garda)" ;; *) m=$NTEST; ce="teste (randurile t T din teste-garda.sh)" ;; esac
+    if [ "$nr" -eq "$m" ]; then echo OK
+    else echo "PROBLEMA ${f#"$RADACINA"/} declara „$nr ${cuv}${rest:+ $rest}” fara pas; masurat $m $ce — aduce cifra la zi sau dateaz-o cu pasul"; fi
+  done >> "$W/nrerr"
+done
+
 nok=$(grep -c '^OK' "$W/nrerr")
 grep '^PROBLEMA' "$W/nrerr" | sort -u | while read -r l; do echo "${l#PROBLEMA }"; done > "$W/nrp"
 if [ -s "$W/nrp" ]; then while read -r l; do problema "$l"; done < "$W/nrp"; fi
 [ ! -s "$W/nrp" ] && ok "$nok declaratii verificate, toate corespund masuratorii"
 [ -s "$W/nrp" ] && [ "$nok" -gt 0 ] && ok "$nok declaratii corespund"
+ok "cifrele despre gardă (pas128): masurat $NSECT secțiuni si $NTEST teste; $(wc -l < "$W/gardadat" | tr -d ' ') mențiuni datate cu pasul lor (istorie, necomparate)"
 
 # ════════════════════════════════════════════════════════════════════
 titlu 9 "Structura HTML a documentelor"
@@ -1538,6 +1563,66 @@ else
   else
     ok "niciun cuvant de certitudine in textul nemarcat ($(wc -l < "$W/cert" | tr -d ' ') tipare)"
   fi
+fi
+
+# pas128: regula „Știința și Creatorul” (pas126, aprobată de Bogdan). Metoda științifică
+# nu-L pune pe Dumnezeu ca ipoteză; trecerea la „știința dovedește/infirmă pe Dumnezeu”
+# e un pas filozofic. O propoziție din textul public NEMARCAT care leagă știința, pe
+# Dumnezeu și un verb de dovadă, fără etichetă („credem”, „interpretare”; NO „vi tror”,
+# „tolkning”), se semnalează — de citit, nu blochează. Măsurat la scriere: zero locuri.
+cat > "$W/stiinta.awk" <<'AWK'
+# stiinta.awk (pas128) — regula „Știința și Creatorul”: o propoziție din textul public
+# NEMARCAT care spune că știința dovedește/infirmă pe Dumnezeu, fără etichetă
+# („credem”, „interpretare”; NO: „vi tror”, „tolkning”) — de citit.
+# LC_ALL=C: tolower doar pe ASCII; diacriticele se compara exact, octet cu octet.
+function litera(c) { return c ~ /[a-z0-9]/ || c > "~" }
+function cuvant(t, x,   poz, i, st) {
+  poz = 1
+  while ((i = index(substr(t, poz), x)) > 0) {
+    st = poz + i - 1
+    if (!(st > 1 && litera(substr(t, st - 1, 1))) && !litera(substr(t, st + length(x), 1))) return st
+    poz = st + 1
+  }
+  return 0
+}
+function oricare(t, lista,   n, a, q) { n = split(lista, a, "|"); for (q = 1; q <= n; q++) if (cuvant(t, a[q])) return 1; return 0 }
+function curat(s,   i, r, j) {
+  while ((i = index(s, M)) > 0) {
+    r = substr(s, i); j = index(r, "</span>")
+    if (j == 0) break
+    s = substr(s, 1, i - 1) " " substr(r, j + 7)
+  }
+  gsub(/<[^>]*>/, " ", s); gsub(/\302\255/, "", s); gsub(/&nbsp;/, " ", s); gsub(/[ \t\r]+/, " ", s)
+  return s
+}
+BEGIN {
+  M = "<span data-afirmatie=\""
+  STI = "Știința|Știință|Științei|Științific|Științifică|știința|știință|științei|stiinta|stiintei|științific|științifică|stiintific|stiintifica|vitenskap|vitenskapen|vitenskapelig|vitenskapelige|science"
+  DZ  = "dumnezeu|dumnezeul|dumnezeului|creator|creatorul|creatorului|gud|guds|skaper|skaperen"
+  VB  = "dovedește|dovedeste|dovedesc|demonstrează|demonstreaza|infirmă|infirma|infirmat|dovedit|demonstrat|nu există|nu exista|beviser|bevist|bevise|motbeviser|motbevist|finnes ikke|ikke finnes"
+  ET  = "credem|interpretare|credință|credinta|vi tror|tolkning|tro"
+}
+{ T = T " " curat($0) }
+END {
+  n = split(T, P, /[.!?] /)
+  for (i = 1; i <= n; i++) {
+    s = P[i]; ls = tolower(s)
+    if (oricare(ls, STI) && oricare(ls, DZ) && oricare(ls, VB) && !oricare(ls, ET)) {
+      sub(/^ +/, "", s); if (length(s) > 160) s = substr(s, 1, 157) "..."
+      print R "\t" s
+    }
+  }
+}
+AWK
+: > "$W/stihit"
+while read -r f; do
+  LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$W/stiinta.awk" "$f" >> "$W/stihit"
+done < "$W/pub13"
+if [ -s "$W/stihit" ]; then
+  atentie "$(wc -l < "$W/stihit" | tr -d ' ') propoziții spun, fără etichetă, că știința dovedește sau infirmă pe Dumnezeu — regula „Știința și Creatorul”: INTERPRETARE sau „credem”:"
+  awk -F'\t' '{print "             " $1; print "               ... " $2 " ..."}' "$W/stihit"
+else
+  ok "nicio propoziție fără etichetă despre știință care ar dovedi sau infirma pe Dumnezeu (regula „Știința și Creatorul”)"
 fi
 
 # ════════════════════════════════════════════════════════════════════
@@ -2297,19 +2382,26 @@ titlu 21 "Erorile gasite: tipurile, ca sa stim unde sa cautam"
 # Din pas67.  scripts/erori.tsv — o eroare gasita si corectata = un rand (TAB):
 #   pas  id  poz  tip  descriere  sursa
 #   tip: superlativ | atribuire | cifra | cronologie | atenuare | traducere | contradictie | alta
-#   poz: pozitia <h2> (ca in capitole-verificate.tsv) sau "-"; sursa: https://... sau "-"
+#   ancora: numele capitolului RO (ca in capitole-verificate.tsv, din pas128; pana atunci
+#           pozitia <h2>) sau "-";  sursa: https://... sau "-"
 # Nu blocheaza decat un rand stricat; altfel numara erorile pe tipuri.
+# pas128: ancora trebuie sa existe in documentul randului (lista din [18], capanc); o
+# pozitie numerica nu mai e primita — un capitol inserat mai sus ar muta-o in tacere.
 ERORI="$SCRIPT_DIR/erori.tsv"
 if [ ! -f "$ERORI" ]; then
   problema "lipseste scripts/erori.tsv"
 else
   grep -v '^#' "$ERORI" | grep -v '^[[:space:]]*$' > "$W/er"
-  awk -F'\t' -v MF="$W/m" '
-    BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 } }
+  # santinela: fara lista ancorelor din [18], verificarea ancorelor n-ar vedea nimic
+  [ -s "$W/capanc" ] || problema "[21] lista ancorelor capitolelor (din [18]) e goala — ancorele din erori.tsv nu pot fi verificate"
+  awk -F'\t' -v MF="$W/m" -v AF="$W/capanc" '
+    BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
+            while ((getline l < AF) > 0) { split(l, x, "\t"); anc[x[1] "\t" x[3]] = 1 } }
     NF != 6 { print "erori.tsv rand " NR ": " NF " coloane, trebuie 6"; next }
     $1 !~ /^pas[0-9]+[a-z]?$/ { print "erori.tsv rand " NR ": pas \"" $1 "\"" }
     !($2 in doc) { print "erori.tsv rand " NR ": \"" $2 "\" nu e in manifest" }
-    $3 != "-" && $3 !~ /^[1-9][0-9]*$/ { print "erori.tsv rand " NR ": poz \"" $3 "\"" }
+    $3 ~ /^[0-9]+$/ { print "erori.tsv rand " NR ": pozitia \"" $3 "\" — din pas128 capitolul se numeste prin ancora (ca in capitole-verificate.tsv)"; next }
+    $3 != "-" && ($2 in doc) && !(($2 "\t" $3) in anc) { print "erori.tsv rand " NR ": ancora \"" $3 "\" nu e un capitol RO din " $2 }
     $4 !~ /^(superlativ|atribuire|cifra|cronologie|atenuare|traducere|contradictie|alta)$/ { print "erori.tsv rand " NR ": tip \"" $4 "\"" }
     $5 ~ /^[[:space:]]*-?[[:space:]]*$/ { print "erori.tsv rand " NR ": fara descriere" }
     $6 != "-" && $6 !~ /^https:\/\// { print "erori.tsv rand " NR ": sursa \"" $6 "\" — https://... sau -" }
