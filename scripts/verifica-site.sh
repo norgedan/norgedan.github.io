@@ -2001,6 +2001,9 @@ function scoate(s, a, b,   out, i, j) {
 BEGIN { RS = "\001" }
 {
   s = scoate($0, "<!--", "-->"); s = scoate(s, "<script", "</script>"); s = scoate(s, "<style", "</style>")
+  # pas123: randul de tema e navigare, nu afirmatie — nu intra in amprenta.  Doar forma
+  # exacta <p class="nd-tema">; ce contine il verifica [23] L9 (doar legaturi spre case)
+  s = scoate(s, "<p class=\"nd-tema\"", "</p>")
   n = 0
   while ((i = index(s, "<h2")) > 0) {
     s = substr(s, i + 3); n++

@@ -22,10 +22,13 @@
 #       case de tema spre care nu trimite niciun alt document
 #   L7  pagina teme.html == ce se genereaza acum din teme.tsv
 #   L8  cifrele RO-NO: numere care apar intr-o limba si lipsesc din cealalta (pas122)
+#   L9  randurile de tema <p class="nd-tema">: doar navigare spre casele din teme.tsv
+#       (pas123) — garda [18] nu le pune in amprenta, deci trebuie sa nu poata duce
+#       nimic altceva decat legaturi
 #       (teme.html sta in radacina hub-ului, publica si in sitemap-hub.xml; garda o
 #       cunoaste ca pagina de structura din pas119.)
 #
-# PROBLEMA = stricat (L1, L2, L5, L7); ATENTIE = de lucru (L3, L4, L6, L8).
+# PROBLEMA = stricat (L1, L2, L5, L7, L9); ATENTIE = de lucru (L3, L4, L6, L8).
 # Iesire 1 daca exista cel putin o PROBLEMA.
 #
 # POSIX: sh (ksh pe OpenBSD), awk (one-true-awk pe OpenBSD), sort, cmp, mktemp.
@@ -86,12 +89,12 @@ awk -F'\t' -v hub="$HUBNAME" '
 # ── extragerea: capitole, texte, trimiteri ─────────────────────────
 # Cititorul comun: scripts/capitole.awk (acelasi ca in garda, din pas120).
 
-: > "$W/cap"; : > "$W/lnk"
+: > "$W/cap"; : > "$W/lnk"; : > "$W/nt"
 while IFS="$(printf '\t')" read -r doc lang repo cale site; do
   fis="$RADACINA/$repo/$cale"
   [ -f "$fis" ] || { echo "lipseste $fis" >&2; exit 2; }
   awk -v doc="$doc" -v lang="$lang" -v site="$site" -v base="$BASE" \
-      -v tdir="$W/t" -v udir="$W/u" -v lnk="$W/lnk" -v capf="$W/cap" \
+      -v tdir="$W/t" -v udir="$W/u" -v lnk="$W/lnk" -v capf="$W/cap" -v ntf="$W/nt" \
       -f "$SCRIPT_DIR/capitole.awk" "$fis" || exit 2
 done < "$W/f"
 
@@ -460,6 +463,65 @@ grep -v '^TOTAL' "$W/l8" | awk -F'\t' '
     printf "%s —%s%s\n", $1, (r != "" ? " doar RO:" r : ""), (no != "" ? (r != "" ? ";" : "") " doar NO:" no : "") }' > "$W/l8b"
 if [ "$n8" -eq 0 ]; then ok "$t8 perechi de capitole, aceleasi numere in RO si NO"
 else atentie "$n8 din $t8 perechi de capitole au numere doar intr-o limba — de citit: traducere gresita sau diferenta legitima?"; lista "$W/l8b"; fi
+
+# ════════════════════════════════════════════════════════════════════
+titlu L9 "Randurile de tema: doar legaturi spre casele din teme.tsv"
+# ════════════════════════════════════════════════════════════════════
+# pas123.  Forma singura admisa, intr-un capitol, pe un rand:
+#   RO  <p class="nd-tema">Tema: <a href="...casa...">Moldova</a> · <a ...>China</a></p>
+#   NO  <p class="nd-tema">Tema: <a href="...hjem...">Moldova</a></p>
+# Garda [18] scoate randul din amprenta capitolului (e navigare, nu afirmatie); de aceea
+# aici e PROBLEMA orice altceva: alt text decat „Tema:” / „Teme:” / „Temaer:” si „·”,
+# alt tag decat <a>, atribute in plus, legatura spre altceva decat casa unei teme in
+# aceeasi limba, textul legaturii diferit de titlul temei, teme diferite in RO si NO,
+# sau un rand nd-tema in afara textului capitolelor (comentariu, aside, nav).
+awk -F'\t' '
+  FILENAME == ARGV[1] { nt++; tid[nt] = $1; tro[nt] = $2; tno[nt] = $3; cd[nt] = $4; ca[nt] = $5; next }
+  FILENAME == ARGV[2] { r2n[$1 "\t" $2] = $4; n2r[$1 "\t" $3] = $2; rp[$1 "\t" $5] = $2; next }
+  FILENAME == ARGV[3] { site[$5] = $1 "\t" $2; next }
+  { d = $1; lg = $2; ps = $3; loc = d " (" lg ") capitolul " ps
+    nr++
+    if ($4 != "-") print "PROBLEMA " loc ": randul de tema are " $4
+    rest = $5; gsub("\302\267", "", rest); gsub(/ /, "", rest)
+    if (rest !~ /^(Tema|Teme|Temaer):$/) print "PROBLEMA " loc ": text in afara legaturilor: „" $5 "” (admis: Tema: si ·)"
+    if (NF < 6) print "PROBLEMA " loc ": randul de tema nu are nicio legatura"
+    k = (lg == "ro") ? ps : n2r[d "\t" ps]
+    for (i = 6; i <= NF; i++) {
+      nl++; j = index($i, "|"); tg = substr($i, 1, j - 1); tx = substr($i, j + 1); gsub(/^ +| +$/, "", tx)
+      jj = index(tg, ">"); pth = substr(tg, 1, jj - 1); anc = substr(tg, jj + 1)
+      if (!(pth in site)) { print "PROBLEMA " loc ": legatura „" tx "” nu duce la un document (" tg ")"; continue }
+      split(site[pth], z, "\t")
+      if (z[2] != lg) { print "PROBLEMA " loc ": legatura „" tx "” duce in alta limba (" z[2] ")"; continue }
+      g = 0
+      for (q = 1; q <= nt; q++) {
+        if (cd[q] != z[1]) continue
+        if (ca[q] == "") ok = (anc == "")
+        else ok = (lg == "ro") ? (anc == ca[q]) : (anc == r2n[z[1] "\t" rp[z[1] "\t" ca[q]]])
+        if (ok) { g = q; break }
+      }
+      if (!g) { print "PROBLEMA " loc ": legatura „" tx "” nu duce la casa unei teme din teme.tsv (" z[1] "#" anc ")"; continue }
+      tt = (lg == "ro") ? tro[g] : tno[g]
+      if (tx != tt) print "PROBLEMA " loc ": textul legaturii „" tx "” nu e titlul temei „" tt "”"
+      tem[d "\t" k "\t" lg] = tem[d "\t" k "\t" lg] " " tid[g]; ck[d "\t" k] = 1
+    }
+  }
+  END {
+    for (c in ck) if (tem[c "\tro"] != tem[c "\tno"]) { split(c, x, "\t")
+      print "PROBLEMA " x[1] " capitolul " x[2] ": teme diferite in RO (" tem[c "\tro"] " ) si NO (" tem[c "\tno"] " )" }
+    print "TOTAL " nr + 0 " " nl + 0 }' "$W/teme" "$W/map" "$W/f" "$W/nt" > "$W/l9"
+# santinela: fiecare class="nd-tema" din fisier trebuie sa fi fost citit, in text de capitol
+while IFS="$(printf '\t')" read -r doc lang repo cale site; do
+  b=$(grep -o 'class="nd-tema"' "$RADACINA/$repo/$cale" | wc -l | tr -d ' ')
+  v=$(awk -F'\t' -v d="$doc" -v l="$lang" '$1 == d && $2 == l' "$W/nt" | wc -l | tr -d ' ')
+  [ "$b" -ne "$v" ] && echo "PROBLEMA $doc ($lang): $b randuri nd-tema in fisier, $v citite in textul capitolelor — unul sta intr-un comentariu, aside, nav sau in afara capitolelor"
+done < "$W/f" >> "$W/l9"
+grep '^PROBLEMA' "$W/l9" | sort > "$W/l9p"
+while IFS= read -r l; do problema "${l#PROBLEMA }"; done < "$W/l9p"   # nu „| while”: contorul s-ar pierde
+set -- $(sed -n 's/^TOTAL //p' "$W/l9")
+if ! grep -q '^PROBLEMA' "$W/l9"; then
+  if [ "$1" -eq 0 ]; then ok "niciun rand de tema inca"
+  else ok "$1 randuri de tema, $2 legaturi — toate spre casele din teme.tsv, aceleasi teme in RO si NO"; fi
+fi
 
 if [ "$GARDA" != 1 ]; then
   echo ""

@@ -464,6 +464,20 @@ mut_T140() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|Ursul 
 mut_T141() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|Ursul rănit și pericolul său real în 2026</h2>|Ursul rănit și pericolul său real în 2026</h2><p>În ediția din 2026, România a fost pe locul 31.</p>|'
              rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|Den sårede bjørnen og den reelle faren i 2026</h2>|Den sårede bjørnen og den reelle faren i 2026</h2><p>I 2026-utgaven kom Romania på 31. plass.</p>|'; }
 mut_T142() { mut_T139; }
+# pas123: randul de tema <p class="nd-tema"> — navigare, scos din amprenta [18]; [23] L9
+# cere sa nu duca nimic altceva decat legaturi spre casele din teme.tsv.  T143 e testul
+# pentru care exista: un rand corect intr-un capitol VERIFICAT (corpus3-1#cap3) trece.
+NDRO='https://norgedan.github.io/corpus3/ro/5-dezinformarea-ro.html'
+NDNO='https://norgedan.github.io/corpus3/no/5-desinformasjon-no.html'
+nd_ro() { rep norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html "s|Katyn-ul românesc și cum este falsificat</h2>|Katyn-ul românesc și cum este falsificat</h2>$1|"; }
+nd_no() { rep norgedan.github.io/corpus3/no/1-romania-og-russland-no.html "s|Romanias Katyn og hvordan det forfalskes</h2>|Romanias Katyn og hvordan det forfalskes</h2>$1|"; }
+mut_T143() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a></p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
+mut_T144() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a> — 3 milioane</p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
+mut_T145() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Minciuna absoluta</a></p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
+mut_T146() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"https://norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html#cap9\">Dezinformarea</a></p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
+mut_T147() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a></p>"; }
+mut_T148() { nd_ro "<!-- <p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a></p> -->"; }
+mut_T149() { nd_ro "<p class=\"nd-tema\">Tema: <a href=\"$NDRO\">Dezinformarea</a> <strong>falsificat</strong></p>"; nd_no "<p class=\"nd-tema\">Tema: <a href=\"$NDNO\">Desinformasjon</a></p>"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -599,6 +613,13 @@ t T139 SEMNAL  "corpus3-2#cap5 — doar NO: 2023"   "[23] L8: un numar schimbat 
 t T140 TACE    "corpus3-2#cap5 —"                 "[23] L8: diferentele de forma (interval, psalm, secol, deceniu, mii) tac"
 t T141 TACE    "corpus3-2#cap5 —"                 "[23] L8: un an urmat de liniuta si alt numar mai tarziu nu e interval"
 t T142 TACE    " din  perechi"                    "[23] L8: totalul perechilor se scrie (fara sed GNU)"
+t T143 TRECE   "-"                                "[18]+[23] L9: rand de tema corect intr-un capitol verificat — amprenta neschimbata"
+t T144 PICA    "text in afara legaturilor"        "[23] L9: text strecurat in randul de tema"
+t T145 PICA    "nu e titlul temei"                "[23] L9: legatura cu alt text decat titlul temei"
+t T146 PICA    "nu duce la casa unei teme"        "[23] L9: legatura spre altceva decat casa temei"
+t T147 PICA    "teme diferite in RO"              "[23] L9: rand de tema doar in RO"
+t T148 PICA    "1 randuri nd-tema in fisier, 0 citite" "[23] L9 santinela: rand de tema ascuns intr-un comentariu"
+t T149 PICA    "randul de tema are <strong>"     "[23] L9: alt tag decat <a> in randul de tema"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

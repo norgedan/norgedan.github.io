@@ -10,6 +10,9 @@
 #                  capf   fisierul unde se scriu capitolele; gol = iesirea standard
 #                  tdir, udir, lnk  — doar pentru legaturi.sh: textul fiecarui
 #                         capitol (tot / fara marcaje) si trimiterile; goale = nimic
+#                  ntf    — doar pentru legaturi.sh (pas123): randurile de tema
+#                         <p class="nd-tema">, unul pe linie: doc limba poz defecte
+#                         rest-text, apoi perechi tinta|text-legatura
 # Iesire, un rand pe capitol:  doc TAB lang TAB pozitie TAB ancora TAB titlu
 # Portabil: one-true-awk (OpenBSD), mawk, gawk; LC_ALL=C.
 function attr(tag, a) {
@@ -46,7 +49,7 @@ function rezolva(h,   anc, i, n, p, k, out, seg) {
   return p "\t" anc
 }
 BEGIN {
-  RS = "<"; pos = 0; inch = 0; skip = ""; sd = 0; mark = 0; sdep = 0; incom = 0
+  RS = "<"; pos = 0; inch = 0; skip = ""; sd = 0; mark = 0; sdep = 0; incom = 0; innt = 0
   txtout = (tdir != "")
   sec = ""; inh2 = 0
   dir = site; sub(/[^\/]*$/, "", dir)
@@ -91,10 +94,24 @@ NR == 1 { next }
   } else if (nm == "/span" && mark > 0) {
     if (--sdep == 0) mark = 0
   }
+  # pas123: <p class="nd-tema"> — randul de navigare spre casele temelor
+  if (ntf != "" && !innt && nm == "p" && tag ~ /class="nd-tema"/) {
+    innt = 1; nrest = ""; nleg = ""; inA = 0; atx = ""; atg = ""
+    nbad = (tag == "p class=\"nd-tema\"") ? "" : " atribute-in-plus"
+    if (pos == 0 || !inch) nbad = nbad " in-afara-capitolelor"
+  } else if (innt) {
+    if (nm == "a" && !inA) { inA = 1; atx = ""; h = attr(tag, "href"); atg = (h == "") ? "-" : rezolva(h); if (atg == "") atg = "extern" }
+    else if (nm == "/a" && inA) { inA = 0; gsub(/\t/, ">", atg); nleg = nleg "\t" atg "|" atx }
+    else if (nm == "/p") {
+      innt = 0; gsub(/^ +| +$/, "", nrest); gsub(/ +/, " ", nrest)
+      print doc "\t" lang "\t" pos "\t" (nbad == "" ? "-" : substr(nbad, 2)) "\t" nrest nleg >> ntf
+    } else if (nm != "!--") nbad = nbad " <" nm ">"
+  }
   if (txtout && pos > 0 && inch && nm == "a") {
     h = attr(tag, "href")
     if (h != "") { r = rezolva(h); if (r != "") print doc "\t" lang "\t" pos "\t" r >> lnk }
   }
+  if (innt) { y = ent(txt); if (inA) atx = atx y; else nrest = nrest y }
   if (pos > 0 && inch) {
     x = ent(txt)
     if (index(bloc, " " nm " ") || index(bloc, " " substr(nm, 2) " ")) x = " " x
