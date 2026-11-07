@@ -401,25 +401,37 @@ titlu L8 "Cifrele RO-NO: acelasi capitol, aceleasi numere in ambele limbi"
 #   - numerele de o singura cifra: se scriu des in cuvinte („trei” / „tre”)
 # ATENTIE, nu PROBLEMA: o diferenta poate fi legitima — de citit capitol cu capitol.
 cat > "$W/l8.awk" <<'EOF'
+# 1946-47 -> 1946-1947: doar cand anul scurtat urmeaza imediat dupa liniuta (pas122b;
+# in pas122 regula privea orice numar de doua cifre de dupa „2026-”, si „2026-utgaven
+# ... pa 31. plass” devenea 2031)
+function interval(s,   o, a) {
+  o = ""
+  while (match(s, /(1[0-9]|20)[0-9][0-9]-[0-9][0-9]/)) {
+    if (substr(s, RSTART + RLENGTH, 1) ~ /[0-9]/ || (RSTART > 1 && substr(s, RSTART - 1, 1) ~ /[0-9]/)) {
+      o = o substr(s, 1, RSTART + RLENGTH - 1); s = substr(s, RSTART + RLENGTH); continue }
+    a = substr(s, RSTART, RLENGTH)
+    o = o substr(s, 1, RSTART - 1) substr(a, 1, 5) substr(a, 1, 2) substr(a, 6, 2)
+    s = substr(s, RSTART + RLENGTH)
+  }
+  return o s
+}
 function norm(s, lg) {
   gsub("\302\240", " ", s); gsub("\342\200\223", "-", s); gsub("\342\200\224", "-", s)
   if (lg == "no") { gsub(/[0-9]+-(tallet|årene|tallets)/, " ", s); gsub(/Bibel(en)? (fra )?1930|1930-(bibelen|oversettelsen)/, " ", s)
                     gsub(/[0-9]+\. (århundre|årtusen)/, " ", s) }
   else gsub(/anii '?[0-9]+/, " ", s)
   gsub(/[0-9]+:[0-9]+([-,][0-9]+)*/, " ", s)
+  s = interval(s)
   gsub(/Psalm[a-z]* [0-9]+/, " ", s); gsub(/Salm[a-z]* [0-9]+/, " ", s); gsub(/Sal [0-9]+/, " ", s)
   return s
 }
 function cifre(f, lg, dest,   l, s, t) {
-  s = ""; prev = ""; sep = ""
+  s = ""
   while ((getline l < f) > 0) s = s " " l
   close(f); s = norm(s, lg)
   while (match(s, /[0-9]+([. ][0-9][0-9][0-9])*(,[0-9]+)?/)) {
     t = substr(s, RSTART, RLENGTH); s = substr(s, RSTART + RLENGTH)
     gsub(/[. ]/, "", t)
-    # 1946-47: al doilea an, scurtat, se completeaza din primul
-    if (t ~ /^[0-9][0-9]$/ && prev ~ /^1[0-9][0-9][0-9]$|^20[0-9][0-9]$/ && sep == "-") t = substr(prev, 1, 2) t
-    prev = t; sep = substr(s, 1, 1)
     if (t ~ /^[0-9]$/ || t == "1688") continue
     dest[t] = 1
   }
@@ -438,7 +450,7 @@ END { print "TOTAL\t" tot + 0 }
 EOF
 awk -F'\t' -v dir="$W/t" -f "$W/l8.awk" "$W/harta" > "$W/l8"
 n8=$(grep -c -v '^TOTAL' "$W/l8")
-t8=$(sed -n 's/^TOTAL\t//p' "$W/l8")
+t8=$(awk -F'\t' '$1 == "TOTAL" { print $2 }' "$W/l8")   # pas122b: nu sed '\t' (GNU)
 # fiecare lista sortata, ca iesirea sa nu depinda de ordinea interna a lui awk
 grep -v '^TOTAL' "$W/l8" | awk -F'\t' '
   function srt(s,   a, n, i, j, x, o) { n = split(s, a, " ")

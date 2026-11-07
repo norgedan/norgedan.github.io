@@ -458,6 +458,12 @@ mut_T138() { rep norgedan.github.io/scripts/legaturi.sh 's|^MAN="$SCRIPT_DIR/doc
 mut_T139() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's/etter 2022, har/etter 2023, har/'; }
 mut_T140() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|Ursul rănit și pericolul său real în 2026</h2>|Ursul rănit și pericolul său real în 2026</h2><p>Foametea din 1946–1947; Psalmul 103 (Psalmii 103:1); secolul XX; anii 1990; 43.000 de oameni.</p>|'
              rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|Den sårede bjørnen og den reelle faren i 2026</h2>|Den sårede bjørnen og den reelle faren i 2026</h2><p>Hungersnøden 1946–47; Salme 104 (Sal 104:1); 1900-tallet; 1990-årene; 43 000 mennesker.</p>|'; }
+# pas122b: anul scurtat se completeaza doar imediat dupa liniuta; „2026-utgaven ... 31.
+# plass” ramane 31 (in pas122 devenea 2031 — alarma falsa).  T142: totalul L8 se scrie si
+# cu sed-ul de pe OpenBSD (pas122 il citea cu „sed 's/\t//'”, extensie GNU: „din  perechi”).
+mut_T141() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|Ursul rănit și pericolul său real în 2026</h2>|Ursul rănit și pericolul său real în 2026</h2><p>În ediția din 2026, România a fost pe locul 31.</p>|'
+             rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|Den sårede bjørnen og den reelle faren i 2026</h2>|Den sårede bjørnen og den reelle faren i 2026</h2><p>I 2026-utgaven kom Romania på 31. plass.</p>|'; }
+mut_T142() { mut_T139; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -591,6 +597,8 @@ t T137 PICA    "lipseste scripts/legaturi.sh"     "[23] santinela: scriptul de l
 t T138 PICA    "legaturi.sh s-a oprit cu eroare (cod 2)" "[23] santinela: scriptul de legaturi se opreste cu eroare"
 t T139 SEMNAL  "corpus3-2#cap5 — doar NO: 2023"   "[23] L8: un numar schimbat doar in NO se vede"
 t T140 TACE    "corpus3-2#cap5 —"                 "[23] L8: diferentele de forma (interval, psalm, secol, deceniu, mii) tac"
+t T141 TACE    "corpus3-2#cap5 —"                 "[23] L8: un an urmat de liniuta si alt numar mai tarziu nu e interval"
+t T142 TACE    " din  perechi"                    "[23] L8: totalul perechilor se scrie (fara sed GNU)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
