@@ -1,11 +1,14 @@
 #!/bin/sh
 # legaturi.sh — legaturile dintre documente, capitole si teme (pas118).
 #
-# Script SEPARAT de garda: verifica-site.sh ramane inghetata.  Daca legaturi.sh
-# se dovedeste stabil o saptamana-doua, Bogdan hotaraste daca intra in garda.
+# Un singur cod pentru legaturi: garda (verifica-site.sh, [23]) il ruleaza si ii
+# citeste iesirea; separat, scriptul da detaliile complete si rescrie teme.html.
 #
 #   sh ~/norgedan.github.io/scripts/legaturi.sh           verifica straturile L1-L7
 #   sh ~/norgedan.github.io/scripts/legaturi.sh --scrie   rescrie teme.html din teme.tsv
+#
+# Din pas121 ruleaza si in garda, ca sectiunea [23] (LEGATURI_GARDA=1: fara bannerul
+# propriu, L3 pe scurt — lista completa ramane aici, in rularea separata).
 #
 # Straturile:
 #   L1  ancorele capitolelor: fiecare <h2> are ancora (id pe h2 sau pe <section>-ul
@@ -63,10 +66,13 @@ problema() { echo "  PROBLEMA $1"; probleme=$((probleme + 1)); }
 # randurile unui fisier, indentate, sub o ATENTIE/PROBLEMA
 lista() { while IFS= read -r l; do echo "             $l"; done < "$1"; }
 
-echo "===================================================="
-echo "  legaturi.sh  ·  pas118  ·  mod: $MOD"
-echo "  radacina clonelor: $RADACINA"
-echo "===================================================="
+GARDA=${LEGATURI_GARDA:-0}
+if [ "$GARDA" != 1 ]; then
+  echo "===================================================="
+  echo "  legaturi.sh  ·  pas121  ·  mod: $MOD"
+  echo "  radacina clonelor: $RADACINA"
+  echo "===================================================="
+fi
 
 # ── fisierele documentelor: doc lang repo cale site ─────────────────
 # site = calea pe norgedan.github.io (hub-ul la radacina, celelalte sub /repo/)
@@ -194,6 +200,8 @@ awk -F'\t' '
 set -- $(sed -n 's/^TOTAL //p' "$W/l3")
 grep -v '^TOTAL' "$W/l3" > "$W/l3b"
 if [ "$1" -eq 0 ]; then ok "fiecare capitol care trateaza o tema trimite spre casa ei"
+elif [ "$GARDA" = 1 ]; then
+  atentie "$1 capitole trateaza o tema fara sa trimita spre casa ei — pe teme:$(awk '{ t = $1; sub(/:$/, "", t); printf "%s %s %s", (NR > 1 ? "," : ""), t, $2 }' "$W/l3b") (lista: sh scripts/legaturi.sh)"
 else atentie "$1 capitole trateaza o tema fara sa trimita spre casa ei (tema: capitol(aparitii)) — de legat, tema cu tema:"; lista "$W/l3b"; fi
 
 # ════════════════════════════════════════════════════════════════════
@@ -374,9 +382,11 @@ else
   problema "teme.html nu mai corespunde teme.tsv sau capitolelor de acum — sh $0 --scrie, apoi git diff"
 fi
 
-echo ""
-echo "===================================================="
-if [ "$probleme" -eq 0 ]; then echo "  REZULTAT: nicio problema (ATENTIE = lucru de facut, nu greseala)."
-else echo "  REZULTAT: $probleme probleme."; fi
-echo "===================================================="
+if [ "$GARDA" != 1 ]; then
+  echo ""
+  echo "===================================================="
+  if [ "$probleme" -eq 0 ]; then echo "  REZULTAT: nicio problema (ATENTIE = lucru de facut, nu greseala)."
+  else echo "  REZULTAT: $probleme probleme."; fi
+  echo "===================================================="
+fi
 [ "$probleme" -eq 0 ]

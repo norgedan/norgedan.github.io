@@ -444,6 +444,14 @@ mut_T129() { cv_ancora; }
 mut_T130() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|<section class="chapter" id="cap10">|<section class="chapter" id="norge-test"><h2>Norge i 2026</h2><p>Prove.</p></section><section class="chapter" id="cap10">|'; }
 mut_T131() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|<section class="chapter" id="cap10">|<section class="chapter" id="ekstra"><h2>Ekstra</h2><p>Prove.</p></section><section class="chapter" id="cap10">|'; }
 mut_T132() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|<footer|<aside><h2>Caseta</h2></aside><footer|'; }
+# pas121: legaturi.sh ruleaza in garda, ca [23]; fiecare strat care blocheaza are testul lui
+mut_T133() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|<section class="chapter" id="cap5">|<section class="chapter">|'; }
+mut_T134() { rep norgedan.github.io/scripts/teme.tsv 's|corpus3-2#cap6|corpus3-2#cap99|'; }
+# legatura dupa titlul lui cap4 (neverificat), ca sa nu atinga amprenta lui cap3 (verificat)
+mut_T135() { rep norgedan.github.io/corpus3/ro/3-europa-la-rascruce-ro.html 's|pe care Europa trebuie să îl înțeleagă</h2>|pe care Europa trebuie să îl înțeleagă</h2><p><a href="https://norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html#cap8">Moldova</a></p>|'; }
+mut_T136() { rep norgedan.github.io/teme.html 's|Casa temei · Temaets hjem|Casa · Hjem|'; }
+mut_T137() { rm norgedan.github.io/scripts/legaturi.sh; }
+mut_T138() { rep norgedan.github.io/scripts/legaturi.sh 's|^MAN="$SCRIPT_DIR/documente.tsv"|MAN="$SCRIPT_DIR/nu-exista.tsv"|'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -569,6 +577,12 @@ t T129 PICA    "corpus3-2#cap99: nu e ancora unui capitol" "[18] registrul numes
 t T130 TRECE   "-"                                "[18] capitol doar-NO (norge...) inaintea unui capitol verificat: perechea NO ramane corecta"
 t T131 PICA    "corpus3-2: 11 capitole RO, 12 NO" "[18] un capitol NO in plus, fara norge..., nu se poate pune fata in fata"
 t T132 PICA    "cele doua citiri ale capitolelor nu se potrivesc" "[18] santinela: <h2> intr-un aside — amprenta fara nume"
+t T133 PICA    "L1: corpus3-2 (ro) capitolul 5 fara ancora" "[23] L1: capitol fara ancora"
+t T134 PICA    "L2: teme.tsv china: casa „corpus3-2#cap99”" "[23] L2: casa unei teme nu exista"
+t T135 PICA    "L5: trimitere doar intr-o limba"  "[23] L5: trimitere spre alt document doar in RO"
+t T136 PICA    "L7: teme.html nu mai corespunde"  "[23] L7: teme.html schimbata de mana, nu din teme.tsv"
+t T137 PICA    "lipseste scripts/legaturi.sh"     "[23] santinela: scriptul de legaturi lipseste"
+t T138 PICA    "legaturi.sh s-a oprit cu eroare (cod 2)" "[23] santinela: scriptul de legaturi se opreste cu eroare"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

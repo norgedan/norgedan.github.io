@@ -2420,6 +2420,38 @@ else
   ok "nicio fraza adresata masinilor, nicio regula CSS care ascunde"
 fi
 
+# ════════════════════════════════════════════════════════════════════
+titlu 23 "Legaturile si temele: scripts/legaturi.sh (L1-L7)"
+# ════════════════════════════════════════════════════════════════════
+# pas121: legaturi.sh (pas118, in proba pana acum) ruleaza aici.  Un singur cod: garda
+# ii citeste iesirea, strat cu strat.  PROBLEMA (L1 ancore, L2 casa temei, L5 paritatea
+# trimiterilor RO-NO, L7 teme.html la zi) opreste push-ul; ATENTIE (L3 legaturi lipsa,
+# L4 cifre repetate in afara casei, L6 orfani) e lucru de facut.  Aici OK apare o data pe
+# strat, nu o data pe sectiune: fiecare strat e o verificare de sine statatoare.
+# Lista completa si rescrierea lui teme.html: sh scripts/legaturi.sh [--scrie]
+if [ ! -f "$SCRIPT_DIR/legaturi.sh" ]; then
+  problema "lipseste scripts/legaturi.sh — legaturile si temele nu pot fi verificate"
+else
+  LEGATURI_GARDA=1 sh "$SCRIPT_DIR/legaturi.sh" > "$W/leg23" 2>&1; lc=$?
+  strat=""; nl=0
+  while IFS= read -r l; do
+    case "$l" in
+      "[L"*"]"*) strat=${l%%"]"*}; strat=${strat#"["} ;;
+      "  PROBLEMA "*) problema "$strat: ${l#"  PROBLEMA "}"; nl=$((nl + 1)) ;;
+      "  ATENTIE  "*) atentie "$strat: ${l#"  ATENTIE  "}"; nl=$((nl + 1)) ;;
+      "  OK       "*) ok "$strat: ${l#"  OK       "}"; nl=$((nl + 1)) ;;
+      "            "*) echo "$l" ;;
+    esac
+  done < "$W/leg23"
+  # santinela: legaturi.sh iese cu 2 la o eroare interna (fisier lipsa, awk oprit);
+  # cu 1 doar daca a raportat PROBLEMA, deja numarata mai sus
+  if [ "$lc" -gt 1 ] || { [ "$lc" -eq 1 ] && ! grep -q '^  PROBLEMA ' "$W/leg23"; }; then
+    problema "legaturi.sh s-a oprit cu eroare (cod $lc): $(grep -v '^ *$' "$W/leg23" | tail -1)"
+  elif [ "$nl" -eq 0 ]; then
+    problema "legaturi.sh nu a raportat nimic — iesirea lui nu mai poate fi citita de garda"
+  fi
+fi
+
 # ── modul --surse (pas68): citatele exacte confruntate cu pagina lor, prin retea ──
 # Pentru fiecare rand cu citat: pagina se descarca (curl, sau ftp(1) pe OpenBSD), se
 # reduce la litere si cifre (fara tag-uri, entitati, punctuatie, ghilimele, spatii) si
