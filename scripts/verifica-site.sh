@@ -2073,7 +2073,10 @@ if [ "$MOD" = capitole ]; then
       { k = $1 "\t" ap[$1 "\t" $2]
         if ((k in t) && (k in an)) {
           schimbat = ($6 != "-" && $6 != ar[k]) || ($7 != "-" && $7 != an[k])
-          if (schimbat && (k in hp) && hp[k] == $4 "\t" $5) {
+          # pas120b: randul din HEAD se cauta dupa acelasi nume ca in registru (ancora);
+          # in pas120 se cauta dupa pozitie si refuzul nu se mai declansa (T107 pe OpenBSD)
+          ka = $1 "\t" $2
+          if (schimbat && (ka in hp) && hp[ka] == $4 "\t" $5) {
             print "REFUZ\t" $1 "#" $2 " „" t[k] "”: textul s-a schimbat, dar randul are tot " $4 ", " $5 " — dupa reverificarea la sursa scrie pasul si data noi in rand, apoi --capitole" > RAP
           } else {
             if ($6 == "-" || $7 == "-") print "NOU\t" $1 "#" $2 " „" t[k] "”" > RAP
