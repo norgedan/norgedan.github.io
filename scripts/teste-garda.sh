@@ -508,6 +508,15 @@ mut_T157() { echo '{ }' > norgedan.github.io/scripts/capitole.awk; }
 # ── pas129: pagina-capcana PubMed (7 nov.: cookie-uri + JavaScript, 206 caractere) ──
 pm_k() { printf '%s' 'https://pubmed.ncbi.nlm.nih.gov/21534650/' | cksum | cut -d' ' -f1; }
 mut_T158() { cache_surse; printf '<html><head><title>pubmed.ncbi.nlm.nih.gov</title></head><body class="x"><script>var challengeDomain="x";</script></body></html>' > "cache-surse/$(pm_k).html"; }
+
+# ── pas130: dovezi.html, generata din registre ─────────────────────────────────
+mut_T160() { rep norgedan.github.io/dovezi.html 's|FAPT · FAKTUM|FAPT verificat de mine · FAKTUM|'; }
+mut_T161() { rm norgedan.github.io/scripts/dovezi.sh; }
+mut_T162() { cp norgedan.github.io/dovezi.html corpus/dovezi.html; }
+mut_T163() { rep norgedan.github.io/scripts/surse.tsv 's|	2026-11-07	claude	«The Skynode|	2026-11-06	claude	«The Skynode|'; }
+mut_T164() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|<a class="nd-dov" href="https://norgedan.github.io/dovezi.html#zelenski-deepfake-2022" title="Dovada · Beviset">↗</a>||'; }
+mut_T165() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|dovezi.html#zelenski-deepfake-2022"|dovezi.html#pst-ntv-2026"|'; }
+mut_T166() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|<footer|<p>Text <a class="nd-dov" href="https://norgedan.github.io/dovezi.html#pst-ntv-2026" title="Dovada · Beviset">↗</a></p><footer|'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -665,6 +674,13 @@ t T155 PICA    "se numeste prin ancora"            "[21] erori.tsv cu pozitie nu
 t T156 PICA    "nu e un capitol RO din"            "[21] erori.tsv cu ancora inexistenta"
 t T157 PICA    "[21] lista ancorelor"              "[21] santinela: lista ancorelor e goala"
 t T158 SEMNAL  "pubmed.ncbi.nlm.nih.gov/21534650/ cere verificare anti-robot" "--surse: pagina PubMed cu verificare (challengeDomain) numita ca atare" --surse
+t T160 PICA    "dovezi.html nu e la zi"           "[13] dovezi.html schimbata de mana"
+t T161 PICA    "scripts/dovezi.sh lipseste"       "[13] santinela: generatorul dovezilor lipseste"
+t T162 PICA    "corpus/dovezi.html nu e in manifest" "[2] dovezi.html e structura doar in hub"
+t T163 PICA    "dovezi.html nu e la zi"           "[13] registrul surselor schimbat, pagina dovezilor neregenerata"
+t T164 PICA    "zelenski-deepfake-2022 — fara semnul de dovada" "[13] marcaj fara semnul de dovada ↗"
+t T165 PICA    "zelenski-deepfake-2022 — fara semnul de dovada" "[13] semnul de dovada trimite spre alt id"
+t T166 PICA    "un semn fara marcaj"              "[13] semn de dovada fara marcaj"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

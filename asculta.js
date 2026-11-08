@@ -34,7 +34,7 @@
   };
   var LCOD = NO ? 'nb-NO' : 'ro-RO';
   var BLOC = /^(P|H1|H2|H3|H4|H5|H6|LI|BLOCKQUOTE|DT|DD|FIGCAPTION|TD|TH|PRE)$/;
-  var SARI = 'script,style,noscript,nav,footer,button,select,option,svg,.audio-bar,#asculta-bara,[aria-hidden="true"]';
+  var SARI = 'script,style,noscript,nav,footer,button,select,option,svg,.audio-bar,#asculta-bara,[aria-hidden="true"],.nd-dov';
 
   var blocuri = [], idx = 0, bucati = [], bi = 0, activ = false, pauza = false, rata = 0.9;
   try { var r = parseFloat(localStorage.getItem('asculta-rata')); if (r > 0.4 && r < 2) rata = r; } catch (e) {}

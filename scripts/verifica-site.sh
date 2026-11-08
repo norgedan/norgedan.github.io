@@ -327,7 +327,7 @@ url_of() {
 # Pana la 18 oct 2026 codul butonului „Asculta” se numara si el (275 de cuvinte).
 cuvinte() {
   awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
-    | sed 's/<[^>]*>//g' | LC_ALL="$LOCALE_NUM" wc -w | tr -d ' '
+    | sed -e 's/<a class="nd-dov"[^>]*>[^<]*<\/a>//g' -e 's/<[^>]*>//g' | LC_ALL="$LOCALE_NUM" wc -w | tr -d ' '
 }
 
 # textul unei pagini pentru cautari (pas55): fara CSS si cod, fara tag-uri, cu
@@ -340,7 +340,7 @@ NBSP=$(printf '\302\240')
 SHY=$(printf '\302\255')
 text_normalizat() {
   awk '/<style>/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$1" \
-    | tr '\n\r\t' '   ' | LC_ALL=C sed -e 's/<[^>]*>/ /g' -e 's/&nbsp;/ /g' -e "s/$NBSP/ /g" -e "s/$SHY//g" | tr -s ' '
+    | tr '\n\r\t' '   ' | LC_ALL=C sed -e 's/<a class="nd-dov"[^>]*>[^<]*<\/a>//g' -e 's/<[^>]*>/ /g' -e 's/&nbsp;/ /g' -e "s/$NBSP/ /g" -e "s/$SHY//g" | tr -s ' '
 }
 
 # pagina interna = marcata noindex
@@ -454,6 +454,9 @@ while read -r f; do
   # tematic, generat de scripts/legaturi.sh din teme.tsv; publica, in sitemap-hub.xml.
   # Doar in hub: in alt repo, o teme.html ramane necunoscuta (T127).
   [ "$repo" = "$HUBNAME" ] && [ "$cale" = teme.html ] && continue
+  # pas130: dovezi.html, la fel — pagina publica a dovezilor, generata de
+  # scripts/dovezi.sh din afirmatii.tsv si surse.tsv; doar in hub (T162).
+  [ "$repo" = "$HUBNAME" ] && [ "$cale" = dovezi.html ] && continue
   e_intern "$f" && continue
   problema "$rel nu e in manifest (nici structura, nici noindex)"
   necunoscute=$((necunoscute + 1))
@@ -1244,7 +1247,10 @@ titlu 13 "Afirmatiile: registru, perechi RO-NO, datoria de verificare"
 
 # paginile publice (fara noindex), ca la [7]
 : > "$W/pub13"
-while read -r f; do e_intern "$f" || echo "$f" >> "$W/pub13"; done < "$W/html"
+# pas130: dovezi.html repeta textul afirmatiilor deja marcate in pagini, fara marcaj; nu
+# intra aici (detectorul de certitudine ar citi a doua oara aceleasi afirmatii).  Ea se
+# verifica intreaga, prin regenerare din registre (mai jos, in aceasta sectiune).
+while read -r f; do [ "$f" = "$HUB/dovezi.html" ] && continue; e_intern "$f" || echo "$f" >> "$W/pub13"; done < "$W/html"
 
 # marcajele din pagini, citite din tag-uri reale:  id TAB fisier TAB tag
 : > "$W/afuz"
@@ -1565,6 +1571,55 @@ else
   fi
 fi
 
+# pas130: dovezile la vedere.  dovezi.html arata cititorului, pentru fiecare afirmatie
+# marcata, eticheta si sursele (adresa, data, cine a citit-o).  E generata din registre;
+# garda o regenereaza si o compara — o pagina ramasa in urma opreste push-ul.
+if [ ! -f "$SCRIPT_DIR/dovezi.sh" ]; then
+  problema "[13] scripts/dovezi.sh lipseste — pagina dovezilor nu poate fi verificata"
+elif ! RADACINA="$RADACINA" sh "$SCRIPT_DIR/dovezi.sh" > "$W/dovezi.gen" 2> "$W/dovezi.err"; then
+  problema "[13] scripts/dovezi.sh s-a oprit cu eroare: $(head -1 "$W/dovezi.err")"
+elif [ ! -f "$HUB/dovezi.html" ]; then
+  problema "[13] dovezi.html lipseste din hub — sh scripts/dovezi.sh --scrie"
+elif ! cmp -s "$W/dovezi.gen" "$HUB/dovezi.html"; then
+  problema "[13] dovezi.html nu e la zi cu registrele (sau a fost schimbata de mana) — sh scripts/dovezi.sh --scrie"
+else
+  ok "dovezi.html la zi: $(grep -c '<section class="af"' "$HUB/dovezi.html") afirmatii cu eticheta si sursele lor, la vedere"
+fi
+# pas130: fiecare marcaj are, imediat dupa el, semnul de dovada spre propria afirmatie,
+# iar fiecare semn sta dupa un marcaj cu acelasi id.  Citit din textul brut (marcajele
+# pot fi imbricate: semnul vine dupa inchiderea lor).
+cat > "$W/dov.awk" <<'AWK'
+BEGIN { RS = "\001" }
+{
+  s = $0
+  while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break }; s = substr(s, 1, i - 1) substr(s, i + j + 2) }
+  t = s; nm = 0
+  while ((i = index(t, "<span data-afirmatie=\"")) > 0) {
+    t = substr(t, i); id = substr(t, 23); id = substr(id, 1, index(id, "\"") - 1)
+    t = substr(t, 2); d = 1; k = 0
+    while (d > 0) {
+      a = index(t, "<span"); b = index(t, "</span>")
+      if (b == 0) { print R "\t" id "\tmarcaj neinchis"; d = -1; break }
+      if (a > 0 && a < b) { d++; t = substr(t, a + 5) } else { d--; t = substr(t, b + 7) }
+    }
+    if (d < 0) break
+    nm++
+    w = "<a class=\"nd-dov\" href=\"https://norgedan.github.io/dovezi.html#" id "\""
+    if (substr(t, 1, length(w)) != w) print R "\t" id "\tfara semnul de dovada imediat dupa marcaj (sau semnul trimite spre alt id)"
+  }
+  ns = 0; t = s
+  while ((i = index(t, "<a class=\"nd-dov\"")) > 0) { ns++; t = substr(t, i + 1) }
+  if (ns != nm) print R "\t-\t" ns " semne de dovada, " nm " marcaje — un semn fara marcaj"
+}
+AWK
+: > "$W/dovp"
+while read -r f; do LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$W/dov.awk" "$f" >> "$W/dovp"; done < "$W/pub13"
+if [ -s "$W/dovp" ]; then
+  while IFS="$TAB" read -r r id m; do problema "[13] $r: $id — $m"; done < "$W/dovp"
+else
+  ok "fiecare marcaj din pagini are semnul de dovada ↗ spre dovezi.html#id"
+fi
+
 # pas128: regula „Știința și Creatorul” (pas126, aprobată de Bogdan). Metoda științifică
 # nu-L pune pe Dumnezeu ca ipoteză; trecerea la „știința dovedește/infirmă pe Dumnezeu”
 # e un pas filozofic. O propoziție din textul public NEMARCAT care leagă știința, pe
@@ -1779,6 +1834,7 @@ function e_verse(tag,   v, n, w, i) {
   return 0
 }
 function norm(s) {
+  gsub(/<a class="nd-dov"[^>]*>[^<]*<\/a>/, " ", s)   # pas130: semnul de dovada nu e din verset
   gsub(/<[^>]*>/, " ", s)
   gsub(/&nbsp;/, " ", s); gsub(/&amp;/, "\\&", s); gsub(/&quot;/, " ", s); gsub(/&#39;/, "'", s)
   gsub(/„|“|”|"|«|»|‹|›/, " ", s)
@@ -2089,6 +2145,9 @@ BEGIN { RS = "\001" }
   # pas123: randul de tema e navigare, nu afirmatie — nu intra in amprenta.  Doar forma
   # exacta <p class="nd-tema">; ce contine il verifica [23] L9 (doar legaturi spre case)
   s = scoate(s, "<p class=\"nd-tema\"", "</p>")
+  # pas130: semnul de dovada (<a class="nd-dov">↗</a>) e navigare spre dovezi.html, nu
+  # text; nu intra in amprenta.  Perechea marcaj–semn o verifica [13].
+  s = scoate(s, "<a class=\"nd-dov\"", "</a>")
   n = 0
   while ((i = index(s, "<h2")) > 0) {
     s = substr(s, i + 3); n++
