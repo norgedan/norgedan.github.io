@@ -296,6 +296,66 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra 4 --citat  # după: ci
 sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&gt;'  # sursa susține: rândul lui Bogdan în surse.tsv + dovezi.html</pre>
 <p>Verdictele suitei: <strong>PICA</strong> (trebuie să blocheze, din motivul corect), <strong>TRECE</strong>, <strong>SEMNAL</strong> (atenționarea trebuie să apară), <strong>TACE</strong>, <strong>ABSENT</strong>, <strong>DESCHIS</strong> (vulnerabilitate cunoscută — azi niciuna). Contra-proba: <code>SCRIPT=/cale/verifica-vechi.sh sh …/teste-garda.sh</code>. Testele <code>--surse</code> sunt cele lente (așteaptă limitele de timp), mai ales pe <code>mksh</code>.</p>
 
+<h2 id="sesiunea-9-noiembrie">Sesiunea 7–9 noiembrie 2026 (pas126–pas135): ce s-a făcut, ce a rămas</h2>
+<p>Scris la cererea lui Bogdan, la sfârșitul zilei de 9 noiembrie, ca să pornim de aici. Planul viu rămâne în <a href="https://norgedan.github.io/status-proiect.html">status-proiect.html</a> (3a — punctele slabe, 3b — pașii hotărâți); aici e povestea sesiunii: problemele găsite, soluțiile și în ce stadiu e fiecare. Starea la închidere (pas135, garda la Bogdan): totul împins în toate repo-urile, garda curată, 208 afirmații, 169 cu dovezi în surse.tsv, datoria 33, citite doar de Claude 157 și de un om 12.</p>
+
+<h3>Regulile noi ale sesiunii (în „Standardul nostru”, mai sus)</h3>
+<ul>
+  <li><strong>21 — garda se îmbunătățește pe dovadă, nu pe gust</strong> (pas129): o slăbiciune numită, cu un test care o arată, sau o măsurătoare înainte și după; POSIX, fără GNU; acțiunile din workflow fixate pe commit, verificate lunar. Însemnătate: unealta nu mai crește „pentru că se poate”.</li>
+  <li><strong>22 — copiile lui Claude cât mai aproape de ale lui Bogdan</strong> (pas129): ce diferă se spune la predare; nicio excepție în gardă pentru mediul lui Claude. Însemnătate: ce trece la Claude trebuie să treacă și pe OpenBSD.</li>
+  <li><strong>23 — cititorul vede dovezile</strong> (pas130): semnul ↗ după fiecare afirmație marcată, spre dovezi.html. Însemnătate: încrederea nu se cere, se arată.</li>
+  <li><strong>24 — punctele slabe nu se pierd și au întâietate</strong> (pas132): orice „Slab”/„Neverificat” intră în status 3a, cu gravitatea, iar pasul următor le ia întâi; curățenia doar listează, șterge Bogdan. Însemnătate: o slăbiciune spusă o dată nu mai poate fi uitată.</li>
+  <li><strong>Ordinea după gravitate</strong> (auditul din 8 nov., aprobată de Bogdan) și <strong>alternanța</strong>: un pas de structură, apoi unul de conținut.</li>
+</ul>
+
+<h3>Pașii, pe scurt, și ce înseamnă</h3>
+<ul>
+  <li><strong>pas126–pas127a [structură]:</strong> auditul regulilor; suita nu mai poate „trece” fără să ruleze (santinele: VSH lipsă oprește suita, exit 126/127 = „verificarea n-a rulat”, martorul T00 picat oprește tot).</li>
+  <li><strong>pas127 [conținut]:</strong> corpus-06 „Pericolele”, verificat la sursă.</li>
+  <li><strong>pas128 [structură]:</strong> garda își verifică propriile cifre (secțiuni, teste) în pagini; regula „Știința și Creatorul” în [13]; erori.tsv pe ancore de capitol.</li>
+  <li><strong>pas129 [structură]:</strong> auditul de securitate și viteză; regulile 21 și 22.</li>
+  <li><strong>pas130 [structură]:</strong> dovezi.html și semnul ↗ (gravitatea 1).</li>
+  <li><strong>pas131 [conținut]:</strong> corpus-01#geneza: vârstele de milioane de ani păstrate ca ESTIMARE, cu metoda (datarea radiometrică) și premisa ei, plus cele două poziții creștine — Bogdan voia să le scoată, Claude a obiectat, Bogdan a acceptat varianta cinstită.</li>
+  <li><strong>pas132 [structură]:</strong> regula 24; legăturile din text lizibile în toate documentele (și verificate de [3]); <code>--curatenie</code>.</li>
+  <li><strong>pas133 [conținut]:</strong> datoria, lotul 1 (7 afirmații); delta „circa 82–83%”; „în formele ei” la Geneza.</li>
+  <li><strong>pas134 [structură]:</strong> <code>--mostra</code> și <code>--confirma</code> (gravitatea 2): Bogdan citește dovezile, fără citatul lui Claude întâi; 4 pe săptămână, la cererea lui (propunerea era 2).</li>
+  <li><strong>pas135 [conținut]:</strong> datoria, lotul 2 (4 afirmații); Crick citit întreg; aplica.sh spune calea exactă.</li>
+</ul>
+
+<h3>Problemele găsite și soluțiile, fiecare în stadiul ei</h3>
+<ul>
+  <li><strong>Garda verifică forma dovezilor, nu și dacă sursa spune ce scrie în citat; 153 de dovezi erau citite doar de Claude.</strong> Soluția: <code>--mostra</code> / <code>--confirma</code> (pas134). Stadiu: <em>făcut</em>; prima mostră reală — <em>urmează</em>, sâmbătă 14 nov. Ce dă: fără nicio eroare în n citiri, rata de erori e sub circa 3/n cu 95% încredere; o eroare găsită cere reverificarea tuturor.</li>
+  <li><strong>Citatul lui Crick („aproape un miracol”) stătea fără fraza imediat următoare</strong>, în care el spune că asta nu înseamnă că viața n-ar fi putut apărea prin reacții chimice obișnuite. Găsit în cartea dată de Bogdan (Life Itself, p. 88). Soluția: formularea aprobată, RO și NO (pas135). Stadiu: <em>făcut</em>.</li>
+  <li><strong>„Ateu” pentru Crick:</strong> el se descria „agnostic cu o puternică înclinație spre ateism”. Bogdan a fost de acord pe 9 nov. Stadiu: <em>urmează</em> — Claude propune formularea exactă RO/NO, cu sursa citită; de verificat și Hoyle.</li>
+  <li><strong>Datarea lui Iov:</strong> fraza noastră alege o singură poziție (poezia sec. VI–IV), iar Britannica dă în alt articol sec. VIII ca probabil. Stadiu: <em>urmează</em> — o sursă academică, apoi „vedem ce zice sursa” (Bogdan).</li>
+  <li><strong>Datoria de surse:</strong> 44 → 37 (pas133) → 33 (pas135). Stadiu: <em>în lucru</em>, loturi de 4–10. neonicotinoide-ue și nbim-ai — sursele refuză citirea automată, de citit pe altă cale.</li>
+  <li><strong>Claude a dat aplica.sh numele repo-ului în loc de cale</strong> (pas134; a doua oară după pas108). aplica.sh a refuzat corect, nimic stricat. Soluția: aplica.sh tipărește acum calea exactă (pas135). Stadiu: <em>făcut</em>.</li>
+  <li><strong>T30 a picat din alt motiv</strong> (pas135): site-ul are 210.999 de cuvinte, iar mutația lui adăuga un cuvânt și trecea pragul din [8]. Soluția: mutația schimbă un cuvânt fără să adauge. Stadiu: <em>făcut</em>. Consecință: următorul text nou cere „211 000” în index — garda o spune.</li>
+  <li><strong>Garda e un singur fișier mare</strong>, iar suita rulează garda întreagă la fiecare test (peste o oră). Propunerea lui Bogdan: fiecare regulă un script. Aprobată în forma recomandată: dirijor, pregătire comună, registru cu amprente (un script lipsă = PROBLEMA), mutare câte o secțiune cu ieșire identică octet cu octet, pilot [21] sau [20], măsurat. Stadiu: <em>urmează</em> — pasul de structură următor.</li>
+  <li><strong>dovezi.html arată o singură dată pe adresă</strong> (a lui Claude), chiar după confirmarea lui Bogdan. Stadiu: <em>urmează</em> (Mediu).</li>
+  <li><strong>Celelalte puncte slabe</strong> (status 3a): verificarea lunară a acțiunilor (14 nov.), L4 corpus3-5#cap4 25.000, „sursa notata” fără diacritice, citatul de la Regensburg, pelicanii din sursă terțiară. Stadiu: <em>urmează</em>, după gravitate.</li>
+</ul>
+
+<h3>Lecțiile zilei</h3>
+<ul>
+  <li><strong>Un citat se citește cu fraza de după</strong> (Crick): fără ea, citatul spunea mai mult decât a spus autorul. Adevărul complet, nu cel convenabil, întărește mărturia.</li>
+  <li><strong>Argumentele unui script se iau din antetul lui, nu din memorie</strong> (aplica.sh); iar o greșeală repetată se repară în unealtă, nu doar într-o lecție.</li>
+  <li><strong>Un test nu se leagă de un număr care se schimbă cu site-ul</strong> — a treia oară (T148, T30): mutațiile nu adaugă cuvinte.</li>
+  <li><strong>Un test ABSENT trece și pe garda veche</strong> dacă mesajul de eroare nu are tiparul (T172): e nevoie de un test pereche care arată că modul a rulat (T180).</li>
+  <li><strong>O dovadă care acoperă doar jumătate din afirmație e adevărul convenabil</strong>: garda ar fi acceptat hoyle-crick doar cu Hoyle; s-a spus deschis și s-a căutat cartea.</li>
+  <li><strong>Sursele se contrazic și între ele</strong> (SSRN ~63 / revista ~62; Britannica VI–IV / VIII): urmăm versiunea publicată și spunem diferența.</li>
+  <li><strong>Mai multe verificări ajută doar dacă fiecare e făcută bine</strong>: 4 dovezi citite cu atenție pe săptămână, nu zece în grabă; omul caută singur înainte să vadă citatul lui Claude.</li>
+</ul>
+
+<h3>Mâine, în ordine</h3>
+<ol>
+  <li>Începutul de sesiune: starea clonelor, jurnalul, cheia (Rutina de sesiune, mai jos).</li>
+  <li>[structură] Pilotul „fiecare regulă un script”: [21] sau [20] mutată în <code>scripts/reguli/</code>, cu registrul de amprente și dovada octet cu octet; timpii măsurați înainte și după.</li>
+  <li>[conținut] Crick (și Hoyle): eticheta exactă, RO și NO, cu sursa citită — propunere, apoi aprobarea lui Bogdan; apoi datoria, lotul 3, cu iov-datare dacă găsim sursa academică.</li>
+  <li>Sâmbătă 14 nov.: rularea săptămânală (suita completă pe ksh, <code>--surse</code>, <code>--curatenie</code>, prima <code>--mostra</code>) și verificarea lunară a acțiunilor fixate.</li>
+  <li>Apoi ordinea după gravitate: (3) protecția ramurii și semnarea commiturilor — Bogdan, în setările GitHub; (4) o singură sursă a sursei; (5) lista de risc ponderată și tipul „alta” despărțit; (7) ordinea internă; (8) graful JSON-LD. Conținut nou: „Puterea adevărului” — fișa întâi.</li>
+</ol>
+
 <h2>Ce urmează</h2>
 <p>În <a href="https://norgedan.github.io/status-proiect.html">status-proiect.html</a>, „Pașii următori” — o singură casă pentru plan (pas126; aici rămăsese planul din 2 noiembrie, cu pas103–pas106, făcuți de mult).</p>
 
