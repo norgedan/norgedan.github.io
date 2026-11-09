@@ -6,7 +6,6 @@ antrenament-mental
 canal-bosfor
 celula-minima
 consonanta-tsimane
-delta-romania
 eichmann-stangneth
 fluier-paleolitic
 foneme-sugari
@@ -25,7 +24,6 @@ movile-chemosinteza
 movile-izolare
 movile-specii
 muzica-universala
-mythos-leak
 nbim-ai
 neonicotinoide-ue
 neshamah-frecventa
@@ -33,13 +31,8 @@ neuroni-oglinda
 nucleu-temperatura
 paduri-virgine
 pamant-sferic
-pelicani-delta
-petrol-1857
 polenizare
-rat-park
-rosia-montana
 senicid
-sturioni-interdictie
 vag-aferent
 vosoughi-2018
 zimbardo-critica
