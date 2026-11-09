@@ -57,8 +57,14 @@ case "${1:-}" in
   --push)    MOD=push; PUSH_REPO="${2:-}" ;;
   --cauta)   MOD=cauta; CAUTA="${2:-}" ;;
   --cifre)   MOD=cifre; CIFRE_DOC="${2:-}" ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document>]" >&2; exit 2 ;;
+  --curatenie) MOD=curatenie ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document> | --curatenie]" >&2; exit 2 ;;
 esac
+# pas132: rutina de curatenie (regula 24) — doar listeaza; sterge doar Bogdan
+if [ "$MOD" = curatenie ]; then
+  [ -f "$SCRIPT_DIR/curatenie.sh" ] || { echo "PROBLEMA scripts/curatenie.sh lipseste" >&2; exit 1; }
+  RADACINA="$RADACINA" exec sh "$SCRIPT_DIR/curatenie.sh"
+fi
 
 # Locale pentru numararea cuvintelor: wc -w numara diferit pe text cu
 # diacritice in POSIX fata de UTF-8.  Primul locale UTF-8 disponibil.
@@ -590,6 +596,17 @@ awk -F'\t' '{ if ($2 == "ro") r[$1] = $3; else n[$1] = $3 } END { for (k in r) i
 nst=$(wc -l < "$W/stare" | tr -d ' ')
 [ "$nst" -gt 0 ] || problema "Corpus III: niciun „Stare la” citit (santinela)"
 [ "$nst" -gt 0 ] && ok "Corpus III: $nst fisiere datate („Stare la”), RO si NO cu aceeasi luna"
+# pas132: legaturile din text se citesc pe fondul inchis.  Pana la pas130, albastrul
+# implicit al browserului le facea ilizibile (20 de fisiere); regula CSS de atunci trebuie
+# sa ramana in fiecare fisier-document.
+ncss=0
+while IFS="$TAB" read -r repo cale limba id colectie titlu; do
+  f="$RADACINA/$repo/$cale"; [ -f "$f" ] || continue
+  if grep -qF 'p a:not([class])' "$f"; then ncss=$((ncss + 1))
+  else problema "$repo/$cale: fara regula de culoare pentru legaturile din text (p a:not([class]) — pas130); pe fondul inchis legaturile raman albastre, ilizibile"; fi
+done < "$W/docs"
+[ "$ncss" -gt 0 ] || problema "[3] niciun fisier-document citit pentru regula legaturilor (santinela)"
+[ "$ncss" -eq "$(wc -l < "$W/docs" | tr -d ' ')" ] && ok "legaturile din text: regula de culoare in toate cele $ncss fisiere-document"
 
 # ════════════════════════════════════════════════════════════════════
 titlu 4 "Linkuri interne si ancore — tot site-ul, din tag-uri reale"

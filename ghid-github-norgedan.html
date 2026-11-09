@@ -817,6 +817,8 @@ done &lt; /tmp/lista</pre>
 <span class="cmd">git -C ~/norgedan.github.io diff scripts/capitole-verificate.tsv</span>
 <span class="comment"># citatele din surse.tsv recitite în pagina lor (rețea; semnalează)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --surse</span>
+<span class="comment"># sâmbăta, curățenia (regula 24): fișiere rătăcite, publicate fără rost, patch-uri vechi, temporare rămase — doar listează, șterge Bogdan</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie</span>
 <span class="comment"># suita gărzii, după orice schimbare a verificării (~35 de minute, clonele neatinse)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/teste-garda.sh</span>
 <span class="comment"># la push: automat, prin garda (aduce starea tuturor de pe GitHub)</span></pre>

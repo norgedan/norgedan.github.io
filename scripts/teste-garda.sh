@@ -517,6 +517,13 @@ mut_T163() { rep norgedan.github.io/scripts/surse.tsv 's|	2026-11-07	claude	«Th
 mut_T164() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|<a class="nd-dov" href="https://norgedan.github.io/dovezi.html#zelenski-deepfake-2022" title="Dovada · Beviset">↗</a>||'; }
 mut_T165() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|dovezi.html#zelenski-deepfake-2022"|dovezi.html#pst-ntv-2026"|'; }
 mut_T166() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|<footer|<p>Text <a class="nd-dov" href="https://norgedan.github.io/dovezi.html#pst-ntv-2026" title="Dovada · Beviset">↗</a></p><footer|'; }
+
+# ── pas132: rutina de curatenie (doar listeaza) si regula de culoare a legaturilor ──
+mut_T167() { : > corpus/main; }
+mut_T168() { cp norgedan.github.io/og.png norgedan.github.io/zz-uitat.png && git -C norgedan.github.io add zz-uitat.png; }
+mut_T169() { : > norgedan.github.io/zz-nimic.txt; }
+mut_T170() { mkdir -p Downloads && : > Downloads/pas999-test.patch; }
+mut_T171() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|p a:not(\[class\]),li a:not(\[class\]){[^}]*}||'; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -681,6 +688,11 @@ t T163 PICA    "dovezi.html nu e la zi"           "[13] registrul surselor schim
 t T164 PICA    "zelenski-deepfake-2022 — fara semnul de dovada" "[13] marcaj fara semnul de dovada ↗"
 t T165 PICA    "zelenski-deepfake-2022 — fara semnul de dovada" "[13] semnul de dovada trimite spre alt id"
 t T166 PICA    "un semn fara marcaj"              "[13] semn de dovada fara marcaj"
+t T167 SEMNAL  "corpus/main — neurmarit de git"   "--curatenie: fisier neurmarit (ca „main” din pas123) listat" --curatenie
+t T168 SEMNAL  "zz-uitat.png — nimic nu trimite spre el" "--curatenie: imagine publicata spre care nu trimite nimic" --curatenie
+t T169 ABSENT  "og.png — nimic nu trimite"        "--curatenie: imaginea folosita (og.png) nu e listata" --curatenie
+t T170 SEMNAL  "pas999-test.patch — patch deja aplicat" "--curatenie: patch vechi in Descarcari listat" --curatenie
+t T171 PICA    "fara regula de culoare pentru legaturile din text" "[3] fisier-document fara regula de culoare a legaturilor"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
