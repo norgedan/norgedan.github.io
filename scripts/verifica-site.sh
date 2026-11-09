@@ -16,6 +16,8 @@
 #                         rescrie titlul si amprentele in scripts/capitole-verificate.tsv
 #   ... --surse           ca verificarea manuala + citatele exacte din surse.tsv confruntate
 #                         cu pagina lor, prin retea (pas68)
+#   ... --mostra [N] [--citat]   N dovezi citite doar de Claude, pentru ochiul omului (pas134)
+#   ... --confirma <id> <url>    omul a citit sursa si o sustine: randul lui in surse.tsv
 #
 # Cod de iesire: 0 = curat, 1 = probleme, 2 = utilizare gresita.
 #
@@ -58,8 +60,14 @@ case "${1:-}" in
   --cauta)   MOD=cauta; CAUTA="${2:-}" ;;
   --cifre)   MOD=cifre; CIFRE_DOC="${2:-}" ;;
   --curatenie) MOD=curatenie ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document> | --curatenie]" >&2; exit 2 ;;
+  --mostra|--confirma) MOD=mostra ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document> | --curatenie | --mostra [N] [--citat] | --confirma <id> <url>]" >&2; exit 2 ;;
 esac
+# pas134: ochi de om pe dovezi (gravitatea 2) — mostra.sh alege, arata si scrie confirmarea
+if [ "$MOD" = mostra ]; then
+  [ -f "$SCRIPT_DIR/mostra.sh" ] || { echo "PROBLEMA scripts/mostra.sh lipseste" >&2; exit 1; }
+  exec sh "$SCRIPT_DIR/mostra.sh" "$@"
+fi
 # pas132: rutina de curatenie (regula 24) — doar listeaza; sterge doar Bogdan
 if [ "$MOD" = curatenie ]; then
   [ -f "$SCRIPT_DIR/curatenie.sh" ] || { echo "PROBLEMA scripts/curatenie.sh lipseste" >&2; exit 1; }

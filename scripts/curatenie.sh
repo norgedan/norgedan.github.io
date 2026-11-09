@@ -10,7 +10,7 @@
 #   [c2] pe site: imagini, PDF-uri, scripturi si stiluri urmarite de git, dar spre care
 #        nu trimite nimic (niciun fisier text din niciun repo nu le numeste)
 #   [c3] pe masina: patch-uri vechi in Descarcari, directoare temporare ramase de la
-#        rulari intrerupte (/tmp/verifica-site.*, teste-garda.*, dovezi.*, legaturi.*)
+#        rulari intrerupte (/tmp/verifica-site.*, teste-garda.*, dovezi.*, legaturi.*, mostra.*)
 #
 # POSIX: sh, git, find, awk, sed, grep.  Iesirea: „DE CITIT” pe rand, apoi totalul.
 LC_ALL=C; export LC_ALL
@@ -75,7 +75,7 @@ if [ -d "$DESCARCARI" ]; then
   find "$DESCARCARI" -maxdepth 1 -type f -name 'pas*.patch' 2>/dev/null | sort > "$W/pt"
   while read -r f; do spune "$f — patch deja aplicat? (rm /home/bogdan/Downloads/pas*.patch inainte de urmatoarea descarcare)"; done < "$W/pt"
 fi
-for p in 'verifica-site.*' 'teste-garda.*' 'dovezi.*' 'legaturi.*' 'curatenie.*'; do
+for p in 'verifica-site.*' 'teste-garda.*' 'dovezi.*' 'legaturi.*' 'curatenie.*' 'mostra.*'; do
   find "$TMPD" -maxdepth 1 -type d -name "$p" -mtime +0 2>/dev/null
 done | sort > "$W/tm"
 while read -r f; do spune "$f — director temporar mai vechi de o zi (o rulare intrerupta)"; done < "$W/tm"

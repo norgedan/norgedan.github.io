@@ -819,6 +819,13 @@ done &lt; /tmp/lista</pre>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --surse</span>
 <span class="comment"># sâmbăta, curățenia (regula 24): fișiere rătăcite, publicate fără rost, patch-uri vechi, temporare rămase — doar listează, șterge Bogdan</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie</span>
+<span class="comment"># sâmbăta, ochi de om pe dovezi (pas134): 4 afirmații citite doar de Claude, alese la întâmplare (aceeași zi = aceleași), FAPT întâi</span>
+<span class="comment"># întâi fără citatul lui Claude — cauți tu în pagină ce susține afirmația; apoi --citat, ca să compari</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra 4 --citat</span>
+<span class="comment"># sursa susține afirmația și citatul e în pagină: verificările întâi, apoi rândul tău în surse.tsv și dovezi.html rescrisă</span>
+<span class="comment"># comanda exactă o tipărește --mostra; dacă sursa NU susține: nu confirma, spune-i lui Claude (regula 24, „Grav”)</span>
+<span class="cmd">sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&gt;'</span>
 <span class="comment"># suita gărzii, după orice schimbare a verificării (~35 de minute, clonele neatinse)</span>
 <span class="cmd">sh ~/norgedan.github.io/scripts/teste-garda.sh</span>
 <span class="comment"># la push: automat, prin garda (aduce starea tuturor de pe GitHub)</span></pre>

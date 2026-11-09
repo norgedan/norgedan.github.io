@@ -290,7 +290,10 @@ sh ~/norgedan.github.io/scripts/teste-garda.sh T85 T90        # doar testele num
 sh ~/norgedan.github.io/scripts/legaturi.sh                  # legăturile, temele, cifrele RO-NO (L1–L9), lista completă
 sh ~/norgedan.github.io/scripts/legaturi.sh --scrie          # rescrie teme.html din teme.tsv
 sh ~/norgedan.github.io/scripts/dovezi.sh --scrie            # rescrie dovezi.html din registre (pas130)
-sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie # sâmbăta: ce e de curățat — doar listează (pas132)</pre>
+sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie # sâmbăta: ce e de curățat — doar listează (pas132)
+sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra    # sâmbăta: 4 dovezi citite doar de Claude, fără citat — le citește Bogdan (pas134)
+sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra 4 --citat  # după: citatele lui Claude, ca să compari
+sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&gt;'  # sursa susține: rândul lui Bogdan în surse.tsv + dovezi.html</pre>
 <p>Verdictele suitei: <strong>PICA</strong> (trebuie să blocheze, din motivul corect), <strong>TRECE</strong>, <strong>SEMNAL</strong> (atenționarea trebuie să apară), <strong>TACE</strong>, <strong>ABSENT</strong>, <strong>DESCHIS</strong> (vulnerabilitate cunoscută — azi niciuna). Contra-proba: <code>SCRIPT=/cale/verifica-vechi.sh sh …/teste-garda.sh</code>. Testele <code>--surse</code> sunt cele lente (așteaptă limitele de timp), mai ales pe <code>mksh</code>.</p>
 
 <h2>Ce urmează</h2>

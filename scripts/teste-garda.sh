@@ -524,6 +524,21 @@ mut_T168() { cp norgedan.github.io/og.png norgedan.github.io/zz-uitat.png && git
 mut_T169() { : > norgedan.github.io/zz-nimic.txt; }
 mut_T170() { mkdir -p Downloads && : > Downloads/pas999-test.patch; }
 mut_T171() { rep corpus/06-omul-si-inteligenta-artificiala-ro.html 's|p a:not(\[class\]),li a:not(\[class\]){[^}]*}||'; }
+
+# ── pas134: ochi de om pe dovezi (--mostra / --confirma) ──
+# mutatie neutra pentru testele de mod (santinela cere o schimbare): un fisier fara rol
+mut_neutru() { : > norgedan.github.io/zz-nimic.txt; }
+mut_T172() { mut_neutru; }
+mut_T173() { mut_neutru; }
+mut_T174() { mut_neutru; }
+mut_T175() { mut_neutru; }
+mut_T176() { mut_neutru; }
+mut_T177() { f=norgedan.github.io/scripts/surse.tsv
+             awk -F'\t' -v OFS='\t' '{ print } $1 == "delta-romania" && $3 ~ /icr\.ro/ && $5 == "claude" && !g { $5 = "bogdan"; print; g = 1 }' "$f" > x && mv x "$f"; }
+mut_T178() { f=norgedan.github.io/scripts/afirmatii.tsv
+             awk -F'\t' -v OFS='\t' '$1 == "delta-romania" { $3 = "de-verificat" } { print }' "$f" > x && mv x "$f"; }
+mut_T180() { mut_neutru; }
+mut_T179() { f=norgedan.github.io/scripts/surse.tsv; awk 'NR > 1 { printf "\n" } { printf "%s", $0 }' "$f" > x && mv x "$f"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
 echo ""
@@ -693,6 +708,18 @@ t T168 SEMNAL  "zz-uitat.png — nimic nu trimite spre el" "--curatenie: imagine
 t T169 ABSENT  "og.png — nimic nu trimite"        "--curatenie: imaginea folosita (og.png) nu e listata" --curatenie
 t T170 SEMNAL  "pas999-test.patch — patch deja aplicat" "--curatenie: patch vechi in Descarcari listat" --curatenie
 t T171 PICA    "fara regula de culoare pentru legaturile din text" "[3] fisier-document fara regula de culoare a legaturilor"
+t T172 ABSENT  "«"                                "--mostra: citatele lui Claude raman ascunse (ochiul omului cauta singur)" "--mostra 50"
+# T172 trece si pe garda veche (mesajul de utilizare nu are «); T180 arata ca modul a rulat
+t T180 SEMNAL  "Citatele lui Claude sunt ascunse" "--mostra: modul ruleaza si spune ca citatele sunt ascunse" "--mostra 50"
+t T173 SEMNAL  "«"                                "--mostra --citat: citatele apar, ca sa compari" "--mostra 50 --citat"
+t T174 SEMNAL  "Adaugat in surse.tsv: 1 rand"     "--confirma: sursa citita de Claude primeste randul omului" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
+export NORGEDAN_CITITOR=claude
+t T175 SEMNAL  "cititorul nu poate fi"            "--confirma: Claude nu se poate confirma singur" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
+unset NORGEDAN_CITITOR
+t T176 PICA    "nu e in surse.tsv pentru"         "--confirma: adresa care nu e sursa afirmatiei, nimic scris" "--confirma delta-romania https://www.icr.ro/alta"
+t T177 PICA    "a confirmat deja"                 "--confirma: aceeasi adresa confirmata de doua ori" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
+t T178 PICA    "nu verificat"                     "--confirma: afirmatie care nu e verificata" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
+t T179 PICA    "nu se termina cu rand nou"        "--confirma: registru fara rand nou la sfarsit, nimic scris" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
