@@ -152,7 +152,9 @@ mut_T28() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/^    Ordsp
 mut_T29() { grep -v '^iit-disputa' norgedan.github.io/scripts/amprente.tsv > x && mv x norgedan.github.io/scripts/amprente.tsv; }
 # fluxul corect: afirmatia schimbata, reverificata, apoi --amprente = trece
 # pas94: si dovada atinsa in acelasi patch (aici nota randului din afirmatii.tsv)
-mut_T30() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 124 forskere (124)/'
+# pas135: schimbarea nu mai adauga un cuvant — cu „(124)”, site-ul (210.999 de cuvinte) trecea
+# pragul de rotunjire din [8] si testul pica din alt motiv (lectia 16: un test nu se leaga de un numar)
+mut_T30() { rep corpus/06-mennesket-og-kunstig-intelligens-no.html 's/i september 2023 kalte 124 forskere/i september 2023 kalte 124 forskerne/'
             atinge_af iit-disputa
             NORGEDAN_API_DIR=/nu-exista sh norgedan.github.io/scripts/verifica-site.sh --amprente > /dev/null 2>&1; }
 # atinge_af <id> — randul afirmatiei schimbat (nota), cum se intampla la o reverificare

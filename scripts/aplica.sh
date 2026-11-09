@@ -14,7 +14,14 @@
 [ $# -eq 3 ] || { echo "utilizare: sh $0 <repo> <patch> <sha256>" >&2; exit 2; }
 r=$1; p=$2; h=$3
 case $p in /*) ;; *) p=$(pwd)/$p ;; esac
-[ -d "$r/.git" ] || { echo "NU: $r nu e un repo git"; exit 1; }
+# pas135: a doua oara (pas108, pas134) s-a dat numele repo-ului in loc de cale.  Nu ghicim
+# (refuzul e mai sigur), dar spunem calea exacta, daca exista langa hub.
+if [ ! -d "$r/.git" ]; then
+  echo "NU: $r nu e un repo git"
+  sd=$(cd "$(dirname "$0")" && pwd); rd=$(dirname "$(dirname "$sd")")
+  case $r in /*) ;; *) [ -d "$rd/$r/.git" ] && echo "    primul argument e calea completa: $rd/$r" ;; esac
+  exit 1
+fi
 [ -f "$p" ] || { echo "NU: lipseste $p"; exit 1; }
 if command -v sha256 >/dev/null 2>&1; then s=$(sha256 -q "$p")
 else s=$(sha256sum "$p" | cut -d' ' -f1); fi

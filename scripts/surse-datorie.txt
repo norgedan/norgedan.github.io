@@ -6,12 +6,8 @@ antrenament-mental
 canal-bosfor
 celula-minima
 consonanta-tsimane
-eichmann-stangneth
 fluier-paleolitic
 foneme-sugari
-gpt4-barou
-hoyle-crick
-iit-disputa
 inima-ecg-eeg
 inima-endocrina
 inima-neuroni
