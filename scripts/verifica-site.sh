@@ -34,6 +34,9 @@ BASE="https://norgedan.github.io"
 OG_IMG="$BASE/og.png"     # pas82: imaginea de distribuire a tuturor documentelor
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 1
+# pas136: functiile comune ale programelor awk — o singura copie, in scripts/lib.awk
+LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
+[ -n "$LIB_AWK" ] || { echo "PROBLEMA scripts/lib.awk lipseste sau e gol — garda nu poate rula fara functiile comune" >&2; exit 1; }
 HUB=$(dirname "$SCRIPT_DIR")
 HUBNAME=$(basename "$HUB")
 RADACINA=$(dirname "$HUB")
@@ -169,20 +172,14 @@ if [ "$MOD" = cifre ]; then
   [ -n "$rand" ] || { echo "  --cifre: „$CIFRE_DOC” nu e in documente.tsv" >&2; exit 2; }
   repo=$(printf '%s' "$rand" | cut -f3); ro=$(printf '%s' "$rand" | cut -f4); no=$(printf '%s' "$rand" | cut -f5)
   for p in "ro $RADACINA/$repo/$ro" "no $RADACINA/$repo/$no"; do
-    LC_ALL=C awk -v L="${p%% *}" 'BEGIN { RS = "\001" }
-      function norm(t,   o, i, c, n) {
-        gsub(/\302\240|\342\200\257|\342\200\211/, " ", t); o = ""; n = length(t)
-        for (i = 1; i <= n; i++) { c = substr(t, i, 1)
-          if ((c == "." || c == " ") && i > 1 && substr(t, i - 1, 1) ~ /[0-9]/ && substr(t, i + 1, 3) ~ /^[0-9][0-9][0-9]$/ && substr(t, i + 4, 1) !~ /[0-9]/) continue
-          o = o c }
-        return o }
+    LC_ALL=C awk -v L="${p%% *}" "$LIB_AWK"'BEGIN { RS = "\001" }
       { s = $0
         while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break } s = substr(s, 1, i - 1) " " substr(s, i + j + 2) }
         gsub(/<cite[^>]*>[^<]*<\/cite>/, " ", s); gsub(/<style[^>]*>[^<]*<\/style>/, " ", s)
         n = split(s, cap, "<h2")
         for (k = 2; k <= n; k++) { t = cap[k]
           tit = t; sub(/<\/h2>.*/, "", tit); sub(/^[^>]*>/, "", tit); gsub(/<[^>]*>/, "", tit)
-          gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); t = norm(t)
+          gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); t = normcifre(t)
           gsub(/[0-9]+:[0-9]+([-–][0-9]+)?/, " ", t)
           while (match(t, /[0-9]+([.,][0-9]+)?/)) { m = substr(t, RSTART, RLENGTH); gsub(/,/, ".", m)
             if (m != "1688" && m != "1930") print L "\t" (k - 1) "\t" m "\t" tit
@@ -1292,11 +1289,7 @@ if [ ! -f "$AFIRMATII" ]; then
 else
   grep -v '^#' "$AFIRMATII" | grep -v '^[[:space:]]*$' > "$W/af"
   # pas95: data trebuie sa existe in calendar (2027-19-39 trecea)
-  awk -F'\t' '
-    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
-      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
-      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
-      return l >= 1 && l <= 12 && z >= 1 && z <= n }
+  awk -F'\t' "$LIB_AWK"'
     NF != 8 { print "rand " NR ": " NF " coloane, trebuie 8"; next }
     {
       for (i = 1; i <= 8; i++) if ($i == "") print "rand " NR ": coloana " i " e goala (fara continut se scrie -)"
@@ -1461,14 +1454,8 @@ fi
 # 13:51 fata de 13.51) se accepta in scripts/cifre-ok.txt:  id TAB motiv.
 CIFRE_OK="$SCRIPT_DIR/cifre-ok.txt"
 : > "$W/cifok"; [ -f "$CIFRE_OK" ] && grep -v '^#' "$CIFRE_OK" | grep -v '^[[:space:]]*$' > "$W/cifok"
-LC_ALL=C awk -F'\t' -v MF="$W/m" -v OK="$W/cifok" -v AFI="$W/afid" '
-  function norm(t,   o, i, c, n, j) {
-    gsub(/\302\240|\342\200\257|\342\200\211/, " ", t); o = ""; n = length(t)
-    for (i = 1; i <= n; i++) { c = substr(t, i, 1)
-      if ((c == "." || c == " ") && i > 1 && substr(t, i - 1, 1) ~ /[0-9]/ && substr(t, i + 1, 3) ~ /^[0-9][0-9][0-9]$/ && substr(t, i + 4, 1) !~ /[0-9]/) continue
-      o = o c }
-    return o }
-  function cifre(t, arr,   m) { t = norm(t)
+LC_ALL=C awk -F'\t' -v MF="$W/m" -v OK="$W/cifok" -v AFI="$W/afid" "$LIB_AWK"'
+  function cifre(t, arr,   m) { t = normcifre(t)
     while (match(t, /[0-9]+([.,][0-9]+)?/)) { m = substr(t, RSTART, RLENGTH); gsub(/,/, ".", m); arr[m] = 1; t = substr(t, RSTART + RLENGTH) } }
   BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); lb[x[3] "/" x[4]] = "ro"; dc[x[3] "/" x[4]] = x[1]; lb[x[3] "/" x[5]] = "no"; dc[x[3] "/" x[5]] = x[1] }
           while ((getline l < OK) > 0) { split(l, x, "\t"); acc[x[1]] = 1 }
@@ -1522,16 +1509,6 @@ cat > "$W/cert.awk" <<'AWK'
 # Potrivire pe cuvinte intregi: inainte si dupa tipar nu sta o litera
 # ("overbeviser" nu e "beviser").  Octetii peste ~ (diacriticele) conteaza ca
 # litere; cratima e granita, deci "s-a dovedit" si "a demonstrat-o" se prind.
-function litera(c) { return c ~ /[a-z0-9]/ || c > "~" }
-function cuvant(t, x,   poz, i, st) {
-  poz = 1
-  while ((i = index(substr(t, poz), x)) > 0) {
-    st = poz + i - 1
-    if (!(st > 1 && litera(substr(t, st - 1, 1))) && !litera(substr(t, st + length(x), 1))) return st
-    poz = st + 1
-  }
-  return 0
-}
 BEGIN {
   while ((getline l < TF) > 0) { np++; p[np] = l; pl[np] = tolower(l) }
   # din pas55, un fragment acceptat poate fi legat de fisierul unde a fost citit:
@@ -1586,7 +1563,7 @@ else
   [ -f "$CERT_OK" ] && grep -v '^#' "$CERT_OK" | grep -v '^[[:space:]]*$' > "$W/certok"
   : > "$W/certhit"
   while read -r f; do
-    LC_ALL=C awk -v R="${f#"$RADACINA"/}" -v TF="$W/cert" -v OKF="$W/certok" -f "$W/cert.awk" "$f" >> "$W/certhit"
+    LC_ALL=C awk -v R="${f#"$RADACINA"/}" -v TF="$W/cert" -v OKF="$W/certok" -f "$SCRIPT_DIR/lib.awk" -f "$W/cert.awk" "$f" >> "$W/certhit"
   done < "$W/pub13"
   if [ -s "$W/certhit" ]; then
     atentie "$(wc -l < "$W/certhit" | tr -d ' ') locuri cu cuvinte de certitudine in text nemarcat — de citit:"
@@ -1655,16 +1632,6 @@ cat > "$W/stiinta.awk" <<'AWK'
 # NEMARCAT care spune că știința dovedește/infirmă pe Dumnezeu, fără etichetă
 # („credem”, „interpretare”; NO: „vi tror”, „tolkning”) — de citit.
 # LC_ALL=C: tolower doar pe ASCII; diacriticele se compara exact, octet cu octet.
-function litera(c) { return c ~ /[a-z0-9]/ || c > "~" }
-function cuvant(t, x,   poz, i, st) {
-  poz = 1
-  while ((i = index(substr(t, poz), x)) > 0) {
-    st = poz + i - 1
-    if (!(st > 1 && litera(substr(t, st - 1, 1))) && !litera(substr(t, st + length(x), 1))) return st
-    poz = st + 1
-  }
-  return 0
-}
 function oricare(t, lista,   n, a, q) { n = split(lista, a, "|"); for (q = 1; q <= n; q++) if (cuvant(t, a[q])) return 1; return 0 }
 function curat(s,   i, r, j) {
   while ((i = index(s, M)) > 0) {
@@ -1696,7 +1663,7 @@ END {
 AWK
 : > "$W/stihit"
 while read -r f; do
-  LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$W/stiinta.awk" "$f" >> "$W/stihit"
+  LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$SCRIPT_DIR/lib.awk" -f "$W/stiinta.awk" "$f" >> "$W/stihit"
 done < "$W/pub13"
 if [ -s "$W/stihit" ]; then
   atentie "$(wc -l < "$W/stihit" | tr -d ' ') propoziții spun, fără etichetă, că știința dovedește sau infirmă pe Dumnezeu — regula „Știința și Creatorul”: INTERPRETARE sau „credem”:"
@@ -2274,11 +2241,7 @@ if [ ! -s "$W/capm" ]; then
 elif [ ! -f "$CAPV" ]; then
   problema "lipseste scripts/capitole-verificate.tsv"
 else
-  awk -F'\t' -v M="$W/capm" -v MF="$W/m" -v A="$W/capanc" '
-    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
-      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
-      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
-      return l >= 1 && l <= 12 && z >= 1 && z <= n }
+  awk -F'\t' -v M="$W/capm" -v MF="$W/m" -v A="$W/capanc" "$LIB_AWK"'
     BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
             while ((getline l < A) > 0) { split(l, x, "\t"); ap[x[1] "\t" x[3]] = x[2] }
             while ((getline l < M) > 0) { split(l, x, "\t"); k = x[1] "\t" x[3]
@@ -2410,13 +2373,9 @@ else
   grep -v '^#' "$SURSE" | grep -v '^[[:space:]]*$' > "$W/sr"
   grep -v '^#' "$SDAT" | grep -v '^[[:space:]]*$' | LC_ALL=C sort -u > "$W/sd"
   AZI=$(date +%Y-%m-%d)
-  awk -F'\t' -v AF="$W/af" -v SD="$W/sd" -v AZI="$AZI" '
+  awk -F'\t' -v AF="$W/af" -v SD="$W/sd" -v AZI="$AZI" "$LIB_AWK"'
     # pas91: domeniul inregistrat (amp.cnn.com si edition.cnn.com = cnn.com), cu sufixele
     # de doua niveluri uzuale (co.uk, com.ua, gov.ua ...): aceeasi publicatie e o singura sursa
-    function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
-      a = substr(d, 1, 4) + 0; l = substr(d, 6, 2) + 0; z = substr(d, 9, 2) + 0
-      n = (l == 2) ? ((a % 4 == 0 && (a % 100 != 0 || a % 400 == 0)) ? 29 : 28) : (l == 4 || l == 6 || l == 9 || l == 11) ? 30 : 31
-      return l >= 1 && l <= 12 && z >= 1 && z <= n }
     function dom(u,  d, n, p, b) { d = tolower(u); sub(/^https:\/\//, "", d); sub(/[\/:?#].*/, "", d)
       n = split(d, p, "."); if (n < 2) return d; b = p[n - 1] "." p[n]
       if (n > 2 && length(p[n]) == 2 && p[n - 1] ~ /^(co|com|org|net|gov|ac|edu)$/) b = p[n - 2] "." b

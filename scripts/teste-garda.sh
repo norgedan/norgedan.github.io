@@ -540,6 +540,9 @@ mut_T177() { f=norgedan.github.io/scripts/surse.tsv
 mut_T178() { f=norgedan.github.io/scripts/afirmatii.tsv
              awk -F'\t' -v OFS='\t' '$1 == "delta-romania" { $3 = "de-verificat" } { print }' "$f" > x && mv x "$f"; }
 mut_T180() { mut_neutru; }
+# pas136: biblioteca comuna a garzii — lipsa sau goala, garda se opreste, nu tace
+mut_T181() { rm norgedan.github.io/scripts/lib.awk; }
+mut_T182() { : > norgedan.github.io/scripts/lib.awk; }
 mut_T179() { f=norgedan.github.io/scripts/surse.tsv; awk 'NR > 1 { printf "\n" } { printf "%s", $0 }' "$f" > x && mv x "$f"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
@@ -722,6 +725,8 @@ t T176 PICA    "nu e in surse.tsv pentru"         "--confirma: adresa care nu e 
 t T177 PICA    "a confirmat deja"                 "--confirma: aceeasi adresa confirmata de doua ori" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
 t T178 PICA    "nu verificat"                     "--confirma: afirmatie care nu e verificata" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
 t T179 PICA    "nu se termina cu rand nou"        "--confirma: registru fara rand nou la sfarsit, nimic scris" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
+t T181 PICA    "lib.awk lipseste sau e gol"       "biblioteca comuna lib.awk stearsa: garda se opreste"
+t T182 PICA    "lib.awk lipseste sau e gol"       "biblioteca comuna lib.awk goala: garda se opreste"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
