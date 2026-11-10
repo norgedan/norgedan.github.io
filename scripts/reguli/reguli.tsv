@@ -1,6 +1,8 @@
 # reguli.tsv (pas138) — registrul regulilor garzii mutate in scripturi proprii.
 #
-# Un rand = o regula (TAB):  numar  fisier (in scripts/reguli/)  titlul sectiunii
+# Un rand = un fisier (TAB):  numar (sau „lib”)  fisier (fata de scripts/)  titlu  amprenta sha256
+# Amprenta se rescrie doar prin  sh scripts/verifica-site.sh --reguli  (dupa o schimbare voita);
+# amprenta acestui registru sta, ca martor, in jurnalul privat: norgedan-jurnal/amprenta-reguli.txt.
 # verifica-site.sh ramane intrarea si dirijorul: tipareste titlul, ruleaza fisierul,
 # numara rezultatele.  Garda se opreste cu PROBLEMA daca un fisier din registru lipseste,
 # e gol sau nu ruleaza pana la capat, si daca in scripts/reguli/ sta un .sh care nu e aici.
@@ -14,4 +16,5 @@
 #   - iese cu 0 daca a rulat pana la capat (oricate probleme a gasit); orice alt cod
 #     inseamna „n-a rulat” si dirijorul il spune ca PROBLEMA;
 #   - POSIX sh si awk, fara extensii GNU.
-21	21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam
+lib	lib.awk	Biblioteca functiilor awk comune	184742502fcc769ac46e04de046efe9820571a186641259356c97254ddf90b45
+21	reguli/21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam	0617a306f1c16ad0134fba0822a814556de730d08b71df3c0de4d6005342f6d7

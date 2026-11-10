@@ -64,8 +64,30 @@ case "${1:-}" in
   --cifre)   MOD=cifre; CIFRE_DOC="${2:-}" ;;
   --curatenie) MOD=curatenie ;;
   --mostra|--confirma) MOD=mostra ;;
-  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document> | --curatenie | --mostra [N] [--citat] | --confirma <id> <url>]" >&2; exit 2 ;;
+  --reguli)  MOD=reguli ;;
+  *)         echo "utilizare: sh $0 [--tablou | --github | --ci | --push <repo> | --amprente | --capitole | --surse | --cauta <text> | --cifre <document> | --curatenie | --mostra [N] [--citat] | --confirma <id> <url> | --reguli]" >&2; exit 2 ;;
 esac
+# pas139: --reguli — dupa o schimbare VOITA a unei reguli sau a bibliotecii: rescrie amprentele
+# din scripts/reguli/reguli.tsv si martorul din jurnalul privat (amprenta registrului insusi).
+if [ "$MOD" = reguli ]; then
+  R="$SCRIPT_DIR/reguli/reguli.tsv"; J="${NORGEDAN_JURNAL:-$(dirname "$(dirname "$SCRIPT_DIR")")/norgedan-jurnal}"
+  [ -f "$R" ] || { echo "PROBLEMA scripts/reguli/reguli.tsv lipseste" >&2; exit 1; }
+  sha1f() { if command -v sha256 >/dev/null 2>&1; then sha256 -q "$1"; else sha256sum "$1" | cut -d' ' -f1; fi; }
+  T=$(mktemp /tmp/verifica-site.XXXXXX) || exit 1
+  while IFS= read -r l; do
+    case $l in '#'*|'') printf '%s\n' "$l"; continue ;; esac
+    f=$(printf '%s\n' "$l" | cut -f2)
+    [ -s "$SCRIPT_DIR/$f" ] || { echo "PROBLEMA scripts/$f lipseste sau e gol — nimic scris" >&2; rm -f "$T"; exit 1; }
+    printf '%s\t%s\n' "$(printf '%s\n' "$l" | cut -f1-3)" "$(sha1f "$SCRIPT_DIR/$f")"
+  done < "$R" > "$T"
+  if cmp -s "$T" "$R"; then echo "  reguli.tsv: amprentele erau deja la zi"; rm -f "$T"
+  else diff "$R" "$T" | grep '^>' | cut -f2,4 | sed 's/^/  amprenta noua: /'; cp "$T" "$R" && rm -f "$T"; fi
+  a=$(sha1f "$R")
+  if [ -d "$J" ]; then printf '%s\n' "$a" > "$J/amprenta-reguli.txt" && echo "  martorul din jurnal scris: $J/amprenta-reguli.txt"
+  else echo "  jurnalul privat nu e langa hub ($J) — martorul NU a fost scris"; fi
+  echo "  Urmeaza: garda, apoi commit in hub (scripts/reguli/reguli.tsv) si in jurnal (amprenta-reguli.txt)."
+  exit 0
+fi
 # pas134: ochi de om pe dovezi (gravitatea 2) — mostra.sh alege, arata si scrie confirmarea
 if [ "$MOD" = mostra ]; then
   [ -f "$SCRIPT_DIR/mostra.sh" ] || { echo "PROBLEMA scripts/mostra.sh lipseste" >&2; exit 1; }
@@ -103,23 +125,23 @@ titlu()    { echo ""; echo "[$1] $2"; }
 # regula <numar> (pas138) — dirijorul unei reguli mutate in scripts/reguli/: titlul din
 # registru, fisierul rulat cu directorul registrelor si cel al pregatirii, rezultatele
 # numarate.  Un fisier lipsa, gol sau oprit inainte de capat e PROBLEMA, nu tacere.
+# pas139: registrul tine si amprenta sha256 a fiecarui fisier; un fisier schimbat fara
+# ca amprenta lui sa fie inregistrata (--reguli) NU se ruleaza.
 REGULI="$SCRIPT_DIR/reguli/reguli.tsv"
+sha_fis() { if command -v sha256 >/dev/null 2>&1; then sha256 -q "$1"; else sha256sum "$1" | cut -d' ' -f1; fi; }
 regula() {
   rg_l=$(grep "^$1$TAB" "$REGULI" 2>/dev/null | head -n 1)
-  rg_f=$(printf '%s\n' "$rg_l" | cut -f2); rg_t=$(printf '%s\n' "$rg_l" | cut -f3)
+  rg_f=$(printf '%s\n' "$rg_l" | cut -f2); rg_t=$(printf '%s\n' "$rg_l" | cut -f3); rg_a=$(printf '%s\n' "$rg_l" | cut -f4)
   titlu "$1" "${rg_t:-(regula fara titlu)}"
   if [ -z "$rg_l" ]; then problema "regula [$1] nu e in scripts/reguli/reguli.tsv"; return; fi
-  if [ ! -s "$SCRIPT_DIR/reguli/$rg_f" ]; then problema "regula [$1]: scripts/reguli/$rg_f lipseste sau e gol"; return; fi
-  sh "$SCRIPT_DIR/reguli/$rg_f" "$SCRIPT_DIR" "$W" > "$W/rg.out" 2> "$W/rg.err"; rg_c=$?
+  if [ ! -s "$SCRIPT_DIR/$rg_f" ]; then problema "regula [$1]: scripts/$rg_f lipseste sau e gol"; return; fi
+  if [ "$(sha_fis "$SCRIPT_DIR/$rg_f")" != "$rg_a" ]; then problema "regula [$1]: scripts/$rg_f s-a schimbat fara sa fie inregistrat in reguli.tsv — nu o rulez (schimbare voita: sh scripts/verifica-site.sh --reguli)"; return; fi
+  sh "$SCRIPT_DIR/$rg_f" "$SCRIPT_DIR" "$W" > "$W/rg.out" 2> "$W/rg.err"; rg_c=$?
   cat "$W/rg.out"
   grep '^  PROBLEMA ' "$W/rg.out" | sed 's/.*/x/' >> "$W/prob"
   grep '^  ATENTIE  ' "$W/rg.out" | sed 's/.*/x/' >> "$W/aten"
-  if [ "$rg_c" -ne 0 ]; then problema "regula [$1] n-a rulat pana la capat (scripts/reguli/$rg_f, iesire $rg_c): $(head -n 1 "$W/rg.err")"
-  elif ! grep -Eq '^  (OK|PROBLEMA|ATENTIE) ' "$W/rg.out"; then problema "regula [$1] n-a spus nimic (scripts/reguli/$rg_f) — o regula care tace nu a verificat"; fi
-  for rg_x in "$SCRIPT_DIR"/reguli/*.sh; do
-    [ -f "$rg_x" ] || continue
-    cut -f2 "$REGULI" | grep -qx "${rg_x##*/}" || problema "scripts/reguli/${rg_x##*/} nu e in reguli.tsv — o regula nedeclarata nu ruleaza"
-  done
+  if [ "$rg_c" -ne 0 ]; then problema "regula [$1] n-a rulat pana la capat (scripts/$rg_f, iesire $rg_c): $(head -n 1 "$W/rg.err")"
+  elif ! grep -Eq '^  (OK|PROBLEMA|ATENTIE) ' "$W/rg.out"; then problema "regula [$1] n-a spus nimic (scripts/$rg_f) — o regula care tace nu a verificat"; fi
 }
 
 # ════════════════════════════════════════════════════════════════════
@@ -1124,6 +1146,31 @@ if [ "$MOD" != ci ]; then
   ch=$(git config --global --get credential.helper 2>/dev/null)
   [ -n "$ch" ] && atentie "credential.helper=\"$ch\" — parolele/tokenurile s-ar salva din nou pe disc; push-ul merge prin SSH"
 fi
+# pas139: regulile mutate si biblioteca — fiecare fisier din registru, cu amprenta lui; niciun
+# .sh nedeclarat; iar registrul insusi, confruntat cu martorul din jurnalul privat (alt repo:
+# cine schimba o regula si amprenta ei in hub nu poate schimba si martorul).
+rg_n=0; rg_g=0
+JURNAL="${NORGEDAN_JURNAL:-$RADACINA/norgedan-jurnal}"
+if [ ! -s "$REGULI" ]; then problema "scripts/reguli/reguli.tsv lipseste sau e gol"; rg_g=1
+else
+  grep -v '^#' "$REGULI" | grep -v '^[[:space:]]*$' > "$W/rg.lst"
+  while IFS="$TAB" read -r rg_k rg_f rg_t rg_a; do
+    rg_n=$((rg_n + 1))
+    if [ ! -s "$SCRIPT_DIR/$rg_f" ]; then problema "reguli.tsv: scripts/$rg_f lipseste sau e gol"; rg_g=1
+    elif [ "$(sha_fis "$SCRIPT_DIR/$rg_f")" != "$rg_a" ]; then problema "scripts/$rg_f: amprenta difera de cea din reguli.tsv — schimbare neinregistrata (schimbare voita: sh scripts/verifica-site.sh --reguli)"; rg_g=1; fi
+  done < "$W/rg.lst"
+  for rg_x in "$SCRIPT_DIR"/reguli/*.sh; do
+    [ -f "$rg_x" ] || continue
+    cut -f2 "$W/rg.lst" | grep -qx "reguli/${rg_x##*/}" || { problema "scripts/reguli/${rg_x##*/} nu e in reguli.tsv — o regula nedeclarata nu ruleaza"; rg_g=1; }
+  done
+  cut -f2 "$W/rg.lst" | grep -qx "lib.awk" || { problema "reguli.tsv: lipseste randul bibliotecii lib.awk"; rg_g=1; }
+  if [ -d "$JURNAL" ]; then
+    if [ ! -s "$JURNAL/amprenta-reguli.txt" ]; then problema "martorul din jurnal lipseste: $JURNAL/amprenta-reguli.txt (se scrie cu: sh scripts/verifica-site.sh --reguli)"; rg_g=1
+    elif [ "$(sha_fis "$REGULI")" != "$(head -n 1 "$JURNAL/amprenta-reguli.txt")" ]; then problema "martorul din jurnal nu se potriveste cu scripts/reguli/reguli.tsv — registrul regulilor s-a schimbat fara jurnal"; rg_g=1
+    else rg_m="registrul confirmat de martorul din jurnal"; fi
+  else rg_m="martorul din jurnal: sarit, jurnalul privat nu e aici"; fi
+fi
+[ "$rg_g" -eq 0 ] && ok "regulile mutate si biblioteca: $rg_n fisiere, fiecare cu amprenta din reguli.tsv; $rg_m"
 [ "$greseli" -eq 0 ] && ok "toate repo-urile au fisierele de baza si aceeasi garda activa; $(awk -F'\t' '$1 == "N" { print $2 }' "$W/uses10" 2>/dev/null) actiuni in workflow, toate fixate pe commit"
 
 # ════════════════════════════════════════════════════════════════════
