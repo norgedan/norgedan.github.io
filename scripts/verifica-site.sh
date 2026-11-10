@@ -100,6 +100,28 @@ problema() { echo "  PROBLEMA $1"; echo x >> "$W/prob"; }
 atentie()  { echo "  ATENTIE  $1"; echo x >> "$W/aten"; }
 titlu()    { echo ""; echo "[$1] $2"; }
 
+# regula <numar> (pas138) — dirijorul unei reguli mutate in scripts/reguli/: titlul din
+# registru, fisierul rulat cu directorul registrelor si cel al pregatirii, rezultatele
+# numarate.  Un fisier lipsa, gol sau oprit inainte de capat e PROBLEMA, nu tacere.
+REGULI="$SCRIPT_DIR/reguli/reguli.tsv"
+regula() {
+  rg_l=$(grep "^$1$TAB" "$REGULI" 2>/dev/null | head -n 1)
+  rg_f=$(printf '%s\n' "$rg_l" | cut -f2); rg_t=$(printf '%s\n' "$rg_l" | cut -f3)
+  titlu "$1" "${rg_t:-(regula fara titlu)}"
+  if [ -z "$rg_l" ]; then problema "regula [$1] nu e in scripts/reguli/reguli.tsv"; return; fi
+  if [ ! -s "$SCRIPT_DIR/reguli/$rg_f" ]; then problema "regula [$1]: scripts/reguli/$rg_f lipseste sau e gol"; return; fi
+  sh "$SCRIPT_DIR/reguli/$rg_f" "$SCRIPT_DIR" "$W" > "$W/rg.out" 2> "$W/rg.err"; rg_c=$?
+  cat "$W/rg.out"
+  grep '^  PROBLEMA ' "$W/rg.out" | sed 's/.*/x/' >> "$W/prob"
+  grep '^  ATENTIE  ' "$W/rg.out" | sed 's/.*/x/' >> "$W/aten"
+  if [ "$rg_c" -ne 0 ]; then problema "regula [$1] n-a rulat pana la capat (scripts/reguli/$rg_f, iesire $rg_c): $(head -n 1 "$W/rg.err")"
+  elif ! grep -Eq '^  (OK|PROBLEMA|ATENTIE) ' "$W/rg.out"; then problema "regula [$1] n-a spus nimic (scripts/reguli/$rg_f) — o regula care tace nu a verificat"; fi
+  for rg_x in "$SCRIPT_DIR"/reguli/*.sh; do
+    [ -f "$rg_x" ] || continue
+    cut -f2 "$REGULI" | grep -qx "${rg_x##*/}" || problema "scripts/reguli/${rg_x##*/} nu e in reguli.tsv — o regula nedeclarata nu ruleaza"
+  done
+}
+
 # ════════════════════════════════════════════════════════════════════
 # Uneltele de lucru (pas96) — nu verifica nimic, doar arata; ies inainte de verificare
 # ════════════════════════════════════════════════════════════════════
@@ -934,7 +956,8 @@ fi
 # testele = randurile „t T…” din teste-garda.sh.  Un rand care numeste un pas („pas92”,
 # „Pasul 92”) e istorie datata si nu se compara — cifra de atunci ramane a atunci.
 # Limita: o cifra curenta pe acelasi rand cu un pas nu e verificata.
-NSECT=$(grep -c '^titlu [0-9]' "$SCRIPT_DIR/verifica-site.sh")
+# pas138: o sectiune e fie scrisa aici (titlu N), fie mutata in scripts/reguli/ (regula N)
+NSECT=$(grep -Ec '^(titlu|regula) [0-9]' "$SCRIPT_DIR/verifica-site.sh")
 NTEST=0; [ -f "$SCRIPT_DIR/teste-garda.sh" ] && NTEST=$(grep -c '^t T' "$SCRIPT_DIR/teste-garda.sh")
 # santinela: fara masuratoare, verificarea n-ar vedea nimic
 [ "$NSECT" -gt 0 ] && [ "$NTEST" -gt 0 ] || echo "PROBLEMA [8] nu pot masura secțiunile ($NSECT) sau testele ($NTEST) gărzii — cifrele despre gardă nu sunt verificate" >> "$W/nrerr"
@@ -2420,41 +2443,9 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu 21 "Erorile gasite: tipurile, ca sa stim unde sa cautam"
+regula 21
 # ════════════════════════════════════════════════════════════════════
-# Din pas67.  scripts/erori.tsv — o eroare gasita si corectata = un rand (TAB):
-#   pas  id  poz  tip  descriere  sursa
-#   tip: superlativ | atribuire | cifra | cronologie | atenuare | traducere | contradictie | alta
-#   ancora: numele capitolului RO (ca in capitole-verificate.tsv, din pas128; pana atunci
-#           pozitia <h2>) sau "-";  sursa: https://... sau "-"
-# Nu blocheaza decat un rand stricat; altfel numara erorile pe tipuri.
-# pas128: ancora trebuie sa existe in documentul randului (lista din [18], capanc); o
-# pozitie numerica nu mai e primita — un capitol inserat mai sus ar muta-o in tacere.
-ERORI="$SCRIPT_DIR/erori.tsv"
-if [ ! -f "$ERORI" ]; then
-  problema "lipseste scripts/erori.tsv"
-else
-  grep -v '^#' "$ERORI" | grep -v '^[[:space:]]*$' > "$W/er"
-  # santinela: fara lista ancorelor din [18], verificarea ancorelor n-ar vedea nimic
-  [ -s "$W/capanc" ] || problema "[21] lista ancorelor capitolelor (din [18]) e goala — ancorele din erori.tsv nu pot fi verificate"
-  awk -F'\t' -v MF="$W/m" -v AF="$W/capanc" '
-    BEGIN { while ((getline l < MF) > 0) { split(l, x, "\t"); doc[x[1]] = 1 }
-            while ((getline l < AF) > 0) { split(l, x, "\t"); anc[x[1] "\t" x[3]] = 1 } }
-    NF != 6 { print "erori.tsv rand " NR ": " NF " coloane, trebuie 6"; next }
-    $1 !~ /^pas[0-9]+[a-z]?$/ { print "erori.tsv rand " NR ": pas \"" $1 "\"" }
-    !($2 in doc) { print "erori.tsv rand " NR ": \"" $2 "\" nu e in manifest" }
-    $3 ~ /^[0-9]+$/ { print "erori.tsv rand " NR ": pozitia \"" $3 "\" — din pas128 capitolul se numeste prin ancora (ca in capitole-verificate.tsv)"; next }
-    $3 != "-" && ($2 in doc) && !(($2 "\t" $3) in anc) { print "erori.tsv rand " NR ": ancora \"" $3 "\" nu e un capitol RO din " $2 }
-    $4 !~ /^(superlativ|atribuire|cifra|cronologie|atenuare|traducere|contradictie|alta)$/ { print "erori.tsv rand " NR ": tip \"" $4 "\"" }
-    $5 ~ /^[[:space:]]*-?[[:space:]]*$/ { print "erori.tsv rand " NR ": fara descriere" }
-    $6 != "-" && $6 !~ /^https:\/\// { print "erori.tsv rand " NR ": sursa \"" $6 "\" — https://... sau -" }
-  ' "$W/er" > "$W/ererr"
-  if [ -s "$W/ererr" ]; then
-    while IFS= read -r l; do problema "$l"; done < "$W/ererr"
-  else
-    ok "$(wc -l < "$W/er" | tr -d ' ') erori gasite si corectate, pe tipuri: $(cut -f4 "$W/er" | LC_ALL=C sort | uniq -c | sort -rn | awk '{ printf "%s%s %s", (NR > 1 ? ", " : ""), $2, $1 }')"
-  fi
-fi
+# pas138: regula [21] sta in scripts/reguli/21-erori.sh (pilotul „fiecare regula un script”)
 
 # ════════════════════════════════════════════════════════════════════
 titlu 22 "Text ascuns si instructiuni pentru masini (prompt injection)"

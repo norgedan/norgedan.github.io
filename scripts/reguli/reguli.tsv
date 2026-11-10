@@ -1,0 +1,17 @@
+# reguli.tsv (pas138) — registrul regulilor garzii mutate in scripturi proprii.
+#
+# Un rand = o regula (TAB):  numar  fisier (in scripts/reguli/)  titlul sectiunii
+# verifica-site.sh ramane intrarea si dirijorul: tipareste titlul, ruleaza fisierul,
+# numara rezultatele.  Garda se opreste cu PROBLEMA daca un fisier din registru lipseste,
+# e gol sau nu ruleaza pana la capat, si daca in scripts/reguli/ sta un .sh care nu e aici.
+#
+# Contractul unei reguli:
+#   - e chemata:  sh NN-nume.sh <scripts> <pregatire>   (directorul registrelor si
+#     directorul de lucru al garzii, cu datele pregatite de sectiunile dinainte);
+#   - citeste doar; scrie numai in <pregatire>, in fisiere cu prefixul ei (rNN.);
+#   - tipareste doar randuri "  OK       ...", "  PROBLEMA ..." sau "  ATENTIE  ...",
+#     plus randurile lor de continuare (incep cu spatii);
+#   - iese cu 0 daca a rulat pana la capat (oricate probleme a gasit); orice alt cod
+#     inseamna „n-a rulat” si dirijorul il spune ca PROBLEMA;
+#   - POSIX sh si awk, fara extensii GNU.
+21	21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam

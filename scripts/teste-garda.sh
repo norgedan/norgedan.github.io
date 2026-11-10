@@ -543,6 +543,12 @@ mut_T180() { mut_neutru; }
 # pas136: biblioteca comuna a garzii — lipsa sau goala, garda se opreste, nu tace
 mut_T181() { rm norgedan.github.io/scripts/lib.awk; }
 mut_T182() { : > norgedan.github.io/scripts/lib.awk; }
+# pas138: regulile mutate in scripts/reguli/ — lipsa, oprite, mute sau nedeclarate: PROBLEMA
+mut_T183() { rm norgedan.github.io/scripts/reguli/21-erori.sh; }
+mut_T184() { f=norgedan.github.io/scripts/reguli/21-erori.sh; awk 'NR == 2 { print "exit 3" } { print }' "$f" > x && mv x "$f"; }
+mut_T185() { f=norgedan.github.io/scripts/reguli/21-erori.sh; awk 'NR == 2 { print "exit 0" } { print }' "$f" > x && mv x "$f"; }
+mut_T186() { printf 'echo "  OK       nimic"\n' > norgedan.github.io/scripts/reguli/99-straina.sh; }
+mut_T187() { f=norgedan.github.io/scripts/reguli/reguli.tsv; grep -v '^21' "$f" > x; mv x "$f"; }
 mut_T179() { f=norgedan.github.io/scripts/surse.tsv; awk 'NR > 1 { printf "\n" } { printf "%s", $0 }' "$f" > x && mv x "$f"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
@@ -727,6 +733,11 @@ t T178 PICA    "nu verificat"                     "--confirma: afirmatie care nu
 t T179 PICA    "nu se termina cu rand nou"        "--confirma: registru fara rand nou la sfarsit, nimic scris" "--confirma delta-romania https://www.icr.ro/pagini/the-danube-delta-biosphere-reserve-ddbr"
 t T181 PICA    "lib.awk lipseste sau e gol"       "biblioteca comuna lib.awk stearsa: garda se opreste"
 t T182 PICA    "lib.awk lipseste sau e gol"       "biblioteca comuna lib.awk goala: garda se opreste"
+t T183 PICA    "21-erori.sh lipseste sau e gol"   "regula [21] stearsa din scripts/reguli"
+t T184 PICA    "n-a rulat pana la capat"          "regula [21] se opreste inainte de capat (iesire 3)"
+t T185 PICA    "n-a spus nimic"                   "regula [21] iese cu 0 fara sa verifice: o regula care tace"
+t T186 PICA    "99-straina.sh nu e in reguli.tsv" "un script nedeclarat in scripts/reguli"
+t T187 PICA    "nu e in scripts/reguli/reguli.tsv" "regula [21] scoasa din registrul regulilor"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
