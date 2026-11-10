@@ -357,6 +357,34 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&
   <li>Apoi ordinea după gravitate: (3) protecția ramurii și semnarea commiturilor — Bogdan, în setările GitHub; (4) o singură sursă a sursei; (5) lista de risc ponderată și tipul „alta” despărțit; (7) ordinea internă; (8) graful JSON-LD. Conținut nou: „Puterea adevărului” — fișa întâi.</li>
 </ol>
 
+<h2 id="sesiunea-10-noiembrie">Sesiunea 10 noiembrie 2026 (pas136–pas140): ce s-a făcut, ce a rămas</h2>
+<p>Ziua auditului structural. Starea la închidere (garda la Bogdan, după pas139a): totul împins, 208 afirmații, 172 cu dovezi, datoria 30, citite doar de Claude 159 și de un om 13; garda și suita trec.</p>
+<h3>Ce s-a făcut</h3>
+<ul>
+  <li><strong>Auditul structural</strong> (pas136), prin măsurătoare: garda de 2.868 de linii cu 126 de programe awk; cinci forme de nume de fișier; 84 de ancore numerotate din 197; CSS copiat în 37 de fișiere (33 de variante); istoria pașilor în trei case. Hotărât: fișierele nu se redenumesc; <code>documente.tsv</code> e singurul care știe calea.</li>
+  <li><strong>Securitatea ramurii</strong> (Bogdan, în GitHub): setul de reguli „main-protejat” pe cele 6 repo-uri publice — fără ștergere, fără push forțat, doar commituri semnate; semnarea cu cheia SSH, „Verified” văzut pe pas136. Jurnalul, privat, nu poate primi reguli pe planul gratuit.</li>
+  <li><strong>Biblioteca comună</strong> <code>scripts/lib.awk</code> (pas136) și <strong>prima regulă mutată</strong>, [21], în <code>scripts/reguli/</code> (pas138), cu ieșirea gărzii identică octet cu octet.</li>
+  <li><strong>Amprentele regulilor și martorul din jurnal</strong> (pas139, la cererea lui Bogdan): lanțul jurnal → <code>reguli.tsv</code> → fiecare fișier; o regulă schimbată doar în hub e prinsă. Proba pe OpenBSD a arătat și că <code>sha256 -q</code> și <code>sha256sum</code> dau aceeași amprentă.</li>
+  <li><strong>Conținut</strong> (pas137): Crick, cu propriile lui cuvinte („agnostic cu o puternică înclinație spre ateism”, din cartea dată de Bogdan); Hoyle rămâne „ateu”, cu adaosul că n-a identificat superintelectul cu Dumnezeul personal; datoria 33 → 30.</li>
+  <li><strong>Prima confirmare făcută de om cu unealta nouă</strong> (pas139a): Bogdan a citit rezumatul din PubMed pentru vosoughi-2018 și l-a înregistrat cu <code>--confirma</code>.</li>
+</ul>
+<h3>Lecțiile zilei</h3>
+<ul>
+  <li><strong>O obiecție la o măsură de siguranță e un motiv s-o întărești, nu să renunți la ea</strong> (amprenta: Claude renunțase, Bogdan a cerut soluția — martorul în alt repo).</li>
+  <li><strong>Se numără după conținut, nu după nume</strong>: „norm scrisă de 5 ori” erau trei funcții diferite; ancorele numărate cu un tipar simplu au ieșit 47 în loc de 84.</li>
+  <li><strong>Sursa citită întreagă poate răsturna propunerea</strong>: „care se declarase ateu” pentru Hoyle venea din fragmente de căutare; studiul academic spunea altceva.</li>
+  <li><strong>Descărcarea patch-urilor e un pas, nu o paranteză</strong>: se scrie numerotat, cu <code>ls</code> de verificare după el. Și cheia: de când commiturile se semnează, <code>ssh-add</code> trebuie făcut înainte de commit, nu doar înainte de push.</li>
+  <li><strong>O măsurătoare cinstită spune și „niciun câștig încă”</strong>: mutarea regulii [21] n-a schimbat viteza; câștigul vine doar cu pregătirea rulabilă singură.</li>
+</ul>
+<h3>Mâine, în ordine</h3>
+<ol>
+  <li>[structură] <strong>Garda păzită din afara ei</strong>: un martor mic în jurnalul privat (lista amprentelor pentru <code>verifica-site.sh</code>, <code>teste-garda.sh</code>, <code>aplica.sh</code> și celelalte scripturi), verificat de hook-ul instalat în <code>.git/hooks</code> înainte ca garda să ruleze — o gardă schimbată doar în hub nu mai poate sări propria verificare. Întâi fișa, apoi construcția, cu reinstalarea hook-ului explicată pas cu pas.</li>
+  <li>În același pas: jurnalul de probă al suitei primește un martor valid (testele care creează un jurnal nu mai iau PROBLEMA „martorul lipsește”).</li>
+  <li>[conținut] corpus2-B#orient, primul din lista de risc [19] — cu fișă; și propoziția despre Hoyle pentru corpus-01, spre aprobare.</li>
+  <li>[structură] regula [20] mutată, apoi pregătirea comună rulabilă singură (de ea depinde viteza testelor).</li>
+  <li>Sâmbătă 14 nov.: suita completă pe ksh, <code>--surse</code>, <code>--curatenie</code>, prima <code>--mostra</code>, verificarea lunară a acțiunilor.</li>
+</ol>
+
 <h2>Ce urmează</h2>
 <p>În <a href="https://norgedan.github.io/status-proiect.html">status-proiect.html</a>, „Pașii următori” — o singură casă pentru plan (pas126; aici rămăsese planul din 2 noiembrie, cu pas103–pas106, făcuți de mult).</p>
 
