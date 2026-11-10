@@ -20,8 +20,6 @@ movile-chemosinteza
 movile-izolare
 movile-specii
 muzica-universala
-nbim-ai
-neonicotinoide-ue
 neshamah-frecventa
 neuroni-oglinda
 nucleu-temperatura
@@ -30,7 +28,6 @@ pamant-sferic
 polenizare
 senicid
 vag-aferent
-vosoughi-2018
 zimbardo-critica
 zipf-aleator
 zipf-efort-minim
