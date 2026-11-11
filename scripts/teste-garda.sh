@@ -565,6 +565,11 @@ mut_T192() { echo '# schimbata si reinregistrata in hub, fara jurnal' >> norgeda
 # pas143: regula [20] mutata — fisierul ei lipsa opreste garda; paznicul se citeste in terminal: doar ASCII
 mut_T198() { rm norgedan.github.io/scripts/reguli/20-dovezi.sh; }
 mut_T199() { printf '# o liniuta lunga \342\200\224 in paznic\n' >> norgedan.github.io/scripts/pazitor.sh; }
+# ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
+gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
+un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
+mut_T200() { cache_surse; printf '<!DOCTYPE html><html><head><title>Client Challenge</title></head><body><noscript><p>Please enable JavaScript to proceed.</p></noscript></body></html>' > "cache-surse/$(gu_k).html"; }
+mut_T201() { cache_surse; printf '<!DOCTYPE html><html><head><title>Loading</title><link href="/_fs-ch-AbC123/assets/styles.css" rel="stylesheet" /></head><body><script src="/_fs-ch-AbC123/script.js"></script></body></html>' > "cache-surse/$(un_k).html"; }
 # pas141: sigiliul lui Bogdan — paznicul instalat in copie, langa clone
 pz_instal() { sh norgedan.github.io/scripts/pazitor.sh --instaleaza > /dev/null; }
 pz_sigil()  { echo da | sh .norgedan/pazitor.sh --sigileaza > /dev/null; }
@@ -774,6 +779,8 @@ t T196 PICA    "lipseste sau nu e executabila"    "[10] poarta spre paznic setat
 t T197 SEMNAL  "paznicul instalat difera"         "[24] paznicul instalat nu mai e cel din hub: semnal"
 t T198 PICA    "20-dovezi.sh lipseste sau e gol"  "[20] regula mutata, fisierul ei lipseste: garda se opreste"
 t T199 PICA    "pazitor.sh are caractere care nu sunt ASCII" "[24] paznicul se citeste in terminal: o liniuta lunga e prinsa"
+t T200 SEMNAL  "civilian-death-rate-of-83-in-gaza-war cere verificare anti-robot" "--surse: pagina Client Challenge (titlul) numita ca atare, nu citat disparut" --surse
+t T201 SEMNAL  "db240513.doc.htm cere verificare anti-robot" "--surse: pagina cu resursele /_fs-ch- numita ca atare, nu citat disparut" --surse
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

@@ -2695,6 +2695,9 @@ AWK
   # Semnele se cauta doar cand citatul lipseste: o pagina reala poate contine un widget.
   # pas129: si verificarea PubMed (7 nov.: „cookies-required”, „challengeDomain”, 206
   # caractere de text, fara articol) — inainte raportata ca citat disparut.
+  # pas146: si verificarea „Client Challenge” (resursele /_fs-ch-…): 11 nov. 2026, aceeasi
+  # pagina de 3 KB servita lui curl de theguardian.com si de press.un.org, fara articol —
+  # raportata ca citat disparut, desi citatele erau in pagina (citite brut, respectiv de om).
   cat > "$W/botpat" <<'PAT'
 RecaptchaChallengePageUi
 challenge-platform
@@ -2708,6 +2711,8 @@ cookies-required
 px-captcha
 AwsWafIntegration
 Checking your browser
+<title>Client Challenge</title>
+/_fs-ch-
 PAT
   ng=0; nn=0; ni=0; nb=0; nlim=0; npdf=0
   grep -v '^#' "$SURSE" | grep -v '^[[:space:]]*$' | awk -F'\t' '$6 != "-"' > "$W/src"
