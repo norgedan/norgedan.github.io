@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas126, 7 noiembrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas144, 11 noiembrie 2026</p>
 
 <h2>Textul de copiat</h2>
 
@@ -153,6 +153,20 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     punct iese din listă doar cu motiv scris în jurnal: rezolvat, sau acceptat cu motiv.
     Curățenia (site, repo-uri, OpenBSD) se face la rularea săptămânală: o comandă care
     doar listează; șterge doar Bogdan (pas131, aprobată de Bogdan).
+25. Forma unei livrări (10–11 nov): descărcarea patch-urilor e pas numerotat, urmat de un
+    ls -l; ssh-add înainte de primul commit (commiturile se semnează); aplica.sh primește
+    calea completă a repo-ului; jurnalul întâi. O comandă care așteaptă tastatura (less,
+    --sigileaza, --confirma) stă SINGURĂ în blocul ei. Ce e doar de comparat cu ochii (o
+    listă așteptată pe ecran) se scrie în text, niciodată într-un bloc de comenzi.
+26. Sigiliul lui Bogdan (pas141): un patch care atinge scripturile gărzii se predă cu lista
+    exactă a fișierelor schimbate și noi; Bogdan aplică, apoi rulează
+    sh /home/bogdan/.norgedan/pazitor.sh --sigileaza, compară lista de pe ecran cu cea din
+    discuție și scrie „da” doar dacă sunt identice. Altfel push-ul e oprit de paznic.
+    După o schimbare în scripts/reguli/ sau lib.awk, Claude rulează --reguli; amprentele
+    și martorul din jurnal vin în patch-uri.
+27. Un capitol atins de un pas de conținut ori iese din lista de risc (verificat întreg și
+    înregistrat cu --capitole), ori rămâne în „Puncte slabe deschise” cu ce anume i-a
+    rămas necitit (pas142–pas143: corpus2-B#orient corectat, dar tot primul la risc).
 
 III. LECȚIILE — lista de verificare a unui capitol (fiecare vine dintr-o greșeală reală):
  1. --cauta pe fiecare fapt corectat: toate locurile unde apare, în toate documentele,
@@ -187,6 +201,16 @@ III. LECȚIILE — lista de verificare a unui capitol (fiecare vine dintr-o gre�
     temă → testele L9; cifre → [8]/[13]. Testele acelor secțiuni rulează la predare, iar
     un test nu se leagă de un număr care se schimbă odată cu site-ul (pas127a: T148
     căuta „1 … 0 citite”, pas124 pusese 4 rânduri de temă în același fișier).
+17. Formularea se propune DUPĂ citirea brută a sursei (citeste-sursa.py), nu după
+    rezumatul unui instrument (pas142: fișa punea violența sexuală lângă crimele împotriva
+    umanității; HRW o trece la crime de război și cere investigații).
+18. Un fapt marcat adus la zi se aduce la zi în TOATE documentele unde apare același id
+    (pas142: bilanțul din Gaza și Iranul erau și în corpus-04 și corpus3-2).
+19. La reluarea după o întrerupere, întâi starea copiilor: git log și git status în
+    fiecare copie. Ce e deja construit se verifică din nou (garda, testele, patch = commit),
+    nu se presupune (11 nov: pas142 era deja în commituri la reluare).
+20. O discuție lungă își pierde detaliile la rezumare: discuție nouă cel târziu după
+    3–4 pași sau la sfârșitul zilei, cu secțiunea de sesiune scrisă înainte.
 
 UNDE STAU CELELALTE (o singură casă pentru fiecare):
 - Cifrele, pașii făcuți și ce urmează: status-proiect.html.
@@ -204,7 +228,8 @@ UNDE STAU CELELALTE (o singură casă pentru fiecare):
 <ul>
   <li><code>status-proiect.html</code> — ce ESTE acum: repo-uri, tablou, verificări, decizii, istoricul pașilor (https://norgedan.github.io/status-proiect.html)</li>
   <li><code>ghid-github-norgedan.html</code> — CUM și DE CE: proceduri, secțiunile gărzii (singura lor descriere), lecțiile BSD/POSIX (https://norgedan.github.io/ghid-github-norgedan.html)</li>
-  <li><code>DOCUMENTARE.md</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Garda semnalează, doar local, când rămâne în urma pașilor din hub.</li>
+  <li><code>DOCUMENTARE.md</code> și <code>amprenta-reguli.txt</code> — din repo-ul privat <code>norgedan-jurnal</code>; nu se publică nicăieri. Garda semnalează, doar local, când jurnalul rămâne în urma pașilor din hub. Din ele își reface Claude copia jurnalului într-o discuție nouă (martorul regulilor e al doilea fișier, din pas139).</li>
+  <li>Rândurile cu arborii celor 7 repo-uri și starea sigiliului (comenzile de mai jos, lipite în discuție): Claude clonează singur cele 6 repo-uri publice de pe GitHub și compară arborele fiecăruia cu rândul tău — același arbore înseamnă exact aceleași fișiere (regula 22).</li>
   <li>Textele Bibliei (<code>~/biblii/b1688.txt</code>, <code>~/biblii/Norsk-1930.json</code>) — numai dacă se lucrează pe citate. Biblia 1688 nu există în mediul lui Claude: o regulă nouă din [14] se confirmă pe mașina lui Bogdan, înainte de commit.</li>
 </ul>
 
@@ -212,9 +237,16 @@ UNDE STAU CELELALTE (o singură casă pentru fiecare):
   <p class="eticheta">Cum se atașează pe OpenBSD</p>
   <p>Firefox e închis cu <code>unveil</code>: din directorul tău vede doar <code>~/Downloads</code> și <code>/tmp</code>. Deci: o copie proaspătă în Downloads, amprenta comparată cu fișierul din repo, atașarea, apoi copia ștearsă.</p>
 <pre class="cmd">cp /home/bogdan/norgedan-jurnal/DOCUMENTARE.md /home/bogdan/Downloads/DOCUMENTARE.md
+cp /home/bogdan/norgedan-jurnal/amprenta-reguli.txt /home/bogdan/Downloads/amprenta-reguli.txt
 sha256 /home/bogdan/norgedan-jurnal/DOCUMENTARE.md /home/bogdan/Downloads/DOCUMENTARE.md
-rm /home/bogdan/Downloads/DOCUMENTARE.md</pre>
-  <p>Ultima comandă, după atașare. Status și ghidul se pot da și ca link (sunt publice, cu noindex).</p>
+sha256 /home/bogdan/norgedan-jurnal/amprenta-reguli.txt /home/bogdan/Downloads/amprenta-reguli.txt</pre>
+  <p>Fiecare <code>sha256</code> trebuie să dea aceeași amprentă pe ambele rânduri. Apoi starea, de lipit în discuție așa cum iese (pas144):</p>
+<pre class="cmd">for r in norgedan.github.io corpus corpus2 opera limba limba-ro-final norgedan-jurnal; do git -C /home/bogdan/$r fetch -q origin; echo "$r $(git -C /home/bogdan/$r rev-parse --short=12 'HEAD^{tree}') $(git -C /home/bogdan/$r status -sb | head -1)"; done
+sh /home/bogdan/.norgedan/pazitor.sh --verifica; echo "sigiliu: $?"</pre>
+  <p>Fiecare rând trebuie să se termine cu <code>## main...origin/main</code>, fără nimic după; „sigiliu: 0” înseamnă gardă neschimbată de la sigilare. După atașare:</p>
+<pre class="cmd">rm /home/bogdan/Downloads/DOCUMENTARE.md
+rm /home/bogdan/Downloads/amprenta-reguli.txt</pre>
+  <p>Status și ghidul se pot da și ca link (sunt publice, cu noindex).</p>
 </div>
 
 <h2>Ce s-a făcut, pas cu pas (pas48–pas102)</h2>
@@ -292,6 +324,7 @@ sh ~/norgedan.github.io/scripts/legaturi.sh --scrie          # rescrie teme.html
 sh ~/norgedan.github.io/scripts/dovezi.sh --scrie            # rescrie dovezi.html din registre (pas130)
 sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie # sâmbăta: ce e de curățat — doar listează (pas132)
 sh ~/norgedan.github.io/scripts/verifica-site.sh --reguli    # după o schimbare VOITĂ în scripts/reguli/ sau lib.awk: amprentele din reguli.tsv + martorul din jurnal (pas139)
+sh ~/norgedan.github.io/scripts/pazitor.sh --instaleaza      # DOAR Bogdan, după ce a citit cu less paznicul schimbat de un patch (pas143); apoi --sigileaza
 sh ~/.norgedan/pazitor.sh --sigileaza                        # DOAR Bogdan, după un patch care atinge scripturile gărzii: arată ce s-a schimbat, cere „da”, rescrie sigiliul (pas141); fără el, push-ul e oprit
 sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra    # sâmbăta: 4 dovezi citite doar de Claude, fără citat — le citește Bogdan (pas134)
 sh ~/norgedan.github.io/scripts/verifica-site.sh --mostra 4 --citat  # după: citatele lui Claude, ca să compari
@@ -385,6 +418,67 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&
   <li>[structură] regula [20] mutată, apoi pregătirea comună rulabilă singură (de ea depinde viteza testelor).</li>
   <li>Sâmbătă 14 nov.: suita completă pe ksh, <code>--surse</code>, <code>--curatenie</code>, prima <code>--mostra</code>, verificarea lunară a acțiunilor.</li>
 </ol>
+
+<h2 id="sesiunea-11-noiembrie">Sesiunea 11 noiembrie 2026 (pas141–pas144): auditul, ce s-a făcut, ce a rămas</h2>
+<p>Ziua sigiliului și a primului capitol luat din lista de risc. Starea la închidere, după pas143 (garda la Bogdan, pe OpenBSD): totul împins, „totul în regulă”; 209 afirmații în registru, 173 cu dovezi, datoria 30, citite doar de Claude 160 și de un om 13; 267 de erori găsite și corectate; 46 de capitole verificate întregi din 197; sigiliul lui Bogdan pe 18 scripturi, neschimbate de la sigilare.</p>
+
+<h3>Ce s-a făcut</h3>
+<ul>
+  <li><strong>pas141 [structură] — sigiliul lui Bogdan.</strong> Garda e păzită din afara ei: <code>scripts/pazitor.sh</code>, instalat în <code>/home/bogdan/.norgedan/</code>, unde nu ajunge niciun patch; fiecare clonă publică are poarta (<code>core.hooksPath</code>) spre el. La push, paznicul compară scripturile gărzii cu sigiliul și abia apoi lasă garda să ruleze. Sigiliul îl rescrie doar Bogdan, cu <code>--sigileaza</code>, după ce a văzut lista schimbărilor. Regula [24] spune starea sigiliului la fiecare rulare.</li>
+  <li><strong>pas142 [conținut] — corpus2-B#orient și limita lui Hoyle.</strong> Propoziția neatribuită despre crimele din 7 octombrie a devenit una atribuită Human Rights Watch și marcată (<code>hrw-7oct</code>), după citirea brută a comunicatului din 17 iulie 2024. Aduse la zi în toate documentele unde apar: bilanțul din Gaza („peste 74.000 până în noiembrie 2026”), UNOSAT („circa 82%”, iunie 2026), războiul din Iran („în noiembrie 2026 nu există armistițiu”). Morții de foame, atribuiți Ministerului Sănătății din Gaza. În NO, paragraful de analiză care lipsea. În corpus-01, la fine-tuning: Hoyle, ateu, n-a identificat super-intelectul cu Dumnezeul personal al credinței; citirea spre Creator e a noastră („credem”).</li>
+  <li><strong>pas143 [structură] — regula [20] mutată</strong> în <code>scripts/reguli/20-dovezi.sh</code>, cu aceeași ieșire pe site și aceleași verdicte la testele ei; paznicul scris doar în ASCII (liniuțele lungi apăreau ca <code>&lt;E2&gt;&lt;80&gt;&lt;94&gt;</code> în <code>less</code>), cu regulă care blochează dacă reapar; martor valid în jurnalul de probă al suitei; tema „sănătate” nu mai prinde „Ministerul Sănătății”. Teste noi: T198, T199. Bogdan a citit paznicul nou, l-a reinstalat și a resigilat.</li>
+  <li><strong>pas144 [structură] — auditul de mai jos</strong> și această secțiune; regulile 25–27 și lecțiile 17–20 în textul de copiat; comenzile pentru o discuție nouă.</li>
+</ul>
+
+<h3>Auditul din 11 noiembrie, cu bune și cu rele (măsurat în copiile lui Claude, după pas143)</h3>
+<table>
+<tr><th>Strat</th><th>Bune</th><th>Rele</th></tr>
+<tr><td>Repo-urile</td><td>6 publice și jurnalul privat, toate împinse; ramura <code>main</code> a celor publice e protejată (fără ștergere, fără push forțat, doar commituri semnate); aceeași gardă activă în toate; fiecare patch e dovedit egal cu commitul lui Claude înainte de livrare, iar <code>aplica.sh</code> compară la Bogdan amprenta și lista fișierelor.</td><td>Jurnalul rămâne neprotejat (planul gratuit). Copiile lui Claude au alte commituri decât clonele lui Bogdan — aceleași fișiere, altă istorie; până azi potrivirea nu se verifica direct. Soluția, din pas144: arborele fiecărui repo comparat la începutul discuției.</td></tr>
+<tr><td>Site-ul</td><td>19 documente RO+NO, 197 de capitole, toate cu ancoră unică și pereche NO; 297 de citate biblice identice cu edițiile declarate; fiecare afirmație marcată are dovada la vedere (↗ spre dovezi.html); nicio afirmație „de verificat” sau „de corectat” în registru.</td><td>151 din 197 de capitole n-au verificare întreagă înregistrată — acolo stau 615 cifre și 271 de superlative necitite la sursă. Din 173 de afirmații cu dovezi, 160 sunt citite doar de Claude. Datoria: 30. 52 de perechi de capitole au numere doar într-o limbă (L8), necitite. Afirmațiile de actualitate îmbătrânesc lunar, iar garda nu vede luna rămasă în urmă.</td></tr>
+<tr><td>Scripturile</td><td>Garda blochează sau semnalează pe secțiuni, fiecare verificare nouă cu test; nicio extensie GNU găsită la căutarea tiparelor cunoscute; trei reguli stau în scripturi proprii, cu amprentă în registru, martor în jurnal și sigiliu la Bogdan; paznicul e doar ASCII.</td><td><code>verifica-site.sh</code> ține încă cele mai multe secțiuni; cele mai mari sunt [13], [14] și [18]. Suita e lentă: fiecare test cere o rulare întreagă a gărzii (circa 40 s în mediul lui Claude, la pas143), deci suita întreagă nu se poate rula des. Căutarea de extensii GNU a fost pe tipare, nu o dovadă: dovada rămâne rularea pe ksh la Bogdan.</td></tr>
+<tr><td>Rutina</td><td>Fișă → aprobare → patch → aplicare cu <code>aplica.sh</code> → gardă → commit → teste → sigilare (când e cazul) → push; jurnalul întâi; fiecare predare cu Verificat / Slab / Neverificat; punctele slabe trec în status 3a și au întâietate.</td><td>Azi, trei poticniri, toate din forma livrării sau din lungimea discuției: (1) lista de comparat la sigilare, pusă într-un bloc de comenzi, a fost lipită în terminal; (2) <code>less</code> și comanda următoare în același bloc — a doua a ajuns la <code>less</code> ca taste; (3) discuția s-a întrerupt în timpul pas142, iar la reluare commiturile erau deja făcute. Nimic nu s-a stricat, dar fiecare a devenit regulă sau lecție (25, 19, 20). Și: fișa pas142 a propus o formulare după rezumatul unui instrument, corectată la citirea brută (lecția 17).</td></tr>
+</table>
+
+<h3>Problemele zilei și soluțiile, fiecare în stadiul ei</h3>
+<ul>
+  <li><strong>Garda se putea schimba pe ea însăși printr-un patch</strong> → paznic și sigiliu în afara repo-urilor (pas141). <em>Rezolvat</em>; limite acceptate: nu apără de un calculator compromis și nu există în CI.</li>
+  <li><strong>Propoziție neatribuită și mai slabă decât sursa</strong> (corpus2-B#orient) → atribuită, marcată, cu citate exacte (pas142). <em>Rezolvat</em> pentru propoziție; <em>deschis</em> pentru capitol: e tot primul în lista de risc, fiindcă „cea mai sângeroasă zi pentru evrei de la Holocaust” și „Hamas, 1987” au fost citite doar prin rezumat, iar studiul Lancet și baza de date a armatei israeliene n-au fost recitite.</li>
+  <li><strong>Aceleași probleme în corpus-04, „Israel și Gaza”</strong> („proiectat deliberat”, o propoziție atribuită „experților ONU” necitită la sursă, paragraful de analiză lipsă din NO). <em>Deschis</em>, cu fișă — primul lucru din discuția următoare.</li>
+  <li><strong>Paznicul greu de citit în terminal</strong> → doar ASCII, cu regulă și test (pas143). <em>Rezolvat</em>.</li>
+  <li><strong>Jurnalul de probă al suitei fără martor</strong> → <code>jr_martor</code> (pas143). <em>Rezolvat</em>.</li>
+  <li><strong>Capitolele despre Gaza apăreau la tema „sănătate”</strong> → tiparul îngustat, măsurat înainte și după (pas143). <em>Rezolvat</em>; un capitol care ar scrie doar „Sănătății”, cu majusculă, n-ar mai fi prins — azi nu există niciunul.</li>
+  <li><strong>Modul <code>--surse</code> citea un fișier de lucru al secțiunii [20]</strong>, văzut la mutare → își face singur lista (pas143). <em>Rezolvat</em>, acoperit de un test pe pagini din cache; o rulare reală, cu rețea, sâmbătă.</li>
+  <li><strong>Luna din text rămâne în urmă</strong> la afirmațiile de actualitate. <em>Deschis</em>: de construit o avertizare în gardă.</li>
+  <li><strong>dovezi.html arată rândurile vechi lângă cele noi</strong> (73.651; 81%), fără să spună care e la zi. <em>Deschis</em>.</li>
+</ul>
+
+<h3>Lecțiile zilei</h3>
+<ul>
+  <li><strong>Formularea vine după citirea brută, nu înaintea ei.</strong> O fișă scrisă din rezumatul unui instrument poate fi aprobată greșită; diferența față de ce s-a aprobat se spune la predare.</li>
+  <li><strong>Forma unei comenzi e parte din siguranță.</strong> Ce nu e comandă nu stă în bloc de comenzi; ce așteaptă tastatura stă singur.</li>
+  <li><strong>După o întrerupere, întâi starea, apoi lucrul.</strong> Ce se găsește deja construit se verifică din nou, nu se crede.</li>
+  <li><strong>Un capitol corectat nu e un capitol verificat.</strong> Cât timp nu e înregistrat întreg, rămâne în lista de risc și se spune de ce.</li>
+  <li><strong>Mutarea unei reguli scoate la iveală legături ascunse</strong> (fișierul de lucru citit de <code>--surse</code>): de aceea se mută câte una, cu testele ei.</li>
+</ul>
+
+<h3>Ce mai avem de făcut, în ordine</h3>
+<ol>
+  <li><strong>[conținut] corpus-04 „Israel și Gaza” și restul din corpus2-B#orient.</strong> Întâi fișa: se citesc brut, cu <code>citeste-sursa.py</code>, sursele pentru „cea mai sângeroasă zi pentru evrei de la Holocaust”, „Hamas, 1987, din Frăția Musulmană”, studiul din The Lancet (ianuarie 2025), baza de date publicată de The Guardian, +972 și Local Call (august 2025), cifra copiilor, și propoziția atribuită „experților ONU” din corpus-04. Bogdan aprobă formulările RO și NO (inclusiv scoaterea lui „deliberat” și paragraful de analiză în NO). Apoi patch-ul, cu ambele capitole înregistrate prin <code>--capitole</code>, ca să iasă din lista de risc.</li>
+  <li><strong>[structură] viteza suitei:</strong> pregătirea comună rulabilă singură (textul curățat o singură dată pentru toate secțiunile), apoi testele în paralel, măsurate înainte și după. În același șir: următoarea regulă mutată; avertizarea pentru luna rămasă în urmă; testele care pică lângă un prag de mie de cuvinte; în dovezi.html, care rând e cel la zi.</li>
+  <li><strong>Sâmbătă, 14 noiembrie — rularea săptămânală, la Bogdan:</strong> suita completă pe ksh; <code>--surse</code> (acolo se confirmă și citatul de la Regensburg); <code>--curatenie</code>; prima <code>--mostra</code> (4 dovezi citite de Bogdan, confirmate cu <code>--confirma</code> doar dacă sursa susține); verificarea lunară a acțiunilor fixate în workflow. La Claude: suita pe dash și pe mksh.</li>
+  <li><strong>[conținut] datoria, lotul 4</strong> (din cele 30), cu surse citite brut; <code>iov-datare</code> după o sursă academică; <code>pelicani-delta</code> cu cifra primară a Comisiei Europene; cifra 25.000 repetată nemarcat în corpus3-5#cap4.</li>
+  <li><strong>[conținut] următoarele din lista de risc:</strong> corpus3-5#cap4, corpus-05#bogatii, corpus3-4#cap1 — fiecare cu fișă.</li>
+  <li><strong>Mai târziu, fiecare cu fișa lui:</strong> ancorele cu sens (doar adăugate, cele vechi păstrate); CSS-ul într-un singur fișier; statusul curățat, cu istoria într-o singură casă; capitolul nou „Puterea adevărului”; cele 52 de perechi din L8, citite.</li>
+</ol>
+<p><strong>Termene apropiate</strong> (din <code>afirmatii.tsv</code>): 30 noiembrie 2026 — trump-dmitriev-2026; 1 decembrie 2026 — afganistan-opiu și iran-razboi-2026; 15 decembrie 2026 — alegeri-sua-2026.</p>
+
+<h3>Discuția nouă: cum pornim</h3>
+<ol>
+  <li>Bogdan lipește „Textul de copiat” de la începutul acestei pagini și dă adresele: status-proiect.html, ghid-github-norgedan.html și această pagină, cu ancora <code>#sesiunea-11-noiembrie</code>.</li>
+  <li>Bogdan atașează <code>DOCUMENTARE.md</code> și <code>amprenta-reguli.txt</code> și lipește rândurile cu arborii și sigiliul — comenzile sunt mai sus, la „Cum se atașează pe OpenBSD”.</li>
+  <li>Claude clonează cele 6 repo-uri publice, își reface copia jurnalului din cele două fișiere, compară arborii cu rândurile lui Bogdan, rulează garda și spune ce a ieșit — abia apoi începe lucrul, cu punctul 1 din lista de mai sus.</li>
+</ol>
+<p>Arborii repo-urilor neatinse de pas144, la închiderea zilei (primele 12 caractere din <code>HEAD^{tree}</code>): corpus <code>bf9d44cca669</code> · corpus2 <code>c57d99c9f2c6</code> · opera <code>68919ceece8e</code> · limba <code>b0ebc4d0610b</code> · limba-ro-final <code>ec6b5827cb8a</code>. Arborele hub-ului și al jurnalului, după pas144, sunt în discuția de predare și în jurnal.</p>
 
 <h2>Ce urmează</h2>
 <p>În <a href="https://norgedan.github.io/status-proiect.html">status-proiect.html</a>, „Pașii următori” — o singură casă pentru plan (pas126; aici rămăsese planul din 2 noiembrie, cu pas103–pas106, făcuți de mult).</p>
