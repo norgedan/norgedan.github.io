@@ -1,24 +1,24 @@
 #!/bin/sh
-# pazitor.sh (pas141) — sigiliul lui Bogdan: garda pazita din afara ei.
+# pazitor.sh (pas141) - sigiliul lui Bogdan: garda pazita din afara ei.
 #
 # Garda nu se poate verifica pe ea insasi: un verifica-site.sh schimbat ar putea sari
 # orice verificare, iar un martor livrat prin patch e scris de acelasi care a scris
 # patch-ul.  De aceea paznicul si sigiliul stau IN AFARA repo-urilor, in
-# <radacina clonelor>/.norgedan/ — unde nu ajunge niciun patch (aplica.sh lucreaza doar
-# in clone) — iar sigiliul il rescrie doar omul, cu mana lui, dupa ce a vazut ce s-a schimbat.
+# <radacina clonelor>/.norgedan/ - unde nu ajunge niciun patch (aplica.sh lucreaza doar
+# in clone) - iar sigiliul il rescrie doar omul, cu mana lui, dupa ce a vazut ce s-a schimbat.
 #
 #   .norgedan/pazitor.sh      copia INSTALATA a acestui fisier (ea ruleaza, nu cea din hub)
 #   .norgedan/hooks/pre-push  poarta: fiecare clona are core.hooksPath spre acest director
 #   .norgedan/sigiliu.tsv     amprentele sha256 ale scripturilor garzii:  cale <TAB> amprenta
 #
-# Ce pazeste: tot ce hotaraste daca un push trece — scripts/*.sh, *.awk, *.py, hook-ul,
+# Ce pazeste: tot ce hotaraste daca un push trece - scripts/*.sh, *.awk, *.py, hook-ul,
 # regulile cu registrul lor si workflow-ul CI, toate din hub.  Registrele de date (*.tsv
 # din scripts/) NU: se schimba la fiecare pas de continut si le pazeste garda insasi.
 #
 #   sh scripts/pazitor.sh --instaleaza      (din hub, o data, dupa ce ai CITIT fisierul)
 #        copiaza paznicul in .norgedan/ si scrie poarta; nu sigileaza si nu atinge clonele
 #   sh .norgedan/pazitor.sh --sigileaza     arata ce s-a schimbat de la ultima sigilare,
-#        cere „da” si abia apoi rescrie sigiliul
+#        cere "da" si abia apoi rescrie sigiliul
 #   sh .norgedan/pazitor.sh --verifica      compara, fara sa scrie; iesire 0 = neschimbat,
 #        1 = schimbat (lista pe iesire), 2 = nesigilat sau hub lipsa
 #   (la push, chemat de poarta)  --push     verifica; neschimbat -> da mai departe garzii
@@ -48,7 +48,7 @@ if [ "$MOD" = --instaleaza ]; then
   exit 0
 fi
 
-# de aici: copia instalata — D = <radacina>/.norgedan
+# de aici: copia instalata - D = <radacina>/.norgedan
 HUB="$(dirname "$D")/norgedan.github.io"; S="$D/sigiliu.tsv"
 T=$(mktemp -d /tmp/pazitor.XXXXXX) || exit 1
 trap 'rm -rf "$T"' EXIT
@@ -62,7 +62,7 @@ acum() {
   while IFS= read -r f; do printf '%s\t%s\n' "$f" "$(sha "$HUB/$f")"; done < "$T/lista" > "$T/acum"
   [ -s "$T/acum" ]
 }
-# deosebiri <sigiliu> <acum> — un rand pentru fiecare fisier schimbat, nou sau disparut
+# deosebiri <sigiliu> <acum> - un rand pentru fiecare fisier schimbat, nou sau disparut
 deosebiri() {
   awk -F'\t' 'NR == FNR { v[$1] = $2; next }
     { n[$1] = 1; if (!($1 in v)) print "    nou:       " $1; else if (v[$1] != $2) print "    schimbat:  " $1 }
@@ -83,7 +83,7 @@ case $MOD in
   echo ""
   printf '  Ai vazut ce s-a schimbat si vrei sa sigilezi? Scrie da: '
   read -r r || r=
-  [ "$r" = da ] || { echo "  Nesigilat — nimic scris."; exit 1; }
+  [ "$r" = da ] || { echo "  Nesigilat - nimic scris."; exit 1; }
   cp "$T/acum" "$S.nou.$$" && mv "$S.nou.$$" "$S" || { rm -f "$S.nou.$$"; echo "pazitor: sigiliul nu a putut fi scris" >&2; exit 1; }
   echo "  Sigilat: $(wc -l < "$S" | tr -d ' ') fisiere, in $S"
   exit 0 ;;
@@ -91,11 +91,11 @@ case $MOD in
   shift
   top=$(git rev-parse --show-toplevel) || exit 1
   if [ ! -s "$S" ]; then
-    echo "pazitor: garda nu e sigilata — push oprit.  Sigileaza: sh $D/pazitor.sh --sigileaza" >&2; exit 1
+    echo "pazitor: garda nu e sigilata - push oprit.  Sigileaza: sh $D/pazitor.sh --sigileaza" >&2; exit 1
   fi
   if ! cmp -s "$S" "$T/acum"; then
     echo "" >&2
-    echo "pazitor: scripturile garzii s-au schimbat de la ultima sigilare — PUSH OPRIT:" >&2
+    echo "pazitor: scripturile garzii s-au schimbat de la ultima sigilare - PUSH OPRIT:" >&2
     deosebiri "$S" "$T/acum" >&2
     echo "  Daca schimbarea e cea asteptata (ai aplicat un patch care le atinge):" >&2
     echo "    sh $D/pazitor.sh --sigileaza" >&2

@@ -206,9 +206,13 @@ mut_T47() { rep norgedan.github.io/scripts/verifica-site.sh 's/while ((i = index
 # (independent de cate sunt inregistrate — un numar fix s-ar strica la primul rand nou)
 mut_T45() { grep -v '^corpus2-C	' "$CV" > x && mv x "$CV"; }
 
+# jr_martor (pas143): martorul valid al registrului regulilor, in jurnalul de test — ca un
+# test cu jurnal sa pice (sau sa semnaleze) doar din motivul lui, nu si din „martorul lipseste”
+jr_martor() { mkdir -p norgedan-jurnal
+              if command -v sha256 >/dev/null 2>&1; then sha256 -q norgedan.github.io/scripts/reguli/reguli.tsv; else sha256sum norgedan.github.io/scripts/reguli/reguli.tsv | cut -d' ' -f1; fi > norgedan-jurnal/amprenta-reguli.txt; }
 # ── pas64: mesajul din [11] arata pasul, pe orice shell ────────────────────
 # un jurnal ramas in urma (data veche): atentionarea trebuie sa numeasca pasul
-mut_T48() { mkdir -p norgedan-jurnal && printf '| 2026-01-01 | test |\n' > norgedan-jurnal/DOCUMENTARE.md; }
+mut_T48() { mkdir -p norgedan-jurnal && printf '| 2026-01-01 | test |\n' > norgedan-jurnal/DOCUMENTARE.md && jr_martor; }
 
 # ── pas67: dovezile, riscul, erorile ([19]-[21]) ──────────────────────────
 SR=norgedan.github.io/scripts/surse.tsv; SDT=norgedan.github.io/scripts/surse-datorie.txt; ER=norgedan.github.io/scripts/erori.tsv
@@ -336,7 +340,7 @@ mut_T83() { rm norgedan.github.io/og.png; }
 mut_T84() { printf '\211PNG\r\n\032\n\000\000\000\015IHDR\000\000\002\000\000\000\001\000\010\002\000\000\000' > norgedan.github.io/og.png; }
 # [11]: jurnalul scris dupa miezul noptii — data e alta, dar pasul din hub apare: tace
 mut_T49() { hs=$(git -C norgedan.github.io log -1 --grep='^pas[0-9]' --format='%s' | cut -d: -f1)
-            mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md; }
+            mkdir -p norgedan-jurnal && printf '| 2026-01-01 | %s: test |\n' "$hs" > norgedan-jurnal/DOCUMENTARE.md && jr_martor; }
 
 mut_T26() { tr -d '\n' < corpus/sitemap.xml | sed 's|</urlset>|<url><loc>https://norgedan.github.io/corpus/fantoma.html</loc></url><url><loc>https://norgedan.github.io/corpus/</loc></url></urlset>|' > x && mv x corpus/sitemap.xml; }
 
@@ -557,7 +561,10 @@ mut_T189() { echo '# o schimbare mica, neinregistrata' >> norgedan.github.io/scr
 mut_T190() { mkdir -p norgedan-jurnal && echo 0000 > norgedan-jurnal/amprenta-reguli.txt; }
 mut_T191() { mkdir -p norgedan-jurnal && echo "| 2026-01-01 | test |" > norgedan-jurnal/DOCUMENTARE.md; }
 mut_T192() { echo '# schimbata si reinregistrata in hub, fara jurnal' >> norgedan.github.io/scripts/reguli/21-erori.sh; mkdir -p norgedan-jurnal
-             if command -v sha256 >/dev/null 2>&1; then sha256 -q norgedan.github.io/scripts/reguli/reguli.tsv; else sha256sum norgedan.github.io/scripts/reguli/reguli.tsv | cut -d' ' -f1; fi > norgedan-jurnal/amprenta-reguli.txt; rg_reinreg; }
+             jr_martor; rg_reinreg; }
+# pas143: regula [20] mutata — fisierul ei lipsa opreste garda; paznicul se citeste in terminal: doar ASCII
+mut_T198() { rm norgedan.github.io/scripts/reguli/20-dovezi.sh; }
+mut_T199() { printf '# o liniuta lunga \342\200\224 in paznic\n' >> norgedan.github.io/scripts/pazitor.sh; }
 # pas141: sigiliul lui Bogdan — paznicul instalat in copie, langa clone
 pz_instal() { sh norgedan.github.io/scripts/pazitor.sh --instaleaza > /dev/null; }
 pz_sigil()  { echo da | sh .norgedan/pazitor.sh --sigileaza > /dev/null; }
@@ -765,6 +772,8 @@ t T194 SEMNAL  "schimbate de la ultima sigilare"  "[24] script schimbat dupa sig
 t T195 SEMNAL  "nu e sigilata"                    "[24] paznic instalat, fara sigiliu: semnal"
 t T196 PICA    "lipseste sau nu e executabila"    "[10] poarta spre paznic setata, dar paznicul nu e acolo: push-ul ar trece fara garda" manual
 t T197 SEMNAL  "paznicul instalat difera"         "[24] paznicul instalat nu mai e cel din hub: semnal"
+t T198 PICA    "20-dovezi.sh lipseste sau e gol"  "[20] regula mutata, fisierul ei lipseste: garda se opreste"
+t T199 PICA    "pazitor.sh are caractere care nu sunt ASCII" "[24] paznicul se citeste in terminal: o liniuta lunga e prinsa"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

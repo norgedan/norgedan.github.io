@@ -16,7 +16,15 @@ SCRIPT_DIR=$1; W=$2
 [ -d "$SCRIPT_DIR" ] && [ -d "$W" ] || { echo "utilizare: sh $0 <scripts> <pregatire>" >&2; exit 2; }
 ok()      { echo "  OK       $1"; }
 atentie() { echo "  ATENTIE  $1"; }
+problema() { echo "  PROBLEMA $1"; }
 N="$(dirname "$(dirname "$SCRIPT_DIR")")/.norgedan"
+
+# pas143: paznicul e singurul script pe care omul il citeste intreg, in terminal (less),
+# inainte sa-l instaleze; acolo o liniuta lunga apare ca <E2><80><94>.  Deci doar ASCII.
+# Se verifica si unde paznicul nu e instalat (CI, copiile suitei).
+if [ -f "$SCRIPT_DIR/pazitor.sh" ] && LC_ALL=C grep -q '[^ -~	]' "$SCRIPT_DIR/pazitor.sh"; then
+  problema "scripts/pazitor.sh are caractere care nu sunt ASCII — in terminal se citesc greu: $(LC_ALL=C grep -c '[^ -~	]' "$SCRIPT_DIR/pazitor.sh") randuri (LC_ALL=C grep -n '[^ -~]' scripts/pazitor.sh)"
+fi
 
 if [ ! -f "$N/pazitor.sh" ]; then
   ok "sigiliul: sarit — paznicul nu e instalat pe acest calculator ($N)"
