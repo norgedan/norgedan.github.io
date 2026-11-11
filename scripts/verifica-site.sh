@@ -1101,7 +1101,15 @@ while read -r repo; do
   # ce urmeaza tine de clona locala — in CI nu exista, deci nu se verifica acolo
   if [ "$MOD" != ci ]; then
     hp=$(git -C "$d" config --get core.hooksPath 2>/dev/null)
-    [ "$hp" = "scripts/hooks" ] || { problema "$repo: garda inactiva (core.hooksPath=\"${hp:-nesetat}\")"; greseli=1; }
+    # pas141: poarta noua e paznicul din afara repo-urilor (<radacina>/.norgedan/hooks), care
+    # verifica sigiliul si abia apoi cheama hook-ul din clona; poarta veche inca e primita,
+    # cu semnal, pana e instalat paznicul.
+    case "$hp" in
+      "$RADACINA/.norgedan/hooks")
+        [ -x "$RADACINA/.norgedan/hooks/pre-push" ] || { problema "$repo: poarta $hp/pre-push lipseste sau nu e executabila — push-ul ar trece fara garda"; greseli=1; } ;;
+      scripts/hooks) atentie "$repo: poarta veche (core.hooksPath=scripts/hooks) — garda ruleaza, dar fara paznic si sigiliu: git config core.hooksPath $RADACINA/.norgedan/hooks" ;;
+      *) problema "$repo: garda inactiva (core.hooksPath=\"${hp:-nesetat}\")"; greseli=1 ;;
+    esac
     # identitatea cu care se fac commit-urile: adresa noreply, nu emailul personal
     em=$(git -C "$d" config --get user.email 2>/dev/null)
     case "$em" in
@@ -2846,6 +2854,10 @@ PAT
   fi
   ok "--surse: $ng citate gasite in pagina lor; $nn negasite; $ni pagini inaccesibile; $nb cu verificare anti-robot; $nlim limitate de server (429); $npdf PDF fara text ($nr adrese la a doua incercare, $nrr recuperate)"
 fi
+
+# ════════════════════════════════════════════════════════════════════
+# pas141: sigiliul lui Bogdan, intrebat si de garda (ancora e paznicul, care ruleaza inaintea ei)
+regula 24
 
 # ════════════════════════════════════════════════════════════════════
 tablou

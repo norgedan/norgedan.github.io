@@ -18,3 +18,4 @@
 #   - POSIX sh si awk, fara extensii GNU.
 lib	lib.awk	Biblioteca functiilor awk comune	184742502fcc769ac46e04de046efe9820571a186641259356c97254ddf90b45
 21	reguli/21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam	0617a306f1c16ad0134fba0822a814556de730d08b71df3c0de4d6005342f6d7
+24	reguli/24-sigiliu.sh	Sigiliul lui Bogdan: garda pazita din afara ei	c3a3b291a642211640833cfbd7c2b506505e5c430b3f0b3e83d3c84760b149f5

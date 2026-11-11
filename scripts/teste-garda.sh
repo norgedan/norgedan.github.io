@@ -558,6 +558,14 @@ mut_T190() { mkdir -p norgedan-jurnal && echo 0000 > norgedan-jurnal/amprenta-re
 mut_T191() { mkdir -p norgedan-jurnal && echo "| 2026-01-01 | test |" > norgedan-jurnal/DOCUMENTARE.md; }
 mut_T192() { echo '# schimbata si reinregistrata in hub, fara jurnal' >> norgedan.github.io/scripts/reguli/21-erori.sh; mkdir -p norgedan-jurnal
              if command -v sha256 >/dev/null 2>&1; then sha256 -q norgedan.github.io/scripts/reguli/reguli.tsv; else sha256sum norgedan.github.io/scripts/reguli/reguli.tsv | cut -d' ' -f1; fi > norgedan-jurnal/amprenta-reguli.txt; rg_reinreg; }
+# pas141: sigiliul lui Bogdan — paznicul instalat in copie, langa clone
+pz_instal() { sh norgedan.github.io/scripts/pazitor.sh --instaleaza > /dev/null; }
+pz_sigil()  { echo da | sh .norgedan/pazitor.sh --sigileaza > /dev/null; }
+mut_T193() { pz_instal && pz_sigil; }
+mut_T194() { pz_instal && pz_sigil && echo '# schimbat dupa sigilare' >> norgedan.github.io/scripts/curatenie.sh; }
+mut_T195() { pz_instal; }
+mut_T196() { git -C opera config core.hooksPath "$(pwd)/.norgedan/hooks" && mut_neutru; }
+mut_T197() { pz_instal && pz_sigil && echo '# altul decat cel citit de om' >> .norgedan/pazitor.sh; }
 mut_T179() { f=norgedan.github.io/scripts/surse.tsv; awk 'NR > 1 { printf "\n" } { printf "%s", $0 }' "$f" > x && mv x "$f"; }
 mut_T119() { awk '{ print } /<\/h2>/ && !g { print "<p>Cifra 987654 doar aici.</p>"; g = 1 }' corpus/02-ce-este-omul-ro.html > x && mv x corpus/02-ce-este-omul-ro.html; }
 
@@ -752,6 +760,11 @@ t T189 PICA    "lib.awk: amprenta difera"         "biblioteca schimbata fara amp
 t T190 PICA    "martorul din jurnal nu se potriveste" "martorul din jurnal spune altceva decat registrul"
 t T191 PICA    "martorul din jurnal lipseste"     "jurnal prezent, fara martor"
 t T192 PICA    "martorul din jurnal nu se potriveste" "regula schimbata si reinregistrata doar in hub: martorul din jurnal o prinde"
+t T193 SEMNAL  "sigiliul lui Bogdan: "             "[24] paznic instalat si sigilat: garda o spune"
+t T194 SEMNAL  "schimbate de la ultima sigilare"  "[24] script schimbat dupa sigilare: semnal, cu lista"
+t T195 SEMNAL  "nu e sigilata"                    "[24] paznic instalat, fara sigiliu: semnal"
+t T196 PICA    "lipseste sau nu e executabila"    "[10] poarta spre paznic setata, dar paznicul nu e acolo: push-ul ar trece fara garda" manual
+t T197 SEMNAL  "paznicul instalat difera"         "[24] paznicul instalat nu mai e cel din hub: semnal"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
