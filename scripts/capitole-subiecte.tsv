@@ -1,0 +1,208 @@
+# capitole-subiecte.tsv — registrul declarat: ce subiecte trateaza fiecare capitol (pas148).
+# Citit de scripts/subiect.sh.  Aici sta intelesul; tiparele din teme.tsv si subiecte.tsv
+# raman doar alarma (subiect.sh arata unde tiparul si registrul se contrazic).
+#
+# Un rand = un capitol RO (perechea NO il urmeaza).  5 coloane, separate prin TAB:
+#   doc  ancora  principal  secundare  cum
+#   principal  id-ul subiectului principal; "-" = capitol de sinteza (tablou, concluzie)
+#              fara un subiect principal
+#   secundare  id-uri separate prin spatiu; "-" = niciunul
+#   cum        citit      = stabilit dupa citirea intreaga a capitolului, aprobat de Bogdan
+#              provizoriu = pus dupa titlu si dupa tipare, inca necitit intreg pentru asta
+corpus-01	treime	dumnezeu	-	provizoriu
+corpus-01	intelepciune	dumnezeu	creatie-stiinta	provizoriu
+corpus-01	fine-tuning	creatie-stiinta	-	provizoriu
+corpus-01	adn	creatie-stiinta	-	provizoriu
+corpus-01	geneza	creatie-stiinta	-	provizoriu
+corpus-01	izvoare	creatie-stiinta	-	provizoriu
+corpus-01	morala	om-suflet	-	provizoriu
+corpus-01	constiinta	om-suflet	creier-minte inima	provizoriu
+corpus-01	nefiinta	dumnezeu	rau-suferinta credinta-bine	provizoriu
+corpus-01	concluzie	creatie-stiinta	om-suflet	provizoriu
+corpus-02	suflarea	om-suflet	-	provizoriu
+corpus-02	chip	om-suflet	-	provizoriu
+corpus-02	minte-inima	inima	creier-minte	provizoriu
+corpus-02	suflet-duh	om-suflet	-	provizoriu
+corpus-02	limbaj	om-suflet	creier-minte	provizoriu
+corpus-02	zipf	om-suflet	-	provizoriu
+corpus-02	ebraica	om-suflet	-	provizoriu
+corpus-02	muzica	om-suflet	-	provizoriu
+corpus-02	moarte-inviere	om-suflet	istoria-mantuirii	provizoriu
+corpus-02	concluzie	om-suflet	-	provizoriu
+corpus-03	originea	rau-suferinta	-	provizoriu
+corpus-03	satan	rau-suferinta	-	provizoriu
+corpus-03	caderea	rau-suferinta	-	provizoriu
+corpus-03	banalitatea	rau-suferinta	-	provizoriu
+corpus-03	creierul	creier-minte	dezinformare	provizoriu
+corpus-03	inima	inima	-	provizoriu
+corpus-03	propaganda	dezinformare	rusia	provizoriu
+corpus-03	credinta	credinta-bine	-	provizoriu
+corpus-03	antidotul	inima	dezinformare	provizoriu
+corpus-03	binele	credinta-bine	rau-suferinta	provizoriu
+corpus-03	concluzie	credinta-bine	-	provizoriu
+corpus-04	radiografie	-	china rusia iran europa	provizoriu
+corpus-04	imperii	imperii-istorie	-	provizoriu
+corpus-04	isus	istoria-mantuirii	imperii-istorie	provizoriu
+corpus-04	israel	gaza-israel	-	citit
+corpus-04	factori	-	rusia gaza-israel	provizoriu
+corpus-04	actori	-	moldova nato china rusia	provizoriu
+corpus-04	planul	imperii-istorie	-	provizoriu
+corpus-04	concluzie	-	rau-suferinta	provizoriu
+corpus-05	pamantul-viu	natura-romaniei	-	provizoriu
+corpus-05	aer-apa-sol	natura-romaniei	-	provizoriu
+corpus-05	furnici-albine	natura-romaniei	-	provizoriu
+corpus-05	carpati	natura-romaniei	-	provizoriu
+corpus-05	bogatii	natura-romaniei	romania-economie	provizoriu
+corpus-05	fauna	natura-romaniei	-	provizoriu
+corpus-05	movile	natura-romaniei	-	provizoriu
+corpus-05	responsabilitate	natura-romaniei	-	provizoriu
+corpus-05	brancusi	-	-	provizoriu
+corpus-05	concluzie	natura-romaniei	-	provizoriu
+corpus-06	ce-este-ai	ai	-	provizoriu
+corpus-06	constiinta	ai	om-suflet	provizoriu
+corpus-06	chipul	ai	om-suflet	provizoriu
+corpus-06	pericolele	ai	dezinformare inima	provizoriu
+corpus-06	romania	ai	dezinformare	provizoriu
+corpus-06	norvegia	ai	-	provizoriu
+corpus-06	scriptura	ai	inima	provizoriu
+corpus-06	concluzie	ai	om-suflet	provizoriu
+corpus2-A	dumnezeu	dumnezeu	-	provizoriu
+corpus2-A	creatia	creatie-stiinta	-	provizoriu
+corpus2-A	caderea	rau-suferinta	-	provizoriu
+corpus2-A	avraam	istoria-mantuirii	-	provizoriu
+corpus2-A	moise	istoria-mantuirii	-	provizoriu
+corpus2-A	prorocii	istoria-mantuirii	-	provizoriu
+corpus2-A	hristos	istoria-mantuirii	-	provizoriu
+corpus2-A	biserica	istoria-mantuirii	-	provizoriu
+corpus2-A	raul	rau-suferinta	-	provizoriu
+corpus2-A	limbi	istoria-mantuirii	-	provizoriu
+corpus2-A	minte	inima	creier-minte	provizoriu
+corpus2-A	sfarsit	istoria-mantuirii	-	provizoriu
+corpus2-A	azi	-	istoria-mantuirii	provizoriu
+corpus2-A	alegerea	istoria-mantuirii	-	provizoriu
+corpus2-B	tabloul	-	iran rau-suferinta	provizoriu
+corpus2-B	rusia-adn	rusia-imperiala	rusia	provizoriu
+corpus2-B	doua-popoare	ucraina-razboi	rusia	provizoriu
+corpus2-B	crime	ucraina-razboi	rusia	provizoriu
+corpus2-B	putin	rusia	ucraina-razboi dezinformare	provizoriu
+corpus2-B	prietenii	rusia	china iran	provizoriu
+corpus2-B	china	china	rusia	provizoriu
+corpus2-B	orient	gaza-israel	iran	provizoriu
+corpus2-B	imperii	imperii-istorie	-	provizoriu
+corpus2-B	dumnezeu-istorie	imperii-istorie	-	provizoriu
+corpus2-B	concluzie	-	imperii-istorie	provizoriu
+corpus2-C	intro	dezinformare	-	provizoriu
+corpus2-C	economia	dezinformare	-	provizoriu
+corpus2-C	actori	dezinformare	ai	provizoriu
+corpus2-C	minciuni	dezinformare	sanatate	provizoriu
+corpus2-C	romania-vulnerabila	dezinformare	-	provizoriu
+corpus2-C	galati	rusia	nato	provizoriu
+corpus2-C	algoritm	ai	dezinformare	provizoriu
+corpus2-C	radicalizat	dezinformare	-	provizoriu
+corpus2-C	silicon	-	ai china europa	provizoriu
+corpus2-C	razboi-cibernetic	securitate-cibernetica	china	provizoriu
+corpus2-C	glasswing	securitate-cibernetica	-	provizoriu
+corpus2-C	ce-faci	securitate-cibernetica	-	provizoriu
+corpus2-D	intro	sanatate	-	provizoriu
+corpus2-D	era-comunista	comunism-postcomunism	-	provizoriu
+corpus2-D	postcomunism	comunism-postcomunism	-	provizoriu
+corpus2-D	demografie	demografie-diaspora	-	provizoriu
+corpus2-D	boli	sanatate	-	provizoriu
+corpus2-D	sistem-medical	sanatate	-	provizoriu
+corpus2-D	cazuri	sanatate	-	provizoriu
+corpus2-D	dezinformare-medicala	sanatate	dezinformare	provizoriu
+corpus2-D	farmaceutice	sanatate	-	provizoriu
+corpus2-D	droguri	sanatate	-	provizoriu
+corpus2-D	creier	sanatate	creier-minte	provizoriu
+corpus2-D	glimfatic	creier-minte	-	provizoriu
+corpus2-D	rezerva	creier-minte	-	provizoriu
+corpus2-D	speranta	-	comunism-postcomunism	provizoriu
+corpus3-1	cap1	rusia-imperiala	rusia	provizoriu
+corpus3-1	cap2	rusia-imperiala	comunism-postcomunism moldova	provizoriu
+corpus3-1	cap3	rusia-imperiala	-	provizoriu
+corpus3-1	cap4	rusia-imperiala	nato	provizoriu
+corpus3-1	cap5	rusia	nato	provizoriu
+corpus3-1	cap6	dezinformare	rusia	provizoriu
+corpus3-1	cap7	romania-ucraina	-	provizoriu
+corpus3-1	cap8	moldova	-	provizoriu
+corpus3-1	cap9	comunism-postcomunism	-	provizoriu
+corpus3-1	cap10	rusia-imperiala	moldova	provizoriu
+corpus3-1	cap11	rusia	moldova dezinformare	provizoriu
+corpus3-1	concluzie	-	rusia comunism-postcomunism	provizoriu
+corpus3-2	cap1	-	-	provizoriu
+corpus3-2	cap2	-	china rusia iran	provizoriu
+corpus3-2	cap3	europa	dezinformare rusia	provizoriu
+corpus3-2	cap4	ucraina-razboi	-	provizoriu
+corpus3-2	cap5	rusia	-	provizoriu
+corpus3-2	cap6	china	-	provizoriu
+corpus3-2	cap7	-	rusia gaza-israel	provizoriu
+corpus3-2	cap8	-	nato china rusia	provizoriu
+corpus3-2	cap9	-	gaza-israel rau-suferinta	provizoriu
+corpus3-2	cap10	sua-trump	-	provizoriu
+corpus3-2	concluzie	-	-	provizoriu
+corpus3-3	cap1	europa	-	provizoriu
+corpus3-3	cap2	europa	-	provizoriu
+corpus3-3	cap3	europa	-	provizoriu
+corpus3-3	cap4	europa	rusia	provizoriu
+corpus3-3	cap5	europa	china rusia sua-trump	provizoriu
+corpus3-3	cap6	europa	nato china	provizoriu
+corpus3-3	cap7	europa	-	provizoriu
+corpus3-3	cap8	europa	dezinformare	provizoriu
+corpus3-3	concluzie	europa	-	provizoriu
+corpus3-4	cap1	-	romania-economie romania-politica	provizoriu
+corpus3-4	cap2	romania-politica	-	provizoriu
+corpus3-4	cap3	nato	ucraina-razboi	provizoriu
+corpus3-4	cap4	nato	-	provizoriu
+corpus3-4	cap5	romania-economie	-	provizoriu
+corpus3-4	cap6	romania-economie	-	provizoriu
+corpus3-4	cap7	romania-politica	dezinformare	provizoriu
+corpus3-4	cap8	demografie-diaspora	-	provizoriu
+corpus3-4	cap9	comunism-postcomunism	-	provizoriu
+corpus3-4	cap10	-	romania-economie romania-politica	provizoriu
+corpus3-4	concluzie	-	-	provizoriu
+corpus3-5	cap1	dezinformare	-	provizoriu
+corpus3-5	cap2	dezinformare	-	provizoriu
+corpus3-5	cap3	dezinformare	rusia	provizoriu
+corpus3-5	cap4	dezinformare	romania-politica	provizoriu
+corpus3-5	cap5	dezinformare	ai	provizoriu
+corpus3-5	cap6	dezinformare	-	provizoriu
+corpus3-5	cap7	dezinformare	-	provizoriu
+corpus3-5	cap8	dezinformare	-	provizoriu
+corpus3-5	concluzie	dezinformare	-	provizoriu
+corpus3-6	cap1	-	-	provizoriu
+opera-1	cap1	opera	-	provizoriu
+opera-1	cap2	opera	-	provizoriu
+opera-1	cap3	opera	-	provizoriu
+opera-1	cap4	opera	-	provizoriu
+opera-1	cap5	opera	-	provizoriu
+opera-1	cap6	opera	-	provizoriu
+opera-1	cap7	opera	-	provizoriu
+opera-1	cap8	opera	-	provizoriu
+opera-1	cap9	opera	-	provizoriu
+opera-1	cap10	opera	-	provizoriu
+opera-1	cap11	opera	-	provizoriu
+limba-1	cap1	limba-romana	-	provizoriu
+limba-1	cap2	limba-romana	-	provizoriu
+limba-1	cap3	limba-romana	moldova rusia-imperiala	provizoriu
+limba-1	cap4	limba-romana	-	provizoriu
+limba-1	cap5	moldova	limba-romana	provizoriu
+limba-1	cap6	moldova	-	provizoriu
+limba-1	cap7	romania-ucraina	-	provizoriu
+limba-1	cap8	demografie-diaspora	-	provizoriu
+limba-1	cap9	moldova	-	provizoriu
+limba-1	cap10	limba-romana	-	provizoriu
+limba-ro-final-1	cap1	limba-romana	-	provizoriu
+limba-ro-final-1	cap2	limba-romana	-	provizoriu
+limba-ro-final-1	cap3	limba-romana	-	provizoriu
+limba-ro-final-1	cap4	limba-romana	-	provizoriu
+limba-ro-final-1	cap5	limba-romana	-	provizoriu
+limba-ro-final-1	cap6	limba-romana	-	provizoriu
+limba-ro-final-1	cap7	limba-romana	-	provizoriu
+limba-ro-final-1	cap8	limba-romana	-	provizoriu
+limba-ro-final-1	cap9	limba-romana	-	provizoriu
+limba-ro-final-1	cap10	limba-romana	-	provizoriu
+limba-ro-final-1	cap11	limba-romana	moldova	provizoriu
+limba-ro-final-1	cap12	limba-romana	moldova	provizoriu
+limba-ro-final-1	cap13	moldova	-	provizoriu
+limba-ro-final-1	cap14	demografie-diaspora	-	provizoriu
+limba-ro-final-1	cap15	limba-romana	-	provizoriu
