@@ -1,0 +1,13 @@
+# subiecte.tsv — subiectele norgedan care nu au (inca) o casa in teme.tsv (pas147).
+# Citit de scripts/subiect.sh, impreuna cu teme.tsv: orice tema e si subiect.
+#
+# Un rand = un subiect.  5 coloane, separate prin TAB, aceleasi ca in teme.tsv:
+#   id  titlu_ro  titlu_no  casa  tipar
+#   casa   "-" cat timp subiectul nu are un singur loc unde se tine la zi; cand primeste
+#          unul, randul se muta in teme.tsv (acolo casa e obligatorie si verificata de garda).
+#   tipar  expresie regulata (ERE), cautata cu majusculele exacte in textul RO al fiecarui
+#          capitol si in textul marcat al fiecarei afirmatii.
+# Un id nu poate fi si in teme.tsv, si aici.
+gaza-israel	Israel și Gaza	Israel og Gaza	-	Gaza|Hamas|[Pp]alestinian|Netanyahu|[Ii]sraelian|Cisiordani|Hezbollah
+iran	Iranul	Iran	-	Iran|[Ii]ranian|Teheran|Ormuz|Hormuz|Khamenei
+sua-trump	Statele Unite sub Trump	USA under Trump	-	Trump|Casa Albă|Witkoff|Dmitriev|Vance
