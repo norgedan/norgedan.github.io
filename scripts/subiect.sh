@@ -135,13 +135,15 @@ PROV=$(grep -v '^#' "$REG" | awk -F'\t' '$5 == "provizoriu"' | wc -l | tr -d ' '
 
 # ── capitolele fara niciun subiect declarat ──────────────────────────
 awk -F'\t' 'FILENAME == ARGV[1] { are[$2 "\t" $3] = 1; next }
-  !(($1 "\t" $4) in are) { print $1 "#" $4 "\t" $5 }' "$W/dc" "$W/cap" > "$W/fara"
+  FILENAME == ARGV[2] { if (!/^#/) cum[$1 "\t" $2] = $5; next }
+  !(($1 "\t" $4) in are) { print $1 "#" $4 "\t" $5 "\t" cum[$1 "\t" $4] }' "$W/dc" "$REG" "$W/cap" > "$W/fara"
 NF_=$(wc -l < "$W/fara" | tr -d ' ')
 
 if [ "$CE" = --fara ]; then
   echo "Capitole RO fara niciun subiect declarat in capitole-subiecte.tsv: $NF_ din $TOT"
+  echo "  (sinteza = citit si lasat fara subiect: deschidere sau concluzie; de lamurit = inca necitit)"
   awk -F'\t' 'function scurt(t, m) { if (length(t) <= m) return t; t = substr(t, 1, m); sub(/ [^ ]*$/, "", t); return t " ..." }
-    { printf "  %-32s %s\n", $1, scurt($2, 60) }' "$W/fara"
+    { printf "  %-32s %-11s %s\n", $1, ($3 == "citit" ? "sinteza" : "de lamurit"), scurt($2, 52) }' "$W/fara"
   echo ""
   echo "Randuri inca „provizoriu” (puse dupa titlu si tipare, necitite intreg): $PROV din $TOT"
   exit 0

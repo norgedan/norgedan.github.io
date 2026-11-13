@@ -48,16 +48,16 @@ corpus-04	factori	-	rusia gaza-israel	provizoriu
 corpus-04	actori	-	moldova nato china rusia	provizoriu
 corpus-04	planul	imperii-istorie	-	provizoriu
 corpus-04	concluzie	-	rau-suferinta	provizoriu
-corpus-05	pamantul-viu	natura-romaniei	-	provizoriu
-corpus-05	aer-apa-sol	natura-romaniei	-	provizoriu
-corpus-05	furnici-albine	natura-romaniei	-	provizoriu
-corpus-05	carpati	natura-romaniei	-	provizoriu
-corpus-05	bogatii	natura-romaniei	romania-economie	provizoriu
-corpus-05	fauna	natura-romaniei	-	provizoriu
-corpus-05	movile	natura-romaniei	-	provizoriu
-corpus-05	responsabilitate	natura-romaniei	-	provizoriu
+corpus-05	pamantul-viu	natura	-	provizoriu
+corpus-05	aer-apa-sol	natura	-	provizoriu
+corpus-05	furnici-albine	natura	-	provizoriu
+corpus-05	carpati	natura	-	provizoriu
+corpus-05	bogatii	natura	romania-economie	provizoriu
+corpus-05	fauna	natura	-	provizoriu
+corpus-05	movile	natura	-	provizoriu
+corpus-05	responsabilitate	natura	-	provizoriu
 corpus-05	brancusi	-	-	provizoriu
-corpus-05	concluzie	natura-romaniei	-	provizoriu
+corpus-05	concluzie	natura	-	provizoriu
 corpus-06	ce-este-ai	ai	-	provizoriu
 corpus-06	constiinta	ai	om-suflet	provizoriu
 corpus-06	chipul	ai	om-suflet	provizoriu
@@ -129,17 +129,17 @@ corpus3-1	cap9	comunism-postcomunism	-	provizoriu
 corpus3-1	cap10	rusia-imperiala	moldova	provizoriu
 corpus3-1	cap11	rusia	moldova dezinformare	provizoriu
 corpus3-1	concluzie	-	rusia comunism-postcomunism	provizoriu
-corpus3-2	cap1	-	-	provizoriu
-corpus3-2	cap2	-	china rusia iran	provizoriu
-corpus3-2	cap3	europa	dezinformare rusia	provizoriu
-corpus3-2	cap4	ucraina-razboi	-	provizoriu
-corpus3-2	cap5	rusia	-	provizoriu
-corpus3-2	cap6	china	-	provizoriu
-corpus3-2	cap7	-	rusia gaza-israel	provizoriu
-corpus3-2	cap8	-	nato china rusia	provizoriu
-corpus3-2	cap9	-	gaza-israel rau-suferinta	provizoriu
-corpus3-2	cap10	sua-trump	-	provizoriu
-corpus3-2	concluzie	-	-	provizoriu
+corpus3-2	cap1	-	-	citit
+corpus3-2	cap2	ordinea-internationala	china rusia iran romania-securitate	citit
+corpus3-2	cap3	europa	dezinformare rusia	citit
+corpus3-2	cap4	ucraina-razboi	rusia	citit
+corpus3-2	cap5	rusia	-	citit
+corpus3-2	cap6	china	rusia	citit
+corpus3-2	cap7	ordinea-internationala	rusia gaza-israel	citit
+corpus3-2	cap8	-	nato china rusia iran europa romania-securitate	citit
+corpus3-2	cap9	-	gaza-israel ucraina-razboi	citit
+corpus3-2	cap10	sua-trump	ucraina-razboi	citit
+corpus3-2	concluzie	-	-	citit
 corpus3-3	cap1	europa	-	provizoriu
 corpus3-3	cap2	europa	-	provizoriu
 corpus3-3	cap3	europa	-	provizoriu
