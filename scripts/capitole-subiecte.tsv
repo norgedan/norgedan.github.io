@@ -80,17 +80,17 @@ corpus2-A	minte	inima	creier-minte	provizoriu
 corpus2-A	sfarsit	istoria-mantuirii	-	provizoriu
 corpus2-A	azi	-	istoria-mantuirii	provizoriu
 corpus2-A	alegerea	istoria-mantuirii	-	provizoriu
-corpus2-B	tabloul	-	iran rau-suferinta	provizoriu
-corpus2-B	rusia-adn	rusia-imperiala	rusia	provizoriu
-corpus2-B	doua-popoare	ucraina-razboi	rusia	provizoriu
-corpus2-B	crime	ucraina-razboi	rusia	provizoriu
-corpus2-B	putin	rusia	ucraina-razboi dezinformare	provizoriu
-corpus2-B	prietenii	rusia	china iran	provizoriu
-corpus2-B	china	china	rusia	provizoriu
-corpus2-B	orient	gaza-israel	iran	provizoriu
-corpus2-B	imperii	imperii-istorie	-	provizoriu
-corpus2-B	dumnezeu-istorie	imperii-istorie	-	provizoriu
-corpus2-B	concluzie	-	imperii-istorie	provizoriu
+corpus2-B	tabloul	-	ucraina-razboi iran	citit
+corpus2-B	rusia-adn	rusia-imperiala	rusia	citit
+corpus2-B	doua-popoare	ucraina-razboi	rusia	citit
+corpus2-B	crime	ucraina-razboi	rusia rusia-imperiala	citit
+corpus2-B	putin	rusia	ucraina-razboi dezinformare	citit
+corpus2-B	prietenii	rusia	china iran	citit
+corpus2-B	china	china	rusia	citit
+corpus2-B	orient	gaza-israel	iran	citit
+corpus2-B	imperii	imperii-istorie	-	citit
+corpus2-B	dumnezeu-istorie	imperii-istorie	rau-suferinta	citit
+corpus2-B	concluzie	-	-	citit
 corpus2-C	intro	dezinformare	-	provizoriu
 corpus2-C	economia	dezinformare	-	provizoriu
 corpus2-C	actori	dezinformare	ai	provizoriu
@@ -138,7 +138,7 @@ corpus3-2	cap6	china	rusia	citit
 corpus3-2	cap7	ordinea-internationala	rusia gaza-israel	citit
 corpus3-2	cap8	-	nato china rusia iran europa romania-securitate	citit
 corpus3-2	cap9	-	gaza-israel ucraina-razboi	citit
-corpus3-2	cap10	sua-trump	ucraina-razboi	citit
+corpus3-2	cap10	sua-trump	ucraina-razboi ordinea-internationala	citit
 corpus3-2	concluzie	-	-	citit
 corpus3-3	cap1	europa	-	provizoriu
 corpus3-3	cap2	europa	-	provizoriu
