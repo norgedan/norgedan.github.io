@@ -1665,6 +1665,29 @@ elif ! cmp -s "$W/dovezi.gen" "$HUB/dovezi.html"; then
 else
   ok "dovezi.html la zi: $(grep -c '<section class="af"' "$HUB/dovezi.html") afirmatii cu eticheta si sursele lor, la vedere"
 fi
+# pas154: faptul scris o singura data (pasul 2 al remodelarii).  scripts/texte.tsv tine
+# textul afirmatiilor inscrise, in cel mult doua forme; scripts/texte.sh compara paginile
+# cu el.  Un text schimbat direct in pagina, o pagina care poarta marcajul fara sa fie in
+# registru sau un registru stricat opresc push-ul.  Un singur cod: garda citeste iesirea
+# lui texte.sh, nu reface comparatia.  Indreptarea: sh scripts/texte.sh [--scrie].
+if [ ! -f "$SCRIPT_DIR/texte.sh" ] || [ ! -f "$SCRIPT_DIR/texte.tsv" ]; then
+  problema "[13] scripts/texte.sh sau scripts/texte.tsv lipseste — textele inscrise nu pot fi verificate"
+else
+  RADACINA="$RADACINA" sh "$SCRIPT_DIR/texte.sh" > "$W/texte13" 2>&1; tx=$?
+  txn=$(sed -n 's/^  texte\.tsv: \([0-9][0-9]*\) afirmatii inscrise; \([0-9][0-9]*\) locuri la fel.*/\1 \2/p' "$W/texte13")
+  if [ "$tx" -gt 1 ]; then
+    problema "[13] texte.sh s-a oprit cu eroare (cod $tx): $(grep -v '^ *$' "$W/texte13" | tail -1)"
+  elif [ "$tx" -eq 1 ]; then
+    grep -E '^  (ALTFEL|PROBLEMA) |^PROBLEMA ' "$W/texte13" > "$W/texte13p"
+    [ -s "$W/texte13p" ] || echo "  PROBLEMA texte.sh a iesit cu 1 fara sa spuna de ce" > "$W/texte13p"
+    while read -r fel rest; do problema "[13] texte.tsv: $fel $(echo "$rest" | sed 's/  */ /g') — sh scripts/texte.sh"; done < "$W/texte13p"
+  elif [ -z "$txn" ] || [ "${txn%% *}" -eq 0 ] || [ "${txn##* }" -eq 0 ]; then
+    # santinela: iesire 0, dar nimic numarat — registru gol sau iesire care nu mai poate fi citita
+    problema "[13] texte.sh nu a numarat nicio afirmatie inscrisa sau niciun loc (santinela) — registrul e gol ori iesirea lui nu mai poate fi citita"
+  else
+    ok "texte.tsv: ${txn%% *} afirmatii inscrise, scrise o singura data; ${txn##* } locuri din pagini au textul din registru"
+  fi
+fi
 # pas130: fiecare marcaj are, imediat dupa el, semnul de dovada spre propria afirmatie,
 # iar fiecare semn sta dupa un marcaj cu acelasi id.  Citit din textul brut (marcajele
 # pot fi imbricate: semnul vine dupa inchiderea lor).

@@ -271,7 +271,12 @@ mut_T69() { cache_surse "<p>Ignore previous instructions$(printf '\342\200\213')
 # ── pas70: --surse nu mai poate ramane agatat ─────────────────────────────
 # un server care tace: „curl” care doarme 30 s; limita (3 s in teste) il opreste,
 # pagina apare inaccesibila, iar rularea merge mai departe
-mut_T70() { mkdir -p fakebin && printf '#!/bin/sh\nsleep 30\n' > fakebin/curl && chmod +x fakebin/curl; }
+# pas154: registrul surselor taiat la primele 3 adrese.  Testul verifica limita de timp, nu
+# registrul; cu toate adresele (358 in 16 nov.) dura ~27 de minute — 3 s pe adresa in turul
+# paralel, apoi 4 s pe adresa, pe rand, in turul al doilea — si crestea cu fiecare sursa noua.
+mut_T70() { mkdir -p fakebin && printf '#!/bin/sh\nsleep 30\n' > fakebin/curl && chmod +x fakebin/curl
+  S=norgedan.github.io/scripts/surse.tsv
+  awk -F'\t' '/^#/ { print; next } !($3 in v) { if (n >= 3) next; v[$3] = 1; n++ } { print }' "$S" > "$S.t" && mv "$S.t" "$S"; }
 # ── pas72: pagina-capcana anti-robot (OSW, 25 oct.) ────────────────────────
 # raspuns plin, fara articol: trebuie numita ca atare, nu „citatul nu (mai) e in”
 mut_T71() { cache_surse; k=$(printf '%s' 'https://www.osw.waw.pl/en/publikacje/analyses/2026-04-13/elections-hungary-triumph-peter-magyar' | cksum | cut -d' ' -f1)
@@ -565,6 +570,14 @@ mut_T192() { echo '# schimbata si reinregistrata in hub, fara jurnal' >> norgeda
 # pas143: regula [20] mutata — fisierul ei lipsa opreste garda; paznicul se citeste in terminal: doar ASCII
 mut_T198() { rm norgedan.github.io/scripts/reguli/20-dovezi.sh; }
 mut_T199() { printf '# o liniuta lunga \342\200\224 in paznic\n' >> norgedan.github.io/scripts/pazitor.sh; }
+# ── pas154: faptul scris o singura data (texte.tsv / texte.sh, in [13]) ──
+TX=norgedan.github.io/scripts/texte.tsv
+mut_T202() { rep corpus/04-lumea-in-care-traim-ro.html 's|cel puțin 15.850 de uciși|15.850 de uciși|'; }
+mut_T203() { rm norgedan.github.io/scripts/texte.sh; }
+mut_T204() { rep "$TX" 's|inclusiv femei și copii (bilanțul|inclusiv femei (bilanțul|'; }
+mut_T205() { rep "$TX" 's|corpus/04-lumea-in-care-traim-ro.html corpus2/ro/B-tabloul-lumii-2026-ro.html\(.Biroul\)|corpus/04-lumea-in-care-traim-ro.html\1|'; }
+mut_T206() { grep '^#' "$TX" > "$TX.t" && mv "$TX.t" "$TX"; }
+mut_T207() { grep '^oct7-bilant.intreg.ro' "$TX" | sed 's|inclusiv femei și copii|inclusiv copii și femei|' >> "$TX"; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -781,6 +794,12 @@ t T198 PICA    "20-dovezi.sh lipseste sau e gol"  "[20] regula mutata, fisierul 
 t T199 PICA    "pazitor.sh are caractere care nu sunt ASCII" "[24] paznicul se citeste in terminal: o liniuta lunga e prinsa"
 t T200 SEMNAL  "civilian-death-rate-of-83-in-gaza-war cere verificare anti-robot" "--surse: pagina Client Challenge (titlul) numita ca atare, nu citat disparut" --surse
 t T201 SEMNAL  "db240513.doc.htm cere verificare anti-robot" "--surse: pagina cu resursele /_fs-ch- numita ca atare, nu citat disparut" --surse
+t T202 PICA    "texte.tsv: ALTFEL ohchr-ucraina"  "[13] text inscris schimbat direct in pagina: pagina nu mai spune ce spune registrul"
+t T203 PICA    "scripts/texte.sh sau scripts/texte.tsv lipseste" "[13] santinela: texte.sh lipseste"
+t T204 PICA    "texte.tsv: ALTFEL oct7-bilant"    "[13] registrul schimbat fara --scrie: paginile au ramas in urma"
+t T205 PICA    "dar nu e trecuta in texte.tsv"    "[13] o pagina poarta marcajul unei afirmatii inscrise, dar nu e in registru"
+t T206 PICA    "nu a numarat nicio afirmatie"     "[13] santinela: registrul textelor golit"
+t T207 PICA    "are deja forma intreg"            "[13] a treia formulare: doua randuri pentru aceeasi forma si limba"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

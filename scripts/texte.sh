@@ -19,14 +19,14 @@
 # Dupa --scrie urmeaza, ca la orice schimbare de text marcat: verifica-site.sh --amprente
 # (afirmatia a fost reverificata la sursa), --capitole unde e cazul, dovezi.sh --scrie, garda.
 #
-# Nu face parte din garda si nu opreste niciun push (deocamdata; legarea de garda e pas separat).
+# Din pas154 garda il ruleaza in [13]: o diferenta sau o problema opreste push-ul.
 # Iesire: 0 = paginile spun ce spune registrul; 1 = diferente sau registru gresit; 2 = utilizare.
 # POSIX: sh (ksh pe OpenBSD), awk (one-true-awk), find, grep, mktemp, cmp, cp.  LC_ALL=C.
 
 LC_ALL=C; export LC_ALL
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
 HUB=$(dirname "$SCRIPT_DIR")
-RADACINA=$(dirname "$HUB")
+RADACINA=${RADACINA:-$(dirname "$HUB")}      # garda si testele o dau din afara (ca la dovezi.sh)
 TEXTE="$SCRIPT_DIR/texte.tsv"
 REPOURI="norgedan.github.io corpus corpus2 opera limba limba-ro-final"
 
