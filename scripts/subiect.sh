@@ -225,3 +225,7 @@ t1=$(awk -F'\t' '$1 != "9999" { print $1 " (" $2 ")"; exit }' "$W/a2")
 echo ""
 echo "Primul termen de reverificare: ${t1:--}"
 echo "Limita: randurile „provizoriu” nu sunt inca citite intreg; afirmatiile, inca pe cuvinte."
+
+# pas155: evenimentele subiectului si cele care ajung la el dinspre alte subiecte
+[ -f "$SCRIPT_DIR/eveniment.sh" ] && sh "$SCRIPT_DIR/eveniment.sh" --subiect "$CE"
+exit 0

@@ -1,0 +1,28 @@
+# efecte.tsv — efectele unui eveniment, numite (pasul 3 al remodelarii, pas155).
+#
+# REGULA NUMIRII (Bogdan, 15-17 nov. 2026): binele se numeste bine si raul rau; nu judecam,
+# numim.  Un efect e o afirmatie cu sursa, numita dupa un criteriu spus pe fata.  Doua
+# straturi: AICI stau fapta, cuvantul pus langa fapta si urmarea; ce credem despre de unde
+# vine raul sta in text, cu eticheta („credem”).  Aceleasi criterii pentru toti faptasii.
+#
+# Separator: TAB.  Randurile care incep cu # sunt comentarii.
+#   eveniment   id din evenimente.tsv
+#   fel         bine | rau | urmare.  „urmare” = ce a decurs, fara nume de bine sau de rau.
+#   afirmatie   id din afirmatii.tsv: sursa efectului
+#   criteriu    obligatoriu la bine si la rau; „-” la urmare.  Unul sau mai multe, prin „; ”:
+#                 porunca numita            (de ex. „porunca: sa nu ucizi”)
+#                 norma numita din drept    (de ex. „Conventia a III-a de la Geneva, art. 109”)
+#                 fapta fata de cuvant      („fapta fata de cuvant: a declarat X, a facut Y”)
+#               Unde exista o norma de drept, se pune alaturi de porunca.
+#   intentie    doar la rau: documentata (ordin, hotarare de instanta, declaratia faptasului,
+#               fapta repetata dupa avertisment) | nestabilita.  La bine si urmare: „-”.
+#   stare       propus (de Claude) | aprobat (de Bogdan).  Numirea e hotararea omului.
+#   ce          efectul, pe un rand, ASCII — nimic peste ce spune afirmatia
+abu-dhabi-2026-11	bine	trump-dmitriev-2026	Conventia a III-a de la Geneva, art. 109 (acorduri de repatriere a prizonierilor in timpul ostilitatilor)	-	propus	acord de principiu pentru un schimb amplu de prizonieri; Zelenski: 1.200-1.300 de fiecare parte
+abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	propus	niciun progres in chestiunile de fond
+abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	propus	europenii, pana acum doar la consultari separate, anuntati la aceeasi masa in runda urmatoare (anuntul lui Zelenski)
+iran-stare-2026-11	urmare	iran-razboi-2026	-	-	propus	Stramtoarea Ormuz inchisa: dupa Agentia Internationala a Energiei, cea mai mare perturbare a aprovizionarii din istoria pietei petrolului
+iran-stare-2026-11	urmare	iran-razboi-2026	-	-	propus	fara armistitiu din 8 iulie; negocierile prin mediatori in impas
+gaza-armistitiu-un-an	bine	gaza-armistitiu	porunca: sa nu ucizi	-	propus	operatiunile majore oprite; toti ostaticii ramasi s-au intors
+gaza-armistitiu-un-an	rau	gaza-armistitiu	porunca: sa nu ucizi	nestabilita	propus	1.593 de morti de la armistitiu pana la 2 nov. 2026 (Ministerul Sanatatii din Gaza, via OCHA)
+gaza-armistitiu-un-an	urmare	gaza-armistitiu	-	-	propus	faza a doua blocata: Israelul cere intai dezarmarea completa a Hamas, Hamas cere pasi simultani

@@ -1,0 +1,17 @@
+# evenimente.tsv — evenimentul, ca regula tare (pasul 3 al remodelarii, pas155).
+#
+# Un rand = ceva ce s-a intamplat si atinge unul sau mai multe subiecte.  Evenimentul NU
+# primeste eticheta „bun” sau „rau”: eticheta o primesc efectele lui, unul cate unul, in
+# efecte.tsv.  Fisa: sh scripts/eveniment.sh [<id> | --subiect <subiect>].
+#
+# Separator: TAB.  Randurile care incep cu # sunt comentarii.
+#   id            nume scurt, litere mici, cifre, liniuta
+#   data          AAAA-LL-ZZ: cand s-a intamplat (sau ziua la care e citita starea)
+#   subiect       subiectul principal (din teme.tsv sau subiecte.tsv)
+#   legate        celelalte subiecte atinse, despartite prin spatiu; „-” = niciunul
+#   afirmatii     id-urile din afirmatii.tsv care poarta evenimentul in pagini, prin spatiu
+#   reverificare  AAAA-LL-ZZ: pana cand e bun de citit; „-” = eveniment incheiat
+#   rezumat       ce s-a intamplat, pe un rand, ASCII
+abu-dhabi-2026-11	2026-11-11	ucraina-razboi	rusia sua-trump europa	trump-dmitriev-2026	2026-11-30	negocieri Rusia-Ucraina mediate de SUA, la Abu Dhabi (10-11 nov. 2026)
+iran-stare-2026-11	2026-11-12	iran	sua-trump	iran-razboi-2026	2026-12-01	razboiul cu Iranul, starea din noiembrie 2026: fara armistitiu, Ormuz inchisa, blocada americana, negocieri in impas
+gaza-armistitiu-un-an	2026-11-02	gaza-israel	sua-trump	gaza-armistitiu	2026-12-01	armistitiul din Gaza la un an (in vigoare din 10 oct. 2025): faza a doua blocata
