@@ -17,12 +17,13 @@
 #   intentie    doar la rau: documentata (ordin, hotarare de instanta, declaratia faptasului,
 #               fapta repetata dupa avertisment) | nestabilita.  La bine si urmare: „-”.
 #   stare       propus (de Claude) | aprobat (de Bogdan).  Numirea e hotararea omului.
+#               pas157: cele 8 randuri de mai jos, aprobate de Bogdan pe 17 nov. 2026.
 #   ce          efectul, pe un rand, ASCII — nimic peste ce spune afirmatia
-abu-dhabi-2026-11	bine	trump-dmitriev-2026	Conventia a III-a de la Geneva, art. 109 (acorduri de repatriere a prizonierilor in timpul ostilitatilor)	-	propus	acord de principiu pentru un schimb amplu de prizonieri; Zelenski: 1.200-1.300 de fiecare parte
-abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	propus	niciun progres in chestiunile de fond
-abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	propus	europenii, pana acum doar la consultari separate, anuntati la aceeasi masa in runda urmatoare (anuntul lui Zelenski)
-iran-stare-2026-11	urmare	iran-razboi-2026	-	-	propus	Stramtoarea Ormuz inchisa: dupa Agentia Internationala a Energiei, cea mai mare perturbare a aprovizionarii din istoria pietei petrolului
-iran-stare-2026-11	urmare	iran-razboi-2026	-	-	propus	fara armistitiu din 8 iulie; negocierile prin mediatori in impas
-gaza-armistitiu-un-an	bine	gaza-armistitiu	porunca: sa nu ucizi	-	propus	operatiunile majore oprite; toti ostaticii ramasi s-au intors
-gaza-armistitiu-un-an	rau	gaza-armistitiu	porunca: sa nu ucizi	nestabilita	propus	1.593 de morti de la armistitiu pana la 2 nov. 2026 (Ministerul Sanatatii din Gaza, via OCHA)
-gaza-armistitiu-un-an	urmare	gaza-armistitiu	-	-	propus	faza a doua blocata: Israelul cere intai dezarmarea completa a Hamas, Hamas cere pasi simultani
+abu-dhabi-2026-11	bine	trump-dmitriev-2026	Conventia a III-a de la Geneva, art. 109 (acorduri de repatriere a prizonierilor in timpul ostilitatilor)	-	aprobat	acord de principiu pentru un schimb amplu de prizonieri; Zelenski: 1.200-1.300 de fiecare parte
+abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	aprobat	niciun progres in chestiunile de fond
+abu-dhabi-2026-11	urmare	trump-dmitriev-2026	-	-	aprobat	europenii, pana acum doar la consultari separate, anuntati la aceeasi masa in runda urmatoare (anuntul lui Zelenski)
+iran-stare-2026-11	urmare	iran-razboi-2026	-	-	aprobat	Stramtoarea Ormuz inchisa: dupa Agentia Internationala a Energiei, cea mai mare perturbare a aprovizionarii din istoria pietei petrolului
+iran-stare-2026-11	urmare	iran-razboi-2026	-	-	aprobat	fara armistitiu din 8 iulie; negocierile prin mediatori in impas
+gaza-armistitiu-un-an	bine	gaza-armistitiu	porunca: sa nu ucizi	-	aprobat	operatiunile majore oprite; toti ostaticii ramasi s-au intors
+gaza-armistitiu-un-an	urmare	gaza-armistitiu	-	-	aprobat	1.593 de morti de la armistitiu pana la 2 nov. 2026 (Ministerul Sanatatii din Gaza, via OCHA); faptasul si imprejurarile nu sunt in afirmatie — de reluat ca rau la 1 dec., cu ce sustine fiecare parte
+gaza-armistitiu-un-an	urmare	gaza-armistitiu	-	-	aprobat	faza a doua blocata: Israelul cere intai dezarmarea completa a Hamas, Hamas cere pasi simultani
