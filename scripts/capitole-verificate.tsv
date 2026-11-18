@@ -3,7 +3,7 @@
 #   id  ancora  titlu-RO  pas  data  amprenta-RO  amprenta-NO  nota
 # ancora  numele capitolului RO (din pas120; inainte, pozitia <h2>): id-ul de pe <h2>
 #         sau al <section>-ului lui, citit de scripts/capitole.awk — acelasi nume ca in
-#         legaturi.sh si teme.tsv.  Perechea NO o da scripts/harta.awk (ancorele NO pot
+#         legaturi.sh si subiecte.tsv.  Perechea NO o da scripts/harta.awk (ancorele NO pot
 #         fi traduse; capitolele doar-NO despre Norvegia se sar).
 # titlu, amprente — scrise de  verifica-site.sh --capitole, nu de mana
 # pas, data — pasul si ziua verificarii la sursa; nota — ce s-a verificat, pe scurt

@@ -7,7 +7,7 @@
 # Separator: TAB.  Randurile care incep cu # sunt comentarii.
 #   id            nume scurt, litere mici, cifre, liniuta
 #   data          AAAA-LL-ZZ: cand s-a intamplat (sau ziua la care e citita starea)
-#   subiect       subiectul principal (din teme.tsv sau subiecte.tsv)
+#   subiect       subiectul principal (din subiecte.tsv, registrul unic din pas160)
 #   legate        celelalte subiecte atinse, despartite prin spatiu; „-” = niciunul
 #   afirmatii     id-urile din afirmatii.tsv care poarta evenimentul in pagini, prin spatiu
 #   reverificare  AAAA-LL-ZZ: pana cand e bun de citit; „-” = eveniment incheiat

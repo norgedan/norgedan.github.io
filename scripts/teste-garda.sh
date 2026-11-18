@@ -739,7 +739,7 @@ t T132 PICA    "cele doua citiri ale capitolelor nu se potrivesc" "[18] santinel
 t T133 PICA    "L1: corpus3-2 (ro) capitolul 5 fara ancora" "[23] L1: capitol fara ancora"
 t T134 PICA    "L2: subiecte.tsv china: casa „corpus3-2#cap99”" "[23] L2: casa unei teme nu exista"
 t T135 PICA    "L5: trimitere doar intr-o limba"  "[23] L5: trimitere spre alt document doar in RO"
-t T136 PICA    "L7: teme.html nu mai corespunde"  "[23] L7: teme.html schimbata de mana, nu din teme.tsv"
+t T136 PICA    "L7: teme.html nu mai corespunde"  "[23] L7: teme.html schimbata de mana, nu din subiecte.tsv"
 t T137 PICA    "lipseste scripts/legaturi.sh"     "[23] santinela: scriptul de legaturi lipseste"
 t T138 PICA    "legaturi.sh s-a oprit cu eroare (cod 2)" "[23] santinela: scriptul de legaturi se opreste cu eroare"
 t T139 SEMNAL  "corpus3-2#cap5 — doar NO: 2023"   "[23] L8: un numar schimbat doar in NO se vede"

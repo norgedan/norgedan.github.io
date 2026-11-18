@@ -372,7 +372,7 @@ awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
       }
       print "</section>"
     }
-    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/subiecte.tsv (temele: subiectele care au o casă). Un capitol e trecut la o temă dacă tiparul ei revine de cel puțin " prag " ori în textul lui. · Siden er generert av scripts/legaturi.sh fra scripts/teme.tsv. Et kapittel føres opp under et tema hvis temaets mønster forekommer minst " prag " ganger i teksten.</p>"
+    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/subiecte.tsv (temele: subiectele care au o casă). Un capitol e trecut la o temă dacă tiparul ei revine de cel puțin " prag " ori în textul lui. · Siden er generert av scripts/legaturi.sh fra scripts/subiecte.tsv (temaene: emnene som har et hjem). Et kapittel føres opp under et tema hvis temaets mønster forekommer minst " prag " ganger i teksten.</p>"
     print "</main>"
     print "</body>"
     print "</html>"

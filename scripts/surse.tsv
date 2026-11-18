@@ -5,6 +5,8 @@
 # accesat AAAA-LL-ZZ · cine: cine a citit sursa (claude, bogdan, ...)
 # citat   textul exact, intre « », copiat din pagina — NU din rezumatul unui instrument; altfel -
 # Regula: FAPT = o sursa P sau doua S din domenii diferite; ESTIMARE = o sursa P sau S.
+# pas163: ce a hotarat, declarat sau legiferat cineva se dovedeste cu actul insusi (P: Monitorul
+# Oficial, portalul legislativ, textul emitentului), nu cu presa sau discursurile despre el.
 # Din pas68 Claude citeste textul brut al paginii (scripts/citeste-sursa.py, trafilatura), iar
 # --surse reciteste pagina si cauta citatul mecanic. „-” = pagina inaccesibila sau date fara
 # text (JSON Eurostat). „cine = claude” ramane: fara ochi independenti.
