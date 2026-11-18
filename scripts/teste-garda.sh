@@ -583,6 +583,14 @@ SB=norgedan.github.io/scripts/subiecte.tsv
 mut_T208() { grep '^iran	' "$SB" > "$SB.r" && cat "$SB.r" >> "$SB" && rm "$SB.r"; }
 mut_T209() { rep "$SB" 's|^gaza-israel	Israel și Gaza	|gaza-israel		|'; }
 mut_T210() { grep -v '^[a-z]' "$SB" > norgedan.github.io/scripts/teme.tsv; }
+# ── pas161: subiectul fiecarei afirmatii, declarat (afirmatii-subiecte.tsv; garda [13]) ──
+AS=norgedan.github.io/scripts/afirmatii-subiecte.tsv
+mut_T211() { grep -v '^cas-substante	' "$AS" > "$AS.t" && mv "$AS.t" "$AS"; }
+mut_T212() { rep "$AS" 's|^cas-substante	creatie-stiinta	|cas-substante	creatia	|'; }
+mut_T213() { grep '^oct7-bilant	' "$AS" > "$AS.r" && cat "$AS.r" >> "$AS" && rm "$AS.r"; }
+mut_T214() { rm "$AS"; }
+mut_T215() { rep "$AS" 's|^csis-rusia	ucraina-razboi	rusia	|csis-rusia	ucraina-razboi	rusia ucraina-razboi	|'; }
+mut_T216() { grep '^#' "$AS" > "$AS.t" && mv "$AS.t" "$AS"; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -808,6 +816,12 @@ t T207 PICA    "are deja forma intreg"            "[13] a treia formulare: doua 
 t T208 PICA    "id „iran” de doua ori"            "[23] L2: acelasi subiect de doua ori in registrul unic"
 t T209 PICA    "gaza-israel: coloana 2 goala"     "[23] L2: subiect fara casa, dar cu titlul gol — si el e verificat acum"
 t T210 PICA    "registru dublu: scripts/teme.tsv" "[23] L2: santinela — al doilea registru de subiecte reapare"
+t T211 PICA    "cas-substante: afirmatie fara subiect declarat" "[13] afirmatie noua fara rand in afirmatii-subiecte.tsv"
+t T212 PICA    "subiect principal necunoscut „creatia”" "[13] subiect care nu e in registrul unic subiecte.tsv"
+t T213 PICA    "oct7-bilant: de doua ori"         "[13] doua randuri de subiect pentru aceeasi afirmatie"
+t T214 PICA    "lipseste scripts/afirmatii-subiecte.tsv" "[13] santinela: registrul subiectelor afirmatiilor lipseste"
+t T215 PICA    "e si principal, si secundar"      "[13] acelasi subiect si principal, si secundar"
+t T216 PICA    "afirmatie fara subiect declarat"  "[13] registrul golit: fiecare afirmatie ramane fara subiect"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

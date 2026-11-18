@@ -15,11 +15,12 @@
 # Tiparul subiectului e doar ALARMA: fisa arata unde tiparul si registrul se contrazic
 # (tiparul de cel putin PRAG ori intr-un capitol care nu declara subiectul; subiect
 # declarat intr-un capitol in care tiparul nu apare deloc).
-# O afirmatie tine de subiect daca tiparul e in textul ei marcat (RO) sau in randul ei
-# din afirmatii.tsv (acolo fara diacritice) — inca pe cuvinte, nu declarat.
+# De ce subiect tine o afirmatie e DECLARAT in afirmatii-subiecte.tsv (pas161): principal
+# si secundare, ca la capitole.  Tiparul e si aici doar alarma: afirmatia in al carei text
+# (RO) sau rand din afirmatii.tsv apare tiparul, dar care nu declara subiectul.
 #
-# Limite, spuse: randurile „provizoriu” din registru sunt puse dupa titlu si tipare, nu
-# dupa citire; faptele nemarcate nu apar la afirmatii.
+# Limite, spuse: randurile „provizoriu” si „propus” sunt puse de Claude, inca neaprobate
+# de Bogdan; faptele nemarcate nu apar la afirmatii.
 #
 # POSIX: sh (ksh pe OpenBSD), awk (one-true-awk), sort, mktemp.  LC_ALL=C.
 
@@ -33,15 +34,16 @@ SUB="$SCRIPT_DIR/subiecte.tsv"
 AFI="$SCRIPT_DIR/afirmatii.tsv"
 CAPV="$SCRIPT_DIR/capitole-verificate.tsv"
 REG="$SCRIPT_DIR/capitole-subiecte.tsv"
+AFS="$SCRIPT_DIR/afirmatii-subiecte.tsv"
 
 CE=${1:-}
 case "$CE" in
-  -h|--help) sed -n '2,23p' "$0"; exit 0 ;;
+  -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
   --fara|"") ;;
   -*) echo "utilizare: sh $0 [<id> | --fara]" >&2; exit 2 ;;
 esac
 [ $# -le 1 ] || { echo "utilizare: sh $0 [<id> | --fara]" >&2; exit 2; }
-for f in "$MAN" "$SUB" "$AFI" "$CAPV" "$REG" "$SCRIPT_DIR/capitole.awk"; do
+for f in "$MAN" "$SUB" "$AFI" "$CAPV" "$REG" "$AFS" "$SCRIPT_DIR/capitole.awk"; do
   [ -f "$f" ] || { echo "lipseste $f" >&2; exit 2; }
 done
 
@@ -150,6 +152,9 @@ fi
 
 # ── toate subiectele, pe scurt ───────────────────────────────────────
 if [ -z "$CE" ]; then
+  # pas161: afirmatiile declarate (afirmatii-subiecte.tsv), principal si secundare:  subiect id
+  awk -F'\t' '/^#/ || NF < 4 { next } { print $2 "\t" $1; if ($3 != "-") { k = split($3, b, " "); for (i = 1; i <= k; i++) print b[i] "\t" $1 } }' "$AFS" > "$W/da"
+  NAP=$(awk -F'\t' '/^#/ || NF < 4 { next } { n++; if ($4 == "propus") p++ } END { print p + 0 " din " n + 0 }' "$AFS")
   echo "Subiectele norgedan (subiecte.tsv, registrul unic; capitolele: capitole-subiecte.tsv)"
   echo "  subiect                  principal  secundar  afirmatii  alarme  primul termen  casa"
   awk -F'\t' '
@@ -159,10 +164,12 @@ if [ -z "$CE" ]; then
     FILENAME == ARGV[4] { if (!(($1 "\t" $2) in v)) { v[$1 "\t" $2] = 1; na[$1]++
                             if (($2 in rv) && (t[$1] == "" || rv[$2] < t[$1])) t[$1] = rv[$2] } next }
     { printf "  %-24s %9d %9d %10d %7d  %-13s  %s\n", $1, pr[$1], se[$1], na[$1], al[$1], (t[$1] == "" ? "-" : t[$1]), $3 }' \
-    "$W/dc" "$W/al" "$AFI" "$W/sa2" "$W/s"
+    "$W/dc" "$W/al" "$AFI" "$W/da" "$W/s"
+  echo "  (afirmatii = declarate in afirmatii-subiecte.tsv, principal sau secundar; alarme = la capitole)"
   echo ""
   echo "  $NF_ din $TOT capitole RO fara niciun subiect declarat (lista: sh $0 --fara)"
   echo "  $PROV din $TOT randuri din registru sunt inca „provizoriu”"
+  echo "  $NAP afirmatii au subiectul inca „propus” (afirmatii-subiecte.tsv)"
   echo "  fisa unui subiect: sh $0 <id>"
   exit 0
 fi
@@ -207,23 +214,37 @@ echo ""
 echo "Doar pomenit (tiparul de 1-$((PRAG - 1)) ori, nedeclarat): $(tr -s ' \n' '\n\n' < "$W/o2" | grep -c '#')"
 cat "$W/o2"
 
-grep "^$CE	" "$W/sa2" > "$W/a1"
+# pas161: afirmatiile subiectului sunt cele DECLARATE in afirmatii-subiecte.tsv
+#   a1: subiect id doc rol(P|S)
+awk -F'\t' -v ce="$CE" '
+  FILENAME == ARGV[1] { if (/^#/ || NF < 4) next
+                        if ($2 == ce) rol[$1] = "P"; else if ((" " $3 " ") ~ (" " ce " ")) rol[$1] = "S"; next }
+  $2 in rol { print ce "\t" $2 "\t" $1 "\t" rol[$2] }' "$AFS" "$W/af" | sort -u > "$W/a1"
 awk -F'\t' 'FILENAME == ARGV[1] { if (!/^#/) { et[$1] = $2; rv[$1] = $8 } next }
-  { if (!($2 in d)) ord[++n] = $2; d[$2] = d[$2] " " $3; nd[$2]++ }
+  FILENAME == ARGV[2] { if (!/^#/ && NF >= 4) cum[$1] = $4; next }
+  { if (!($2 in d)) { ord[++n] = $2; r[$2] = $4 } d[$2] = d[$2] " " $3; nd[$2]++ }
   END { for (i = 1; i <= n; i++) { a = ord[i]
-          printf "%s\t%s\t%s\t%d\t%s\n", (rv[a] ~ /^20/ ? rv[a] : "9999"), a, (a in et ? et[a] : "?"), nd[a], d[a] } }' \
-  "$AFI" "$W/a1" | sort > "$W/a2"
+          printf "%s\t%s\t%s\t%d\t%s\t%s\t%s\n", (rv[a] ~ /^20/ ? rv[a] : "9999"), a, (a in et ? et[a] : "?"), nd[a], d[a], r[a], cum[a] } }' \
+  "$AFI" "$AFS" "$W/a1" | sort > "$W/a2"
 n3=$(wc -l < "$W/a2" | tr -d ' ')
 n4=$(awk -F'\t' '$4 > 1' "$W/a2" | wc -l | tr -d ' ')
+n5=$(awk -F'\t' '$6 == "P"' "$W/a2" | wc -l | tr -d ' ')
+n6=$(awk -F'\t' '$7 == "propus"' "$W/a2" | wc -l | tr -d ' ')
 echo ""
-echo "Afirmatii marcate care tin de subiect: $n3 (dintre care $n4 in mai multe documente)"
-echo "  reverificare   afirmatie                   eticheta       documente"
-awk -F'\t' '{ printf "  %-13s  %-27s %-13s %s\n", ($1 == "9999" ? "-" : $1), $2, $3, $5 }' "$W/a2"
+echo "Afirmatii marcate declarate la subiect: $n3 ($n5 principal, $((n3 - n5)) secundar; $n4 in mai multe documente; $n6 inca propuse)"
+echo "  reverificare   afirmatie                   rol  eticheta       documente"
+awk -F'\t' '{ printf "  %-13s  %-27s %-4s %-13s %s%s\n", ($1 == "9999" ? "-" : $1), $2, $6, $3, $5, ($7 == "propus" ? "   (propus)" : "") }' "$W/a2"
+
+# alarma: tiparul apare in afirmatie, dar subiectul nu e declarat
+cut -f2 "$W/a1" | sort -u > "$W/a1id"
+grep "^$CE	" "$W/sa2" | cut -f2 | sort -u | comm -23 - "$W/a1id" > "$W/a_af"
+echo "Alarma — tiparul apare in afirmatie, dar subiectul nu e declarat: $(wc -l < "$W/a_af" | tr -d ' ')"
+awk '{ printf "  %s", $1; n++; if (n % 4 == 0) printf "\n" } END { if (n % 4) printf "\n" }' "$W/a_af"
 
 t1=$(awk -F'\t' '$1 != "9999" { print $1 " (" $2 ")"; exit }' "$W/a2")
 echo ""
 echo "Primul termen de reverificare: ${t1:--}"
-echo "Limita: randurile „provizoriu” nu sunt inca citite intreg; afirmatiile, inca pe cuvinte."
+echo "Limita: randurile „provizoriu” (capitole) si „propus” (afirmatii) nu sunt inca aprobate de Bogdan."
 
 # pas155: evenimentele subiectului si cele care ajung la el dinspre alte subiecte
 [ -f "$SCRIPT_DIR/eveniment.sh" ] && sh "$SCRIPT_DIR/eveniment.sh" --subiect "$CE"

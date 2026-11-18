@@ -1,0 +1,232 @@
+# afirmatii-subiecte.tsv — registrul declarat: de ce subiect tine fiecare afirmatie (pas161).
+# Citit de scripts/subiect.sh; verificat de garda [13].  Aici sta intelesul; tiparele din
+# subiecte.tsv raman doar alarma (subiect.sh arata unde tiparul si registrul se contrazic).
+# Fisier separat, nu a 9-a coloana in afirmatii.tsv: registrul afirmatiilor ramane la 8
+# coloane, iar subiectul se poate schimba fara sa atinga amprentele si dovezile.
+#
+# Un rand = o afirmatie din afirmatii.tsv; fiecare afirmatie are exact un rand.
+# 4 coloane, separate prin TAB:
+#   id         id-ul din afirmatii.tsv
+#   principal  id-ul subiectului principal (din subiecte.tsv) — despre ce e afirmatia
+#   secundare  id-uri separate prin spatiu; "-" = niciunul
+#   cum        aprobat = citit si aprobat de Bogdan
+#              propus  = pus de Claude dupa capitol si dupa text, inca neaprobat
+inima-neuroni	inima	creier-minte	propus
+inima-endocrina	inima	-	propus
+vag-aferent	inima	creier-minte	propus
+inima-ecg-eeg	inima	creier-minte	propus
+heartmath-camp	inima	creier-minte	propus
+scriptura-inima	inima	om-suflet	propus
+cas-substante	creatie-stiinta	-	propus
+adn-probabilitate	creatie-stiinta	-	propus
+celula-minima	creatie-stiinta	-	propus
+geneza-ordine	creatie-stiinta	-	propus
+iov-datare	creatie-stiinta	-	propus
+nucleu-temperatura	creatie-stiinta	-	propus
+pamant-sferic	creatie-stiinta	-	propus
+marea-neagra-oxigen	creatie-stiinta	natura	propus
+canal-bosfor	creatie-stiinta	-	propus
+movile-specii	natura	-	propus
+movile-izolare	natura	-	propus
+senicid	om-suflet	-	propus
+iit-disputa	om-suflet	creier-minte	propus
+neshamah-frecventa	om-suflet	-	propus
+limbaj-etape	om-suflet	-	propus
+foneme-sugari	om-suflet	-	propus
+zipf-aleator	om-suflet	-	propus
+zipf-efort-minim	om-suflet	-	propus
+muzica-universala	om-suflet	-	propus
+fluier-paleolitic	om-suflet	-	propus
+consonanta-tsimane	om-suflet	-	propus
+dumnezeu-prin-sine	dumnezeu	-	propus
+eichmann-stangneth	rau-suferinta	-	propus
+milgram-identificare	rau-suferinta	-	propus
+zimbardo-critica	rau-suferinta	-	propus
+neuroni-oglinda	creier-minte	-	propus
+antrenament-mental	creier-minte	-	propus
+csis-rusia	ucraina-razboi	rusia	propus
+mediazona-nume	ucraina-razboi	rusia	propus
+ohchr-ucraina	ucraina-razboi	rusia	propus
+iran-razboi-2026	iran	sua-trump	propus
+sipri-europa-2025	europa	nato	propus
+oct7-bilant	gaza-israel	-	propus
+hrw-7oct	gaza-israel	-	propus
+gaza-bilant	gaza-israel	-	propus
+gaza-armistitiu	gaza-israel	sua-trump	propus
+ipc-foamete-2025	gaza-israel	-	propus
+gallant-2024	gaza-israel	-	propus
+rusia-pib-militar	rusia	-	propus
+sua-romania-2025	nato	sua-trump romania-securitate	propus
+holodomor-recunoastere	ucraina-razboi	rusia-imperiala	propus
+tartus-2026	rusia	-	propus
+china-materiale	china	-	propus
+polenizare	natura	-	propus
+neonicotinoide-ue	natura	europa	propus
+insecte-declin	natura	-	propus
+paduri-virgine	natura	-	propus
+rosia-montana	natura	romania-economie	propus
+petrol-1857	natura	romania-economie	propus
+neptun-deep	romania-economie	romania-securitate	propus
+delta-romania	natura	-	propus
+ursi-romania	natura	-	propus
+pelicani-delta	natura	-	propus
+sturioni-interdictie	natura	-	propus
+movile-chemosinteza	natura	-	propus
+clima-2025	natura	-	propus
+gpt4-barou	ai	-	propus
+alphafold	ai	-	propus
+ccr-anulare	romania-politica	dezinformare	propus
+fmi-ai-locuri	ai	-	propus
+fond-norvegia	ai	-	propus
+datatilsynet-meta	ai	europa	propus
+nbim-ai	ai	-	propus
+hoyle-crick	creatie-stiinta	dumnezeu	propus
+constante-masuri	creatie-stiinta	dumnezeu	propus
+vosoughi-2018	dezinformare	-	propus
+romania-imuna	dezinformare	-	propus
+milgram	rau-suferinta	dezinformare	propus
+galati-drona	romania-securitate	rusia ucraina-razboi	propus
+sandworm-2022	securitate-cibernetica	ucraina-razboi rusia	propus
+volt-typhoon	securitate-cibernetica	china	propus
+xz-utils	securitate-cibernetica	-	propus
+mythos-leak	securitate-cibernetica	ai	propus
+glasswing	securitate-cibernetica	ai	propus
+firefox-271	securitate-cibernetica	ai	propus
+nasteri-2025	demografie-diaspora	-	propus
+efpia-wait	sanatate	europa	propus
+lazonick-pharma	sanatate	-	propus
+bacau-2026	sanatate	-	propus
+rat-park	sanatate	-	propus
+glimfatic	creier-minte	-	propus
+ai-act-calendar	ai	europa	propus
+datacentre-energie	ai	-	propus
+huawei-5g	securitate-cibernetica	china	propus
+fable-mythos-iunie	securitate-cibernetica	ai	propus
+glasswing-bilant	securitate-cibernetica	ai	propus
+securitate-informatori	comunism-postcomunism	-	propus
+investitii-publice-2024	romania-economie	europa	propus
+demografie-2024	demografie-diaspora	sanatate	propus
+ungaria-alegeri-2026	europa	-	propus
+ungaria-deficit-2026	europa	-	propus
+bulgaria-alegeri-2026	europa	-	propus
+romania-aparare-2026	nato	romania-economie	propus
+saracie-copii-2024	romania-economie	europa	propus
+deficit-2025	romania-economie	europa	propus
+romania-criza-2026	romania-politica	-	propus
+criza-cost-imm	romania-politica	romania-economie	propus
+boli-cauze-deces	sanatate	europa	propus
+cancer-col-uterin	sanatate	europa	propus
+rezistenta-antimicrobiana	sanatate	europa	propus
+mortalitate-evitabila	sanatate	europa	propus
+sanatate-cheltuieli-2023	sanatate	europa romania-economie	propus
+malpraxis-sesizari	sanatate	-	propus
+interimat-record	romania-politica	-	propus
+criza-2026-final	romania-politica	-	propus
+aparare-ankara-2026	nato	romania-economie	propus
+patriot-donatie	nato	ucraina-razboi	propus
+rujeola-2024	sanatate	europa	propus
+ror-acoperire-2025	sanatate	-	propus
+sua-supradoze-2024	sanatate	-	propus
+sua-supradoze-2025	sanatate	-	propus
+nitazene-europa	sanatate	europa	propus
+romania-decese-droguri	sanatate	-	propus
+ana-audit-cpeca	sanatate	-	propus
+romania-consum-tineri	sanatate	-	propus
+ruta-balcanica	sanatate	-	propus
+afganistan-opiu	sanatate	-	propus
+nps-china-india	sanatate	china	propus
+vaccinuri-antidrog	sanatate	-	propus
+harvard-rezilienta	sanatate	-	propus
+paulescu-palade	sanatate	-	propus
+ana-aslan-1952	sanatate	-	propus
+lancet-demenza-2024	creier-minte	sanatate	propus
+canal-1949	comunism-postcomunism	-	propus
+diaspora-numar	demografie-diaspora	-	propus
+remitente-2024	demografie-diaspora	romania-economie	propus
+bitdefender-teste	romania-economie	securitate-cibernetica	propus
+pnrr-final-2026	romania-economie	europa	propus
+paulescu-antisemitism	rau-suferinta	-	propus
+crink-ponderi	ordinea-internationala	china rusia iran	propus
+flota-fantoma	rusia	iran	propus
+coreea-kursk	rusia	ucraina-razboi	propus
+iran-beidou-shahed	china	ucraina-razboi iran rusia	propus
+crink-exercitii	ordinea-internationala	-	propus
+sea-shield-2026	romania-securitate	-	propus
+gas-lisbon-2026	romania-securitate	rusia ucraina-razboi	propus
+hub-marea-neagra	romania-securitate	-	propus
+ucraina-drone-2026	ucraina-razboi	rusia	propus
+ria-drone-2026	ucraina-razboi	rusia	propus
+pierderi-rusia-2026	ucraina-razboi	rusia	propus
+patriot-golf-2026	ucraina-razboi	iran	propus
+afd-bundestag-2025	europa	-	propus
+sondaje-afd-2026	europa	-	propus
+saxonia-anhalt-2026	europa	-	propus
+bfv-koeln-2026	europa	-	propus
+chrupalla-trupe-2026	europa	-	propus
+afd-rusia-program	europa	rusia	propus
+chrupalla-putin-2025	europa	rusia	propus
+krah-spion-2025	europa	china	propus
+weidel-soci-2025	europa	-	propus
+hoecke-2024	europa	-	propus
+gene-de-novo-2025	creatie-stiinta	-	propus
+rau-submarin	creatie-stiinta	-	propus
+franta-practica	istoria-mantuirii	-	propus
+germania-fara-confesiune	istoria-mantuirii	-	propus
+biserica-angliei-2024	istoria-mantuirii	-	propus
+africa-crestini	istoria-mantuirii	-	propus
+china-crestini	istoria-mantuirii	china	propus
+iran-gamaan	istoria-mantuirii	iran	propus
+ucraina-energie-2026	ucraina-razboi	rusia	propus
+fantana-alba-victime	rusia-imperiala	romania-ucraina	propus
+katyn-1990	rusia-imperiala	-	propus
+transnistria-wiesel	rau-suferinta	-	propus
+deveselu-rusia	romania-securitate	rusia nato	propus
+rusia-buget-militar-2026	rusia	-	propus
+meliorator-2024	dezinformare	ai rusia	propus
+romania-2024-csat	dezinformare	romania-politica securitate-cibernetica	propus
+biolaboratoare-onu	dezinformare	rusia	propus
+media-literacy-2026	dezinformare	-	propus
+cij-2009	romania-ucraina	ordinea-internationala	propus
+ucraina-limba-romana-2025	romania-ucraina	limba-romana	propus
+moldova-frauda-2014	moldova	-	propus
+incredere-eurostat-2024	comunism-postcomunism	europa	propus
+austria-aderare-1995	europa	-	propus
+fn-imprumut-2014	europa	-	propus
+le-pen-apel-2026	europa	-	propus
+moldova-cetatenie-2024	moldova	europa	propus
+genovese-38	credinta-bine	-	propus
+efect-martor-2011	credinta-bine	-	propus
+philpot-cctv	credinta-bine	-	propus
+caf-romania-2025	credinta-bine	europa	propus
+veto-gaza-sua	ordinea-internationala	gaza-israel sua-trump	propus
+galati-f16	nato	romania-securitate	propus
+norvegia-gaz-2025	europa	-	propus
+lancet-gaza-2025	gaza-israel	-	propus
+augustin-rau	rau-suferinta	dumnezeu	propus
+ucraina-energie-dixi	ucraina-razboi	rusia	propus
+cpi-energie-ucraina	ucraina-razboi	rusia ordinea-internationala	propus
+china-rusia-comert-2025	china	rusia	propus
+germania-strategie-2026	china	europa	propus
+alegeri-sua-2026	sua-trump	-	propus
+harvard-fonduri	sua-trump	-	propus
+firme-avocatura	sua-trump	-	propus
+cook-slaughter-2026	sua-trump	-	propus
+indiana-harta-2025	sua-trump	-	propus
+cetateni-ucisi	sua-trump	-	propus
+ice-decese-2026	sua-trump	-	propus
+cbo-asigurati-2034	sua-trump	sanatate	propus
+trump-dmitriev-2026	sua-trump	ucraina-razboi rusia	propus
+maduro-capturat-2026	ordinea-internationala	sua-trump	propus
+zelenski-deepfake-2022	dezinformare	ucraina-razboi ai	propus
+pst-ntv-2026	ai	dezinformare	propus
+drone-ghidaj-final	ai	ucraina-razboi	propus
+grau-genom	creatie-stiinta	-	propus
+datare-radiometrica	creatie-stiinta	-	propus
+iran-scrisoare-2026	iran	sua-trump	propus
+iran-fara-congres	iran	sua-trump	propus
+iran-evaluari-nucleare	iran	sua-trump	propus
+iran-sprijin-grupari	iran	gaza-israel	propus
+iran-onu-yemen-2025	iran	ordinea-internationala	propus
+iran-civili-2026	iran	-	propus
+protocol-i-civili	ordinea-internationala	iran	propus
+gaza-foamete-morti	gaza-israel	-	propus

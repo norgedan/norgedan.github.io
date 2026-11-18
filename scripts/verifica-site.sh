@@ -1386,6 +1386,40 @@ fi
 cut -f1 "$W/af" | LC_ALL=C sort -u > "$W/afid"
 cut -f1 "$W/afuz" | LC_ALL=C sort -u > "$W/afuzid"
 
+# pas161: subiectul fiecarei afirmatii e declarat in afirmatii-subiecte.tsv — un rand pe
+# afirmatie, subiecte doar din registrul unic subiecte.tsv
+AFS="$SCRIPT_DIR/afirmatii-subiecte.tsv"
+if [ ! -f "$AFS" ] || [ ! -f "$SCRIPT_DIR/subiecte.tsv" ]; then
+  problema "lipseste scripts/afirmatii-subiecte.tsv sau scripts/subiecte.tsv — subiectul afirmatiilor nu poate fi verificat"
+else
+  awk -F'\t' '
+    FILENAME == ARGV[1] { if (!/^#/ && NF) s[$1] = 1; next }
+    FILENAME == ARGV[2] { a[$1] = 1; next }
+    /^#/ || /^[ \t]*$/ { next }
+    NF != 4 { print "rand " FNR ": " NF " coloane in loc de 4"; next }
+    { for (i = 1; i <= 4; i++) if ($i ~ /^[ ]*$/) { print $1 ": coloana " i " goala (se scrie \"-\")"; next } }
+    !($1 in a) { print $1 ": nu e in afirmatii.tsv"; next }
+    v[$1]++ { print $1 ": de doua ori"; next }
+    { n++
+      if (!($2 in s)) print $1 ": subiect principal necunoscut „" $2 "” (nu e in subiecte.tsv)"
+      if ($3 != "-") { k = split($3, b, " ")
+        for (i = 1; i <= k; i++) {
+          if (!(b[i] in s)) print $1 ": subiect secundar necunoscut „" b[i] "”"
+          else if (b[i] == $2) print $1 ": „" b[i] "” e si principal, si secundar"
+          if (u[$1 SUBSEP b[i]]++) print $1 ": secundarul „" b[i] "” de doua ori" } }
+      if ($4 == "aprobat") ap++
+      else if ($4 != "propus") print $1 ": cum „" $4 "” — trebuie aprobat sau propus" }
+    END { for (i in a) if (!(i in v)) print i ": afirmatie fara subiect declarat in afirmatii-subiecte.tsv"
+          print "TOTAL " n + 0 " " ap + 0 }' "$SCRIPT_DIR/subiecte.tsv" "$W/af" "$AFS" > "$W/afs"
+  grep -v '^TOTAL ' "$W/afs" | LC_ALL=C sort > "$W/afse"
+  while IFS= read -r l; do problema "afirmatii-subiecte.tsv: $l"; greseli=1; done < "$W/afse"
+  afs_n=$(awk '$1 == "TOTAL" { print $2 }' "$W/afs"); afs_a=$(awk '$1 == "TOTAL" { print $3 }' "$W/afs")
+  if [ ! -s "$W/afse" ]; then
+    if [ "${afs_n:-0}" -eq 0 ]; then problema "afirmatii-subiecte.tsv: nicio afirmatie citita — registrul e gol sau citirea s-a stricat"
+    else ok "afirmatii-subiecte.tsv: $afs_n afirmatii, fiecare cu subiectul declarat ($afs_a aprobate, $((afs_n - afs_a)) propuse)"; fi
+  fi
+fi
+
 # marcajul se pune doar pe <span>: altfel detectorul nu-l poate ocoli corect
 awk -F'\t' '$3 != "span" {print $2 ": data-afirmatie=\"" $1 "\" pe <" $3 "> — se pune doar pe <span>"}' "$W/afuz" > "$W/x13"
 while read -r l; do problema "$l"; greseli=1; done < "$W/x13"

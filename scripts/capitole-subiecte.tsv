@@ -1,6 +1,6 @@
 # capitole-subiecte.tsv — registrul declarat: ce subiecte trateaza fiecare capitol (pas148).
-# Citit de scripts/subiect.sh.  Aici sta intelesul; tiparele din teme.tsv si subiecte.tsv
-# raman doar alarma (subiect.sh arata unde tiparul si registrul se contrazic).
+# Citit de scripts/subiect.sh.  Aici sta intelesul; tiparele din subiecte.tsv (registrul
+# unic din pas160) raman doar alarma (subiect.sh arata unde tiparul si registrul se contrazic).
 #
 # Un rand = un capitol RO (perechea NO il urmeaza).  5 coloane, separate prin TAB:
 #   doc  ancora  principal  secundare  cum
