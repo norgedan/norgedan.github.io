@@ -506,7 +506,7 @@ while read -r f; do
   if awk -F'\t' -v r="$repo" -v c="$cale" '$1==r && $2==c {g=1} END {exit !g}' "$W/docs"; then continue; fi
   case "$cale" in index.html|*/index.html|404.html|google*.html) continue ;; esac
   # pas119 (garda versionata): teme.html e pagina de structura a hub-ului — indexul
-  # tematic, generat de scripts/legaturi.sh din teme.tsv; publica, in sitemap-hub.xml.
+  # tematic, generat de scripts/legaturi.sh din subiecte.tsv (temele); publica, in sitemap-hub.xml.
   # Doar in hub: in alt repo, o teme.html ramane necunoscuta (T127).
   [ "$repo" = "$HUBNAME" ] && [ "$cale" = teme.html ] && continue
   # pas130: dovezi.html, la fel — pagina publica a dovezilor, generata de

@@ -112,7 +112,7 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     AfD) are textul complet și sursele într-un singur document — „Lumea în 2026” (corpus3-2)
     pentru actualitate; corpus-04 și corpus2-B sunt instantanee datate. Celelalte documente dau
     un rezumat scurt și trimit acolo. La un fapt corectat: --cauta pe tot site-ul (pas110).
-17. Temele au case declarate (pas118): scripts/teme.tsv (id, titluri, casa, tipar).
+17. Temele au case declarate (pas118): scripts/teme.tsv (id, titluri, casa, tipar); din pas160 unit cu subiecte.tsv — registrul unic scripts/subiecte.tsv, temele = rândurile cu casă.
     sh ~/norgedan.github.io/scripts/legaturi.sh verifică L1–L9 (ancore, casă unică,
     legături lipsă, cifre repetate, paritate RO-NO a trimiterilor, orfani, teme.html la zi,
     cifrele RO-NO, rândurile de temă);
@@ -320,7 +320,7 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --surse      # citatele din sur
 sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita completă (sâmbăta, pe dash și pe mksh)
 sh ~/norgedan.github.io/scripts/teste-garda.sh T85 T90        # doar testele numite
 sh ~/norgedan.github.io/scripts/legaturi.sh                  # legăturile, temele, cifrele RO-NO (L1–L9), lista completă
-sh ~/norgedan.github.io/scripts/legaturi.sh --scrie          # rescrie teme.html din teme.tsv
+sh ~/norgedan.github.io/scripts/legaturi.sh --scrie          # rescrie teme.html din subiecte.tsv (temele)
 sh ~/norgedan.github.io/scripts/dovezi.sh --scrie            # rescrie dovezi.html din registre (pas130)
 sh ~/norgedan.github.io/scripts/verifica-site.sh --curatenie # sâmbăta: ce e de curățat — doar listează (pas132)
 sh ~/norgedan.github.io/scripts/verifica-site.sh --reguli    # după o schimbare VOITĂ în scripts/reguli/ sau lib.awk: amprentele din reguli.tsv + martorul din jurnal (pas139)

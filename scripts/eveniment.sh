@@ -11,7 +11,7 @@
 # (sursa), criteriul si starea (propus / aprobat); subiectele legate; ce e de adus la zi:
 # paginile care poarta afirmatiile evenimentului si daca textul lor sta in texte.tsv.
 #
-# Registre: evenimente.tsv, efecte.tsv (aici), afirmatii.tsv, teme.tsv, subiecte.tsv, texte.tsv.
+# Registre: evenimente.tsv, efecte.tsv (aici), afirmatii.tsv, subiecte.tsv (registrul unic), texte.tsv.
 # Nu face parte din garda si nu opreste niciun push.  Registrele gresite opresc scriptul.
 # Iesire: 0 = bine; 1 = registru gresit sau id necunoscut; 2 = utilizare.
 # POSIX: sh (ksh pe OpenBSD), awk, find, grep, sort, mktemp.  LC_ALL=C.
@@ -31,7 +31,7 @@ case ${1:-} in
   -*)         echo "utilizare: sh $0 [<id> | --subiect <subiect>]" >&2; exit 2 ;;
   *)          [ $# -eq 1 ] || { echo "utilizare: sh $0 [<id> | --subiect <subiect>]" >&2; exit 2; }; MOD=fisa; CE=$1 ;;
 esac
-for f in "$EV" "$EF" "$AF" "$SCRIPT_DIR/teme.tsv" "$SCRIPT_DIR/subiecte.tsv"; do
+for f in "$EV" "$EF" "$AF" "$SCRIPT_DIR/subiecte.tsv"; do
   [ -f "$f" ] || { echo "PROBLEMA lipseste $f" >&2; exit 1; }
 done
 
@@ -40,7 +40,7 @@ trap 'rm -rf "$W"' EXIT
 trap 'exit 1' INT TERM HUP
 
 # subiectele si afirmatiile cunoscute
-cat "$SCRIPT_DIR/teme.tsv" "$SCRIPT_DIR/subiecte.tsv" | awk -F'\t' '!/^#/ && NF >= 2 { print $1 "\t" $2 }' > "$W/sub"
+awk -F'\t' '!/^#/ && NF >= 2 { print $1 "\t" $2 }' "$SCRIPT_DIR/subiecte.tsv" > "$W/sub"
 awk -F'\t' '!/^#/ && NF >= 2 { print $1 "\t" $NF }' "$AF" > "$W/af"
 
 # 1. registrele: forma lor
@@ -136,7 +136,7 @@ fisa)
   fisa "$CE"; echo ""
   ;;
 subiect)
-  grep -q "^$CE	" "$W/sub" || { echo "Niciun subiect „$CE” in teme.tsv sau subiecte.tsv." >&2; exit 1; }
+  grep -q "^$CE	" "$W/sub" || { echo "Niciun subiect „$CE” in subiecte.tsv." >&2; exit 1; }
   echo ""
   echo "Evenimentele subiectului $CE — $(nume "$CE")"
   ai=$(awk -F'\t' -v s="$CE" '!/^#/ && NF == 7 && $3 == s { print $2 "\t" $1 }' "$EV" | sort -r | cut -f2)

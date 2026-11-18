@@ -5,7 +5,7 @@
 # citeste iesirea; separat, scriptul da detaliile complete si rescrie teme.html.
 #
 #   sh ~/norgedan.github.io/scripts/legaturi.sh           verifica straturile L1-L7
-#   sh ~/norgedan.github.io/scripts/legaturi.sh --scrie   rescrie teme.html din teme.tsv
+#   sh ~/norgedan.github.io/scripts/legaturi.sh --scrie   rescrie teme.html din subiecte.tsv (temele)
 #
 # Din pas121 ruleaza si in garda, ca sectiunea [23] (LEGATURI_GARDA=1: fara bannerul
 # propriu, L3 pe scurt — lista completa ramane aici, in rularea separata).
@@ -13,16 +13,16 @@
 # Straturile:
 #   L1  ancorele capitolelor: fiecare <h2> are ancora (id pe h2 sau pe <section>-ul
 #       lui), unica in fisier, aceleasi ancore in aceeasi ordine in RO si NO
-#   L2  o singura casa pe tema: teme.tsv corect, casa exista in RO si NO
+#   L2  o singura casa pe tema: subiecte.tsv corect (temele = randurile cu casa), casa exista in RO si NO
 #   L3  legaturi lipsa: capitolele care trateaza o tema si nu trimit spre casa ei
 #   L4  faptele: cifre nemarcate dintr-un capitol care apar si in casa temei —
 #       acelasi fapt in doua locuri, fara id comun de afirmatie
 #   L5  paritatea RO-NO a trimiterilor spre capitole din alte documente
 #   L6  orfanii: capitole fara nicio tema si fara nicio trimitere primita;
 #       case de tema spre care nu trimite niciun alt document
-#   L7  pagina teme.html == ce se genereaza acum din teme.tsv
+#   L7  pagina teme.html == ce se genereaza acum din subiecte.tsv
 #   L8  cifrele RO-NO: numere care apar intr-o limba si lipsesc din cealalta (pas122)
-#   L9  randurile de tema <p class="nd-tema">: doar navigare spre casele din teme.tsv
+#   L9  randurile de tema <p class="nd-tema">: doar navigare spre casele din subiecte.tsv
 #       (pas123) — garda [18] nu le pune in amprenta, deci trebuie sa nu poata duce
 #       nimic altceva decat legaturi
 #       (teme.html sta in radacina hub-ului, publica si in sitemap-hub.xml; garda o
@@ -43,7 +43,7 @@ HUB=$(dirname "$SCRIPT_DIR")
 RADACINA=$(dirname "$HUB")
 HUBNAME=$(basename "$HUB")
 MAN="$SCRIPT_DIR/documente.tsv"
-TEME="$SCRIPT_DIR/teme.tsv"
+TEME="$SCRIPT_DIR/subiecte.tsv"   # pas160: registrul unic; temele = randurile cu casa
 INDEX="$HUB/teme.html"
 
 MOD=verifica
@@ -132,33 +132,37 @@ dn=$(sed -n 's/^DOARNO //p' "$W/l1")
 [ -n "$dn" ] && ok "capitole doar in NO (rolul Norvegiei), sarite la potrivire: $dn"
 
 # ════════════════════════════════════════════════════════════════════
-titlu L2 "O singura casa pe tema: teme.tsv"
+titlu L2 "O singura casa pe tema: subiecte.tsv (randurile cu casa)"
 # ════════════════════════════════════════════════════════════════════
 awk -F'\t' 'FILENAME == ARGV[1] { if ($2 == "ro") { doc[$1] = 1; anc[$1 "\tro\t" $4] = 1; poz[$1 "\t" $4] = $3 } next }
   FILENAME == ARGV[2] { arenno[$1 "\t" $2] = 1; next }
   /^#/ || /^[ \t]*$/ { next }
-  { if (NF != 5) { print "PROBLEMA teme.tsv rand " FNR ": " NF " coloane in loc de 5"; next }
-    if ($1 !~ /^[a-z0-9-]+$/) print "PROBLEMA teme.tsv rand " FNR ": id „" $1 "” (doar litere mici, cifre, -)"
-    if ($1 in id) print "PROBLEMA teme.tsv: id „" $1 "” de doua ori"
+  { if (NF != 5) { print "PROBLEMA subiecte.tsv rand " FNR ": " NF " coloane in loc de 5"; next }
+    if ($1 !~ /^[a-z0-9-]+$/) print "PROBLEMA subiecte.tsv rand " FNR ": id „" $1 "” (doar litere mici, cifre, -)"
+    if ($1 in id) print "PROBLEMA subiecte.tsv: id „" $1 "” de doua ori"
     id[$1] = 1
-    for (i = 2; i <= 5; i++) if ($i == "") print "PROBLEMA teme.tsv " $1 ": coloana " i " goala"
+    for (i = 2; i <= 5; i++) if ($i == "") print "PROBLEMA subiecte.tsv " $1 ": coloana " i " goala"
+    if ($4 == "-") next
     c = $4; a = ""; j = index(c, "#"); if (j > 0) { a = substr(c, j + 1); c = substr(c, 1, j - 1) }
-    if (!(c in doc)) { print "PROBLEMA teme.tsv " $1 ": casa „" $4 "” — documentul nu e in documente.tsv"; next }
-    if (a != "" && !((c "\tro\t" a) in anc)) print "PROBLEMA teme.tsv " $1 ": casa „" $4 "” — ancora nu e a unui capitol din fisierul RO"
-    else if (a != "" && !((c "\t" poz[c "\t" a]) in arenno)) print "PROBLEMA teme.tsv " $1 ": casa „" $4 "” — capitolul nu are pereche in NO"
+    if (!(c in doc)) { print "PROBLEMA subiecte.tsv " $1 ": casa „" $4 "” — documentul nu e in documente.tsv"; next }
+    if (a != "" && !((c "\tro\t" a) in anc)) print "PROBLEMA subiecte.tsv " $1 ": casa „" $4 "” — ancora nu e a unui capitol din fisierul RO"
+    else if (a != "" && !((c "\t" poz[c "\t" a]) in arenno)) print "PROBLEMA subiecte.tsv " $1 ": casa „" $4 "” — capitolul nu are pereche in NO"
     n++ }
   END { print "TOTAL " n+0 }' "$W/cap" "$W/map" "$TEME" > "$W/l2"
+# pas160: un singur registru de subiecte — fostul teme.tsv nu are voie sa reapara alaturi
+[ -f "$SCRIPT_DIR/teme.tsv" ] && echo "PROBLEMA registru dublu: scripts/teme.tsv exista din nou — registrul unic al subiectelor e scripts/subiecte.tsv (pas160)" >> "$W/l2"
 grep '^PROBLEMA' "$W/l2" | while IFS= read -r l; do echo "  $l"; done
 np=$(grep -c '^PROBLEMA' "$W/l2")
 probleme=$((probleme + np))
 nteme=$(sed -n 's/^TOTAL //p' "$W/l2")
 [ "$np" -eq 0 ] && ok "$nteme teme, fiecare cu o singura casa, care exista in RO si NO"
 if [ "$np" -gt 0 ]; then
-  echo ""; echo "  REZULTAT: teme.tsv are probleme — L3-L7 nu pot rula."; exit 1
+  echo ""; echo "  REZULTAT: subiecte.tsv are probleme — L3-L7 nu pot rula."; exit 1
 fi
 
 # temele, fara comentarii: id titlu_ro titlu_no casa_doc casa_anc tipar
 awk -F'\t' '/^#/ || /^[ \t]*$/ { next }
+  $4 == "-" { next }
   { c = $4; a = ""; j = index(c, "#"); if (j > 0) { a = substr(c, j + 1); c = substr(c, 1, j - 1) }
     print $1 "\t" $2 "\t" $3 "\t" c "\t" a "\t" $5 }' "$TEME" > "$W/teme"
 
@@ -286,14 +290,14 @@ orf=$(sed -n 's/^ORFANI //p' "$W/l6")
 case_=$(sed -n 's/^CASE //p' "$W/l6")
 norf=${orf%%"$(printf '\t')"*}
 if [ "$norf" -eq 0 ]; then ok "fiecare capitol are o tema sau primeste o trimitere"
-else atentie "$norf capitole fara nicio tema din teme.tsv si fara nicio trimitere primita — pe documente:"
+else atentie "$norf capitole fara nicio tema din subiecte.tsv si fara nicio trimitere primita — pe documente:"
   echo "            ${orf#*"$(printf '\t')"}"; fi
 if [ -z "$case_" ]; then ok "spre casa fiecarei teme trimite cel putin un alt document"
 else atentie "case de tema spre care nu trimite, din text, niciun alt document (teme.html nu se socoteste):"
   echo "            $case_"; fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu L7 "Pagina teme.html == ce se genereaza acum din teme.tsv"
+titlu L7 "Pagina teme.html == ce se genereaza acum din subiecte.tsv"
 # ════════════════════════════════════════════════════════════════════
 awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
   function esc(s) { gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s); gsub(/"/, "\\&quot;", s); return s }
@@ -368,7 +372,7 @@ awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
       }
       print "</section>"
     }
-    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/teme.tsv. Un capitol e trecut la o temă dacă tiparul ei revine de cel puțin " prag " ori în textul lui. · Siden er generert av scripts/legaturi.sh fra scripts/teme.tsv. Et kapittel føres opp under et tema hvis temaets mønster forekommer minst " prag " ganger i teksten.</p>"
+    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/subiecte.tsv (temele: subiectele care au o casă). Un capitol e trecut la o temă dacă tiparul ei revine de cel puțin " prag " ori în textul lui. · Siden er generert av scripts/legaturi.sh fra scripts/teme.tsv. Et kapittel føres opp under et tema hvis temaets mønster forekommer minst " prag " ganger i teksten.</p>"
     print "</main>"
     print "</body>"
     print "</html>"
@@ -376,14 +380,14 @@ awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
 
 if [ "$MOD" = scrie ]; then
   cp "$W/index.html" "$INDEX" || exit 2
-  ok "teme.html rescris din teme.tsv ($nteme teme).  Citeste diferenta inainte de commit:"
+  ok "teme.html rescris din subiecte.tsv ($nteme teme).  Citeste diferenta inainte de commit:"
   echo "             git -C $HUB diff --stat"
 elif [ ! -f "$INDEX" ]; then
   problema "lipseste teme.html — sh $0 --scrie"
 elif cmp -s "$W/index.html" "$INDEX"; then
   ok "teme.html e la zi ($nteme teme)"
 else
-  problema "teme.html nu mai corespunde teme.tsv sau capitolelor de acum — sh $0 --scrie, apoi git diff"
+  problema "teme.html nu mai corespunde subiecte.tsv (temele) sau capitolelor de acum — sh $0 --scrie, apoi git diff"
 fi
 
 # ════════════════════════════════════════════════════════════════════
@@ -465,7 +469,7 @@ if [ "$n8" -eq 0 ]; then ok "$t8 perechi de capitole, aceleasi numere in RO si N
 else atentie "$n8 din $t8 perechi de capitole au numere doar intr-o limba — de citit: traducere gresita sau diferenta legitima?"; lista "$W/l8b"; fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu L9 "Randurile de tema: doar legaturi spre casele din teme.tsv"
+titlu L9 "Randurile de tema: doar legaturi spre casele din subiecte.tsv"
 # ════════════════════════════════════════════════════════════════════
 # pas123.  Forma singura admisa, intr-un capitol, pe un rand:
 #   RO  <p class="nd-tema">Tema: <a href="...casa...">Moldova</a> · <a ...>China</a></p>
@@ -499,7 +503,7 @@ awk -F'\t' '
         else ok = (lg == "ro") ? (anc == ca[q]) : (anc == r2n[z[1] "\t" rp[z[1] "\t" ca[q]]])
         if (ok) { g = q; break }
       }
-      if (!g) { print "PROBLEMA " loc ": legatura „" tx "” nu duce la casa unei teme din teme.tsv (" z[1] "#" anc ")"; continue }
+      if (!g) { print "PROBLEMA " loc ": legatura „" tx "” nu duce la casa unei teme din subiecte.tsv (" z[1] "#" anc ")"; continue }
       tt = (lg == "ro") ? tro[g] : tno[g]
       if (tx != tt) print "PROBLEMA " loc ": textul legaturii „" tx "” nu e titlul temei „" tt "”"
       tem[d "\t" k "\t" lg] = tem[d "\t" k "\t" lg] " " tid[g]; ck[d "\t" k] = 1
@@ -520,7 +524,7 @@ while IFS= read -r l; do problema "${l#PROBLEMA }"; done < "$W/l9p"   # nu „| 
 set -- $(sed -n 's/^TOTAL //p' "$W/l9")
 if ! grep -q '^PROBLEMA' "$W/l9"; then
   if [ "$1" -eq 0 ]; then ok "niciun rand de tema inca"
-  else ok "$1 randuri de tema, $2 legaturi — toate spre casele din teme.tsv, aceleasi teme in RO si NO"; fi
+  else ok "$1 randuri de tema, $2 legaturi — toate spre casele din subiecte.tsv, aceleasi teme in RO si NO"; fi
 fi
 
 if [ "$GARDA" != 1 ]; then

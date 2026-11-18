@@ -473,7 +473,7 @@ mut_T131() { rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|<secti
 mut_T132() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|<footer|<aside><h2>Caseta</h2></aside><footer|'; }
 # pas121: legaturi.sh ruleaza in garda, ca [23]; fiecare strat care blocheaza are testul lui
 mut_T133() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|<section class="chapter" id="cap5">|<section class="chapter">|'; }
-mut_T134() { rep norgedan.github.io/scripts/teme.tsv 's|corpus3-2#cap6|corpus3-2#cap99|'; }
+mut_T134() { rep norgedan.github.io/scripts/subiecte.tsv 's|corpus3-2#cap6|corpus3-2#cap99|'; }
 # legatura dupa titlul lui cap4 (neverificat), ca sa nu atinga amprenta lui cap3 (verificat)
 mut_T135() { rep norgedan.github.io/corpus3/ro/3-europa-la-rascruce-ro.html 's|pe care Europa trebuie să îl înțeleagă</h2>|pe care Europa trebuie să îl înțeleagă</h2><p><a href="https://norgedan.github.io/corpus3/ro/1-romania-si-rusia-ro.html#cap8">Moldova</a></p>|'; }
 mut_T136() { rep norgedan.github.io/teme.html 's|Casa temei · Temaets hjem|Casa · Hjem|'; }
@@ -492,7 +492,7 @@ mut_T141() { rep norgedan.github.io/corpus3/ro/2-lumea-in-2026-ro.html 's|Ursul 
              rep norgedan.github.io/corpus3/no/2-verden-i-2026-no.html 's|Den sårede bjørnen og den reelle faren i 2026</h2>|Den sårede bjørnen og den reelle faren i 2026</h2><p>I 2026-utgaven kom Romania på 31. plass.</p>|'; }
 mut_T142() { mut_T139; }
 # pas123: randul de tema <p class="nd-tema"> — navigare, scos din amprenta [18]; [23] L9
-# cere sa nu duca nimic altceva decat legaturi spre casele din teme.tsv.  T143 e testul
+# cere sa nu duca nimic altceva decat legaturi spre casele din subiecte.tsv (temele).  T143 e testul
 # pentru care exista: un rand corect intr-un capitol VERIFICAT (corpus3-1#cap3) trece.
 NDRO='https://norgedan.github.io/corpus3/ro/5-dezinformarea-ro.html'
 NDNO='https://norgedan.github.io/corpus3/no/5-desinformasjon-no.html'
@@ -578,6 +578,11 @@ mut_T204() { rep "$TX" 's|inclusiv femei și copii (bilanțul|inclusiv femei (bi
 mut_T205() { rep "$TX" 's|corpus/04-lumea-in-care-traim-ro.html corpus2/ro/B-tabloul-lumii-2026-ro.html\(.Biroul\)|corpus/04-lumea-in-care-traim-ro.html\1|'; }
 mut_T206() { grep '^#' "$TX" > "$TX.t" && mv "$TX.t" "$TX"; }
 mut_T207() { grep '^oct7-bilant.intreg.ro' "$TX" | sed 's|inclusiv femei și copii|inclusiv copii și femei|' >> "$TX"; }
+# ── pas160: registrul unic al subiectelor (subiecte.tsv; garda [23] L2) ──
+SB=norgedan.github.io/scripts/subiecte.tsv
+mut_T208() { grep '^iran	' "$SB" > "$SB.r" && cat "$SB.r" >> "$SB" && rm "$SB.r"; }
+mut_T209() { rep "$SB" 's|^gaza-israel	Israel și Gaza	|gaza-israel		|'; }
+mut_T210() { grep -v '^[a-z]' "$SB" > norgedan.github.io/scripts/teme.tsv; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -724,7 +729,7 @@ t T130 TRECE   "-"                                "[18] capitol doar-NO (norge..
 t T131 PICA    "corpus3-2: 11 capitole RO, 12 NO" "[18] un capitol NO in plus, fara norge..., nu se poate pune fata in fata"
 t T132 PICA    "cele doua citiri ale capitolelor nu se potrivesc" "[18] santinela: <h2> intr-un aside — amprenta fara nume"
 t T133 PICA    "L1: corpus3-2 (ro) capitolul 5 fara ancora" "[23] L1: capitol fara ancora"
-t T134 PICA    "L2: teme.tsv china: casa „corpus3-2#cap99”" "[23] L2: casa unei teme nu exista"
+t T134 PICA    "L2: subiecte.tsv china: casa „corpus3-2#cap99”" "[23] L2: casa unei teme nu exista"
 t T135 PICA    "L5: trimitere doar intr-o limba"  "[23] L5: trimitere spre alt document doar in RO"
 t T136 PICA    "L7: teme.html nu mai corespunde"  "[23] L7: teme.html schimbata de mana, nu din teme.tsv"
 t T137 PICA    "lipseste scripts/legaturi.sh"     "[23] santinela: scriptul de legaturi lipseste"
@@ -800,6 +805,9 @@ t T204 PICA    "texte.tsv: ALTFEL oct7-bilant"    "[13] registrul schimbat fara 
 t T205 PICA    "dar nu e trecuta in texte.tsv"    "[13] o pagina poarta marcajul unei afirmatii inscrise, dar nu e in registru"
 t T206 PICA    "nu a numarat nicio afirmatie"     "[13] santinela: registrul textelor golit"
 t T207 PICA    "are deja forma intreg"            "[13] a treia formulare: doua randuri pentru aceeasi forma si limba"
+t T208 PICA    "id „iran” de doua ori"            "[23] L2: acelasi subiect de doua ori in registrul unic"
+t T209 PICA    "gaza-israel: coloana 2 goala"     "[23] L2: subiect fara casa, dar cu titlul gol — si el e verificat acum"
+t T210 PICA    "registru dublu: scripts/teme.tsv" "[23] L2: santinela — al doilea registru de subiecte reapare"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

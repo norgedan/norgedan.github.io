@@ -1,13 +1,45 @@
-# subiecte.tsv — subiectele norgedan care nu au (inca) o casa in teme.tsv (pas147).
-# Citit de scripts/subiect.sh, impreuna cu teme.tsv: orice tema e si subiect.
+# subiecte.tsv — REGISTRUL UNIC al subiectelor norgedan (pas160: teme.tsv si subiecte.tsv unite).
+# Citit de scripts/legaturi.sh (garda [23]; din el se genereaza teme.html), scripts/subiect.sh,
+# scripts/eveniment.sh.  Un singur loc pentru „ce subiecte avem”: aceeasi limba peste tot.
 #
-# Un rand = un subiect.  5 coloane, separate prin TAB, aceleasi ca in teme.tsv:
-#   id  titlu_ro  titlu_no  casa  tipar
-#   casa   "-" cat timp subiectul nu are un singur loc unde se tine la zi; cand primeste
-#          unul, randul se muta in teme.tsv (acolo casa e obligatorie si verificata de garda).
-#   tipar  expresie regulata (ERE), cautata cu majusculele exacte in textul RO al fiecarui
-#          capitol si in textul marcat al fiecarei afirmatii.
-# Un id nu poate fi si in teme.tsv, si aici.
+# Un rand = un subiect.  5 coloane, separate prin TAB:
+#   id        litere mici fara diacritice, cifre si "-"; stabil (ancora in teme.html); unic
+#   titlu_ro, titlu_no
+#   casa      UNDE locuieste subiectul (regula 16: o singura casa pe fapt), sau „-”:
+#               id-document#ancora   = un capitol anume   (ex: corpus3-2#cap4)
+#               id-document          = tot documentul      (ex: corpus3-5)
+#               -                    = inca fara casa: subiect urmarit, dar nu „tema”
+#             Un subiect CU casa e o TEMA: garda ([23] L2–L9) verifica faptul ca acea casa
+#             exista in RO si NO, ca celelalte capitole trimit spre ea, si o pune in teme.html.
+#             Casa e locul unde subiectul se trateaza pe larg si se tine la zi; celelalte
+#             capitole trimit spre ea, nu repeta faptele (sau le repeta cu acelasi id
+#             de afirmatie, ca garda [13] sa le urmareasca impreuna).
+#   tipar     expresie regulata (ERE), cautata cu majusculele exacte in textul RO al fiecarui
+#             capitol (si, in subiect.sh, in textul marcat al afirmatiilor).  E doar ALARMA:
+#             ce trateaza un capitol e declarat in capitole-subiecte.tsv (pas148).
+#             La teme, garda (legaturi.sh) socoteste ca un capitol „trateaza tema” daca tiparul
+#             revine de cel putin PRAG ori (implicit 3).
+#             Fara \b, fara {n}, fara litere cu diacritice intre [ ] — awk-ul de pe
+#             OpenBSD lucreaza pe octeti: ă intre paranteze drepte se rupe in doi octeti.
+#             Diacriticele merg in afara parantezelor:  inim(a|ă|ii)
+#             Fara alternative redundante cu acelasi inceput (imperialism.*|imperial.*):
+#             mawk (Linux) pierde atunci potriviri; one-true-awk (OpenBSD) nu.
+#
+# Casele temelor sunt cele aprobate de Bogdan pe 6 nov. 2026, dupa masurarea pe capitole.
+#
+# Primele randuri: temele (cu casa, din fostul teme.tsv, pas118); apoi subiectele fara casa
+# (din fostul subiecte.tsv, pas147–149).  Cand un subiect primeste o casa, i se scrie casa
+# pe randul lui — nu se muta nicaieri.
+ucraina-razboi	Războiul din Ucraina	Krigen i Ukraina	corpus3-2#cap4	Zelensk|Donbas|Kiev|Kyiv|Bahmut|Harkov|Zaporoj|Crimeea|invazi[a-z]* (rus|din|la scar)|războ[a-z]* din Ucraina|frontul|ucrainen
+romania-ucraina	România și Ucraina	Romania og Ukraina	corpus3-1#cap7	Bucovin|Cernăuți|Insula Șerpilor|[Rr]omânii din Ucraina|Bugeac|Herța|România și Ucraina|României cu Ucraina|Ucraina și România
+dezinformare	Dezinformarea	Desinformasjon	corpus3-5	[Dd]ezinform|[Pp]ropagand|Meliorator|deepfake|fake news|manipul
+moldova	Moldova	Moldova	corpus3-1#cap8	Moldov|Chișinău|Transnistri|Maia Sandu
+ai	Inteligența artificială	Kunstig intelligens	corpus-06	[Ii]nteligenț[a-z]* [Aa]rtificial|ChatGPT|[^A-Za-z]AI[^A-Za-z]|algoritm
+nato	NATO și flancul estic	NATO og østflanken	corpus3-4#cap4	NATO|Articolul 5
+china	China	Kina	corpus3-2#cap6	China|Chinei|Beijing|Xi Jinping|chinez
+rusia-imperiala	Logica imperială a Rusiei	Russlands imperielle logikk	corpus3-1#cap1	[Ii]mperial[a-z]* rus|[Ii]mperiul [Rr]us|[Ii]mperiului [Rr]us|țarist|[Ii]mperiu[a-z]* sovietic|Kremlin
+sanatate	Sănătate, medicină și droguri	Helse, medisin og rusmidler	corpus2-D	sănăt|Sănătat|[Mm]edical|spital|[Dd]rog[uia]|opioid|fentanil
+inima	Inima — organ și centru al omului	Hjertet — organ og menneskets sentrum	corpus-02#minte-inima	[Ii]nim(a|ă|ii|ile|ilor)[^a-z]|[Ii]nimi
 gaza-israel	Israel și Gaza	Israel og Gaza	-	Gaza|Hamas|[Pp]alestinian|Netanyahu|[Ii]sraelian|Cisiordani|Hezbollah
 iran	Iranul	Iran	-	Iran|[Ii]ranian|Teheran|Ormuz|Hormuz|Khamenei
 sua-trump	Statele Unite sub Trump	USA under Trump	-	Trump|Casa Albă|Witkoff|Dmitriev|Vance

@@ -9,7 +9,7 @@
 #   sh ~/norgedan.github.io/scripts/subiect.sh <id>       fisa unui subiect
 #   sh ~/norgedan.github.io/scripts/subiect.sh --fara     capitolele fara niciun subiect declarat
 #
-# Subiect = un rand din teme.tsv (subiect cu casa) sau din subiecte.tsv (fara casa inca).
+# Subiect = un rand din subiecte.tsv, registrul unic (pas160; cu casa = tema, fara casa inca).
 # Ce subiecte trateaza un capitol e DECLARAT in capitole-subiecte.tsv (pas148): un subiect
 # principal si, daca e cazul, cateva secundare — stabilite prin citire, aprobate de Bogdan.
 # Tiparul subiectului e doar ALARMA: fisa arata unde tiparul si registrul se contrazic
@@ -29,7 +29,6 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
 HUB=$(dirname "$SCRIPT_DIR")
 RADACINA=$(dirname "$HUB")
 MAN="$SCRIPT_DIR/documente.tsv"
-TEME="$SCRIPT_DIR/teme.tsv"
 SUB="$SCRIPT_DIR/subiecte.tsv"
 AFI="$SCRIPT_DIR/afirmatii.tsv"
 CAPV="$SCRIPT_DIR/capitole-verificate.tsv"
@@ -42,7 +41,7 @@ case "$CE" in
   -*) echo "utilizare: sh $0 [<id> | --fara]" >&2; exit 2 ;;
 esac
 [ $# -le 1 ] || { echo "utilizare: sh $0 [<id> | --fara]" >&2; exit 2; }
-for f in "$MAN" "$TEME" "$SUB" "$AFI" "$CAPV" "$REG" "$SCRIPT_DIR/capitole.awk"; do
+for f in "$MAN" "$SUB" "$AFI" "$CAPV" "$REG" "$SCRIPT_DIR/capitole.awk"; do
   [ -f "$f" ] || { echo "lipseste $f" >&2; exit 2; }
 done
 
@@ -56,9 +55,9 @@ awk -F'\t' '
   /^#/ || /^[ \t]*$/ { next }
   NF != 5 { print "subiect.sh: " FILENAME " rand " FNR ": " NF " coloane in loc de 5" > "/dev/stderr"; rau = 1; next }
   $1 !~ /^[a-z0-9-]+$/ { print "subiect.sh: " FILENAME " rand " FNR ": id „" $1 "”" > "/dev/stderr"; rau = 1; next }
-  $1 in v { print "subiect.sh: id „" $1 "” de doua ori (teme.tsv si subiecte.tsv)" > "/dev/stderr"; rau = 1; next }
+  $1 in v { print "subiect.sh: id „" $1 "” de doua ori in subiecte.tsv" > "/dev/stderr"; rau = 1; next }
   { v[$1] = 1; print $1 "\t" $2 "\t" $4 "\t" $5 }
-  END { exit rau }' "$TEME" "$SUB" > "$W/s" || exit 2
+  END { exit rau }' "$SUB" > "$W/s" || exit 2
 
 if [ -n "$CE" ] && [ "$CE" != --fara ]; then
   cut -f1 "$W/s" | grep -qx -- "$CE" || {
@@ -151,7 +150,7 @@ fi
 
 # ── toate subiectele, pe scurt ───────────────────────────────────────
 if [ -z "$CE" ]; then
-  echo "Subiectele norgedan (teme.tsv + subiecte.tsv; capitolele: capitole-subiecte.tsv)"
+  echo "Subiectele norgedan (subiecte.tsv, registrul unic; capitolele: capitole-subiecte.tsv)"
   echo "  subiect                  principal  secundar  afirmatii  alarme  primul termen  casa"
   awk -F'\t' '
     FILENAME == ARGV[1] { if ($4 == "P") pr[$1]++; else se[$1]++; next }
@@ -174,7 +173,7 @@ $(grep "^$CE	" "$W/s")
 EOT
 echo "===================================================="
 echo "  SUBIECT: $sid — $stitlu"
-if [ "$scasa" = "-" ]; then echo "  casa: inca niciuna (subiecte.tsv)"; else echo "  casa: $scasa (teme.tsv)"; fi
+if [ "$scasa" = "-" ]; then echo "  casa: inca niciuna"; else echo "  casa: $scasa (tema)"; fi
 echo "===================================================="
 
 grep "^$CE	" "$W/sc" > "$W/c1"
