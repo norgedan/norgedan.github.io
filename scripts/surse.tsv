@@ -503,8 +503,8 @@ canal-bosfor	S	https://www.hydro-international.com/content/news/undersea-river-d
 vag-aferent	S	https://frontiersin.org/articles/10.3389/fimmu.2017.01452/pdf	2026-11-19	claude	«The VN is a mixed nerve with 20% efferent and 80% afferent fibers (1)»
 neuroni-oglinda	P	https://pages.ucsd.edu/~jpineda/COGS171/readings/Hickok.pdf	2026-11-19	claude	«evidence from humans makes a strong case against the position»
 limbaj-etape	P	https://www.crl.ucsd.edu/bates/papers/pdf/from-meiti/31-Dont%20shoot.pdf	2026-11-19	claude	«these figures reflect true variation in language development from 8 to 30 months»
-inima-ecg-eeg	P	https://www.bem.fi/book/	2026-11-19	bogdan	«The amplitude of the EEG is about 100 µV when measured on the scalp»
-inima-ecg-eeg	P	https://www.bem.fi/book/	2026-11-19	bogdan	«This amplitude is about 1 mV in a normal heart»
+inima-ecg-eeg	P	https://www.bem.fi/book/13/13.htm	2026-11-19	bogdan	«The amplitude of the EEG is about 100 µV when measured on the scalp»
+inima-ecg-eeg	P	https://www.bem.fi/book/19/19.htm	2026-11-19	bogdan	«This amplitude is about 1 mV in a normal heart»
 limbaj-etape	P	https://pmc.ncbi.nlm.nih.gov/articles/PMC3582035/	2026-11-19	bogdan	«Mean (SD) and range of expressive vocabulary at 18 and 24 months»
 zipf-efort-minim	P	https://www.pnas.org/doi/10.1073/pnas.0335980100	2026-11-19	bogdan	«Complex Systems Lab, Universitat Pompeu Fabra, Doctor Aiguader 80, 08003 Barcelona, Spain»
 canal-bosfor	P	https://researchconnect.stonybrook.edu/en/publications/morphology-and-evolution-of-an-anastomosed-channel-network-where-/	2026-11-19	bogdan	«radiocarbon-dated in cores to be younger than ~7.5 to 8.0 ka»
@@ -515,3 +515,16 @@ rau-submarin	P	https://www.see.leeds.ac.uk/fileadmin/Documents/news/jeff-Peakall
 rau-submarin	P	https://noc.ac.uk/news/research-reveals-how-currents-deep-ocean-floor-are-able-travel-thousands-miles	2026-11-19	claude	«transports 22,000 cubic metres of water every second»
 limbaj-etape	P	https://escholarship.org/content/qt3s69v6kt/qt3s69v6kt.pdf	2026-11-19	claude	«children demonstrate remarkably similar early lexical development across languages, with highly overlapping first words»
 limbaj-etape	P	https://iris.unitn.it/handle/11572/49040	2026-11-19	claude	«The composition of young children's vocabularies in 7 contrasting linguistic communities was investigated.»
+zipf-efort-minim	P	https://www.pnas.org/doi/10.1073/pnas.0335980100	2026-11-19	bogdan	«the early hypothesis of Zipf of a principle of least effort for explaining the law is shown to be sound»
+rau-submarin	P	https://doi.org/10.1002/2013JC009008	2026-11-19	bogdan	«a single trunk channel up to 1.3 km wide and 25 m deep»
+rau-submarin	P	https://doi.org/10.1002/2013JC009008	2026-11-19	bogdan	«a maximum thickness of 35 m, and a maximum velocity of 1.5 m/s»
+canal-bosfor	P	https://doi.org/10.1002/2013JC009008	2026-11-19	bogdan	«The ADCP was deployed from Autosub3, an autonomous underwater vehicle»
+milgram	P	https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0093927	2026-11-19	bogdan	«which varied enormously in levels of obedient responding»
+milgram	P	https://doi.org/10.1037/h0040525	2026-11-19	bogdan	«26 Ss obeyed the experimental commands fully, and administered the highest shock on the generator.»
+zipf-aleator	P	https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0009411	2026-11-19	bogdan	«The good fit of random texts to real Zipf's law-like rank distributions has not yet been established.»
+zipf-aleator	P	https://doi.org/10.1109/18.165464	2026-11-19	bogdan	«It is shown that the distribution of word frequencies for randomly generated texts is very similar to Zipf's law»
+zipf-aleator	P	https://links.jstor.org/sici?sici=0002-9556%28195706%2970%3A2%3C311%3ASEOIS%3E2.0.CO%3B2-8	2026-11-19	bogdan	«monkeys typing at random manage to do it about as well as we do»
+polenizare	P	https://doi.org/10.1098/rspb.2006.3721	2026-11-19	bogdan	«87 of the leading global food crops is dependent upon animal pollination, while 28 crops do not rely upon animal pollination»
+zimbardo-critica	P	https://doi.org/10.1037/amp0000401	2026-11-19	bogdan	«the guards received precise instructions regarding the treatment of the prisoners»
+zimbardo-critica	P	https://doi.org/10.1348/014466605x48998	2026-11-19	bogdan	«Unlike the prisoners, the guards failed to identify with their role.»
+limbaj-etape	P	https://doi.org/10.1111/j.1467-8624.2004.00729.x	2026-11-19	bogdan	«The composition of young children's vocabularies in 7 contrasting linguistic communities was investigated.»
