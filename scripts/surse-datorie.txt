@@ -3,7 +3,6 @@
 # aici (garda o semnaleaza).  O afirmatie noua nu intra aici — vine direct cu surse.
 adn-probabilitate
 celula-minima
-inima-ecg-eeg
 inima-neuroni
 iov-datare
 movile-izolare
