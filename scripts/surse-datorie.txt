@@ -2,22 +2,13 @@
 # dovezi in surse.tsv.  Lista doar scade: cand o afirmatie primeste surse suficiente, iese de
 # aici (garda o semnaleaza).  O afirmatie noua nu intra aici — vine direct cu surse.
 adn-probabilitate
-canal-bosfor
 celula-minima
 inima-ecg-eeg
 inima-neuroni
 iov-datare
-limbaj-etape
-milgram
 movile-izolare
 movile-specii
 neshamah-frecventa
-neuroni-oglinda
 paduri-virgine
 pamant-sferic
-polenizare
 senicid
-vag-aferent
-zimbardo-critica
-zipf-aleator
-zipf-efort-minim
