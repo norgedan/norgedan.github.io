@@ -2,27 +2,17 @@
 # dovezi in surse.tsv.  Lista doar scade: cand o afirmatie primeste surse suficiente, iese de
 # aici (garda o semnaleaza).  O afirmatie noua nu intra aici — vine direct cu surse.
 adn-probabilitate
-antrenament-mental
 canal-bosfor
 celula-minima
-consonanta-tsimane
-fluier-paleolitic
-foneme-sugari
 inima-ecg-eeg
-inima-endocrina
 inima-neuroni
-insecte-declin
 iov-datare
 limbaj-etape
-marea-neagra-oxigen
 milgram
-movile-chemosinteza
 movile-izolare
 movile-specii
-muzica-universala
 neshamah-frecventa
 neuroni-oglinda
-nucleu-temperatura
 paduri-virgine
 pamant-sferic
 polenizare
