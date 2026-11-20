@@ -557,3 +557,6 @@ milgram-identificare	S	https://www.psychologicalscience.org/?p=71885	2026-11-20	
 adn-probabilitate	P	https://search.worldcat.org/oclc/232978147	2026-11-20	bogdan	«no better than 1 chance in 10^164»
 movile-izolare	S	https://www.gesslab.org/movile-cave	2026-11-20	bogdan	«Speleogenesis in this area was initiated in the late Miocene (5.5 million years ago)»
 movile-izolare	P	https://www.mdpi.com/1424-2818/13/3/128/htm	2026-11-20	claude	«covered by Quaternary deposits (clays and loess), approximately 2.5 million years ago»
+proteine-aleatorii	P	https://pmc.ncbi.nlm.nih.gov/articles/PMC4476321	2026-11-20	claude	«we selected functional proteins by enriching for those that bind to ATP»
+proteine-aleatorii	S	https://genomebiology.biomedcentral.com/articles/10.1186/gb-2001-2-6-reports0015	2026-11-20	claude	«the authors estimate that about one in 10^11 random 80-mers has any given biological activity»
+proteine-aleatorii	S	https://www.asbmb.org/asbmbtoday/asbmbtoday_article.aspx?id=48961	2026-11-20	claude	«But they were rare, on the order of one in 10^11 sequences»
