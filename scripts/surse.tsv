@@ -563,3 +563,6 @@ proteine-aleatorii	S	https://www.asbmb.org/asbmbtoday/asbmbtoday_article.aspx?id
 movile-izolare	P	https://pmc.ncbi.nlm.nih.gov/articles/PMC5748958	2026-11-21	claude	«has been isolated from the surface for ~ 5.5 million years»
 movile-izolare	P	https://hal.inrae.fr/ISYEB-ANTILLES/hal-03998872v1	2026-11-21	claude	«sealed from the atmosphere for ~5 million years»
 crick-panspermie	P	https://collections.nlm.nih.gov/ocr/nlm:nlmuid-101584582X436-doc	2026-11-21	claude	«We conclude that it is possible that life reached the earth in this way, but that the scientific evidence is inadequate at the present time to say anything about the probability»
+proteine-aleatorii	P	https://pmc.ncbi.nlm.nih.gov/articles/PMC4476321	2026-11-21	bogdan	«We therefore estimate that roughly 1 in 10^11 of all random-sequence proteins have ATP-binding activity comparable to the proteins isolated in this study»
+movile-izolare	P	https://doi.org/10.3390/d13030128	2026-11-21	bogdan	«which were covered by Quaternary deposits (clays and loess), approximately 2.5 million years ago»
+movile-izolare	P	https://doi.org/10.1038/s41396-022-01350-4	2026-11-21	bogdan	«sealed from the atmosphere for ~5 million years»
