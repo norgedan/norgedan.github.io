@@ -199,6 +199,55 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     (hotărâtă de Bogdan pe 21 nov., pas177): la începutul fiecărui pas, întâi punctele
     slabe deschise și ce a rămas NEVERIFICAT, apoi lucrul nou. Unde Claude nu poate citi
     sursa, îi dă lui Bogdan adresa exactă și ce să caute acolo.
+33. Ce nu e scris în repo nu există — REGULĂ A RUTINEI (hotărâtă de Bogdan pe 23 nov.,
+    pas186): orice hotărâre, promisiune, punct slab sau propunere aprobată intră în fișier
+    în același pas (status 3a sau 3b, context, jurnal), nu „data viitoare”; publicarea
+    pasului anterior (hash-urile push-urilor) intră în jurnal la pasul următor. Ce nu se
+    termină într-o zi se scrie în status ca prioritate pentru data viitoare. Discuția nu e
+    memoria proiectului: la rezumare se pierd detalii.
+34. Atașamentul se verifică, nu se crede (pas186): amprenta fiecărui fișier atașat se
+    compară cu rândul sha256 din terminalul lui Bogdan, înainte de orice lucru; dacă diferă,
+    Claude o spune din primul mesaj (23 nov.: DOCUMENTARE.md atașat era o versiune veche,
+    deși copia din Downloads era la zi).
+35. Pornirea unei discuții noi (pas186): Claude citește întâi „Puncte slabe deschise”
+    (status 3a), „Pașii următori” (3b), ultima secțiune de sesiune din acest document și
+    ultimele rânduri din jurnal; spune ce a găsit și, separat, ce nu a găsit; abia apoi
+    lucrul.
+36. Regulile remodelării (scrise până în pas185 în status 3b; mutate aici în pas186 la
+    curățenia din 3b, cuvintele neschimbate): Alternanta „un pas de structura, un capitol” e
+    suspendata pe durata ei; nicio regula noua de garda in afara celor cerute de constructia
+    noua; securitatea ramane cum e. Regula tare a lui Bogdan: la unirea capitolelor sensul
+    nu se schimba — intai fisa de unire (fiecare idee, cu locul unde traieste dupa), nimic
+    nu dispare fara aprobarea lui. Regula numirii, a lui Bogdan (15 nov.): binele se numeste
+    bine si raul rau; a numi raul bine sau binele rau e o greseala, care se recunoaste si se
+    corecteaza cand apare. Nu se eticheteaza capitole intregi; la fiecare eveniment, fisa
+    spune ce s-a schimbat in bine, ce in rau si urmarile, cu subiectele legate — raul numit
+    se sprijina pe fapta documentata si pe criteriul spus (Scriptura, dreptul
+    international), urmarile sunt afirmatii cu sursa. Precizat pe 15 nov. (seara): greseala
+    (fara voie sau din slabiciune) se deosebeste de raul facut cu buna stiinta; „cu buna
+    stiinta” se scrie doar cand intentia e documentata (ordin, hotarare de instanta,
+    declaratia faptasului, fapta repetata dupa avertisment) — altfel se numesc fapta si
+    roadele si se spune ca intentia nu e stabilita. Regula surselor (15 nov.), in locul
+    dublei confirmari: Claude citeste o data sursele cele mai de incredere si prezinta fisa
+    cu bune si cu rele, Bogdan spune ce nu i se pare in regula; sursa primara unde exista,
+    doua surse independente la faptele disputate, si se spune cine sustine ce. Confirmarea
+    omului nu blocheaza niciun pas; mostra ramane la rularea de sambata. Fiecare fisa are
+    randul „semnale la citire”. Proba de drum: dupa pasul (3), Gaza trebuie sa se poata
+    aduce la zi dintr-o singura fisa; altfel ne oprim si regandim. Rularea de sambata si
+    termenele raman.
+37. Două hotărâri de structură (scrise până în pas185 în status 3b; mutate aici în pas186,
+    cuvintele neschimbate). Din auditul structural din 10 nov.: Hotarat: fisierele NU se
+    redenumesc (adresele publice raman); documente.tsv e singurul loc care cunoaste calea,
+    niciun script nu ghiceste din nume. Fiecare regula un script (propunerea lui Bogdan,
+    aprobata pe 9 nov., forma punctului 6): verifica-site.sh ramane intrarea (hook, CI si
+    comenzile nu se schimba) si devine dirijorul; regulile in scripts/reguli/NN-nume.sh, cu
+    o pregatire comuna si o singura biblioteca de functii; un registru al regulilor cu
+    amprenta fiecarui script — unul lipsa sau schimbat = PROBLEMA, iar [10] cere acelasi set
+    in toate repo-urile; mutarea cate o sectiune, cu dovada: iesirea garzii identica octet
+    cu octet inainte si dupa pe site neschimbat si aceleasi verdicte ale suitei; pilotul
+    [21] sau [20], masurat (azi, in mediul lui Claude, garda: 39,5 s, din care [13] 30%,
+    [14] 14%, [4] 14%); daca castigul nu se vede, ne oprim. La sfarsit, testele tintite
+    (doar regula lor); martorul T00 si rularea de sambata raman pe garda intreaga.
 
 III. LECȚIILE — lista de verificare a unui capitol (fiecare vine dintr-o greșeală reală):
  1. --cauta pe fiecare fapt corectat: toate locurile unde apare, în toate documentele,
@@ -527,6 +576,27 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&
 </ol>
 <p>Arborii repo-urilor neatinse de pas144, la închiderea zilei (primele 12 caractere din <code>HEAD^{tree}</code>): corpus <code>bf9d44cca669</code> · corpus2 <code>c57d99c9f2c6</code> · opera <code>68919ceece8e</code> · limba <code>b0ebc4d0610b</code> · limba-ro-final <code>ec6b5827cb8a</code>. Arborele hub-ului și al jurnalului, după pas144, sunt în discuția de predare și în jurnal.</p>
 
+<h2 id="sesiunile-11-19-noiembrie">Sesiunile 11–19 noiembrie 2026 (pas145–pas171): rezumat</h2>
+<p>Scris în pas186, din rândurile jurnalului (DOCUMENTARE.md, unde stau toate detaliile), ca să nu rămână o gaură între secțiunea din 11 nov. și cea din 20–23 nov. Un rând pe pas; ce s-a hotărât atunci ca regulă stă în „Textul de copiat” (regulile 28–30, 36–37).</p>
+<ul>
+  <li><strong>pas145 [conținut]</strong> — corpus-04#israel verificat la sursă; bilanțul din Gaza sprijinit pe OCHA, nu doar pe surse ale unei tabere.</li>
+  <li><strong>pas146 [structură]</strong> — punctul slab din pas145 (două alarme false) reparat întâi.</li>
+  <li><strong>pas147 [structură]</strong> — începutul REMODELĂRII, hotărâtă de Bogdan pe 12 nov.: indexul de subiecte (<code>subiect.sh</code>, <code>subiecte.tsv</code>); găsit: același bilanț din 7 oct. sub două id-uri.</li>
+  <li><strong>pas148–pas149 [structură]</strong> — registrul declarat al capitolelor (<code>capitole-subiecte.tsv</code>), vocabularul de subiecte; corpus3-2 citit întreg pentru registru.</li>
+  <li><strong>pas150 [conținut]</strong> — Abu Dhabi, primul eveniment tratat ca eveniment (trump-dmitriev-2026 adus la zi).</li>
+  <li><strong>pas151 [structură]</strong> — rularea săptămânală din 14 nov.; corpus2-B citit pentru registru.</li>
+  <li><strong>pas152 [structură]</strong> — cititorul de surse (<code>citeste-sursa.py</code>, cu <code>--proba</code>); Bogdan a confirmat cu <code>--confirma</code> trei dovezi (Katyn, drona de la Galați, alegerile din Bulgaria).</li>
+  <li><strong>pas153–pas154 [structură]</strong> — faptul scris o singură dată: <code>texte.tsv</code> și <code>texte.sh</code>, legat apoi de gardă ([13]).</li>
+  <li><strong>pas155–pas156 [structură]</strong> — evenimentul: <code>evenimente.tsv</code>, <code>efecte.tsv</code>, <code>eveniment.sh</code>; gaza-armistitiu și trump-dmitriev-2026 în texte.tsv.</li>
+  <li><strong>pas157–pas158 [conținut]</strong> — numirile aprobate de Bogdan; fișa atacului din 28 feb. 2026 asupra Iranului.</li>
+  <li><strong>pas159 [conținut + structură]</strong> — unirea nr. 1: corpus2-B#orient adus în corpus-04#israel; auditul arhitecturii.</li>
+  <li><strong>pas160–pas161 [structură]</strong> — registrul unic al subiectelor (teme + subiecte); subiectul fiecărei afirmații, declarat (<code>afirmatii-subiecte.tsv</code>).</li>
+  <li><strong>pas162 [conținut + structură]</strong> — cele 11 afirmații cu „?” verificate la sursă; Holodomor corectat.</li>
+  <li><strong>pas163 [structură]</strong> — <code>tablou.sh</code> și regula 28, „la sursă actul însuși, nu presa”.</li>
+  <li><strong>pas164–pas168 [conținut + dovezi]</strong> — prioritățile 1 și 2 (tranșele 1–2): actele citite la sursă, multe de Bogdan; regula în trei trepte aprobată (pas164). În pas168 garda a oprit, pe drept, push-ul corpus, fiindcă hub-ul nu era încă aplicat.</li>
+  <li><strong>pas169–pas171 [conținut + dovezi + reguli]</strong> — punctele slabe întâi; regula 29 („întâi aplici și comiți tot, apoi push, hub-ul ultimul”) și regula 30 (trei trepte) în context; originalele tranșei 1, aduse de Bogdan, citite.</li>
+</ul>
+
 <h2 id="sesiunea-23-noiembrie">Sesiunea 20–23 noiembrie 2026 (pas172–pas184): datoria stinsă, auditul pe straturi, garda întărită</h2>
 <p>Starea la închidere, după pas183 la Bogdan, pe OpenBSD: totul împins, garda „totul în regulă” cu 10 atenționări, sigiliul pus pe 26 de fișiere. În registru: 221 de afirmații, toate verificate, 216 cu dovezi în surse.tsv (citite doar de Claude 169, și de un om 47), datoria veche de surse 0; 328 de erori găsite și corectate; 49 din 197 de capitole verificate întreg. Garda după pas183: 25 de secțiuni și 222 de teste, suita completă trecută la Claude.</p>
 
@@ -575,7 +645,7 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&
 <ol>
   <li>Bogdan lipește „Textul de copiat” de la începutul acestei pagini și dă adresele: status-proiect.html, ghid-github-norgedan.html și această pagină, cu ancora <code>#sesiunea-23-noiembrie</code>.</li>
   <li>Bogdan atașează <code>DOCUMENTARE.md</code> și <code>amprenta-reguli.txt</code> și lipește rândurile cu arborii și sigiliul — comenzile sunt mai sus, la „Cum se atașează pe OpenBSD”.</li>
-  <li>Claude clonează cele 6 repo-uri publice, își reface copia jurnalului, compară arborii cu rândurile lui Bogdan, rulează garda și spune ce a ieșit — abia apoi începe lucrul, cu punctul 1 din ordinea de mai sus.</li>
+  <li>Claude clonează cele 6 repo-uri publice, compară amprenta fiecărui atașament cu rândul sha256 al lui Bogdan (regula 34), își reface copia jurnalului, compară arborii cu rândurile lui Bogdan, citește 3a, 3b, această secțiune și ultimele rânduri din jurnal (regula 35), rulează garda și spune ce a găsit și ce nu — abia apoi începe lucrul, cu prima prioritate din status 3b.</li>
 </ol>
 <p>Arborii repo-urilor neatinse de pas184, la închidere (primele 12 caractere din <code>HEAD^{tree}</code>): corpus <code>ccabc4f3c380</code> · corpus2 <code>49e09c286e03</code> · opera <code>68919ceece8e</code> · limba <code>b0ebc4d0610b</code> · limba-ro-final <code>ec6b5827cb8a</code>. Hub-ul și jurnalul: cei de după pas184, din rândurile lui Bogdan.</p>
 
