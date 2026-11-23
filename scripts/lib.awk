@@ -8,6 +8,14 @@
 # Garda se opreste daca fisierul lipseste sau e gol (nu tace).
 # O functie intra aici doar cand are cel putin doi folositori si acelasi inteles la toti.
 # POSIX awk, fara extensii GNU.
+#
+# pas183: auditul din 23 nov. numarase si norm (3), curat (2), curata (2), cifre (3) ca
+# duplicate.  Citite: au acelasi nume, dar fac lucruri diferite (norm = calea unei
+# legaturi in [4], textul unui verset in [14], cifrele unui capitol in legaturi.sh; curat si
+# curata scot sau nu &nbsp; si spatiile de la capete, dupa nevoia fiecarui loc).  Raman
+# fiecare la locul lui: o „unificare” ar schimba ce verifica.  Folosesc biblioteca si
+# scripturile din afara garzii (dovezi.sh, legaturi.sh, tablou.sh, subiect.sh), cu acelasi
+# „awk ... -f lib.awk” sau "$LIB_AWK".
 
 # dataok(d) — 1 daca d e o data AAAA-LL-ZZ care exista in calendar (pas95)
 function dataok(d,   a, l, z, n) { if (d !~ /^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/) return 0
@@ -39,3 +47,10 @@ function normcifre(t,   o, i, c, n) {
     if ((c == "." || c == " ") && i > 1 && substr(t, i - 1, 1) ~ /[0-9]/ && substr(t, i + 1, 3) ~ /^[0-9][0-9][0-9]$/ && substr(t, i + 4, 1) !~ /[0-9]/) continue
     o = o c }
   return o }
+
+# esc(t) — textul pus intr-o pagina HTML: & < > " scrise ca entitati (pas183; dovezi.sh, legaturi.sh)
+function esc(t) { gsub(/&/, "\\&amp;", t); gsub(/</, "\\&lt;", t); gsub(/>/, "\\&gt;", t); gsub(/"/, "\\&quot;", t); return t }
+
+# scurteaza(t, n) — t taiat la cel mult n caractere, la granita unui cuvant, cu " ..." (pas183;
+# tablou.sh, subiect.sh)
+function scurteaza(t, n) { if (length(t) <= n) return t; t = substr(t, 1, n); sub(/ [^ ]*$/, "", t); return t " ..." }

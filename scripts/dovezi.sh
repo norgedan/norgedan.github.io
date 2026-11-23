@@ -17,6 +17,8 @@
 # POSIX: sh, awk, sed, sort.  Fara extensii GNU.
 LC_ALL=C; export LC_ALL
 SD=$(cd "$(dirname "$0")" && pwd)
+# pas183: esc() vine din biblioteca comuna
+[ -s "$SD/lib.awk" ] || { echo "dovezi.sh: lipseste scripts/lib.awk (biblioteca comuna)" >&2; exit 1; }
 HUB=$(dirname "$SD")
 RADACINA=${RADACINA:-$(dirname "$HUB")}
 HUBNAME=$(basename "$HUB")
@@ -76,7 +78,6 @@ done < "$W/pag"
 [ -s "$W/marc" ] || { echo "dovezi.sh: niciun marcaj citit (santinela)" >&2; exit 1; }
 
 cat > "$W/gen.awk" <<'AWK'
-function esc(t) { gsub(/&/, "\\&amp;", t); gsub(/</, "\\&lt;", t); gsub(/>/, "\\&gt;", t); gsub(/"/, "\\&quot;", t); return t }
 function domeniu(u,   d) { d = u; sub(/^https?:\/\//, "", d); sub(/\/.*/, "", d); sub(/^www\./, "", d); return d }
 function nivel(n) { return n == "P" ? "primară · primær" : (n == "S" ? "secundară · sekundær" : "terțiară · tertiær") }
 function cine(c) { return c == "claude" ? "Claude" : (c == "bogdan" ? "Bogdan" : c) }
@@ -181,7 +182,7 @@ li{margin:.2rem 0;}
 <h1>Dovezile afirmațiilor · Bevisene for påstandene</h1>
 <p class="sub">Afirmațiile de fond din documente sunt marcate și verificate la sursă. Aici fiecare are eticheta ei — FAPT, ESTIMARE, INTERPRETARE sau CREDINȚĂ — și sursele, cu adresa și data citirii: deschideți-le și verificați singuri. · De sentrale påstandene i dokumentene er markert og kontrollert mot kilden. Her har hver sin etikett og kildene, med adresse og lesedato: åpne dem og kontroller selv.</p>
 HTML
-awk -v PAG="$W/pag" -v AF="$SD/afirmatii.tsv" -v SR="$SD/surse.tsv" -v DAT="$SD/surse-datorie.txt" -f "$W/gen.awk" "$W/marc"
+awk -v PAG="$W/pag" -v AF="$SD/afirmatii.tsv" -v SR="$SD/surse.tsv" -v DAT="$SD/surse-datorie.txt" -f "$SD/lib.awk" -f "$W/gen.awk" "$W/marc"
 printf '<p class="gen">Pagină generată din registrele scripts/afirmatii.tsv și scripts/surse.tsv (scripts/dovezi.sh); %s afirmații. Nu se scrie de mână. · Siden er generert fra registrene; %s påstander. Den skrives ikke for hånd.</p>\n' "$N" "$N"
 cat <<'HTML'
 </main>

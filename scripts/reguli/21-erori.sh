@@ -15,8 +15,9 @@
 # Din pregatire citeste:  m (manifestul plat, din [1]) si capanc (ancorele, din [18]).
 SCRIPT_DIR=$1; W=$2
 [ -d "$SCRIPT_DIR" ] && [ -d "$W" ] || { echo "utilizare: sh $0 <scripts> <pregatire>" >&2; exit 2; }
-ok()       { echo "  OK       $1"; }
-problema() { echo "  PROBLEMA $1"; }
+# pas183: raportorii vin din scripts/lib.sh (o singura copie a formei citite de garda)
+[ -s "$SCRIPT_DIR/lib.sh" ] || { echo "lipseste scripts/lib.sh (raportorii comuni)" >&2; exit 2; }
+. "$SCRIPT_DIR/lib.sh"
 
 ERORI="$SCRIPT_DIR/erori.tsv"
 if [ ! -f "$ERORI" ]; then

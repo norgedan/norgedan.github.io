@@ -25,6 +25,9 @@
 
 LC_ALL=C; export LC_ALL
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
+# pas183: scurteaza() vine din biblioteca comuna
+LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
+[ -n "$LIB_AWK" ] || { echo "tablou.sh: lipseste scripts/lib.awk (biblioteca comuna)" >&2; exit 2; }
 D=${NORGEDAN_TABLOU_DIR:-$SCRIPT_DIR}
 AZI=${NORGEDAN_AZI:-$(date +%Y-%m-%d)}
 
@@ -77,7 +80,7 @@ for f in subiecte.tsv afirmatii.tsv afirmatii-subiecte.tsv surse.tsv evenimente.
 done
 echo "$AZI" | grep -q '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$' || { echo "tablou.sh: ziua „$AZI” nu e AAAA-LL-ZZ" >&2; exit 2; }
 
-awk -F'\t' -v azi="$AZI" -v dir="$D" '
+awk -F'\t' -v azi="$AZI" -v dir="$D" "$LIB_AWK"'
   function zi(s,   y, m, d, a) {   # zile de la o origine fixa (algoritmul civil, fara mktime)
     if (s !~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/) return -1
     y = substr(s, 1, 4) + 0; m = substr(s, 6, 2) + 0; d = substr(s, 9, 2) + 0
@@ -85,7 +88,6 @@ awk -F'\t' -v azi="$AZI" -v dir="$D" '
     a = int(y / 100)
     return int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d + 2 - a + int(a / 4)
   }
-  function scurt(t, n) { if (length(t) <= n) return t; t = substr(t, 1, n); sub(/ [^ ]*$/, "", t); return t " ..." }
   BEGIN { A = zi(azi) }
   FILENAME == dir "/subiecte.tsv"          { if (!/^#/ && NF >= 2) { sid[++ns] = $1; tit[$1] = $2 } next }
   FILENAME == dir "/afirmatii.tsv"         { if (!/^#/ && NF >= 8) { af[$1] = $4; src[$1] = $5; rv[$1] = $8; ord[++na] = $1 } next }
@@ -117,7 +119,7 @@ awk -F'\t' -v azi="$AZI" -v dir="$D" '
     n1 = 0
     for (i = 1; i <= na; i++) { a = ord[i]; z = zi(rv[a]); if (z < 0) continue
       dz = z - A; if (dz > 30) continue
-      lin[++n1] = sprintf("%s\t  %s  %s  %-26s (%s)  %s", rv[a], (dz < 0 ? "DEPASIT" : sprintf("in %2d z", dz)), rv[a], a, (a in pr ? pr[a] : "?"), scurt(af[a], 60)) }
+      lin[++n1] = sprintf("%s\t  %s  %s  %-26s (%s)  %s", rv[a], (dz < 0 ? "DEPASIT" : sprintf("in %2d z", dz)), rv[a], a, (a in pr ? pr[a] : "?"), scurteaza(af[a], 60)) }
     if (n1 == 0) print "  nimic in urmatoarele 30 de zile"
     else { for (i = 2; i <= n1; i++) { x = lin[i]; j = i - 1; while (j >= 1 && lin[j] > x) { lin[j + 1] = lin[j]; j-- } lin[j + 1] = x }
            for (i = 1; i <= n1; i++) { x = lin[i]; sub(/^[^\t]*\t/, "", x); print x } }
@@ -127,7 +129,7 @@ awk -F'\t' -v azi="$AZI" -v dir="$D" '
     for (i = 1; i <= na; i++) { a = ord[i]; t = tolower(af[a] " " src[a])
       if (t !~ /(legea [0-9]|legea nr|lege nr|legea semnata|hotararea (nr|guvernului|parlamentului|ccr)|hotarare nr|decizia nr|declaratia (politica|nr|parlamentului|comuna)|rezolutia|tratatul|regulamentul|reg\. \(ue\)|ordonanta|monitorul oficial|conventia (europeana|onu|de la))/) continue
       if (a in areP) continue
-      n2++; printf "  %s  (%s)  %s\n", a, (a in pr ? pr[a] : "?"), scurt(af[a], 70) }
+      n2++; printf "  %s  (%s)  %s\n", a, (a in pr ? pr[a] : "?"), scurteaza(af[a], 70) }
     if (n2 == 0) print "  toate au actul insusi la sursa"
     else print "  " n2 " afirmatii: de cautat actul oficial (Monitorul Oficial, portalul legislativ, textul emitentului) si de pus la sursa"
     # 3. subiectele

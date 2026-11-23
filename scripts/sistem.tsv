@@ -17,7 +17,8 @@ reguli/20-dovezi.sh	regula [20]: dovezile afirmatiilor	afirmatii.tsv,surse.tsv,s
 reguli/21-erori.sh	regula [21]: erorile gasite, pe tipuri	erori.tsv	-	verifica-site.sh	da
 reguli/24-sigiliu.sh	regula [24]: sigiliul lui Bogdan, intrebat de garda	-	-	verifica-site.sh	da
 reguli/25-sistem.sh	regula [25]: sistemul se cunoaste pe sine (acest manifest)	sistem.tsv	-	verifica-site.sh	da
-lib.awk	functiile awk comune ale garzii	-	-	verifica-site.sh,reguli/20-dovezi.sh	garda
+lib.awk	functiile awk comune (garda si scripturile ei)	-	-	verifica-site.sh,reguli/20-dovezi.sh,dovezi.sh,legaturi.sh,tablou.sh,subiect.sh	garda
+lib.sh	raportorii comuni ai regulilor (ok, problema, atentie)	-	-	reguli/20-dovezi.sh,reguli/21-erori.sh,reguli/24-sigiliu.sh,reguli/25-sistem.sh	garda
 capitole.awk	cititorul comun al capitolelor	pagini:documentele	-	verifica-site.sh,legaturi.sh,subiect.sh	garda
 harta.awk	perechea RO-NO a capitolelor	-	-	verifica-site.sh,legaturi.sh	garda
 injectii.sh	tiparele: caractere invizibile, fraze adresate masinilor, alfabete amestecate	-	-	verifica-site.sh,aplica.sh	da

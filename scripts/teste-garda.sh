@@ -635,6 +635,9 @@ mut_T233() { rep "$SI" 's/^tablou\.sh\(.*\)\tBogdan,Claude\tnu$/tablou.sh\1\tdov
 mut_T234() { rep norgedan.github.io/scripts/harta.awk '1s/^# harta\.awk/# perechea/'; }
 # santinela: manifestul lipseste
 mut_T235() { rm "$SI"; }
+# ── pas183: biblioteca comuna a regulilor ──
+# raportorii regulilor lipsesc: fiecare regula se opreste si o spune, nu tace
+mut_T236() { rm norgedan.github.io/scripts/lib.sh; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -885,6 +888,7 @@ t T232 PICA    "registrul scripts/orfan.tsv nu e citit" "[25] registru fara citi
 t T233 PICA    "chemat de dovezi.sh, dar dovezi.sh nu-l pomeneste" "[25] apelant declarat care nu-l pomeneste pe cel chemat"
 t T234 PICA    "harta.awk nu se numeste in primele 3 randuri" "[25] script fara numele lui in antet"
 t T235 PICA    "lipseste scripts/sistem.tsv"     "[25] santinela: manifestul lipseste"
+t T236 PICA    "lipseste scripts/lib.sh (raportorii comuni)" "[20] [21] [24] [25] santinela: raportorii comuni lipsesc"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

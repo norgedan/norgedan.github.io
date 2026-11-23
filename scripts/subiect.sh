@@ -27,6 +27,9 @@
 LC_ALL=C; export LC_ALL
 PRAG=3
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
+# pas183: scurteaza() vine din biblioteca comuna
+LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
+[ -n "$LIB_AWK" ] || { echo "subiect.sh: lipseste scripts/lib.awk (biblioteca comuna)" >&2; exit 2; }
 HUB=$(dirname "$SCRIPT_DIR")
 RADACINA=$(dirname "$HUB")
 MAN="$SCRIPT_DIR/documente.tsv"
@@ -143,8 +146,8 @@ NF_=$(wc -l < "$W/fara" | tr -d ' ')
 if [ "$CE" = --fara ]; then
   echo "Capitole RO fara niciun subiect declarat in capitole-subiecte.tsv: $NF_ din $TOT"
   echo "  (sinteza = citit si lasat fara subiect: deschidere sau concluzie; de lamurit = inca necitit)"
-  awk -F'\t' 'function scurt(t, m) { if (length(t) <= m) return t; t = substr(t, 1, m); sub(/ [^ ]*$/, "", t); return t " ..." }
-    { printf "  %-32s %-11s %s\n", $1, ($3 == "citit" ? "sinteza" : "de lamurit"), scurt($2, 52) }' "$W/fara"
+  awk -F'\t' "$LIB_AWK"'
+    { printf "  %-32s %-11s %s\n", $1, ($3 == "citit" ? "sinteza" : "de lamurit"), scurteaza($2, 52) }' "$W/fara"
   echo ""
   echo "Randuri inca „provizoriu” (puse dupa titlu si tipare, necitite intreg): $PROV din $TOT"
   exit 0
@@ -186,12 +189,12 @@ echo "===================================================="
 grep "^$CE	" "$W/sc" > "$W/c1"
 grep "^$CE	" "$W/dc" > "$W/d1"
 for rol in P S; do
-  awk -F'\t' -v rol="$rol" 'function scurt(t, m) { if (length(t) <= m) return t; t = substr(t, 1, m); sub(/ [^ ]*$/, "", t); return t " ..." }
+  awk -F'\t' -v rol="$rol" "$LIB_AWK"'
     FILENAME == ARGV[1] { if (!/^#/) v[$1 "\t" $2] = $4; next }
     FILENAME == ARGV[2] { n[$2 "\t" $4] = $5; next }
     FILENAME == ARGV[3] { ti[$1 "\t" $4] = $5; ord[$1 "\t" $4] = ++q; next }
     $4 == rol { k = $2 "\t" $3
-      printf "%05d\t  %-30s %3d aparitii   %-22s %-10s %s\n", ord[k], $2 "#" $3, n[k], ((k in v) ? "verificat (" v[k] ")" : "NEVERIFICAT intreg"), $5, scurt(ti[k], 40) }' \
+      printf "%05d\t  %-30s %3d aparitii   %-22s %-10s %s\n", ord[k], $2 "#" $3, n[k], ((k in v) ? "verificat (" v[k] ")" : "NEVERIFICAT intreg"), $5, scurteaza(ti[k], 40) }' \
     "$CAPV" "$W/c1" "$W/cap" "$W/d1" | sort | cut -f2- > "$W/o$rol"
 done
 echo ""

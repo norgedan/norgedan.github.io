@@ -25,9 +25,9 @@
 # surse.tsv fara comentarii), r20.sd, r20.err, r20.p.
 SCRIPT_DIR=$1; W=$2
 [ -d "$SCRIPT_DIR" ] && [ -d "$W" ] || { echo "utilizare: sh $0 <scripts> <pregatire>" >&2; exit 2; }
-ok()       { echo "  OK       $1"; }
-problema() { echo "  PROBLEMA $1"; }
-atentie()  { echo "  ATENTIE  $1"; }
+# pas183: raportorii vin din scripts/lib.sh (o singura copie a formei citite de garda)
+[ -s "$SCRIPT_DIR/lib.sh" ] || { echo "lipseste scripts/lib.sh (raportorii comuni)" >&2; exit 2; }
+. "$SCRIPT_DIR/lib.sh"
 [ -s "$SCRIPT_DIR/lib.awk" ] || { echo "lipseste sau e goala biblioteca scripts/lib.awk" >&2; exit 3; }
 LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk")
 # santinela: fara afirmatiile din [13], nicio sursa n-ar avea de cine sa se lege

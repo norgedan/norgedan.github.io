@@ -39,6 +39,9 @@ PRAG=3          # de cate ori revine tiparul ca un capitol sa "trateze" tema
 BASE=https://norgedan.github.io
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
+# pas183: esc() vine din biblioteca comuna
+LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
+[ -n "$LIB_AWK" ] || { echo "legaturi.sh: lipseste scripts/lib.awk (biblioteca comuna)" >&2; exit 2; }
 HUB=$(dirname "$SCRIPT_DIR")
 RADACINA=$(dirname "$HUB")
 HUBNAME=$(basename "$HUB")
@@ -299,8 +302,7 @@ else atentie "case de tema spre care nu trimite, din text, niciun alt document (
 # ════════════════════════════════════════════════════════════════════
 titlu L7 "Pagina teme.html == ce se genereaza acum din subiecte.tsv"
 # ════════════════════════════════════════════════════════════════════
-awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" '
-  function esc(s) { gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s); gsub(/"/, "\\&quot;", s); return s }
+awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" "$LIB_AWK"'
   function scurt(s,   p, n) {
     n = split(s, p, / — | – | · /)
     if (p[1] == "România" || p[1] == "Romania") { s = p[1] " — " p[2]; sub(/\. .*/, "", s); return s }

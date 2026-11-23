@@ -16,8 +16,9 @@
 #   - iese cu 0 daca a rulat pana la capat (oricate probleme a gasit); orice alt cod
 #     inseamna „n-a rulat” si dirijorul il spune ca PROBLEMA;
 #   - POSIX sh si awk, fara extensii GNU.
-lib	lib.awk	Biblioteca functiilor awk comune	184742502fcc769ac46e04de046efe9820571a186641259356c97254ddf90b45
-20	reguli/20-dovezi.sh	Dovezile afirmatiilor: nivelul sursei, adresa, cine a citit-o	feb8e93ac14c5ce97f30e218bc95550767c2bc9b1262fd7366cf2fa54d3557c9
-21	reguli/21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam	0617a306f1c16ad0134fba0822a814556de730d08b71df3c0de4d6005342f6d7
-24	reguli/24-sigiliu.sh	Sigiliul lui Bogdan: garda pazita din afara ei	1d518ffb98f55174db6bc9c06790fc6f13ce7a99ea9b7337732b458d53ef3285
-25	reguli/25-sistem.sh	Sistemul se cunoaste pe sine: scripturile, ce citesc, ce scriu, cine le cheama	4554c92dfcc6dcf26ac6478084997c95014b0beb9dd25a9126f1ca54456b5fcf
+lib	lib.awk	Biblioteca functiilor awk comune	96cc5e7676b379ea0892a439710f71a9787a8a2e2464573db391e0a7eff078a0
+libsh	lib.sh	Raportorii comuni ai regulilor (ok, problema, atentie)	e082ef26a865ebd4c294bcf3698969a6bc7c2449c709d61e4d6c0e7eb01da724
+20	reguli/20-dovezi.sh	Dovezile afirmatiilor: nivelul sursei, adresa, cine a citit-o	4f1dc698cf630c5d62aec780126c9618abbb2666388d43b5af8d6230212b5593
+21	reguli/21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam	f78643ba9c884f890791c624304253ffbf6bfb403dc99413a8f4f6abc1a438bd
+24	reguli/24-sigiliu.sh	Sigiliul lui Bogdan: garda pazita din afara ei	d5a564ba4d71f2d757bb3c39cdd2b06f4a0a6273e6bfe375c32a05c4d4abb01e
+25	reguli/25-sistem.sh	Sistemul se cunoaste pe sine: scripturile, ce citesc, ce scriu, cine le cheama	1e284590a01e14f5d41915b99971ea2682045df19a49841ca1bdb65f8191b791

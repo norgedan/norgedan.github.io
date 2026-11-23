@@ -19,9 +19,9 @@
 # POSIX sh si awk.
 SCRIPT_DIR=$1; W=$2
 [ -d "$SCRIPT_DIR" ] && [ -d "$W" ] || { echo "utilizare: sh $0 <scripts> <pregatire>" >&2; exit 2; }
-ok()       { echo "  OK       $1"; }
-problema() { echo "  PROBLEMA $1"; }
-atentie()  { echo "  ATENTIE  $1"; }
+# pas183: raportorii vin din scripts/lib.sh (o singura copie a formei citite de garda)
+[ -s "$SCRIPT_DIR/lib.sh" ] || { echo "lipseste scripts/lib.sh (raportorii comuni)" >&2; exit 2; }
+. "$SCRIPT_DIR/lib.sh"
 
 M="$SCRIPT_DIR/sistem.tsv"
 if [ ! -s "$M" ]; then problema "lipseste scripts/sistem.tsv (manifestul scripturilor) sau e gol"; exit 0; fi
