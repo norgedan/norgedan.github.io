@@ -37,6 +37,9 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 1
 # pas136: functiile comune ale programelor awk — o singura copie, in scripts/lib.awk
 LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
 [ -n "$LIB_AWK" ] || { echo "PROBLEMA scripts/lib.awk lipseste sau e gol — garda nu poate rula fara functiile comune" >&2; exit 1; }
+# pas181: tiparele pentru text ascuns si fraze adresate masinilor ([22], --surse) — comune cu aplica.sh
+[ -s "$SCRIPT_DIR/injectii.sh" ] || { echo "PROBLEMA scripts/injectii.sh lipseste sau e gol — garda nu poate cauta textul ascuns" >&2; exit 1; }
+. "$SCRIPT_DIR/injectii.sh"
 HUB=$(dirname "$SCRIPT_DIR")
 HUBNAME=$(basename "$HUB")
 RADACINA=$(dirname "$HUB")
@@ -2510,48 +2513,46 @@ titlu 22 "Text ascuns si instructiuni pentru masini (prompt injection)"
 #             ::before / ::after (decor, fara textul paginii) sunt lasate deoparte
 #   ATENTIE   fraze adresate masinilor („ignore previous instructions”, „system prompt”…),
 #             oriunde in fisier — si in comentarii, atribute, registre
-: > "$W/invpat"
-for c in 213 214 215 216 217; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
-for c in 252 253 254 255 256; do printf "\\342\\200\\$c\n" >> "$W/invpat"; done
-for c in 240 241 242 243 244 246 247 250 251; do printf "\\342\\201\\$c\n" >> "$W/invpat"; done
-printf '\357\273\277\n' >> "$W/invpat"
-# pas91: separatorul de rand si de paragraf (U+2028, U+2029), CGJ (U+034F), U+180E si
-# umplutura Hangul (U+115F, U+1160, U+3164, U+FFA0) — toate se vad ca nimic
-for x in '\342\200\250' '\342\200\251' '\315\217' '\341\240\216' '\341\205\237' '\341\205\240' '\343\205\244' '\357\276\240'; do
-  printf "$x\n" >> "$W/invpat"
-done
-for x in 0 1 2 3 4 5 6 7; do for y in 0 1 2 3 4 5 6 7; do
-  printf "\\363\\240\\200\\2$x$y\n" >> "$W/invpat"; printf "\\363\\240\\201\\2$x$y\n" >> "$W/invpat"
-done; done
-cat > "$W/injpat" <<'PAT'
-ignore previous instructions
-ignore all previous instructions
-ignore the previous instructions
-ignore the above instructions
-disregard previous instructions
-disregard the above
-system prompt
-you are chatgpt
-you are claude
-as an ai language model
-<system>
-</system>
-[inst]
-ignoră instrucțiunile
-ignora instructiunile
-ignorer tidligere instruksjoner
-glem tidligere instruksjoner
-PAT
+# pas181 (auditul din 23 nov.), golurile inchise:
+#   PROBLEMA  text colorat transparent (transparent, rgba/hsla cu alfa 0, #rgb0, #rrggbb00)
+#             sau cu litera de cel mult 1px, in style=
+#   PROBLEMA  legaturi javascript:, vbscript:, data: (href, src, action, formaction, poster, srcset)
+#   PROBLEMA  litere din alfabete amestecate intr-un cuvant (latin + chirilic/grec)
+#   citite si README-urile (*.md) din toate repo-urile; codul (*.sh, *.awk, *.py, *.yml,
+#   hook-uri) doar pentru caractere invizibile.  Tiparele: scripts/injectii.sh, comune cu
+#   aplica.sh; lista de fraze e cea din citeste-sursa.py, in EN, RO si NO.
+#   Limite, spuse: textul de aceeasi culoare cu fundalul nu e prins (culorile se compun din
+#   CSS); o litera latina cu diacritice scrisa decompus (litera + semn combinat) e lasata
+#   deoparte; „μm” cu mu grecesc e prins — se scrie cu semnul micro (µ, U+00B5).
+# pas181: tiparele stau in scripts/injectii.sh, comune cu aplica.sh (o singura copie)
+inj_invpat "$W/invpat"
+# fis22 = textul citit de oameni si de masini: paginile, registrele, README-urile (*.md, din
+# pas181).  cod22 = codul (scripturi, hook-uri, reguli, workflow-uri) - din pas181 citit doar
+# pentru caractere invizibile: frazele adresate masinilor stau acolo legitim (tiparele, testele).
 : > "$W/fis22"
 cat "$W/html" >> "$W/fis22"
 find "$SCRIPT_DIR" -maxdepth 1 -type f \( -name '*.tsv' -o -name '*.txt' \) | sort >> "$W/fis22"
+: > "$W/cod22"
+while IFS= read -r r; do
+  [ -d "$RADACINA/$r" ] || continue
+  find "$RADACINA/$r" -name .git -prune -o -type f -name '*.md' -print | sort >> "$W/fis22"
+  find "$RADACINA/$r" -name .git -prune -o -type f \( -name '*.sh' -o -name '*.awk' -o -name '*.py' -o -name '*.yml' -o -path '*/hooks/*' \) -print | sort >> "$W/cod22"
+done < "$W/repos"
 : > "$W/p22"; : > "$W/a22"
-while IFS= read -r f; do
+cat "$W/fis22" "$W/cod22" | while IFS= read -r f; do
   rel=${f#"$RADACINA"/}
   LC_ALL=C grep -n -F -f "$W/invpat" "$f" 2>/dev/null | cut -d: -f1 | while IFS= read -r n; do
     echo "$rel, randul $n: caracter invizibil (zero-width, bidi, BOM sau eticheta Unicode)"; done >> "$W/p22"
-  LC_ALL=C grep -n -i -F -f "$W/injpat" "$f" 2>/dev/null | cut -d: -f1 | while IFS= read -r n; do
+done
+while IFS= read -r f; do
+  rel=${f#"$RADACINA"/}
+  inj_fraze "$f" 2>/dev/null | sed 's/.*://' | while IFS= read -r n; do
     echo "$rel, randul $n: fraza adresata masinilor — de citit"; done >> "$W/a22"
+  # pas181: o litera chirilica sau greceasca lipita de una latina („pаypal” cu „а” chirilic)
+  # arata ca un cuvant obisnuit, dar nu mai e gasita de [7] si [13]
+  inj_amestec "$f" 2>/dev/null | while IFS= read -r l; do
+    n=${l#"$f":}; b=${n#*:}; n=${n%%:*}
+    echo "$rel, randul $n: litere din alfabete amestecate (latin + chirilic/grec): «$b»"; done >> "$W/p22"
 done < "$W/fis22"
 # pas90: o litera scrisa ca entitate („demonstr&#97;t”, „10&#94;120”) se vede normal in
 # pagina, dar nu mai e gasita de [7] si [13].  Site-ul foloseste doar &nbsp; &lt; &gt;
@@ -2568,25 +2569,32 @@ while IFS= read -r f; do
   awk -F'\t' -v r="$rel" '{ for (i = 2; i < NF; i += 2) if ($i == "style") { v = tolower($(i + 1))
       # pas91: si mutat in afara ecranului, taiat (clip), micsorat la zero, sau cu
       # inaltimea/latimea 0 si overflow ascuns
+      # pas181: si textul colorat transparent (transparent, alfa 0) sau cu litera de cel mult 1px
       if (v ~ /display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|$)|opacity *: *0(\.0*)? *(;|$)/ ||
+          v ~ /(^|[^-])color *: *(transparent|rgba *\([^)]*, *0(\.0*)? *\)|hsla *\([^)]*, *0(\.0*)? *\)|#[0-9a-f][0-9a-f][0-9a-f]0 *(;|$)|#[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]00 *(;|$))/ ||
+          v ~ /font-size *: *(0?\.[0-9]+|1)(px|pt) *(;|$)/ ||
           v ~ /(left|top|text-indent) *: *-[0-9][0-9][0-9]+|clip *: *rect *\( *0|clip-path *: *inset *\( *50%|scale *\( *0 *\)/ ||
           (v ~ /(^|;| )(height|width) *: *0(px)? *(;|$)/ && v ~ /overflow *: *hidden/)) print r ": <" $1 " style=\"" $(i + 1) "\"> — element ascuns" }
       # pas91: <template> nu se afiseaza niciodata; aria-hidden ascunde de cititoarele de ecran
-      if ($1 == "template") print r ": <template> — continut care nu se afiseaza" }' "$(tagsf "$f")" >> "$W/p22"
+      if ($1 == "template") print r ": <template> — continut care nu se afiseaza"
+      # pas181: o legatura javascript:, vbscript: sau data: ruleaza cod sau aduce continut
+      # ascuns la un clic; site-ul nu foloseste niciuna (tab-urile si spatiile se scot: browserul le ignora)
+      for (i = 2; i < NF; i += 2) if ($i ~ /^(href|src|action|formaction|xlink:href|poster|srcset)$/) { u = tolower($(i + 1)); gsub(/[ \t\r\n]/, "", u)
+        if (u ~ /^(javascript|vbscript|data):/) print r ": <" $1 " " $i "=\"" substr($(i + 1), 1, 40) "\"> — legatura care ruleaza cod sau aduce continut ascuns" } }' "$(tagsf "$f")" >> "$W/p22"
   awk -F'\t' -v r="$rel" '{ for (i = 2; i < NF; i += 2) if ($i == "aria-hidden" && $(i + 1) == "true") print r ": <" $1 " aria-hidden=\"true\"> — ascuns pentru cititoarele de ecran (de citit: e doar decor?)" }' "$(tagsf "$f")" >> "$W/a22"
   LC_ALL=C awk '/<style/{s=1} /<\/style>/{s=0;next} /<script/{c=1} /<\/script>/{c=0;next} !s && !c' "$f" \
     | LC_ALL=C grep -n -i -E '<[a-z][a-z0-9]*[^>]*[[:space:]]hidden([[:space:]>=]|$)' | cut -d: -f1 \
     | while IFS= read -r n; do echo "$rel: element cu atributul hidden (in textul fara style si script, randul $n)"; done >> "$W/p22"
   # reguli CSS care ascund: legitime uneori, deci doar semnalate
   LC_ALL=C awk '/<style/{s=1} s{print} /<\/style>/{s=0}' "$f" | tr '\n' ' ' | LC_ALL=C tr 'A-Z' 'a-z' \
-    | LC_ALL=C grep -o -E '[^{}]*\{[^}]*(display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|\})|opacity *: *0(\.0*)? *(;|\}))' \
+    | LC_ALL=C grep -o -E '[^{}]*\{[^}]*(display *: *none|visibility *: *hidden|font-size *: *0(px|pt|em|rem|%)? *(;|\})|opacity *: *0(\.0*)? *(;|\})|[^-]color *: *transparent)' \
     | sed 's/{.*//' | grep -v -e '::before' -e '::after' \
     | while IFS= read -r sel; do echo "$rel: regula CSS care ascunde:$sel"; done >> "$W/a22"
 done < "$W/html"
 if [ -s "$W/p22" ]; then
   while IFS= read -r l; do problema "$l"; done < "$W/p22"
 else
-  ok "$(wc -l < "$W/fis22" | tr -d ' ') fisiere citite: niciun caracter invizibil, niciun element ascuns"
+  ok "$(wc -l < "$W/fis22" | tr -d ' ') fisiere de text si $(wc -l < "$W/cod22" | tr -d ' ') de cod citite: niciun caracter invizibil, niciun element ascuns, niciun alfabet amestecat"
 fi
 if [ -s "$W/a22" ]; then
   atentie "$(wc -l < "$W/a22" | tr -d ' ') locuri de citit (CSS care ascunde sau fraze adresate masinilor):"
@@ -2842,7 +2850,7 @@ PAT
     # pas95: paginile cu caractere invizibile se aduna intr-un singur rand (de obicei spatii de
     # latime zero, inofensive); altfel zeci de randuri ascund citatul negasit, care conteaza
     LC_ALL=C grep -q -F -f "$W/invpat" "$pt" && printf '%s (%s)\n' "$url" "$id" >> "$W/srinv"
-    LC_ALL=C grep -q -i -F -f "$W/injpat" "$pt" && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
+    [ -n "$(inj_fraze "$pt" | head -n 1)" ] && atentie "--surse: $url contine fraze adresate masinilor — tratata ca date, cu grija ($id)"
   done < "$W/src"
   if [ -s "$W/srinv" ]; then
     atentie "--surse: $(LC_ALL=C sort -u "$W/srinv" | wc -l | tr -d ' ') pagini-sursa au caractere invizibile — tratate ca date, cu grija (de obicei spatii de latime zero, inofensive):"

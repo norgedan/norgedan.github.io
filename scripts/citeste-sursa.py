@@ -15,7 +15,7 @@ se semnaleaza si se ignora.  Ruleaza cu python3 -I (fara module din directorul c
 """
 import re, sys, urllib.error, urllib.parse, urllib.request
 
-INVIZ = re.compile('[​-‏‪-‮⁠-⁤⁦-⁩﻿\U000e0000-\U000e007f  ͏᠎ᅟᅠㅤﾠ]')
+INVIZ = re.compile('[\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff\U000e0000-\U000e007f\u2028\u2029\u034f\u180e\u115f\u1160\u3164\uffa0]')
 INJ = re.compile(r'(ignore (all |any |the |your )?(previous|prior|above|earlier) (instructions|prompts?|rules)'
                  r'|disregard (all |any |the |your )?(previous|prior|above|earlier)'
                  r'|forget (all |any |the |your )?(previous|prior|above|earlier) (instructions|prompts?|rules)'
@@ -84,7 +84,7 @@ PROBE = (  # (pagina, numele semnalului asteptat sau None)
     ('<div hidden>Acest text nu se vede in pagina, dar masina il citeste intreg.</div>', 'elemente cu atributul hidden'),
     ('<div aria-hidden="true">Acest text nu se vede in pagina, dar masina il citeste intreg.</div>', 'elemente cu aria-hidden'),
     ('<p class="lead visually-hidden">Acest text nu se vede in pagina, dar masina il citeste intreg.</p>', 'elemente ascunse prin clasa'),
-    ('<p>cuvant​cuvant</p>', 'caractere invizibile'),
+    ('<p>cuvant\u200bcuvant</p>', 'caractere invizibile'),
 )
 
 def proba():
