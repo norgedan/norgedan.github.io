@@ -525,6 +525,58 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --confirma &lt;id&gt; '&lt;url&
 </ol>
 <p>Arborii repo-urilor neatinse de pas144, la închiderea zilei (primele 12 caractere din <code>HEAD^{tree}</code>): corpus <code>bf9d44cca669</code> · corpus2 <code>c57d99c9f2c6</code> · opera <code>68919ceece8e</code> · limba <code>b0ebc4d0610b</code> · limba-ro-final <code>ec6b5827cb8a</code>. Arborele hub-ului și al jurnalului, după pas144, sunt în discuția de predare și în jurnal.</p>
 
+<h2 id="sesiunea-23-noiembrie">Sesiunea 20–23 noiembrie 2026 (pas172–pas184): datoria stinsă, auditul pe straturi, garda întărită</h2>
+<p>Starea la închidere, după pas183 la Bogdan, pe OpenBSD: totul împins, garda „totul în regulă” cu 10 atenționări, sigiliul pus pe 26 de fișiere. În registru: 221 de afirmații, toate verificate, 216 cu dovezi în surse.tsv (citite doar de Claude 169, și de un om 47), datoria veche de surse 0; 328 de erori găsite și corectate; 49 din 197 de capitole verificate întreg. Garda după pas183: 25 de secțiuni și 222 de teste, suita completă trecută la Claude.</p>
+
+<h3>Ce s-a făcut</h3>
+<ul>
+  <li><strong>pas172–pas173 [dovezi]</strong> — datoria veche de surse, de la 10 la 0; auditul cărții lui Meyer (proiectarea, ca INTERPRETARE, nu ca dovadă).</li>
+  <li><strong>pas174–pas177 [conținut]</strong> — corpus-01#adn verificat întreg: Keefe și Szostak, cu cifra și cu concluzia autorilor (lecția 21); Crick și Orgel (panspermia, ca posibilitate); Movile: aerul și cele două estimări ale izolării; regulile de rutină 31 („Propunerile mele”) și 32 (întâi ce e slab; adresa exactă când Claude nu poate citi).</li>
+  <li><strong>pas178–pas180 [conținut + structură]</strong> — corpus3-5#cap4 verificat întreg, cu documentele SRI originale aduse de Bogdan (10 erori corectate); pelicanii (evaluarea din 2017 și estimarea din 2018); auditul pe straturi: scripturile, arhitectura informației, conținutul.</li>
+  <li><strong>pas181 [structură]</strong> — golurile din [22] închise (text transparent, legături javascript:/data:, alfabete amestecate, README-urile, codul); tiparele într-un singur loc, <code>scripts/injectii.sh</code>; <code>aplica.sh</code> citește liniile adăugate înainte de aplicare.</li>
+  <li><strong>pas182 [structură]</strong> — jurnalul citit de [22]; cele două liste de fraze, aceeași probă; manifestul scripturilor <code>scripts/sistem.tsv</code>, regula [25] și harta <code>sh scripts/sistem.sh</code>.</li>
+  <li><strong>pas183 [structură]</strong> — biblioteca comună: doar <code>esc</code> și <code>scurteaza</code> erau cu adevărat aceeași funcție; raportorii regulilor în <code>scripts/lib.sh</code>; ieșirile dovedite identice înainte și după.</li>
+  <li><strong>pas184 [structură]</strong> — această secțiune; statusul adus la zi.</li>
+</ul>
+
+<h3>Problemele și soluțiile, fiecare în stadiul ei</h3>
+<ul>
+  <li><strong>Text ascuns pe care garda nu-l vedea</strong> (transparent, legături care rulează cod, litere chirilice în cuvinte latine) → [22] întărită (pas181). <em>Rezolvat</em>; <em>deschis</em>: textul de aceeași culoare cu fundalul.</li>
+  <li><strong>Un spațiu de lățime zero scris de Claude în jurnal</strong>, prins doar de <code>aplica.sh</code> → jurnalul citit de [22] (pas182). <em>Rezolvat</em>.</li>
+  <li><strong>Scripturile nu se cunoșteau între ele</strong> → manifest și regula [25] (pas182). <em>Rezolvat</em>; limita: ce citește și ce scrie un script e declarat, nu măsurat.</li>
+  <li><strong>Funcțiile „duplicate” din audit</strong> → citite una câte una: cele mai multe erau doar nume repetate cu înțeles diferit (pas183). <em>Rezolvat</em>, cu auditul corectat.</li>
+  <li><strong>T50 și T57 nu mai testau nimic</strong> de când datoria a ajuns la zero → mutații care nu depind de datorie (pas181). <em>Rezolvat</em>.</li>
+  <li><strong>Cinci scripturi fără niciun test</strong> (aplica.sh, eveniment.sh, sistem.sh, subiect.sh, tablou.sh), semnalate de [25] la fiecare rulare. <em>Deschis</em> — propunerea 4.</li>
+  <li><strong>Garda primește un singur marcaj al unui id într-un fișier.</strong> <em>Deschis</em> — propunerea 6 (cere resigilare).</li>
+  <li><strong>Stratul „viu” e subțire:</strong> 174 de capitole cu subiect provizoriu, puține evenimente și trimiteri. <em>Deschis</em> — propunerea 5.</li>
+</ul>
+
+<h3>Lecțiile acestor zile</h3>
+<ul>
+  <li>O cifră dintr-un articol se citește împreună cu concluzia autorilor despre ea (lecția 21).</li>
+  <li>În mediul lui Claude, grep e ugrep: tiparele pe octeți se scriu în awk (lecția 22).</li>
+  <li>Orice regulă nouă se încearcă întâi pe o copie stricată (lecția 23, aprobată de Bogdan).</li>
+  <li>Un audit care numără nume, fără să citească înțelesul, propune reparații greșite (pas183: patru din șase „duplicate” nu erau).</li>
+</ul>
+
+<h3>Ordinea pentru discuția următoare</h3>
+<ol>
+  <li><strong>Întâi termenele:</strong> reverificarea <code>trump-dmitriev-2026</code> (până pe 30 nov.), apoi <code>afganistan-opiu</code>, <code>gaza-armistitiu</code>, <code>gaza-foamete-morti</code> și <code>iran-razboi-2026</code> (până pe 1 dec.); <code>alegeri-sua-2026</code> până pe 15 dec.</li>
+  <li><strong>Propunerea 4:</strong> teste pentru cele cinci scripturi semnalate de [25].</li>
+  <li><strong>Propunerea 5:</strong> corpusurile — subiectele provizorii, în loturi de 20, spre aprobare; trimiterile spre casele temelor (L3); același fapt cu același id (de exemplu <code>oct7-bilant</code>); rutina săptămânală a datelor vii.</li>
+  <li><strong>Propunerea 6:</strong> mai multe marcaje ale aceluiași id într-un fișier (cere resigilare).</li>
+  <li><strong>Propunerea 7:</strong> timpul pe fiecare secțiune a gărzii, pentru viteză.</li>
+  <li>Apoi auditul din nou, până nu mai rămâne nimic din ce s-a găsit. În paralel, conținutul aprobat sau în lucru: paragraful despre originea vieții pentru corpus-01#adn (arătat lui Bogdan înainte de inserare), Henderson și Adams 2019 la reglajul fin, datarea cărții lui Iov (sursa academică întâi), lista de risc de la corpus-05#bogatii.</li>
+</ol>
+
+<h3>Discuția nouă: cum pornim</h3>
+<ol>
+  <li>Bogdan lipește „Textul de copiat” de la începutul acestei pagini și dă adresele: status-proiect.html, ghid-github-norgedan.html și această pagină, cu ancora <code>#sesiunea-23-noiembrie</code>.</li>
+  <li>Bogdan atașează <code>DOCUMENTARE.md</code> și <code>amprenta-reguli.txt</code> și lipește rândurile cu arborii și sigiliul — comenzile sunt mai sus, la „Cum se atașează pe OpenBSD”.</li>
+  <li>Claude clonează cele 6 repo-uri publice, își reface copia jurnalului, compară arborii cu rândurile lui Bogdan, rulează garda și spune ce a ieșit — abia apoi începe lucrul, cu punctul 1 din ordinea de mai sus.</li>
+</ol>
+<p>Arborii repo-urilor neatinse de pas184, la închidere (primele 12 caractere din <code>HEAD^{tree}</code>): corpus <code>ccabc4f3c380</code> · corpus2 <code>49e09c286e03</code> · opera <code>68919ceece8e</code> · limba <code>b0ebc4d0610b</code> · limba-ro-final <code>ec6b5827cb8a</code>. Hub-ul și jurnalul: cei de după pas184, din rândurile lui Bogdan.</p>
+
 <h2>Ce urmează</h2>
 <p>În <a href="https://norgedan.github.io/status-proiect.html">status-proiect.html</a>, „Pașii următori” — o singură casă pentru plan (pas126; aici rămăsese planul din 2 noiembrie, cu pas103–pas106, făcuți de mult).</p>
 
@@ -598,7 +650,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 </div>
 
 <footer>
-  Document intern · norgedan · actualizat 7 noiembrie 2026, după pas126
+  Document intern · norgedan · actualizat 23 noiembrie 2026, după pas183 (pas184)
 </footer>
 
 </div>
