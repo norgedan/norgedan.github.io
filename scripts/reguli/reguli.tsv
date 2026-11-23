@@ -20,3 +20,4 @@ lib	lib.awk	Biblioteca functiilor awk comune	184742502fcc769ac46e04de046efe98205
 20	reguli/20-dovezi.sh	Dovezile afirmatiilor: nivelul sursei, adresa, cine a citit-o	feb8e93ac14c5ce97f30e218bc95550767c2bc9b1262fd7366cf2fa54d3557c9
 21	reguli/21-erori.sh	Erorile gasite: tipurile, ca sa stim unde sa cautam	0617a306f1c16ad0134fba0822a814556de730d08b71df3c0de4d6005342f6d7
 24	reguli/24-sigiliu.sh	Sigiliul lui Bogdan: garda pazita din afara ei	1d518ffb98f55174db6bc9c06790fc6f13ce7a99ea9b7337732b458d53ef3285
+25	reguli/25-sistem.sh	Sistemul se cunoaste pe sine: scripturile, ce citesc, ce scriu, cine le cheama	4554c92dfcc6dcf26ac6478084997c95014b0beb9dd25a9126f1ca54456b5fcf

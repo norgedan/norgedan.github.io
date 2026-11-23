@@ -20,6 +20,8 @@ INJ = re.compile(r'(ignore (all |any |the |your )?(previous|prior|above|earlier)
                  r'|disregard (all |any |the |your )?(previous|prior|above|earlier)'
                  r'|forget (all |any |the |your )?(previous|prior|above|earlier) (instructions|prompts?|rules)'
                  r'|new instructions\s*:|system prompt|</?system>|\[/?inst\]|<\|im_(start|end)\|>'
+                 # pas182: aceleasi jetoane ca in injectii.sh (proba comuna din [22] le compara)
+                 r'|<\|endoftext\|>|<</?sys>>|(?m:^[ \t]*#+[ \t]*(instruction|instructions|response)[ \t]*:?[ \t]*$)'
                  r'|you are (now )?(chatgpt|claude|gemini|copilot|an ai\b|a language model|a large language model|an assistant)'
                  r'|as an ai language model'
                  r'|if you are an? (ai\b|llm\b|language model|large language model|assistant|chatbot)'

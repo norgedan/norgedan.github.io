@@ -1,0 +1,37 @@
+# sistem.tsv (pas182) — manifestul scripturilor: cine e fiecare, ce citeste, ce scrie, cine il cheama.
+# Paginile au inventarul lor ([2]); scripturile il au aici.  Regula [25] (reguli/25-sistem.sh)
+# cere: fiecare script de pe disc are rand si fiecare rand are script; fiecare script se
+# numeste in primele 3 randuri; fiecare registru (scripts/*.tsv, *.txt) are cel putin un
+# cititor; un registru numit aici exista; un apelant numit aici chiar il pomeneste.
+# Harta, de citit:  sh scripts/sistem.sh
+#
+# Coloane (TAB):  script  rol  citeste  scrie  chemat-de  teste
+#   script     calea fata de scripts/
+#   citeste, scrie   registrele din scripts/ (cu reguli/ unde e cazul), despartite prin virgula;
+#              altceva (pagini, jurnal, ce sta in afara repo-urilor) cu doua puncte: pagini:..., jurnal:..., afara:...
+#   chemat-de  alte scripturi din lista, sau: Bogdan, Claude, CI
+#   teste      da = teste in teste-garda.sh; garda = folosit de garda, testat prin ea;
+#              nu = niciun test (semnalat la fiecare rulare)
+verifica-site.sh	garda: verificarea unica a site-ului; opreste push-ul	about.tsv,afirmatii-subiecte.tsv,afirmatii.tsv,amprente.tsv,capitole-verificate.tsv,certitudini-ok.txt,certitudini.txt,cifre-ok.txt,documente.tsv,paritate-ok.txt,piloni.tsv,reguli/reguli.tsv,retrase.txt,subiecte.tsv,surse-datorie.txt,surse.tsv,texte.tsv,pagini:toate	amprente.tsv,capitole-verificate.tsv,reguli/reguli.tsv,jurnal:amprenta-reguli.txt	hooks/pre-push,CI,Bogdan,Claude	da
+reguli/20-dovezi.sh	regula [20]: dovezile afirmatiilor	afirmatii.tsv,surse.tsv,surse-datorie.txt	-	verifica-site.sh	da
+reguli/21-erori.sh	regula [21]: erorile gasite, pe tipuri	erori.tsv	-	verifica-site.sh	da
+reguli/24-sigiliu.sh	regula [24]: sigiliul lui Bogdan, intrebat de garda	-	-	verifica-site.sh	da
+reguli/25-sistem.sh	regula [25]: sistemul se cunoaste pe sine (acest manifest)	sistem.tsv	-	verifica-site.sh	da
+lib.awk	functiile awk comune ale garzii	-	-	verifica-site.sh,reguli/20-dovezi.sh	garda
+capitole.awk	cititorul comun al capitolelor	pagini:documentele	-	verifica-site.sh,legaturi.sh,subiect.sh	garda
+harta.awk	perechea RO-NO a capitolelor	-	-	verifica-site.sh,legaturi.sh	garda
+injectii.sh	tiparele: caractere invizibile, fraze adresate masinilor, alfabete amestecate	-	-	verifica-site.sh,aplica.sh	da
+legaturi.sh	legaturile dintre documente, capitole si teme (L1-L9); rescrie teme.html	documente.tsv,subiecte.tsv,pagini:documentele	pagini:teme.html	verifica-site.sh,Bogdan,Claude	da
+dovezi.sh	pagina dovezilor, generata din registre	afirmatii.tsv,surse.tsv,surse-datorie.txt,documente.tsv,pagini:documentele	pagini:dovezi.html	verifica-site.sh,mostra.sh,Claude	da
+texte.sh	faptul scris o singura data: paginile comparate cu registrul	texte.tsv,pagini:documentele	pagini:documentele	verifica-site.sh,Claude	da
+mostra.sh	ochi de om pe dovezi: --mostra si --confirma	afirmatii.tsv,surse.tsv	surse.tsv	verifica-site.sh,Bogdan	da
+curatenie.sh	rutina de curatenie: doar listeaza	documente.tsv,pagini:toate	-	verifica-site.sh,Bogdan	da
+pazitor.sh	sigiliul lui Bogdan, din afara repo-urilor	-	afara:.norgedan/sigiliu.tsv	reguli/24-sigiliu.sh,Bogdan	da
+hooks/pre-push	poarta: garda la fiecare push	documente.tsv	-	Bogdan	da
+teste-garda.sh	suita de teste a garzii	documente.tsv,pagini:copiile clonelor	pagini:copiile clonelor	Bogdan,Claude	garda
+aplica.sh	aplica un patch, cu toate verificarile, fara commit	-	pagini:repo-ul tinta	Bogdan	nu
+subiect.sh	indexul de subiecte: tot ce spune site-ul despre un subiect	afirmatii-subiecte.tsv,afirmatii.tsv,capitole-subiecte.tsv,capitole-verificate.tsv,documente.tsv,subiecte.tsv	-	Bogdan,Claude	nu
+eveniment.sh	evenimentul si efectele lui	afirmatii.tsv,efecte.tsv,evenimente.tsv,subiecte.tsv,texte.tsv	-	subiect.sh,Bogdan,Claude	nu
+tablou.sh	tabloul de bord: ce traieste, cat e de proaspat, ce e de facut	afirmatii-subiecte.tsv,afirmatii.tsv,capitole-subiecte.tsv,capitole-verificate.tsv,evenimente.tsv,subiecte.tsv,surse.tsv	-	Bogdan,Claude	nu
+sistem.sh	harta sistemului, din acest manifest	sistem.tsv	-	Bogdan,Claude	nu
+citeste-sursa.py	cititorul de surse al lui Claude (text curat, text ascuns, fraze)	-	-	verifica-site.sh,Claude	da

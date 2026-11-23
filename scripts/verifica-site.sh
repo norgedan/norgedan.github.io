@@ -2538,6 +2538,10 @@ while IFS= read -r r; do
   find "$RADACINA/$r" -name .git -prune -o -type f -name '*.md' -print | sort >> "$W/fis22"
   find "$RADACINA/$r" -name .git -prune -o -type f \( -name '*.sh' -o -name '*.awk' -o -name '*.py' -o -name '*.yml' -o -path '*/hooks/*' \) -print | sort >> "$W/cod22"
 done < "$W/repos"
+# pas182: si jurnalul privat (doar local: in CI nu exista).  In pas181 un spatiu de latime
+# zero scris de Claude in jurnal a fost prins doar de aplica.sh, nu de garda.
+J22="${NORGEDAN_JURNAL:-$RADACINA/norgedan-jurnal}"
+[ -d "$J22" ] && find "$J22" -name .git -prune -o -type f \( -name '*.md' -o -name '*.txt' \) -print | sort >> "$W/fis22"
 : > "$W/p22"; : > "$W/a22"
 cat "$W/fis22" "$W/cod22" | while IFS= read -r f; do
   rel=${f#"$RADACINA"/}
@@ -2595,6 +2599,31 @@ if [ -s "$W/p22" ]; then
   while IFS= read -r l; do problema "$l"; done < "$W/p22"
 else
   ok "$(wc -l < "$W/fis22" | tr -d ' ') fisiere de text si $(wc -l < "$W/cod22" | tr -d ' ') de cod citite: niciun caracter invizibil, niciun element ascuns, niciun alfabet amestecat"
+fi
+# pas182: cele doua liste de fraze — scripts/injectii.sh (garda, aplica.sh) si INJ din
+# citeste-sursa.py (cititorul de surse) — trec prin aceeasi proba (inj_proba) si trebuie sa
+# dea acelasi verdict, cel asteptat; altfel una a ramas in urma celeilalte.
+if command -v python3 > /dev/null 2>&1; then
+  inj_proba > "$W/pr22"; cut -f2 "$W/pr22" > "$W/pr22t"
+  inj_fraze "$W/pr22t" | sed 's/.*://' > "$W/pr22s"
+  if [ ! -s "$W/pr22t" ]; then problema "proba frazelor e goala (inj_proba din scripts/injectii.sh) — listele nu sunt comparate"
+  elif ! python3 -I -B -c 'import importlib.util, sys
+s = importlib.util.spec_from_file_location("cs", sys.argv[1]); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+for i, l in enumerate(open(sys.argv[2], encoding="utf-8"), 1):
+    if m.INJ.search(l): print(i)' "$SCRIPT_DIR/citeste-sursa.py" "$W/pr22t" > "$W/pr22p" 2> "$W/pr22e"; then
+    problema "proba frazelor: citeste-sursa.py nu s-a putut incarca ($(head -n 1 "$W/pr22e")) — listele nu sunt comparate"
+  else
+    LC_ALL=C awk -F'\t' 'FILENAME == ARGV[1] { e[FNR] = $1; t[FNR] = $2; n = FNR; next }
+      FILENAME == ARGV[2] { sh[$1] = 1; next } { py[$1] = 1 }
+      END { for (i = 1; i <= n; i++) { x = (e[i] == "D")
+              if ((i in sh) != x || (i in py) != x)
+                printf "proba frazelor, randul %d «%s»: asteptat %s; injectii.sh %s, citeste-sursa.py %s\n", i, t[i], x ? "prinsa" : "lasata", (i in sh) ? "o prinde" : "o lasa", (i in py) ? "o prinde" : "o lasa" } }' \
+      "$W/pr22" "$W/pr22s" "$W/pr22p" > "$W/pr22d"
+    if [ -s "$W/pr22d" ]; then while IFS= read -r l; do problema "$l"; done < "$W/pr22d"
+    else ok "proba frazelor: $(wc -l < "$W/pr22" | tr -d ' ') randuri, acelasi verdict in scripts/injectii.sh si citeste-sursa.py"; fi
+  fi
+else
+  echo "  (proba comuna a listelor de fraze sarita: python3 lipseste)"
 fi
 if [ -s "$W/a22" ]; then
   atentie "$(wc -l < "$W/a22" | tr -d ' ') locuri de citit (CSS care ascunde sau fraze adresate masinilor):"
@@ -2862,6 +2891,10 @@ fi
 # ════════════════════════════════════════════════════════════════════
 # pas141: sigiliul lui Bogdan, intrebat si de garda (ancora e paznicul, care ruleaza inaintea ei)
 regula 24
+
+# ════════════════════════════════════════════════════════════════════
+# pas182: sistemul se cunoaste pe sine — manifestul scripturilor (scripts/sistem.tsv)
+regula 25
 
 # ════════════════════════════════════════════════════════════════════
 tablou
