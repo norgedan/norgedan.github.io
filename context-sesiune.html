@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · starea după pas144, 11 noiembrie 2026</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · regulile la zi după pas190, 24 noiembrie 2026 (starea curentă: status-proiect.html)</p>
 
 <h2>Textul de copiat</h2>
 
@@ -88,7 +88,8 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
   oricând e motiv — o greșeală care a trecut sau o îmbunătățire a structurii — cu patru
   condiții: (1) într-un pas separat, nu amestecată cu text; (2) fiecare verificare nouă
   are în scripts/teste-garda.sh un test care o face să pice; (3) contra-proba pe garda
-  veche și testele secțiunii atinse, pe dash și pe mksh; (4) nicio verificare nu se
+  veche și testele secțiunii atinse, pe dash la Claude și pe ksh la Bogdan (mksh nu e
+  instalat la niciunul — 7 nov., pas146; precizat în pas190); (4) nicio verificare nu se
   slăbește fără motiv scris în jurnal. Suita completă rulează o dată pe săptămână, sâmbăta.
 - Contorul din pas102 rămâne ca semnal, nu ca piedică: în jurnal fiecare pas poartă
   [structură] sau [conținut]; dacă structura începe să domine, discutăm.
@@ -103,8 +104,9 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
   Confirmat: sursa nouă intră în surse.tsv. Infirmat: corectura, cu rând în erori.tsv.
   Negăsit: afirmația se înmoaie sau se scoate.
 - Comenzi POSIX portabile — mașina e OpenBSD (ksh). Comenzi concrete, niciodată
-  șabloane cu &lt;...&gt;. O comandă pe rând. Fiecare comandă git începe cu
-  cd ~/numele-repo-ului &amp;&amp; ... Întâi commit în toate repo-urile, apoi push.
+  șabloane cu &lt;...&gt;. O comandă pe rând, numerotată (pas190, cerut de Bogdan).
+  Căi absolute, git cu git -C /home/bogdan/numele-repo-ului (pas190: aici scria „cd ~/repo &amp;&amp;”,
+  practica și regula 25 erau altele). Ordinea commit / push: regula 29.
 - Claude livrează patch-uri; Bogdan aplică, face commit și push. Claude nu face
   niciodată push.
 - norgedan-jurnal rămâne privat și nu intră nicăieri. Niciun token.
@@ -112,7 +114,7 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     AfD) are textul complet și sursele într-un singur document — „Lumea în 2026” (corpus3-2)
     pentru actualitate; corpus-04 și corpus2-B sunt instantanee datate. Celelalte documente dau
     un rezumat scurt și trimit acolo. La un fapt corectat: --cauta pe tot site-ul (pas110).
-17. Temele au case declarate (pas118): scripts/teme.tsv (id, titluri, casa, tipar); din pas160 unit cu subiecte.tsv — registrul unic scripts/subiecte.tsv, temele = rândurile cu casă.
+17. Temele au case declarate (pas118): registrul unic scripts/subiecte.tsv (din pas160; teme.tsv nu mai există): id, titluri, casa, tipar; temele = rândurile cu casă.
     sh ~/norgedan.github.io/scripts/legaturi.sh verifică L1–L9 (ancore, casă unică,
     legături lipsă, cifre repetate, paritate RO-NO a trimiterilor, orfani, teme.html la zi,
     cifrele RO-NO, rândurile de temă);
@@ -125,7 +127,7 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     afirmațiile în afirmatii-subiecte.tsv (pas161: id, principal, secundare, propus|aprobat;
     garda [13] cere un rând pe afirmație și subiecte din subiecte.tsv). Afirmație nouă = rând nou acolo.
 18. Un capitol are un singur nume: doc#ancoră (pas120) — în gardă ([18], [19], [21]), în
-    capitole-verificate.tsv, în erori.tsv (pas128), în teme.tsv și în legaturi.sh. Cititorul e unul singur,
+    capitole-verificate.tsv, în erori.tsv (pas128), în subiecte.tsv (casele) și în legaturi.sh. Cititorul e unul singur,
     scripts/capitole.awk, iar perechea RO-NO o dă scripts/harta.awk: ancorele NO pot fi
     traduse (minte-inima / hjerte), capitolele doar-NO despre Norvegia (norge…) se sar.
 19. Mesajul de commit: „pasNNN: [structura] …” sau „pasNNN: [continut] …” — eticheta DUPĂ
@@ -135,7 +137,7 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     Bogdan): &lt;p class="nd-tema"&gt;Tema: &lt;a href="…casa…"&gt;Moldova&lt;/a&gt; · &lt;a …&gt;China&lt;/a&gt;&lt;/p&gt;,
     în NO cu titlurile NO. E navigare, nu afirmație: garda [18] o scoate din amprentă, deci
     un capitol verificat rămâne verificat. În schimb [23] L9 cere ca rândul să conțină doar
-    „Tema:” și legături spre casele din teme.tsv, cu titlul temei ca text, aceleași în RO
+    „Tema:” și legături spre casele din subiecte.tsv, cu titlul temei ca text, aceleași în RO
     și NO — orice altceva oprește push-ul.
 21. Garda se îmbunătățește pentru securitate și viteză pe dovadă, nu pe gust: o slăbiciune
     numită, cu un test care o arată, sau o măsurătoare — timpul pe secțiune, înainte și
@@ -216,7 +218,9 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
 36. Regulile remodelării (scrise până în pas185 în status 3b; mutate aici în pas186 la
     curățenia din 3b, cuvintele neschimbate): Alternanta „un pas de structura, un capitol” e
     suspendata pe durata ei; nicio regula noua de garda in afara celor cerute de constructia
-    noua; securitatea ramane cum e. Regula tare a lui Bogdan: la unirea capitolelor sensul
+    noua; securitatea ramane cum e. (Precizat în pas190: regulile de securitate din pas152, pas181
+    și pas182 au fost adăugate cu aprobarea lui Bogdan, ca abateri spuse; o regulă nouă de gardă
+    cere tot aprobarea lui.) Regula tare a lui Bogdan: la unirea capitolelor sensul
     nu se schimba — intai fisa de unire (fiecare idee, cu locul unde traieste dupa), nimic
     nu dispare fara aprobarea lui. Regula numirii, a lui Bogdan (15 nov.): binele se numeste
     bine si raul rau; a numi raul bine sau binele rau e o greseala, care se recunoaste si se
@@ -245,9 +249,17 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     amprenta fiecarui script — unul lipsa sau schimbat = PROBLEMA, iar [10] cere acelasi set
     in toate repo-urile; mutarea cate o sectiune, cu dovada: iesirea garzii identica octet
     cu octet inainte si dupa pe site neschimbat si aceleasi verdicte ale suitei; pilotul
-    [21] sau [20], masurat (azi, in mediul lui Claude, garda: 39,5 s, din care [13] 30%,
+    [21] sau [20], masurat (atunci, 9 nov., in mediul lui Claude, garda: 39,5 s; la pas180, 24,8 s; din care [13] 30%,
     [14] 14%, [4] 14%); daca castigul nu se vede, ne oprim. La sfarsit, testele tintite
     (doar regula lor); martorul T00 si rularea de sambata raman pe garda intreaga.
+38. Ordinea auditului — PRIORITATE PÂNĂ LA CAPĂT (hotărâtă de Bogdan pe 24 nov., pas190):
+    propunerile din auditul limbajului comun (jurnal: audit-limbaj-2026-11-24.md), plus auditul
+    de conținut și legăturile dintre corpusuri, subiecte și teme, se fac toate, până la capăt,
+    în ordinea din status 3b, punctul (00), înaintea oricărei alte lucrări. Scopul: structura
+    și conținutul să se înțeleagă reciproc, ca un tot unitar. La fiecare pas, Claude citește
+    lista din status 3b (din repo, nu din memorie), spune la ce punct suntem și ce urmează; un
+    punct se bifează doar cu dovada scrisă în jurnal. Punctele slabe găsite pe drum (regula 32)
+    se tratează în pasul lor. Regula se încheie când lista e gata, cu rând în jurnal.
 
 III. LECȚIILE — lista de verificare a unui capitol (fiecare vine dintr-o greșeală reală):
  1. --cauta pe fiecare fapt corectat: toate locurile unde apare, în toate documentele,
@@ -411,7 +423,7 @@ sh ~/norgedan.github.io/scripts/verifica-site.sh --tablou     # doar tabloul
 sh ~/norgedan.github.io/scripts/verifica-site.sh --amprente   # după (re)verificarea unei afirmații
 sh ~/norgedan.github.io/scripts/verifica-site.sh --capitole   # după (re)verificarea unui capitol
 sh ~/norgedan.github.io/scripts/verifica-site.sh --surse      # citatele din surse.tsv recitite în pagina lor (rețea)
-sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita completă (sâmbăta, pe dash și pe mksh)
+sh ~/norgedan.github.io/scripts/teste-garda.sh                # suita completă (sâmbăta, pe ksh la Bogdan)
 sh ~/norgedan.github.io/scripts/teste-garda.sh T85 T90        # doar testele numite
 sh ~/norgedan.github.io/scripts/legaturi.sh                  # legăturile, temele, cifrele RO-NO (L1–L9), lista completă
 sh ~/norgedan.github.io/scripts/legaturi.sh --scrie          # rescrie teme.html din subiecte.tsv (temele)
@@ -678,7 +690,7 @@ ssh-add -t 8h /home/bogdan/.ssh/id_ed25519_github</pre>
 
 <p><strong>La push:</strong> verificarea rulează singură, local și apoi pe GitHub. Un pas pe mai multe repo-uri: întâi commit în toate, apoi push-urile unul după altul. Dacă push-ul e blocat, citește liniile <code>PROBLEMA</code> și repară cauza — nu ocoli garda.</p>
 
-<p><strong>Suita gărzii:</strong> completă o dată pe săptămână, sâmbăta, pe dash și pe mksh, separat — o plasă nefolosită se strică în tăcere. La un pas care atinge garda: testele noi, contra-proba și testele secțiunii atinse, pe ambele shell-uri (pas102).</p>
+<p><strong>Suita gărzii:</strong> completă o dată pe săptămână, sâmbăta, pe ksh la Bogdan și pe dash la Claude (mksh nu e instalat la niciunul) — o plasă nefolosită se strică în tăcere. La un pas care atinge garda: testele noi, contra-proba și testele secțiunii atinse, pe ambele shell-uri (pas102).</p>
 <p><strong>La sfârșit:</strong> golește Downloads.</p>
 
 <div class="alerta">
