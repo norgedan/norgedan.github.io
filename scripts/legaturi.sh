@@ -14,11 +14,15 @@
 #   L1  ancorele capitolelor: fiecare <h2> are ancora (id pe h2 sau pe <section>-ul
 #       lui), unica in fisier, aceleasi ancore in aceeasi ordine in RO si NO
 #   L2  o singura casa pe tema: subiecte.tsv corect (temele = randurile cu casa), casa exista in RO si NO
-#   L3  legaturi lipsa: capitolele care trateaza o tema si nu trimit spre casa ei
+#   L3  legaturi lipsa: capitolele care trateaza o tema si nu trimit spre casa ei.
+#       Din pas194 „trateaza” = declarat in capitole-subiecte.tsv (principal sau secundar),
+#       nu ghicit din tipar (regula 17: subiectul se declara, tiparul doar alarmeaza).
+#       Rularea separata arata si nepotrivirile: doar declarat / doar dupa tipar.
 #   L4  faptele: cifre nemarcate dintr-un capitol care apar si in casa temei —
 #       acelasi fapt in doua locuri, fara id comun de afirmatie
 #   L5  paritatea RO-NO a trimiterilor spre capitole din alte documente
-#   L6  orfanii: capitole fara nicio tema si fara nicio trimitere primita;
+#   L6  orfanii: capitole fara niciun subiect declarat in capitole-subiecte.tsv si fara
+#       nicio trimitere primita (pas194; inainte: fara tema dupa tipar);
 #       case de tema spre care nu trimite niciun alt document
 #   L7  pagina teme.html == ce se genereaza acum din subiecte.tsv
 #   L8  cifrele RO-NO: numere care apar intr-o limba si lipsesc din cealalta (pas122)
@@ -35,7 +39,7 @@
 # LC_ALL=C: awk-ul lucreaza pe octeti, la fel pe orice sistem.
 
 LC_ALL=C; export LC_ALL
-PRAG=3          # de cate ori revine tiparul ca un capitol sa "trateze" tema
+PRAG=3          # pas194: doar pentru alarma — de cate ori revine tiparul ca sa fie semnalat
 BASE=https://norgedan.github.io
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
@@ -47,6 +51,7 @@ RADACINA=$(dirname "$HUB")
 HUBNAME=$(basename "$HUB")
 MAN="$SCRIPT_DIR/documente.tsv"
 TEME="$SCRIPT_DIR/subiecte.tsv"   # pas160: registrul unic; temele = randurile cu casa
+CAPSUB="$SCRIPT_DIR/capitole-subiecte.tsv"   # pas194: ce trateaza fiecare capitol, declarat
 INDEX="$HUB/teme.html"
 
 MOD=verifica
@@ -56,7 +61,7 @@ case "${1:-}" in
   *) echo "utilizare: sh $0 [--scrie]" >&2; exit 2 ;;
 esac
 
-for f in "$MAN" "$TEME"; do
+for f in "$MAN" "$TEME" "$CAPSUB"; do
   [ -f "$f" ] || { echo "lipseste $f" >&2; exit 2; }
 done
 
@@ -181,7 +186,19 @@ awk -F'\t' '
              cp = nume; sub(/.*\./, "", cp)
              cd = nume; sub(/\.ro\.[0-9]+$/, "", cd) }
   { text = text " " $0 }
-  END { numara() }' "$W/teme" "$W"/t/*.ro.* > "$W/memb"
+  END { numara() }' "$W/teme" "$W"/t/*.ro.* > "$W/memb_tipar"
+
+# pas194: apartenenta care decide = registrul declarat (principal sau secundar, doar temele);
+# coloana a patra primeste PRAG, ca restul codului sa ramana neschimbat
+awk -F'\t' -v prag="$PRAG" '
+  FILENAME == ARGV[1] { tema[$1] = 1; next }
+  FILENAME == ARGV[2] { if ($2 == "ro") pos[$1 "\t" $4] = $3; next }
+  /^#/ || NF < 5 { next }
+  { k = $1 "\t" $2; if (!(k in pos)) next
+    m = split($3 " " $4, x, " ")
+    for (i = 1; i <= m; i++) if ((x[i] in tema) && !((x[i] SUBSEP k) in v)) {
+      v[x[i] SUBSEP k] = 1; print x[i] "\t" $1 "\t" pos[k] "\t" prag } }' \
+  "$W/teme" "$W/cap" "$CAPSUB" > "$W/memb"
 
 # capitolele care trateaza tema, in afara casei: tema doc pos n anc  (ordinea din manifest)
 awk -F'\t' -v prag="$PRAG" '
@@ -202,7 +219,7 @@ awk -F'\t' '
   { t = $1; tinta = $2 "\t" $3 "\t" cd[t]
     ok = (ca[t] == "") ? (tinta in are) : ((tinta "#" ca[t]) in are)
     tot[t]++
-    if (!ok) { lip[t]++; l[t] = l[t] " " $2 "#" $5 "(" $4 ")" } }
+    if (!ok) { lip[t]++; l[t] = l[t] " " $2 "#" $5 } }
   END { for (i = 1; i <= nt; i++) { t = ord[i]
           if (tot[t] + 0 == 0) continue
           if (lip[t] + 0 == 0) { bune++; continue }
@@ -213,7 +230,28 @@ grep -v '^TOTAL' "$W/l3" > "$W/l3b"
 if [ "$1" -eq 0 ]; then ok "fiecare capitol care trateaza o tema trimite spre casa ei"
 elif [ "$GARDA" = 1 ]; then
   atentie "$1 capitole trateaza o tema fara sa trimita spre casa ei — pe teme:$(awk '{ t = $1; sub(/:$/, "", t); printf "%s %s %s", (NR > 1 ? "," : ""), t, $2 }' "$W/l3b") (lista: sh scripts/legaturi.sh)"
-else atentie "$1 capitole trateaza o tema fara sa trimita spre casa ei (tema: capitol(aparitii)) — de legat, tema cu tema:"; lista "$W/l3b"; fi
+else atentie "$1 capitole trateaza o tema fara sa trimita spre casa ei (tema: capitol) — de legat, tema cu tema:"; lista "$W/l3b"; fi
+
+# pas194: alarma tiparului — doar la rularea separata (in garda ar fi zgomot de lucru)
+if [ "$GARDA" != 1 ]; then
+  awk -F'\t' -v prag="$PRAG" '
+    FILENAME == ARGV[1] { cd[$1] = $4; ca[$1] = $5; next }
+    FILENAME == ARGV[2] { if ($2 == "ro") an[$1 "\t" $3] = $4; next }
+    FILENAME == ARGV[3] { d[$1 "\t" $2 "\t" $3] = 1; next }
+    $4 + 0 >= prag { k = $2 "\t" $3
+      if ($2 == cd[$1] && (ca[$1] == "" || ca[$1] == an[k])) next
+      p[$1 "\t" k] = 1 }
+    END { for (x in d) { split(x, f, "\t"); k = f[2] "\t" f[3]
+            if (f[2] == cd[f[1]] && (ca[f[1]] == "" || ca[f[1]] == an[k])) continue
+            if (!(x in p)) print "doar declarat\t" f[1] ": " f[2] "#" an[k] }
+          for (x in p) if (!(x in d)) { split(x, f, "\t"); print "doar tipar\t" f[1] ": " f[2] "#" an[f[2] "\t" f[3]] } }' \
+    "$W/teme" "$W/cap" "$W/memb" "$W/memb_tipar" | sort > "$W/nep"
+  nd=$(grep -c '^doar declarat' "$W/nep"); nt_=$(grep -c '^doar tipar' "$W/nep")
+  if [ "$nd" -eq 0 ] && [ "$nt_" -eq 0 ]; then ok "registrul si tiparul spun la fel, tema cu tema"
+  else atentie "registrul (capitole-subiecte.tsv) si tiparul nu se potrivesc: $nd doar declarate, $nt_ doar dupa tipar (de cel putin $PRAG ori) — de citit, nu de corectat orbeste:"
+    cut -f2- "$W/nep" | sed 's/^/             /'
+  fi
+fi
 
 # ════════════════════════════════════════════════════════════════════
 titlu L4 "Faptele: aceeasi cifra in casa si in alt capitol, fara id comun"
@@ -274,26 +312,26 @@ if [ -s "$W/l5b" ]; then
 else ok "$n5 trimiteri spre capitole din alte documente, toate si in RO si in NO"; fi
 
 # ════════════════════════════════════════════════════════════════════
-titlu L6 "Orfanii: capitole fara tema si fara trimiteri; case fara vizitatori"
+titlu L6 "Orfanii: capitole fara subiect declarat si fara trimiteri; case fara vizitatori"
 # ════════════════════════════════════════════════════════════════════
-awk -F'\t' -v prag="$PRAG" '
-  FILENAME == ARGV[1] { if ($4 + 0 >= prag) areT[$2 "\t" $3] = 1; next }
+awk -F'\t' '
+  FILENAME == ARGV[1] { if ($0 !~ /^#/ && NF >= 5 && ($3 != "-" || $4 != "-")) areS[$1 "\t" $2] = 1; next }
   FILENAME == ARGV[2] { cd[$1] = $4; ca[$1] = $5; ord[++nt] = $1; next }
   FILENAME == ARGV[3] { if ($2 == "ro" && $4 != "-" && $4 != $1) { primit[$4 "#" $6] = 1; primitD[$4] = 1 } next }
-  $2 == "ro" { k = $1 "\t" $3
-    if (!(k in areT) && !(($1 "#" $4) in primit)) { n++; pe[$1]++ }
+  $2 == "ro" { k = $1 "\t" $4
+    if (!(k in areS) && !(($1 "#" $4) in primit)) { n++; pe[$1]++ }
     if (!($1 in vd)) { vd[$1] = 1; ordd[++nd] = $1 } }
   END { for (i = 1; i <= nd; i++) if (pe[ordd[i]]) s = s " " ordd[i] "(" pe[ordd[i]] ")"
         print "ORFANI " n + 0 "\t" s
         for (i = 1; i <= nt; i++) { t = ord[i]
           if (ca[t] != "" && !((cd[t] "#" ca[t]) in primit)) c = c " " t
           else if (ca[t] == "" && !(cd[t] in primitD)) c = c " " t }
-        print "CASE " c }' "$W/memb" "$W/teme" "$W/trim" "$W/cap" > "$W/l6"
+        print "CASE " c }' "$CAPSUB" "$W/teme" "$W/trim" "$W/cap" > "$W/l6"
 orf=$(sed -n 's/^ORFANI //p' "$W/l6")
 case_=$(sed -n 's/^CASE //p' "$W/l6")
 norf=${orf%%"$(printf '\t')"*}
-if [ "$norf" -eq 0 ]; then ok "fiecare capitol are o tema sau primeste o trimitere"
-else atentie "$norf capitole fara nicio tema din subiecte.tsv si fara nicio trimitere primita — pe documente:"
+if [ "$norf" -eq 0 ]; then ok "fiecare capitol are un subiect declarat sau primeste o trimitere"
+else atentie "$norf capitole fara niciun subiect declarat (capitole-subiecte.tsv) si fara nicio trimitere primita — pe documente:"
   echo "            ${orf#*"$(printf '\t')"}"; fi
 if [ -z "$case_" ]; then ok "spre casa fiecarei teme trimite cel putin un alt document"
 else atentie "case de tema spre care nu trimite, din text, niciun alt document (teme.html nu se socoteste):"
@@ -374,7 +412,7 @@ awk -F'\t' -v base="$BASE" -v hub="$HUBNAME" -v prag="$PRAG" "$LIB_AWK"'
       }
       print "</section>"
     }
-    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/subiecte.tsv (temele: subiectele care au o casă). Un capitol e trecut la o temă dacă tiparul ei revine de cel puțin " prag " ori în textul lui. · Siden er generert av scripts/legaturi.sh fra scripts/subiecte.tsv (temaene: emnene som har et hjem). Et kapittel føres opp under et tema hvis temaets mønster forekommer minst " prag " ganger i teksten.</p>"
+    print "<p class=\"gen\">Pagină generată de scripts/legaturi.sh din scripts/subiecte.tsv (temele: subiectele care au o casă). Un capitol e trecut la o temă după registrul declarat, scripts/capitole-subiecte.tsv (tema e subiectul lui principal sau unul secundar). · Siden er generert av scripts/legaturi.sh fra scripts/subiecte.tsv (temaene: emnene som har et hjem). Et kapittel føres opp under et tema etter det erklærte registeret, scripts/capitole-subiecte.tsv (temaet er kapitlets hovedemne eller et sideemne).</p>"
     print "</main>"
     print "</body>"
     print "</html>"

@@ -22,7 +22,7 @@ lib.sh	raportorii comuni ai regulilor (ok, problema, atentie)	-	-	reguli/20-dove
 capitole.awk	cititorul comun al capitolelor	pagini:documentele	-	verifica-site.sh,legaturi.sh,subiect.sh	garda
 harta.awk	perechea RO-NO a capitolelor	-	-	verifica-site.sh,legaturi.sh	garda
 injectii.sh	tiparele: caractere invizibile, fraze adresate masinilor, alfabete amestecate	-	-	verifica-site.sh,aplica.sh	da
-legaturi.sh	legaturile dintre documente, capitole si teme (L1-L9); rescrie teme.html	documente.tsv,subiecte.tsv,pagini:documentele	pagini:teme.html	verifica-site.sh,Bogdan,Claude	da
+legaturi.sh	legaturile dintre documente, capitole si teme (L1-L9); rescrie teme.html	capitole-subiecte.tsv,documente.tsv,subiecte.tsv,pagini:documentele	pagini:teme.html	verifica-site.sh,Bogdan,Claude	da
 dovezi.sh	pagina dovezilor, generata din registre	afirmatii.tsv,surse.tsv,surse-datorie.txt,documente.tsv,pagini:documentele	pagini:dovezi.html	verifica-site.sh,mostra.sh,Claude	da
 texte.sh	faptul scris o singura data: paginile comparate cu registrul	texte.tsv,pagini:documentele	pagini:documentele	verifica-site.sh,Claude	da
 mostra.sh	ochi de om pe dovezi: --mostra si --confirma	afirmatii.tsv,surse.tsv	surse.tsv	verifica-site.sh,Bogdan	da

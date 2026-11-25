@@ -638,6 +638,15 @@ mut_T235() { rm "$SI"; }
 # ── pas183: biblioteca comuna a regulilor ──
 # raportorii regulilor lipsesc: fiecare regula se opreste si o spune, nu tace
 mut_T236() { rm norgedan.github.io/scripts/lib.sh; }
+# pas194: L3 si L6 citesc registrul declarat (capitole-subiecte.tsv), nu tiparul (regula 17).
+# T237: un capitol fara niciun subiect declarat si fara trimitere e orfan, chiar daca tiparele
+# unor teme apar in el.  T238: tiparul temei stricat (nu mai prinde nimic), dar capitolul o
+# declara — L3 tot o numara; pe codul vechi (tiparul decide), tema dispare din L3.
+CSB=norgedan.github.io/scripts/capitole-subiecte.tsv
+mut_T237() { awk -F'\t' -v OFS='\t' '$1 == "corpus-01" && $2 == "treime" { $3 = "-"; $4 = "-" } { print }' "$CSB" > "$CSB.t" && mv "$CSB.t" "$CSB"; }
+mut_T238() { awk -F'\t' -v OFS='\t' '$1 == "corpus-01" && $2 == "treime" { $4 = "moldova" } { print }' "$CSB" > "$CSB.t" && mv "$CSB.t" "$CSB"
+             S=norgedan.github.io/scripts/subiecte.tsv
+             awk -F'\t' -v OFS='\t' '$1 == "moldova" { $5 = "ZZQQnicaieri" } { print }' "$S" > "$S.t" && mv "$S.t" "$S"; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -889,6 +898,8 @@ t T233 PICA    "chemat de dovezi.sh, dar dovezi.sh nu-l pomeneste" "[25] apelant
 t T234 PICA    "harta.awk nu se numeste in primele 3 randuri" "[25] script fara numele lui in antet"
 t T235 PICA    "lipseste scripts/sistem.tsv"     "[25] santinela: manifestul lipseste"
 t T236 PICA    "lipseste scripts/lib.sh (raportorii comuni)" "[20] [21] [24] [25] santinela: raportorii comuni lipsesc"
+t T237 SEMNAL  "corpus-01(1)"                     "[23] L6: capitol fara subiect declarat si fara trimitere = orfan (pas194)"
+t T238 SEMNAL  ", moldova "                       "[23] L3: tema declarata in registru se numara si cand tiparul nu o prinde (pas194)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""
