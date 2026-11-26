@@ -37,6 +37,8 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 1
 # pas136: functiile comune ale programelor awk — o singura copie, in scripts/lib.awk
 LIB_AWK=$(cat "$SCRIPT_DIR/lib.awk" 2>/dev/null)
 [ -n "$LIB_AWK" ] || { echo "PROBLEMA scripts/lib.awk lipseste sau e gol — garda nu poate rula fara functiile comune" >&2; exit 1; }
+# pas197: cititorul comun al marcajelor de afirmatie ([13]); fara el, garda nu porneste
+[ -s "$SCRIPT_DIR/marcaje.awk" ] || { echo "PROBLEMA lipseste scripts/marcaje.awk (cititorul marcajelor) — garda nu poate rula fara el" >&2; exit 1; }
 # pas181: tiparele pentru text ascuns si fraze adresate masinilor ([22], --surse) — comune cu aplica.sh
 [ -s "$SCRIPT_DIR/injectii.sh" ] || { echo "PROBLEMA scripts/injectii.sh lipseste sau e gol — garda nu poate cauta textul ascuns" >&2; exit 1; }
 . "$SCRIPT_DIR/injectii.sh"
@@ -1462,18 +1464,20 @@ while read -r l; do problema "$l"; greseli=1; done < "$W/afpar"
 #   - marcaj nou sau mutat (id refolosit in alt document) -> idem
 #   - amprenta fara marcaj (marcajul a disparut)  -> idem
 # Un id e astfel legat de documentele lui: nu poate acoperi alt text, altundeva.
+# Din pas197, marcajul il gaseste cititorul comun, scripts/marcaje.awk (forma exacta, in
+# afara comentariilor HTML).  Textul pentru amprenta: pana la </span>-ul pereche; cu un
+# <span> inauntru, pana la primul </span>, ca inainte (si semnalat — pas90).
 cat > "$W/ampr.awk" <<'AWK'
-BEGIN { RS = "\001"; M = "<span data-afirmatie=\"" }
+BEGIN { RS = "\001" }
 {
-  s = $0
-  while ((i = index(s, M)) > 0) {
-    s = substr(s, i + length(M)); q = index(s, "\""); if (q == 0) break
-    id = substr(s, 1, q - 1)
-    g = index(s, ">"); if (g == 0) break
-    s = substr(s, g + 1); j = index(s, "</span>"); if (j == 0) break
-    t = substr(s, 1, j - 1); s = substr(s, j + 7)
-    # pas90: un <span> in interiorul marcajului taie amprenta la primul </span>
-    if (index(t, "<span")) print "!SPAN\t" id
+  s = $0; marcaje(s)
+  for (k = 1; k <= MK_N; k++) {
+    id = MK_ID[k]
+    if (MK_IMB[k]) {
+      r = substr(s, MK_B[k]); j = index(r, "</span>"); if (j == 0) continue
+      t = substr(r, 1, j - 1); print "!SPAN\t" id
+    } else if (MK_E[k]) t = substr(s, MK_B[k], MK_E[k] - MK_B[k])
+    else continue
     gsub(/<[^>]*>/, " ", t); gsub(/&nbsp;/, " ", t); gsub(/[ \t\r\n]+/, " ", t)
     sub(/^ /, "", t); sub(/ $/, "", t)
     print id "\t" t
@@ -1483,7 +1487,7 @@ AWK
 : > "$W/amprn"; : > "$W/ampspan"; : > "$W/amptxt"
 while read -r f; do
   rel=${f#"$RADACINA"/}
-  LC_ALL=C awk -f "$W/ampr.awk" "$f" | while IFS="$TAB" read -r id txt; do
+  LC_ALL=C awk -f "$SCRIPT_DIR/marcaje.awk" -f "$W/ampr.awk" "$f" | while IFS="$TAB" read -r id txt; do
     if [ "$id" = '!SPAN' ]; then printf '%s\t%s\n' "$txt" "$rel" >> "$W/ampspan"; continue; fi
     printf '%s\t%s\t%s\n' "$id" "$rel" "$txt" >> "$W/amptxt"
     printf '%s\t%s\t%s\n' "$id" "$rel" "$(printf '%s' "$txt" | cksum | awk '{print $1 "-" $2}')"
@@ -1731,29 +1735,25 @@ fi
 cat > "$W/dov.awk" <<'AWK'
 BEGIN { RS = "\001" }
 {
-  s = $0
-  while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break }; s = substr(s, 1, i - 1) substr(s, i + j + 2) }
-  t = s; nm = 0
-  while ((i = index(t, "<span data-afirmatie=\"")) > 0) {
-    t = substr(t, i); id = substr(t, 23); id = substr(id, 1, index(id, "\"") - 1)
-    t = substr(t, 2); d = 1; k = 0
-    while (d > 0) {
-      a = index(t, "<span"); b = index(t, "</span>")
-      if (b == 0) { print R "\t" id "\tmarcaj neinchis"; d = -1; break }
-      if (a > 0 && a < b) { d++; t = substr(t, a + 5) } else { d--; t = substr(t, b + 7) }
-    }
-    if (d < 0) break
+  # pas197: marcajele si </span>-ul lor pereche, din scripts/marcaje.awk
+  marcaje($0); nm = 0
+  for (k = 1; k <= MK_N; k++) {
+    id = MK_ID[k]
+    if (!MK_E[k]) { print R "\t" id "\tmarcaj neinchis"; break }
     nm++
     w = "<a class=\"nd-dov\" href=\"https://norgedan.github.io/dovezi.html#" id "\""
-    if (substr(t, 1, length(w)) != w) print R "\t" id "\tfara semnul de dovada imediat dupa marcaj (sau semnul trimite spre alt id)"
+    if (substr($0, MK_E[k] + 7, length(w)) != w) print R "\t" id "\tfara semnul de dovada imediat dupa marcaj (sau semnul trimite spre alt id)"
   }
+  # semnele se numara, ca inainte, pe textul fara comentarii
+  s = $0
+  while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break }; s = substr(s, 1, i - 1) substr(s, i + j + 2) }
   ns = 0; t = s
   while ((i = index(t, "<a class=\"nd-dov\"")) > 0) { ns++; t = substr(t, i + 1) }
   if (ns != nm) print R "\t-\t" ns " semne de dovada, " nm " marcaje — un semn fara marcaj"
 }
 AWK
 : > "$W/dovp"
-while read -r f; do LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$W/dov.awk" "$f" >> "$W/dovp"; done < "$W/pub13"
+while read -r f; do LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/dov.awk" "$f" >> "$W/dovp"; done < "$W/pub13"
 if [ -s "$W/dovp" ]; then
   while IFS="$TAB" read -r r id m; do problema "[13] $r: $id — $m"; done < "$W/dovp"
 else

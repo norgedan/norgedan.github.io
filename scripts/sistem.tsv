@@ -20,7 +20,7 @@ reguli/25-sistem.sh	regula [25]: sistemul se cunoaste pe sine (acest manifest)	s
 lib.awk	functiile awk comune (garda si scripturile ei)	-	-	verifica-site.sh,reguli/20-dovezi.sh,dovezi.sh,legaturi.sh,tablou.sh,subiect.sh	garda
 lib.sh	raportorii comuni ai regulilor (ok, problema, atentie)	-	-	reguli/20-dovezi.sh,reguli/21-erori.sh,reguli/24-sigiliu.sh,reguli/25-sistem.sh	garda
 capitole.awk	cititorul comun al capitolelor	pagini:documentele	-	verifica-site.sh,legaturi.sh,subiect.sh	garda
-marcaje.awk	cititorul comun al marcajelor de afirmatie (pas196)	pagini:documentele	-	dovezi.sh,texte.sh	da
+marcaje.awk	cititorul comun al marcajelor de afirmatie (pas196; garda [13] din pas197)	pagini:documentele	-	verifica-site.sh,dovezi.sh,texte.sh	da
 harta.awk	perechea RO-NO a capitolelor	-	-	verifica-site.sh,legaturi.sh	garda
 injectii.sh	tiparele: caractere invizibile, fraze adresate masinilor, alfabete amestecate	-	-	verifica-site.sh,aplica.sh	da
 legaturi.sh	legaturile dintre documente, capitole si teme (L1-L9); rescrie teme.html	capitole-subiecte.tsv,documente.tsv,subiecte.tsv,pagini:documentele	pagini:teme.html	verifica-site.sh,Bogdan,Claude	da

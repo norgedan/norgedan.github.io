@@ -37,7 +37,7 @@ footer{margin-top:3.5rem;padding-top:1.4rem;border-top:1px solid var(--border);c
 <div class="wrap">
 
 <h1>Context de sesiune</h1>
-<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · regulile la zi după pas192, 25 noiembrie 2026 (starea curentă: status-proiect.html)</p>
+<p class="sub">De lipit la începutul fiecărei discuții noi · proiectul Norgedan · regulile la zi după pas197, 27 noiembrie 2026 (starea curentă: status-proiect.html)</p>
 
 <h2>Textul de copiat</h2>
 
@@ -157,6 +157,7 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     predare intră, în același pas, în lista „Puncte slabe deschise” din status, cu gravitatea
     lui. Pasul următor se ocupă întâi de ele, după gravitate, înaintea lucrărilor noi. Un
     punct iese din listă doar cu motiv scris în jurnal: rezolvat, sau acceptat cu motiv.
+    (Ordinea față de lucrarea din status 3b: regula 39, pas197.)
     Curățenia (site, repo-uri, OpenBSD) se face la rularea săptămânală: o comandă care
     doar listează; șterge doar Bogdan (pas131, aprobată de Bogdan).
 25. Forma unei livrări (10–11 nov): descărcarea patch-urilor e pas numerotat, urmat de un
@@ -203,7 +204,8 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
 32. Ce e slab, slab verificat sau neverificat se tratează PRIORITAR — REGULĂ A RUTINEI
     (hotărâtă de Bogdan pe 21 nov., pas177): la începutul fiecărui pas, întâi punctele
     slabe deschise și ce a rămas NEVERIFICAT, apoi lucrul nou. Unde Claude nu poate citi
-    sursa, îi dă lui Bogdan adresa exactă și ce să caute acolo.
+    sursa, îi dă lui Bogdan adresa exactă și ce să caute acolo. (Ordinea față de lucrarea
+    din status 3b: regula 39, pas197.)
 33. Ce nu e scris în repo nu există — REGULĂ A RUTINEI (hotărâtă de Bogdan pe 23 nov.,
     pas186): orice hotărâre, promisiune, punct slab sau propunere aprobată intră în fișier
     în același pas (status 3a sau 3b, context, jurnal), nu „data viitoare”; publicarea
@@ -263,6 +265,17 @@ II. MECANICA — cum lucrăm (procedurile și formatele; se schimbă cu motiv sc
     lista din status 3b (din repo, nu din memorie), spune la ce punct suntem și ce urmează; un
     punct se bifează doar cu dovada scrisă în jurnal. Punctele slabe găsite pe drum (regula 32)
     se tratează în pasul lor. Regula se încheie când lista e gata, cu rând în jurnal.
+39. Ordinea fiecărui pas — REGULĂ TARE (hotărâtă de Bogdan pe 27 nov., pas197):
+    1. Întâi punctele rele și slabe (status 3a) și ce a rămas NEVERIFICAT, după gravitate —
+       grav, mediu, ușor —, ca să nu strice ce construim (regulile 24 și 32).
+    2. Apoi ordinea noastră: status 3b, punctul (00) (regula 38), până la capăt. Ordinea nu
+       se uită și nu ne abatem de la ea: fiecare pas spune la ce punct suntem și ce urmează,
+       iar ce nu se termină rămâne prioritate pentru pasul următor (regula 33).
+    3. La fiecare pas, tabloul mare: cum face pasul ca structura și regulile ei să vorbească
+       aceeași limbă cu conținutul.
+    Fiecare răspuns al lui Claude începe cu „Unde suntem”: punctul din (00), slabele tratate,
+    tabloul mare. Fiecare rând din jurnal începe la fel: „Punctul: (x). Slabe tratate: ….
+    Tabloul mare: …”. Regulile 24, 32 și 38 rămân; regula 39 le pune în ordine.
 
 III. LECȚIILE — lista de verificare a unui capitol (fiecare vine dintr-o greșeală reală):
  1. --cauta pe fiecare fapt corectat: toate locurile unde apare, în toate documentele,
@@ -357,7 +370,7 @@ commit).  22 — om.  23 — G [13] (semnul ↗, dovezi.html la zi).  24 — om 
 25 — om; aplica.sh cere calea completă.  26 — G [24], [10] (reguli.tsv, martorul).
 27 — G [18], [19] arată; om.  28 — U tablou.sh [2] arată ce lipsește; om.  29 — garda
 oprește corpusul publicat înaintea hub-ului (pas167); om.  30 — G [20] (nivelul sursei);
-om.  31–35 — om.  36 — om.  37 — G [1] (documente.tsv), [10] (reguli.tsv).  38 — om.
+om.  31–35 — om.  36 — om.  37 — G [1] (documente.tsv), [10] (reguli.tsv).  38 — om.  39 — om.
 III. Lecțiile: 3 — U citeste-sursa.py, G [20] (citatul exact); 5 — G [19] (superlativele,
 arătate); 7 — G [3]; 8 — U --cifre, G [23] L8; 9 — G [14]; 13 — G [17], parțial;
 18 — G [13], parțial (același id); 25 — G [22], parțial (până la punctul (i));
