@@ -22,6 +22,7 @@
 # Din pas154 garda il ruleaza in [13]: o diferenta sau o problema opreste push-ul.
 # Iesire: 0 = paginile spun ce spune registrul; 1 = diferente sau registru gresit; 2 = utilizare.
 # POSIX: sh (ksh pe OpenBSD), awk (one-true-awk), find, grep, mktemp, cmp, cp.  LC_ALL=C.
+# Marcajul il citeste scripts/marcaje.awk (pas196), ca in dovezi.sh.
 
 LC_ALL=C; export LC_ALL
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd) || exit 2
@@ -68,7 +69,29 @@ if [ -n "$UNUL" ]; then
   exit $?
 fi
 
-# 2. fiecare (id, fisier): pagina fata de registru; la --scrie, pagina noua in $W
+# 2. fiecare (id, fisier): pagina fata de registru; la --scrie, pagina noua in $W.
+# Din pas196, marcajul il gaseste cititorul comun, scripts/marcaje.awk (aceeasi definitie
+# ca in dovezi.sh): forma exacta, in afara comentariilor HTML.
+[ -s "$SCRIPT_DIR/marcaje.awk" ] || { echo "PROBLEMA lipseste scripts/marcaje.awk (cititorul marcajelor)" >&2; exit 1; }
+cat > "$W/pag.awk" <<'AWK'
+function unifica(s) { gsub(/[ \t\r\n]+/, " ", s); sub(/^ /, "", s); sub(/ $/, "", s); return s }
+FNR == NR { if ($0 !~ /^#/) { split($0, c, "\t"); if (c[1] == id && c[2] == forma && index(" " c[4] " ", " " fis " ")) text = c[5] } next }
+{ pag = pag $0 "\n" }
+END {
+  marcaje(pag); g = 0
+  for (k = 1; k <= MK_N; k++) if (MK_ID[k] == id) { g++; if (g == 1) u = k }
+  if (!g) { print "PROBLEMA\t" id "\t" fis "\tmarcajul lipseste din pagina"; exit }
+  if (g > 1) { print "PROBLEMA\t" id "\t" fis "\tmarcajul apare de mai multe ori"; exit }
+  if (!MK_E[u]) { print "PROBLEMA\t" id "\t" fis "\tmarcajul nu se inchide"; exit }
+  if (MK_IMB[u]) { print "PROBLEMA\t" id "\t" fis "\tun <span> in interiorul marcajului"; exit }
+  acum = substr(pag, MK_B[u], MK_E[u] - MK_B[u])
+  if (unifica(acum) == unifica(text)) { print "LAFEL\t" id "\t" fis "\t" forma; exit }
+  print "ALTFEL\t" id "\t" fis "\t" forma
+  print "    pagina:    " unifica(acum)
+  print "    registrul: " unifica(text)
+  printf "%s%s%s", substr(pag, 1, MK_B[u] - 1), text, substr(pag, MK_E[u]) > iesire
+}
+AWK
 : > "$W/rezultat"; N=0
 awk -F'\t' '!/^#/ && NF == 5 && $4 != "-" { n = split($4, f, " "); for (i = 1; i <= n; i++) print $1 "\t" $2 "\t" f[i] }' "$TEXTE" > "$W/perechi"
 
@@ -76,26 +99,7 @@ while IFS='	' read -r ID FORMA FIS; do
   P="$RADACINA/$FIS"
   if [ ! -f "$P" ]; then echo "PROBLEMA	$ID	$FIS	fisierul lipseste" >> "$W/rezultat"; continue; fi
   N=$((N + 1))
-  awk -v id="$ID" -v fis="$FIS" -v forma="$FORMA" -v iesire="$W/nou.$N" '
-    function unifica(s) { gsub(/[ \t\r\n]+/, " ", s); sub(/^ /, "", s); sub(/ $/, "", s); return s }
-    FNR == NR { if ($0 !~ /^#/) { split($0, c, "\t"); if (c[1] == id && c[2] == forma && index(" " c[4] " ", " " fis " ")) text = c[5] } next }
-    { pag = pag $0 "\n" }
-    END {
-      semn = "<span data-afirmatie=\"" id "\">"
-      a = index(pag, semn)
-      if (!a) { print "PROBLEMA\t" id "\t" fis "\tmarcajul lipseste din pagina"; exit }
-      rest = substr(pag, a + length(semn))
-      if (index(rest, semn)) { print "PROBLEMA\t" id "\t" fis "\tmarcajul apare de mai multe ori"; exit }
-      b = index(rest, "</span>")
-      if (!b) { print "PROBLEMA\t" id "\t" fis "\tmarcajul nu se inchide"; exit }
-      acum = substr(rest, 1, b - 1)
-      if (index(acum, "<span")) { print "PROBLEMA\t" id "\t" fis "\tun <span> in interiorul marcajului"; exit }
-      if (unifica(acum) == unifica(text)) { print "LAFEL\t" id "\t" fis "\t" forma; exit }
-      print "ALTFEL\t" id "\t" fis "\t" forma
-      print "    pagina:    " unifica(acum)
-      print "    registrul: " unifica(text)
-      printf "%s%s%s%s", substr(pag, 1, a - 1), semn, text, substr(rest, b) > iesire
-    }' "$TEXTE" "$P" >> "$W/rezultat"
+  awk -v id="$ID" -v fis="$FIS" -v forma="$FORMA" -v iesire="$W/nou.$N" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/pag.awk" "$TEXTE" "$P" >> "$W/rezultat"
   if [ "$MOD" = scrie ] && [ -s "$W/nou.$N" ]; then
     cp "$W/nou.$N" "$P" || { echo "PROBLEMA	$ID	$FIS	nu s-a putut scrie" >> "$W/rezultat"; }
   fi

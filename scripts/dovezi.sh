@@ -39,7 +39,8 @@ awk -F'\t' -v H="$HUBNAME" '!/^#/ && NF >= 7 && $3 != H && !v[$3]++ { print $3 }
   [ -f "$RADACINA/$r/index.html" ] && printf 'index-%s\tro\t%s\t%s/%s/\t%s — pagina colecției\n' "$r" "$RADACINA/$r/index.html" "$SITE" "$r" "$r"
 done >> "$W/pag"
 
-# marcajele: id doc limba ancora text — in ordinea din pagini
+# marcajele: id doc limba ancora text — in ordinea din pagini.  Din pas196, cititorul e
+# comun: scripts/marcaje.awk (aceeasi definitie a marcajului si in texte.sh).
 cat > "$W/marc.awk" <<'AWK'
 function curata(t) {
   gsub(/<[^>]*>/, "", t); gsub(/[ \t\r\n]+/, " ", t); sub(/^ /, "", t); sub(/ $/, "", t)
@@ -47,33 +48,18 @@ function curata(t) {
 }
 BEGIN { RS = "\001" }
 {
-  s = $0
-  while ((i = index(s, "<!--")) > 0) { j = index(substr(s, i), "-->"); if (j == 0) { s = substr(s, 1, i - 1); break }; s = substr(s, 1, i - 1) substr(s, i + j + 2) }
-  anc = ""; ord = 0
-  while ((i = index(s, "<")) > 0) {
-    s = substr(s, i); j = index(s, ">"); if (j == 0) break
-    tag = substr(s, 1, j); s = substr(s, j + 1)
-    if (tag ~ /^<(section|h2)[ >]/ && match(tag, /id="[^"]*"/)) anc = substr(tag, RSTART + 4, RLENGTH - 5)
-    if (tag ~ /^<span data-afirmatie="/) {
-      id = tag; sub(/^<span data-afirmatie="/, "", id); sub(/".*/, "", id)
-      d = 1; txt = ""
-      while (d > 0 && (k = index(s, "<")) > 0) {
-        txt = txt substr(s, 1, k - 1); s = substr(s, k); m = index(s, ">"); if (m == 0) break
-        t2 = substr(s, 1, m); s = substr(s, m + 1)
-        if (t2 ~ /^<span[ >]/) d++
-        else if (t2 ~ /^<\/span>/) { d--; if (d == 0) break }
-        txt = txt t2
-      }
-      ord++
-      print id "\t" DOC "\t" LANG "\t" anc "\t" curata(txt) "\t" ord
-    }
+  s = $0; marcaje(s)
+  for (k = 1; k <= MK_N; k++) {
+    txt = MK_E[k] ? substr(s, MK_B[k], MK_E[k] - MK_B[k]) : substr(s, MK_B[k])
+    print MK_ID[k] "\t" DOC "\t" LANG "\t" MK_ANC[k] "\t" curata(txt) "\t" k
   }
 }
 AWK
+[ -s "$SD/marcaje.awk" ] || { echo "dovezi.sh: lipseste scripts/marcaje.awk (cititorul marcajelor)" >&2; exit 1; }
 : > "$W/marc"
 while IFS="$(printf '\t')" read -r doc lang f url titlu; do
   [ -f "$f" ] || { echo "dovezi.sh: lipseste $f" >&2; exit 1; }
-  awk -v DOC="$doc" -v LANG="$lang" -f "$W/marc.awk" "$f" >> "$W/marc"
+  awk -v DOC="$doc" -v LANG="$lang" -f "$SD/marcaje.awk" -f "$W/marc.awk" "$f" >> "$W/marc"
 done < "$W/pag"
 [ -s "$W/marc" ] || { echo "dovezi.sh: niciun marcaj citit (santinela)" >&2; exit 1; }
 
