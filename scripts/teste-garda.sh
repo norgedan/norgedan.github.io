@@ -656,6 +656,8 @@ mut_T241() { mut_T239; }
 mut_T242() { F=corpus/04-lumea-in-care-traim-ro.html; awk '{ sub(/<span data-afirmatie="ipc-foamete-2025">/, "&\n") } { print }' "$F" > "$F.t" && mv "$F.t" "$F"; }
 # pas200: fragmentul afisat de detector nu mai arata un tag taiat din randul urmator
 mut_T243() { F=corpus/04-lumea-in-care-traim-ro.html; awk '{ sub(/<span data-afirmatie="ipc-foamete-2025">/, "Cercetarea a demonstrat totul.\n&") } { print }' "$F" > "$F.t" && mv "$F.t" "$F"; }
+# pas201: [9] numara si inchiderile fara comentarii — un marcaj vechi intr-un comentariu nu mai dezechilibreaza
+mut_T244() { mut_T239; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -914,6 +916,7 @@ t T240 PICA    "lipseste scripts/marcaje.awk"     "[13] santinela: cititorul com
 t T241 ABSENT  "textul afirmatiei s-a schimbat dupa verificare" "[13] amprentele: un marcaj intr-un comentariu HTML nu e citit (marcaje.awk, pas197)"
 t T242 ABSENT  "locuri cu cuvinte de certitudine in text nemarcat" "[13] detectorul: un marcaj rupt pe doua randuri ramane marcat (marcaje.awk, pas199)"
 t T243 ABSENT  "nd-dov"                           "[13] detectorul: fragmentul afisat fara tag taiat din randul urmator (pas200)"
+t T244 ABSENT  "dezechilibrat"                    "[9] un comentariu cu </span> nu mai dezechilibreaza tag-urile (pas201)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

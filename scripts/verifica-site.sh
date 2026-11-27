@@ -1025,7 +1025,14 @@ while IFS="$TAB" read -r repo cale limba id col tit; do
   dez=$(awk -F'\t' -v L="$TAG9" '
     BEGIN { n = split(L, t, " "); for (i = 1; i <= n; i++) vrea[t[i]] = 1 }
     FILENAME == ARGV[1] { if ($1 in vrea) d[$1]++; next }
-    { s = $0; while (match(s, /<\/[a-z0-9]+>/)) { x = substr(s, RSTART + 2, RLENGTH - 3); if (x in vrea) c[x]++; s = substr(s, RSTART + RLENGTH) } }
+    # pas201: inchiderile se numara si ele fara comentarii, ca deschiderile din tags.awk
+    { s = $0; o = ""
+      while (s != "") {
+        if (inc) { j = index(s, "-->"); if (!j) { s = ""; break }; s = substr(s, j + 3); inc = 0 }
+        i = index(s, "<!--"); if (!i) { o = o s; break }
+        o = o substr(s, 1, i - 1); s = substr(s, i + 4); inc = 1
+      }
+      s = o; while (match(s, /<\/[a-z0-9]+>/)) { x = substr(s, RSTART + 2, RLENGTH - 3); if (x in vrea) c[x]++; s = substr(s, RSTART + RLENGTH) } }
     END { for (i = 1; i <= n; i++) { k = t[i]; if (d[k] + 0 != c[k] + 0) printf " %s(%d/%d)", k, d[k], c[k] } }' "$(tagsf "$f")" "$f")
   [ -n "$dez" ] && { problema "$repo/$cale dezechilibrat:$dez"; greseli=1; }
   grep -q '">n<' "$f" && { problema "$repo/$cale: artefact '\">n<' (newline pierdut de sed BSD)"; greseli=1; }

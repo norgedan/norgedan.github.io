@@ -5,6 +5,8 @@
 # Capitol = de la un <h2> la urmatorul (sau </main>).  Numele lui = ancora:
 # id-ul de pe <h2>, altfel id-ul ultimului <section> deschis inaintea lui.
 # Nu intra in text: comentarii, script, style, nav, aside, footer.
+# Marcajul de afirmatie (pentru textul „fara marcaje”): aceeasi definitie ca in
+# marcaje.awk — forma exacta <span data-afirmatie="id">, in afara comentariilor (pas201).
 #
 # Variabile (-v):  doc, lang, site, base   — obligatorii
 #                  capf   fisierul unde se scriu capitolele; gol = iesirea standard
@@ -90,7 +92,8 @@ NR == 1 { next }
   }
   if (nm == "span") {
     if (mark > 0) sdep++
-    else if (tag ~ /[ \t\n]data-afirmatie=/) { mark = 1; sdep = 1 }
+    # pas201: marcajul, ca in marcaje.awk — forma exacta <span data-afirmatie="id">
+    else if (tag ~ /^span data-afirmatie="[^"]*"$/) { mark = 1; sdep = 1 }
   } else if (nm == "/span" && mark > 0) {
     if (--sdep == 0) mark = 0
   }
