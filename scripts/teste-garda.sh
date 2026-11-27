@@ -652,6 +652,8 @@ mut_T239() { rep corpus/04-lumea-in-care-traim-ro.html 's|<span data-afirmatie="
 mut_T240() { rm -f norgedan.github.io/scripts/marcaje.awk; }
 # pas197: garda [13] (amprentele, semnul de dovada) pe marcaje.awk — un marcaj intr-un comentariu nu mai primeste amprenta
 mut_T241() { mut_T239; }
+# pas199: detectorul de certitudine pe marcaje.awk — un marcaj rupt pe doua randuri nu mai lasa textul marcat la vedere
+mut_T242() { F=corpus/04-lumea-in-care-traim-ro.html; awk '{ sub(/<span data-afirmatie="ipc-foamete-2025">/, "&\n") } { print }' "$F" > "$F.t" && mv "$F.t" "$F"; }
 # ── pas146: pagina-capcana „Client Challenge” (theguardian.com, press.un.org; 11 nov.) ──
 gu_k() { printf '%s' 'https://www.theguardian.com/world/ng-interactive/2025/aug/21/revealed-israeli-militarys-own-data-indicates-civilian-death-rate-of-83-in-gaza-war' | cksum | cut -d' ' -f1; }
 un_k() { printf '%s' 'https://press.un.org/en/2024/db240513.doc.htm' | cksum | cut -d' ' -f1; }
@@ -908,6 +910,7 @@ t T238 SEMNAL  ", moldova "                       "[23] L3: tema declarata in re
 t T239 ABSENT  "marcajul apare de mai multe ori"  "[13] texte.sh: un marcaj intr-un comentariu HTML nu e marcaj (marcaje.awk, pas196)"
 t T240 PICA    "lipseste scripts/marcaje.awk"     "[13] santinela: cititorul comun al marcajelor lipseste (pas196)"
 t T241 ABSENT  "textul afirmatiei s-a schimbat dupa verificare" "[13] amprentele: un marcaj intr-un comentariu HTML nu e citit (marcaje.awk, pas197)"
+t T242 ABSENT  "locuri cu cuvinte de certitudine in text nemarcat" "[13] detectorul: un marcaj rupt pe doua randuri ramane marcat (marcaje.awk, pas199)"
 echo ""
 echo "  $rulate teste rulate · $gresite cu verdict gresit · $deschise vulnerabilitati inca deschise"
 echo ""

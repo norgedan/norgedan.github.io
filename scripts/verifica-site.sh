@@ -1633,25 +1633,22 @@ BEGIN {
   # din pas55, un fragment acceptat poate fi legat de fisierul unde a fost citit:
   #   cale/fisier.html TAB fragment     (fara TAB: acceptat pe tot site-ul, ca pana acum)
   while ((getline l < OKF) > 0) { nk++; t = index(l, "\t"); if (t > 0) { kf[nk] = substr(l, 1, t - 1); k[nk] = substr(l, t + 1) } else { kf[nk] = ""; k[nk] = l } }
-  M = "<span data-afirmatie=\""
+  RS = "\001"      # dupa citirea listelor: pagina intreaga, intr-un singur sir
 }
-# afirmatiile marcate sunt deja in registru: se scot din text; apoi tag-urile, cratima
-# discreta, spatiile unificate
-function curat(s,   i, r, j) {
-  while ((i = index(s, M)) > 0) {
-    r = substr(s, i); j = index(r, "</span>")
-    if (j == 0) break
-    s = substr(s, 1, i - 1) " " substr(r, j + 7)
-  }
+# afirmatiile marcate sunt deja in registru: din pas199 le scoate cititorul comun
+# (marcaje.awk, fara_marcaje), pe pagina intreaga, cu numerele de rand pastrate; aici
+# raman tag-urile, cratima discreta, spatiile unificate
+function curat(s) {
   gsub(/<[^>]*>/, " ", s); gsub(/\302\255/, "", s); gsub(/[ \t\r]+/, " ", s)
   sub(/^ /, "", s); sub(/ $/, "", s)
   return s
 }
-{ L[FNR] = $0; N = FNR }
+{ PAG = $0 }
 # pas91: fiecare rand se citeste impreuna cu inceputul randului urmator, ca o expresie
 # rupta pe doua randuri („a” / „demonstrat”) sa fie prinsa; se raporteaza doar ce incepe
 # pe randul curent, deci nimic de doua ori.  Granita: \001, pe care niciun fragment nu-l are.
 END {
+  PAG = fara_marcaje(PAG); N = split(PAG, L, "\n"); if (N > 0 && L[N] == "" && substr(PAG, length(PAG)) == "\n") N--
   for (n = 1; n <= N; n++) {
     cs = curat(L[n]); if (cs == "") continue
     cn = (n < N) ? curat(substr(L[n + 1], 1, 80)) : ""
@@ -1682,7 +1679,7 @@ else
   [ -f "$CERT_OK" ] && grep -v '^#' "$CERT_OK" | grep -v '^[[:space:]]*$' > "$W/certok"
   : > "$W/certhit"
   while read -r f; do
-    LC_ALL=C awk -v R="${f#"$RADACINA"/}" -v TF="$W/cert" -v OKF="$W/certok" -f "$SCRIPT_DIR/lib.awk" -f "$W/cert.awk" "$f" >> "$W/certhit"
+    LC_ALL=C awk -v R="${f#"$RADACINA"/}" -v TF="$W/cert" -v OKF="$W/certok" -f "$SCRIPT_DIR/lib.awk" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/cert.awk" "$f" >> "$W/certhit"
   done < "$W/pub13"
   if [ -s "$W/certhit" ]; then
     atentie "$(wc -l < "$W/certhit" | tr -d ' ') locuri cu cuvinte de certitudine in text nemarcat — de citit:"
@@ -1771,24 +1768,22 @@ cat > "$W/stiinta.awk" <<'AWK'
 # („credem”, „interpretare”; NO: „vi tror”, „tolkning”) — de citit.
 # LC_ALL=C: tolower doar pe ASCII; diacriticele se compara exact, octet cu octet.
 function oricare(t, lista,   n, a, q) { n = split(lista, a, "|"); for (q = 1; q <= n; q++) if (cuvant(t, a[q])) return 1; return 0 }
-function curat(s,   i, r, j) {
-  while ((i = index(s, M)) > 0) {
-    r = substr(s, i); j = index(r, "</span>")
-    if (j == 0) break
-    s = substr(s, 1, i - 1) " " substr(r, j + 7)
-  }
+# pas199: marcajele le scoate cititorul comun (marcaje.awk, fara_marcaje), pe pagina intreaga
+function curat(s) {
   gsub(/<[^>]*>/, " ", s); gsub(/\302\255/, "", s); gsub(/&nbsp;/, " ", s); gsub(/[ \t\r]+/, " ", s)
   return s
 }
 BEGIN {
-  M = "<span data-afirmatie=\""
+  RS = "\001"
   STI = "Știința|Știință|Științei|Științific|Științifică|știința|știință|științei|stiinta|stiintei|științific|științifică|stiintific|stiintifica|vitenskap|vitenskapen|vitenskapelig|vitenskapelige|science"
   DZ  = "dumnezeu|dumnezeul|dumnezeului|creator|creatorul|creatorului|gud|guds|skaper|skaperen"
   VB  = "dovedește|dovedeste|dovedesc|demonstrează|demonstreaza|infirmă|infirma|infirmat|dovedit|demonstrat|nu există|nu exista|beviser|bevist|bevise|motbeviser|motbevist|finnes ikke|ikke finnes"
   ET  = "credem|interpretare|credință|credinta|vi tror|tolkning|tro"
 }
-{ T = T " " curat($0) }
+{ PAG = $0 }
 END {
+  PAG = fara_marcaje(PAG); N = split(PAG, L, "\n"); if (N > 0 && L[N] == "" && substr(PAG, length(PAG)) == "\n") N--
+  T = ""; for (r = 1; r <= N; r++) T = T " " curat(L[r])
   n = split(T, P, /[.!?] /)
   for (i = 1; i <= n; i++) {
     s = P[i]; ls = tolower(s)
@@ -1801,7 +1796,7 @@ END {
 AWK
 : > "$W/stihit"
 while read -r f; do
-  LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$SCRIPT_DIR/lib.awk" -f "$W/stiinta.awk" "$f" >> "$W/stihit"
+  LC_ALL=C awk -v R="${f#"$RADACINA"/}" -f "$SCRIPT_DIR/lib.awk" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/stiinta.awk" "$f" >> "$W/stihit"
 done < "$W/pub13"
 if [ -s "$W/stihit" ]; then
   atentie "$(wc -l < "$W/stihit" | tr -d ' ') propoziții spun, fără etichetă, că știința dovedește sau infirmă pe Dumnezeu — regula „Știința și Creatorul”: INTERPRETARE sau „credem”:"

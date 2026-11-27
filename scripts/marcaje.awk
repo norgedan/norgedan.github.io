@@ -55,3 +55,23 @@ function marcaje(s,    n, k, p, part, j, tag, M, LM, id, q, desch, d, com, anc) 
     if (index(tag, "data-afirmatie=")) MK_ALTE++
   }
 }
+
+# fara_marcaje(s) (pas199): textul s fara marcaje — fiecare marcaj, de la „<span data-afirmatie=”
+# pana dupa </span>-ul lui, devine un spatiu, plus atatea „\n” cate avea, ca numerele de rand
+# sa ramana aceleasi.  Cu un <span> inauntru se taie pana la primul </span>, ca detectorul
+# vechi (garda [13] semnaleaza oricum span in span).  Un marcaj neinchis ramane neatins.
+# Folosesc: detectorul de certitudine si regula „Stiinta si Creatorul” din garda [13].
+function fara_marcaje(s,    k, e, r, j, o, poz, bucata, t) {
+  marcaje(s); o = ""; poz = 1
+  for (k = 1; k <= MK_N; k++) {
+    if (MK_IMB[k]) { r = substr(s, MK_B[k]); j = index(r, "</span>"); e = j ? MK_B[k] + j - 1 : 0 }
+    else e = MK_E[k]
+    if (!e) continue
+    bucata = substr(s, MK_A[k], e + 7 - MK_A[k])
+    t = gsub(/\n/, "\n", bucata)
+    o = o substr(s, poz, MK_A[k] - poz) " "
+    while (t-- > 0) o = o "\n"
+    poz = e + 7
+  }
+  return o substr(s, poz)
+}
