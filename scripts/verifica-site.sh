@@ -1651,7 +1651,8 @@ END {
   PAG = fara_marcaje(PAG); N = split(PAG, L, "\n"); if (N > 0 && L[N] == "" && substr(PAG, length(PAG)) == "\n") N--
   for (n = 1; n <= N; n++) {
     cs = curat(L[n]); if (cs == "") continue
-    cn = (n < N) ? curat(substr(L[n + 1], 1, 80)) : ""
+    # pas200: din randul urmator, primele 80 de caractere, fara un tag ramas taiat la capat
+    cn = ""; if (n < N) { cn = substr(L[n + 1], 1, 80); sub(/<[^>]*$/, "", cn); cn = curat(cn) }
     s = cs "\001" cn
     # fragmentele citite si acceptate
     for (q = 1; q <= nk; q++) { if (kf[q] != "" && kf[q] != R) continue; while ((i = index(s, k[q])) > 0) s = substr(s, 1, i - 1) " " substr(s, i + length(k[q])) }

@@ -69,6 +69,17 @@ if [ -n "$CE" ] && [ "$CE" != --fara ]; then
     echo "subiect necunoscut: $CE" >&2; echo "subiectele: $(cut -f1 "$W/s" | tr '\n' ' ')" >&2; exit 2; }
 fi
 
+# afirmatiile marcate din fiecare pagina (pas200: prin cititorul comun, scripts/marcaje.awk)
+[ -s "$SCRIPT_DIR/marcaje.awk" ] || { echo "lipseste scripts/marcaje.awk (cititorul marcajelor)" >&2; exit 2; }
+cat > "$W/af.awk" <<'AWK'
+BEGIN { RS = "\001" }
+{ s = $0; marcaje(s)
+  for (k = 1; k <= MK_N; k++) {
+    r = substr(s, MK_B[k]); j = index(r, "</span>"); t = (j > 0) ? substr(r, 1, j - 1) : ""
+    gsub(/\n/, " ", t); gsub(/<[^>]*>/, "", t); gsub(/[ \t\r]+/, " ", t)
+    print doc "\t" MK_ID[k] "\t" t } }
+AWK
+
 # ── capitolele RO si textul lor (cititorul comun, capitole.awk) ──────
 awk -F'\t' '/^#/ || NF < 7 { next } { print $1 "\t" $3 "\t" $4 }' "$MAN" > "$W/f"
 : > "$W/cap"
@@ -78,14 +89,10 @@ while IFS="$(printf '\t')" read -r doc repo cale; do
   awk -v doc="$doc" -v lang=ro -v site="$cale" -v base=https://norgedan.github.io \
       -v tdir="$W/t" -v udir="$W/u" -v lnk="$W/lnk" -v capf="$W/cap" -v ntf="$W/nt" \
       -f "$SCRIPT_DIR/capitole.awk" "$fis" || exit 2
-  # afirmatiile marcate: doc id text (fara tag-uri), una pe rand
-  awk -v doc="$doc" '
-    { s = s " " $0 }
-    END { while (match(s, /<span data-afirmatie="[^"]*">/)) {
-            id = substr(s, RSTART + 22, RLENGTH - 24); s = substr(s, RSTART + RLENGTH)
-            j = index(s, "</span>"); t = (j > 0) ? substr(s, 1, j - 1) : ""
-            gsub(/<[^>]*>/, "", t); gsub(/[ \t\r]+/, " ", t)
-            print doc "\t" id "\t" t } }' "$fis" >> "$W/af"
+  # afirmatiile marcate: doc id text (fara tag-uri), una pe rand.  Din pas200, marcajele
+  # le gaseste cititorul comun, scripts/marcaje.awk; textul, ca inainte: pana la primul
+  # </span>, randurile noi devin spatii
+  awk -v doc="$doc" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/af.awk" "$fis" >> "$W/af"
 done < "$W/f"
 : >> "$W/af"
 

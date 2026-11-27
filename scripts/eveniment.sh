@@ -110,10 +110,18 @@ fisa() {
       awk -F'\t' -v a="$a" '!/^#/ && $1 == a && $4 != "-" { n = split($4, f, " "); for (i = 1; i <= n; i++) printf "      %s (forma %s)\n", f[i], $2 }' "$TX"
     else
       echo "    $a — NEINSCRISA in texte.tsv: textul se schimba de mana, in fiecare pagina:"
-      grep -l "data-afirmatie=\"$a\"" $(cat "$W/pagini") 2>/dev/null | sed "s|^$RADACINA/|      |"
+      # pas200: paginile cu marcajul, dupa cititorul comun (scripts/marcaje.awk)
+      awk -v a="$a" -f "$SCRIPT_DIR/marcaje.awk" -f "$W/are.awk" $(cat "$W/pagini") 2>/dev/null | sed "s|^$RADACINA/|      |"
     fi
   done
 }
+
+# pas200: o pagina „are” afirmatia daca cititorul comun (scripts/marcaje.awk) gaseste marcajul ei
+[ -s "$SCRIPT_DIR/marcaje.awk" ] || { echo "lipseste scripts/marcaje.awk (cititorul marcajelor)" >&2; exit 2; }
+cat > "$W/are.awk" <<'AWK'
+BEGIN { RS = "\001" }
+{ marcaje($0); for (k = 1; k <= MK_N; k++) if (MK_ID[k] == a) { print FILENAME; break } }
+AWK
 
 for R in $REPOURI; do
   [ -d "$RADACINA/$R" ] || continue
